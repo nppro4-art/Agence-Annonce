@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agence d'Annonce — Vendez plus vite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red: #e8191a;
+      --black: #080808;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --surface3: #242424;
+      --border: #2e2e2e;
+      --white: #f0f0f0;
+      --muted: #666;
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'Outfit', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    /* HERO */
+    .hero { position: relative; background: var(--surface); border-bottom: 1px solid var(--border); padding: 28px 20px 24px; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -40px; right: -60px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(232,25,26,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hero-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--white); line-height: 1; }
+    .logo em { color: var(--red); font-style: normal; }
+    .tag { background: var(--red); color: white; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+    .hero h1 { font-size: 21px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+    .hero h1 span { color: var(--red); }
+    .hero p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .steps { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
+    .step { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .step-num { background: var(--red); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+
+    /* LAYOUT */
+    .container { max-width: 640px; margin: 0 auto; padding: 24px 16px 80px; }
+    .lang-bar { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .lang-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; padding: 7px 13px; transition: all 0.15s; }
+    .lang-btn.active { background: var(--red); border-color: var(--red); color: white; }
+
+    .block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 14px; transition: border-color 0.2s; }
+    .block:focus-within { border-color: rgba(232,25,26,0.35); }
+    .block-title { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2.5px; color: var(--red); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .block-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .field label .req { color: var(--red); }
+
+    input, select, textarea { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; color: var(--white); font-family: 'Outfit', sans-serif; font-size: 14px; padding: 10px 13px; outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--red); background: var(--surface3); }
+    input::placeholder, textarea::placeholder { color: #444; }
+    select option { background: var(--surface2); }
+    textarea { resize: vertical; min-height: 70px; }
+
+    /* PROBLEMES */
+    .pb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .pb-item { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; cursor: pointer; padding: 9px 11px; font-size: 12px; transition: all 0.12s; user-select: none; }
+    .pb-item.on { background: rgba(232,25,26,0.12); border-color: var(--red); }
+    .pb-item .dot { width: 14px; height: 14px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; transition: all 0.12s; display: flex; align-items: center; justify-content: center; }
+    .pb-item.on .dot { background: var(--red); border-color: var(--red); }
+    .pb-item.on .dot::after { content: '✓'; color: white; font-size: 9px; font-weight: 700; }
+
+    /* ESTIMATION */
+    .estimate-btn { width: 100%; background: transparent; border: 1.5px solid var(--warning); border-radius: 10px; color: var(--warning); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; padding: 12px; margin-top: 12px; transition: all 0.15s; }
+    .estimate-btn:hover { background: rgba(245,158,11,0.08); }
+    .estimate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .estimate-result { display: none; margin-top: 12px; background: var(--surface2); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 14px; }
+    .estimate-result.show { display: block; }
+    .estimate-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .estimate-col { text-align: center; }
+    .estimate-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .estimate-value { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; }
+    .estimate-value.low { color: #f87171; }
+    .estimate-value.mid { color: var(--warning); }
+    .estimate-value.high { color: var(--success); }
+    .estimate-note { font-size: 10px; color: var(--muted); margin-top: 8px; text-align: center; font-style: italic; }
+
+    /* SUBMIT */
+    .submit-btn { width: 100%; background: var(--red); border: none; border-radius: 14px; color: white; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: 2.5px; padding: 17px; transition: all 0.15s; margin-top: 20px; }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { background: var(--surface3); color: var(--muted); cursor: not-allowed; }
+
+    /* STATES */
+    .state-box { display: none; border-radius: 14px; padding: 20px; text-align: center; margin-top: 14px; font-size: 14px; line-height: 1.6; }
+    .state-box.show { display: block; }
+    .state-loading { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+    .state-success { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; }
+    .state-error { background: rgba(232,25,26,0.08); border: 1px solid rgba(232,25,26,0.25); color: #f87171; }
+
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .progress-steps { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+    .progress-step { font-size: 10px; color: var(--muted); padding: 4px 9px; border-radius: 20px; background: var(--surface2); border: 1px solid var(--border); transition: all 0.3s; }
+    .progress-step.active { color: white; border-color: var(--red); background: rgba(232,25,26,0.15); }
+    .progress-step.done { color: var(--success); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.08); }
+
+    /* PRICE NOTE */
+    .price-note { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+    .price-note strong { color: var(--white); font-size: 16px; }
+
+    /* PAYPAL LINK */
+    .paypal-note { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 14px 16px; font-size: 13px; color: #4ade80; margin-top: 12px; text-align: center; }
+    .paypal-note a { color: #4ade80; font-weight: 600; }
+
+    @media (max-width: 420px) {
+      .grid3 { grid-template-columns: 1fr 1fr; }
+      .pb-grid { grid-template-columns: 1fr; }
+      .estimate-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .copy-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; padding: 8px 14px; transition: all 0.15s; width: 100%; }
+    .copy-btn:hover { border-color: var(--success); color: var(--success); }
+    .copy-btn.copied { border-color: var(--success); color: var(--success); background: rgba(34,197,94,0.08); }
+    .result-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 14px; }
+    .annonce-text { font-size: 13px; line-height: 1.75; color: var(--white); white-space: pre-wrap; margin-bottom: 12px; background: var(--surface2); border-radius: 8px; padding: 14px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="logo">Agence d'<em>Annonce</em></div>
+    <div class="tag">IA Pro</div>
+  </div>
+  <h1>Vendez votre voiture<br><span>plus vite, mieux présentée.</span></h1>
+  <p>Remplissez le formulaire. Notre IA génère une annonce professionnelle complète, prête à publier sur LeBonCoin.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div> Remplissez le formulaire</div>
+    <div class="step"><div class="step-num">2</div> L'IA rédige votre annonce</div>
+    <div class="step"><div class="step-num">3</div> Vous recevez le résultat</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="price-note">
+    Service professionnel — <strong>15€</strong> par annonce.<br>
+    Paiement uniquement après réception et validation de votre annonce.
+  </div>
+
+  <!-- LANGUE -->
+  <div class="lang-bar">
+    <button class="lang-btn active" data-lang="fr">🇫🇷 Français</button>
+    <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+    <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+    <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+    <button class="lang-btn" data-lang="it">🇮🇹 Italiano</button>
+  </div>
+
+  <!-- VEHICULE -->
+  <div class="block">
+    <div class="block-title">Votre véhicule</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Marque <span class="req">*</span></label><input id="brand" placeholder="BMW, Renault…"/></div>
+      <div class="field"><label>Modèle <span class="req">*</span></label><input id="model" placeholder="Série 3, Clio…"/></div>
+    </div>
+    <div class="grid3" style="margin-bottom:10px">
+      <div class="field"><label>Année <span class="req">*</span></label><input id="year" type="number" placeholder="2019"/></div>
+      <div class="field"><label>Kilométrage <span class="req">*</span></label><input id="mileage" type="number" placeholder="75000"/></div>
+      <div class="field"><label>Prix souhaité (€) <span class="req">*</span></label><input id="price" type="number" placeholder="11500"/></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Couleur</label><input id="color" placeholder="Noir nacré…"/></div>
+      <div class="field"><label>Nb de portes</label>
+        <select id="doors"><option value="">—</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+    </div>
+
+    <!-- ESTIMATION -->
+    <button class="estimate-btn" id="estimateBtn" onclick="estimatePrice()">
+      🔍 Estimer la valeur marchande de ma voiture (gratuit)
+    </button>
+    <div class="estimate-result" id="estimateResult">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Estimation du marché actuel</div>
+      <div class="estimate-grid">
+        <div class="estimate-col">
+          <div class="estimate-label">Basse</div>
+          <div class="estimate-value low" id="estLow">—</div>
+        </div>
+        <div class="estimate-col">
+          <div class="estimate-label">Moyenne</div>
+          <div class="estimate-value mid" id="estMid">—</div>
+        </div>
+        <div class="estimate-col">
+          <div class="estimate-label">Haute</div>
+          <div class="estimate-value high" id="estHigh">—</div>
+        </div>
+      </div>
+      <div class="estimate-note" id="estNote">Estimation indicative basée sur le marché actuel. Pas une valeur officielle.</div>
+    </div>
+  </div>
+
+  <!-- MOTEUR -->
+  <div class="block">
+    <div class="block-title">Motorisation</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Carburant</label>
+        <select id="fuel"><option value="">—</option><option>Essence</option><option>Diesel</option><option>Hybride</option><option>Électrique</option><option>GPL</option></select>
+      </div>
+      <div class="field"><label>Boîte</label>
+        <select id="gearbox"><option value="">—</option><option>Manuelle</option><option>Automatique</option><option>Semi-auto</option></select>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="field"><label>Puissance (ch)</label><input id="power" type="number" placeholder="130"/></div>
+      <div class="field"><label>Cylindrée (cc)</label><input id="engine" type="number" placeholder="1997"/></div>
+      <div class="field"><label>Conso (L/100)</label><input id="consumption" type="number" step="0.1" placeholder="6.2"/></div>
+    </div>
+  </div>
+
+  <!-- EQUIPEMENTS -->
+  <div class="block">
+    <div class="block-title">Équipements & options</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Toit ouvrant</label>
+        <select id="sunroof"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select>
+      </div>
+      <div class="field"><label>Climatisation</label>
+        <select id="clim"><option value="">—</option><option>Manuelle</option><option>Automatique</option><option>Non</option></select>
+      </div>
+    </div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>GPS / Navigation</label>
+        <select id="gps"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select>
+      </div>
+      <div class="field"><label>Caméra recul</label>
+        <select id="camera"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Autres équipements</label>
+      <textarea id="equipment" placeholder="Sièges chauffants, CarPlay, radar de recul, jantes alu 18'…"></textarea>
+    </div>
+  </div>
+
+  <!-- HISTORIQUE -->
+  <div class="block">
+    <div class="block-title">Historique & état</div>
+    <div class="grid3" style="margin-bottom:10px">
+      <div class="field"><label>Nb propriétaires</label>
+        <select id="owners"><option value="">—</option><option value="1er main">1er main</option><option value="2">2</option><option value="3">3</option><option value="4+">4+</option></select>
+      </div>
+      <div class="field"><label>CT</label>
+        <select id="ct"><option value="">—</option><option>Valide</option><option>À refaire</option><option>Non présenté</option></select>
+      </div>
+      <div class="field"><label>Carnet entretien</label>
+        <select id="carnet"><option value="">—</option><option value="Complet">Complet</option><option value="Partiel">Partiel</option><option value="Non">Non</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Dernier entretien</label>
+      <input id="service" placeholder="Ex : vidange + courroie à 70 000 km en 2023"/>
+    </div>
+  </div>
+
+  <!-- PROBLEMES -->
+  <div class="block">
+    <div class="block-title">Problèmes connus</div>
+    <div class="pb-grid" id="pbGrid"></div>
+    <div class="field" style="margin-top:10px">
+      <label>Autres problèmes</label>
+      <textarea id="otherPb" placeholder="Décris ici tout défaut non listé…"></textarea>
+    </div>
+  </div>
+
+  <!-- RAISON -->
+  <div class="block">
+    <div class="block-title">Raison de la vente</div>
+    <div class="field">
+      <label>Pourquoi vous vendez ?</label>
+      <textarea id="reason" placeholder="Changement de véhicule, déménagement, plus besoin…"></textarea>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="block">
+    <div class="block-title">Vos coordonnées</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Prénom <span class="req">*</span></label><input id="sellerName" placeholder="Thomas"/></div>
+      <div class="field"><label>Téléphone <span class="req">*</span></label><input id="sellerPhone" type="tel" placeholder="06 xx xx xx xx"/></div>
+    </div>
+    <div class="field">
+      <label>Ville <span class="req">*</span></label>
+      <input id="sellerCity" placeholder="Lyon, Paris, Marseille…"/>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+    ⚡ GÉNÉRER MON ANNONCE PROFESSIONNELLE
+  </button>
+
+  <div class="state-box state-loading" id="stateLoading">
+    <div class="spinner"></div>
+    <div>Génération de votre annonce en cours…</div>
+    <div class="progress-steps">
+      <div class="progress-step" id="ps1">Analyse</div>
+      <div class="progress-step" id="ps2">Rédaction IA</div>
+      <div class="progress-step" id="ps3">Version courte</div>
+      <div class="progress-step" id="ps4">Envoi</div>
+    </div>
+  </div>
+
+  <div class="state-box state-success" id="stateSuccess">
+    ✅ Votre annonce est prête — copiez-collez sur LeBonCoin !
+  </div>
+
+  <div id="resultBlock" style="display:none">
+    <div class="result-block">
+      <div class="block-title">Version longue — LeBonCoin</div>
+      <div class="annonce-text" id="annonceLongueText"></div>
+      <button class="copy-btn" id="copyLongBtn" onclick="copyText('annonceLongueText', 'copyLongBtn')">📋 Copier la version longue</button>
+    </div>
+    <div class="result-block">
+      <div class="block-title">Version courte — Facebook / SMS</div>
+      <div class="annonce-text" id="annonceCourteText"></div>
+      <button class="copy-btn" id="copyCortBtn" onclick="copyText('annonceCourteText', 'copyCortBtn')">📋 Copier la version courte</button>
+    </div>
+    <div class="paypal-note" style="margin-top:12px">
+      💳 Satisfait ? Réglez <strong style="color:#4ade80">15€</strong> via <a href="https://paypal.me/TONLIENICI" id="paypalLink" target="_blank">PayPal.me</a> ou Lydia. Merci !
+    </div>
+  </div>
+
+  <div class="state-box state-error" id="stateError">
+    ❌ Une erreur est survenue. Veuillez réessayer.
+  </div>
+
+</div>
+
+<script>
+// ⚠️ REMPLACE CES DEUX VALEURS AVANT DE DÉPLOYER
+const WEBHOOK = 'https://discord.com/api/webhooks/1495497926515097742/m5pOz3xxsDcm3_QYrhqZ44PKoDHprdrbzNRvQtO8-eLJGwkKoJh0BHh-2Ke9g0VaxFPD';
+const PAYPAL_LINK = 'https://www.paypal.com/ncp/payment/G7BVDM3TXQL9L';
+
+const LANG_NAMES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsch', it: 'Italiano' };
+const LANG_PROMPTS = {
+  fr: 'Tu es un expert en rédaction d\'annonces automobiles sur LeBonCoin. Rédige en français.',
+  en: 'You are an expert in writing car listings. Write in English for a car marketplace.',
+  es: 'Eres un experto en redacción de anuncios de coches. Redacta en español.',
+  de: 'Du bist Experte für Fahrzeugverkaufsanzeigen. Schreibe auf Deutsch.',
+  it: 'Sei un esperto nella redazione di annunci auto. Scrivi in italiano.'
+};
+
+const PROBLEMS = [
+  'Rayures carrosserie','Bosses / chocs','Pare-brise fissuré','Peinture abîmée',
+  'Clim. HS','Chauffage défaillant','Vitres électriques','Rétroviseur cassé',
+  'Batterie faible','Alternateur','Démarreur','Pneus usés',
+  'Freins à changer','Amortisseurs','Embrayage','Fuite huile',
+  'Voyant moteur','Boîte de vitesses','Pot d\'échappement','Radiateur'
+];
+
+let selectedLang = 'fr';
+let selectedProblems = new Set();
+
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    selectedLang = b.dataset.lang;
+  });
+});
+
+function buildProblems() {
+  const grid = document.getElementById('pbGrid');
+  PROBLEMS.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'pb-item';
+    div.innerHTML = `<div class="dot"></div><span>${p}</span>`;
+    div.addEventListener('click', () => {
+      div.classList.toggle('on');
+      if (div.classList.contains('on')) selectedProblems.add(p);
+      else selectedProblems.delete(p);
+    });
+    grid.appendChild(div);
+  });
+}
+buildProblems();
+
+const v = id => document.getElementById(id)?.value?.trim() || '';
+
+function setProgress(step) {
+  ['ps1','ps2','ps3','ps4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('active','done');
+    if (i < step) el.classList.add('done');
+    else if (i === step) el.classList.add('active');
+  });
+}
+
+// ── ESTIMATION PRIX ──────────────────────────────────────
+async function estimatePrice() {
+  const brand = v('brand'), model = v('model'), year = v('year'), mileage = v('mileage');
+  const fuel = v('fuel'), owners = v('owners'), ct = v('ct');
+  const problems = [...selectedProblems];
+
+  if (!brand || !model || !year) {
+    alert('Remplis au minimum la marque, le modèle et l\'année pour obtenir une estimation.');
+    return;
+  }
+
+  const btn = document.getElementById('estimateBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Estimation en cours…';
+
+  try {
+    const prompt = `Tu es un expert automobile français spécialisé dans la cote des véhicules d'occasion.
+
+Véhicule : ${brand} ${model} ${year}
+${mileage ? `Kilométrage : ${mileage} km` : ''}
+${fuel ? `Carburant : ${fuel}` : ''}
+${owners ? `Propriétaires : ${owners}` : ''}
+${ct ? `CT : ${ct}` : ''}
+${problems.length > 0 ? `Problèmes : ${problems.join(', ')}` : ''}
+
+Donne une estimation réaliste de la valeur marchande sur le marché français actuel (LeBonCoin, La Centrale).
+Réponds UNIQUEMENT en JSON avec ce format exact, sans texte avant ni après :
+{"low": 8500, "mid": 10200, "high": 11800, "note": "Estimation basée sur le marché français actuel. Prix influencé par le kilométrage et l'état général."}`;
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await resp.json();
+    const text = data?.content?.[0]?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+
+    document.getElementById('estLow').textContent = result.low?.toLocaleString('fr-FR') + ' €';
+    document.getElementById('estMid').textContent = result.mid?.toLocaleString('fr-FR') + ' €';
+    document.getElementById('estHigh').textContent = result.high?.toLocaleString('fr-FR') + ' €';
+    document.getElementById('estNote').textContent = result.note || 'Estimation indicative. Pas une valeur officielle.';
+    document.getElementById('estimateResult').classList.add('show');
+
+  } catch(e) {
+    alert('Erreur lors de l\'estimation. Réessaie.');
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔍 Estimer la valeur marchande de ma voiture (gratuit)';
+  }
+}
+
+// ── GÉNÉRATION ANNONCE ───────────────────────────────────
+async function handleSubmit() {
+  const brand = v('brand'), model = v('model'), year = v('year');
+  const mileage = v('mileage'), price = v('price');
+  const sellerName = v('sellerName'), sellerPhone = v('sellerPhone'), sellerCity = v('sellerCity');
+
+  if (!brand || !model || !year || !mileage || !price || !sellerName || !sellerPhone || !sellerCity) {
+    alert('Merci de remplir les champs obligatoires (marqués *).');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  const loading = document.getElementById('stateLoading');
+  const success = document.getElementById('stateSuccess');
+  const error = document.getElementById('stateError');
+
+  btn.disabled = true;
+  loading.classList.add('show');
+  success.classList.remove('show');
+  error.classList.remove('show');
+
+  try {
+    setProgress(0);
+
+    const problems = [...selectedProblems];
+    if (v('otherPb')) problems.push(v('otherPb'));
+
+    const specs = [
+      ['Marque', brand], ['Modèle', model], ['Année', year],
+      ['Kilométrage', mileage + ' km'], ['Prix souhaité', price + ' €'],
+      ['Couleur', v('color')], ['Nb portes', v('doors')],
+      ['Carburant', v('fuel')], ['Boîte', v('gearbox')],
+      ['Puissance', v('power') ? v('power') + ' ch' : ''],
+      ['Cylindrée', v('engine') ? v('engine') + ' cc' : ''],
+      ['Consommation', v('consumption') ? v('consumption') + ' L/100km' : ''],
+      ['Toit ouvrant', v('sunroof')], ['Climatisation', v('clim')],
+      ['GPS', v('gps')], ['Caméra recul', v('camera')],
+      ['Équipements', v('equipment')],
+      ['Nb propriétaires', v('owners')], ['CT', v('ct')],
+      ['Carnet entretien', v('carnet')], ['Dernier entretien', v('service')],
+      ['Problèmes', problems.length > 0 ? problems.join(', ') : 'Aucun'],
+      ['Raison vente', v('reason')]
+    ].filter(([,val]) => val).map(([k,val]) => `- ${k}: ${val}`).join('\n');
+
+    setProgress(1);
+
+    // ── VERSION LONGUE
+    const promptLong = `${LANG_PROMPTS[selectedLang]}
+
+Voici les informations du véhicule :
+${specs}
+
+Génère une annonce LeBonCoin complète et professionnelle avec :
+1. TITRE : accrocheur, max 70 caractères
+2. DESCRIPTION : 300-400 mots, convaincante, valorise le véhicule, honnête sur les défauts
+3. POINTS FORTS : liste de 4-5 bullet points
+4. CONSEIL PRIX : analyse honnête du prix par rapport au marché
+5. CONCLUSION : phrase engageante pour inviter à contacter
+
+Formate ta réponse avec ces sections clairement séparées.`;
+
+    const respLong = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: promptLong }]
+      })
+    });
+    const dataLong = await respLong.json();
+    const annonceLongue = dataLong?.content?.[0]?.text || 'Erreur.';
+
+    setProgress(2);
+
+    // ── VERSION COURTE
+    const promptCourt = `${LANG_PROMPTS[selectedLang]}
+
+Voici les informations du véhicule :
+${specs}
+
+Génère une version COURTE de l'annonce (max 5 lignes) : titre + description condensée percutante. Idéal pour Facebook Marketplace ou SMS.`;
+
+    const respCourt = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        messages: [{ role: 'user', content: promptCourt }]
+      })
+    });
+    const dataCourt = await respCourt.json();
+    const annonceCourte = dataCourt?.content?.[0]?.text || 'Erreur.';
+
+    setProgress(3);
+
+    // ── ENVOI DISCORD
+    const chunkText = (text, size = 1000) => {
+      const chunks = [];
+      let r = text;
+      while (r.length > 0) { chunks.push(r.slice(0, size)); r = r.slice(size); }
+      return chunks;
+    };
+
+    const fields = [
+      { name: '👤 Vendeur', value: `**${sellerName}** | 📞 ${sellerPhone} | 📍 ${sellerCity}`, inline: false },
+      { name: '💰 Prix souhaité', value: `${price} €`, inline: true },
+      { name: '📍 Kilométrage', value: `${mileage} km`, inline: true },
+      { name: '🌍 Langue', value: LANG_NAMES[selectedLang], inline: true },
+      { name: '🔖 Statut', value: '`FORM_COMPLETED → AI_PROCESSING → DONE`', inline: false },
+    ];
+
+    chunkText(annonceLongue).forEach((chunk, i) => {
+      fields.push({ name: i === 0 ? '📝 VERSION LONGUE' : '📝 Suite longue', value: chunk, inline: false });
+    });
+
+    fields.push({ name: '⚡ VERSION COURTE', value: annonceCourte.slice(0, 1000), inline: false });
+
+    await fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        embeds: [{
+          title: `🚗 Nouvelle demande — ${brand} ${model} ${year}`,
+          color: 0xe8191a,
+          fields,
+          footer: { text: "Agence d'Annonce — " + new Date().toLocaleString('fr-FR') }
+        }]
+      })
+    });
+
+    // Afficher les annonces directement sur la page
+    document.getElementById('annonceLongueText').textContent = annonceLongue;
+    document.getElementById('annonceCourteText').textContent = annonceCourte;
+    document.getElementById('paypalLink').href = PAYPAL_LINK;
+    document.getElementById('resultBlock').style.display = 'block';
+
+    setProgress(4);
+    loading.classList.remove('show');
+    success.classList.add('show');
+
+    // Scroll vers le résultat
+    setTimeout(() => {
+      document.getElementById('resultBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+
+  } catch(e) {
+    console.error(e);
+    loading.classList.remove('show');
+    error.classList.add('show');
+    btn.disabled = false;
+  }
+}
+
+function copyText(elId, btnId) {
+  const text = document.getElementById(elId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(btnId);
+    btn.textContent = '✅ Copié !';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = elId.includes('Longue') ? '📋 Copier la version longue' : '📋 Copier la version courte';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
