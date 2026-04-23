@@ -9,26 +9,27 @@ export default async function handler(req, res) {
   const API_KEY = process.env.GEMINI_API_KEY;
   const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
-  const prompt = `Tu es un expert en estimation de prix de vente d'occasion en France.
-Voici l'article : ${specs}
-Donne une fourchette de prix réaliste pour LeBonCoin.
-Réponds avec UNIQUEMENT ce JSON sur une seule ligne :
-{"low":8000,"mid":10000,"high":12000,"note":"Raison courte."}`;
-
   try {
     const resp = await fetch(URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 200, temperature: 0.1 }
+        contents: [{
+          parts: [{
+            text: `Estime le prix de vente occasion en France pour cet article : ${specs.slice(0, 300)}. Réponds SEULEMENT avec ce JSON : {"low":5000,"mid":7000,"high":9000,"note":"raison"}`
+          }]
+        }],
+        generationConfig: { maxOutputTokens: 100, temperature: 0 }
       })
     });
 
     const data = await resp.json();
     const text = (data?.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
-    const match = text.match(/\{[\s\S]*?\}/);
-    if (!match) throw new Error('Pas de JSON: ' + text.slice(0, 100));
+    console.log('TEXT:', text);
+
+    const match = text.match(/\{.*\}/s);
+    if (!match) throw new Error('Pas de JSON: [' + text + ']');
+
     res.status(200).json(JSON.parse(match[0]));
 
   } catch (e) {
