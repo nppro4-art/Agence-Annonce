@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+generateContentefault async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,7 +16,7 @@ Réponds uniquement avec un objet JSON valide sur une seule ligne, sans markdown
 {"low":8000,"mid":10000,"high":12000,"note":"Explication courte ici."}`;
 
   const API_KEY = process.env.GEMINI_API_KEY;
-  const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key=${API_KEY}`;
+  const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generteContentContent?key=${API_KEY}`;
 
   try {
     const resp = await fetch(URL, {
