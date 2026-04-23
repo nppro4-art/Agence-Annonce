@@ -34,7 +34,7 @@ TITRE: [titre ultra-accrocheur, clair, optimisé pour la recherche, max 70 carac
 
 ACCROCHE: [1-2 lignes directes qui donnent envie, sans bullshit]
 
-DESCRIPTION: [contexte, état global, historique, utilisation — 3-4 phrases claires et précises]
+DESCRIPTION: [contexte, état global, historique, utilisation — 3-9 phrases claires et précises]
 
 POINTS FORTS:
 • [point fort 1]
@@ -53,10 +53,9 @@ TRANSPARENCE: [défauts honnêtes mentionnés clairement — l'honnêteté inspi
 INFOS PRATIQUES: [localisation, disponibilité, modalités de visite, livraison si applicable — et call to action]
 
 Règles absolues :
-- Pas de phrases vagues ou de bullshit marketing
+- Pas de phrases vagues
 - Pas de texte inutile
-- Minimaliste, lisible, structuré, professionnel, crédible
-- Optimisé pour les mots-clés LeBonCoin`;
+- Minimaliste, lisible, structuré, professionnel, crédible`;
 
   const promptCourt = `Tu es expert en annonces LeBonCoin. ${LANG[lang] || LANG.fr}
 
@@ -66,7 +65,7 @@ ${specs}
 Rédige une version COURTE et percutante (5 lignes max) : titre + accroche + 3 points clés + prix + contact. Idéal pour Facebook Marketplace ou message SMS. Zéro fioriture.`;
 
   const API_KEY = process.env.GEMINI_API_KEY;
-  const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key=${API_KEY}`;
+  const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
 
   async function callGemini(prompt, tokens = 1200) {
     const resp = await fetch(URL, {
