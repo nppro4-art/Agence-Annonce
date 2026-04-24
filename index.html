@@ -7,241 +7,137 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --red: #e8191a; --black: #080808; --surface: #111; --surface2: #1a1a1a;
-      --surface3: #242424; --border: #2e2e2e; --white: #f0f0f0;
-      --muted: #666; --success: #22c55e; --warning: #f59e0b;
+      --red: #e8191a;
+      --black: #080808;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --surface3: #242424;
+      --border: #2e2e2e;
+      --white: #f0f0f0;
+      --muted: #666;
+      --success: #22c55e;
+      --warning: #f59e0b;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: var(--black); color: var(--white); font-family: 'Outfit', sans-serif; min-height: 100vh; }
+    body { background: var(--black); color: var(--white); font-family: 'Outfit', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-    /* HERO */
     .hero { position: relative; background: var(--surface); border-bottom: 1px solid var(--border); padding: 28px 20px 24px; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; top: -40px; right: -60px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(232,25,26,0.15) 0%, transparent 70%); pointer-events: none; }
-    .hero-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; }
+    .hero::before { content: ''; position: absolute; top: -40px; right: -60px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(232,25,26,0.18) 0%, transparent 70%); pointer-events: none; }
+    .hero-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--white); line-height: 1; }
     .logo em { color: var(--red); font-style: normal; }
     .tag { background: var(--red); color: white; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
-    .hero h1 { font-size: 20px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+    .hero h1 { font-size: 21px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
     .hero h1 span { color: var(--red); }
     .hero p { color: var(--muted); font-size: 13px; line-height: 1.6; }
-    .steps { display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
-    .step { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
-    .step-num { background: var(--red); color: white; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; }
+    .steps { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
+    .step { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .step-num { background: var(--red); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
 
-    /* LAYOUT */
-    .container { max-width: 640px; margin: 0 auto; padding: 22px 16px 80px; }
-    .price-note { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
-    .price-note strong { color: var(--white); font-size: 15px; }
-
-    /* LANGUE */
-    .lang-bar { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
-    .lang-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; padding: 7px 12px; transition: all 0.15s; }
+    .container { max-width: 640px; margin: 0 auto; padding: 24px 16px 80px; }
+    .lang-bar { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+    .lang-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; padding: 7px 13px; transition: all 0.15s; }
     .lang-btn.active { background: var(--red); border-color: var(--red); color: white; }
 
-    /* BLOCKS */
-    .block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; transition: border-color 0.2s; }
+    .block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 14px; transition: border-color 0.2s; }
     .block:focus-within { border-color: rgba(232,25,26,0.35); }
     .block-title { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2.5px; color: var(--red); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
     .block-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
-    .field:last-child { margin-bottom: 0; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
     .field label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-    .req { color: var(--red); }
+    .field label .req { color: var(--red); }
+
     input, select, textarea { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; color: var(--white); font-family: 'Outfit', sans-serif; font-size: 14px; padding: 10px 13px; outline: none; width: 100%; transition: border-color 0.2s; -webkit-appearance: none; }
     input:focus, select:focus, textarea:focus { border-color: var(--red); background: var(--surface3); }
     input::placeholder, textarea::placeholder { color: #444; }
     select option { background: var(--surface2); }
-    textarea { resize: vertical; min-height: 68px; }
+    textarea { resize: vertical; min-height: 70px; }
 
-    /* TYPE SELECTOR */
-    .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 0; }
-    .type-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 500; padding: 10px 4px; text-align: center; transition: all 0.15s; user-select: none; }
-    .type-btn span { display: block; font-size: 22px; margin-bottom: 4px; }
-    .type-btn.active { background: rgba(232,25,26,0.1); border-color: var(--red); color: var(--white); }
-
-    /* URGENCE */
-    .urgence-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .urgence-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; padding: 10px 4px; text-align: center; transition: all 0.15s; user-select: none; }
-    .urgence-btn.active { border-color: var(--warning); color: var(--warning); background: rgba(245,158,11,0.08); }
-
-    /* CHAMPS DYNAMIQUES */
-    .dynamic-fields { margin-top: 12px; }
-    .dfield { display: none; }
-    .dfield.show { display: block; }
+    .pb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .pb-item { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; cursor: pointer; padding: 9px 11px; font-size: 12px; transition: all 0.12s; user-select: none; }
+    .pb-item.on { background: rgba(232,25,26,0.12); border-color: var(--red); }
+    .pb-item .dot { width: 14px; height: 14px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; transition: all 0.12s; display: flex; align-items: center; justify-content: center; }
+    .pb-item.on .dot { background: var(--red); border-color: var(--red); }
+    .pb-item.on .dot::after { content: '✓'; color: white; font-size: 9px; font-weight: 700; }
 
     /* ESTIMATION */
-    .estimate-btn { width: 100%; background: transparent; border: 1.5px solid var(--warning); border-radius: 10px; color: var(--warning); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; padding: 13px; margin-top: 4px; transition: all 0.15s; position: relative; overflow: hidden; }
-    .estimate-btn:hover { background: rgba(245,158,11,0.06); }
-    .estimate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* LOADING ESTIMATION */
-    .est-loading { display: none; margin-top: 14px; }
-    .est-loading.show { display: flex; align-items: center; gap: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
-    .est-spinner { width: 22px; height: 22px; border: 3px solid var(--border); border-top-color: var(--warning); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
-    .est-steps { display: flex; flex-direction: column; gap: 4px; }
-    .est-step { font-size: 11px; color: var(--muted); transition: color 0.3s; }
-    .est-step.active { color: var(--warning); }
-    .est-step.done { color: var(--success); }
-
+    .estimate-btn { width: 100%; background: transparent; border: 1.5px solid var(--warning); border-radius: 10px; color: var(--warning); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; padding: 13px; margin-top: 4px; transition: all 0.15s; }
+    .estimate-btn:hover { background: rgba(245,158,11,0.08); }
+    .estimate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .estimate-result { display: none; margin-top: 12px; background: var(--surface2); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 14px; }
     .estimate-result.show { display: block; }
-    .est-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .est-col { text-align: center; padding: 10px 4px; background: var(--surface); border-radius: 8px; }
-    .est-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-    .est-val { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; }
-    .est-val.low { color: #f87171; }
-    .est-val.mid { color: var(--warning); }
-    .est-val.high { color: var(--success); }
-    .est-note { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5; font-style: italic; }
+    .estimate-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .estimate-col { text-align: center; }
+    .estimate-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .estimate-value { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; }
+    .estimate-value.low { color: #f87171; }
+    .estimate-value.mid { color: var(--warning); }
+    .estimate-value.high { color: var(--success); }
+    .estimate-note { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5; font-style: italic; }
 
-    /* BOUTON PRINCIPAL */
-    .main-btn { width: 100%; border: none; border-radius: 14px; color: white; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: 2.5px; padding: 17px; transition: all 0.15s; margin-top: 10px; background: var(--red); }
-    .main-btn:hover { background: #c81415; }
+    /* BOUTONS PRINCIPAUX */
+    .main-btn { width: 100%; border: none; border-radius: 14px; color: white; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: 2.5px; padding: 17px; transition: all 0.15s; margin-top: 10px; }
+    .main-btn.red { background: var(--red); }
+    .main-btn.red:hover { background: #c81415; }
+    .main-btn.green { background: #16a34a; }
+    .main-btn.green:hover { background: #15803d; }
     .main-btn:active { transform: scale(0.98); }
     .main-btn:disabled { background: var(--surface3); color: var(--muted); cursor: not-allowed; transform: none; }
 
-    /* LOADING OVERLAY */
-    .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(8,8,8,0.97); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; }
-    .loading-overlay.show { display: flex; }
-    .loading-ring { width: 88px; height: 88px; margin-bottom: 26px; }
-    .loading-ring svg { width: 88px; height: 88px; animation: rotate 1.4s linear infinite; }
-    .loading-ring svg .track { fill: none; stroke: var(--surface2); stroke-width: 5; }
-    .loading-ring svg .fill { fill: none; stroke: var(--red); stroke-width: 5; stroke-dasharray: 210; stroke-dashoffset: 52; stroke-linecap: round; }
-    @keyframes rotate { to { transform: rotate(360deg); } }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; margin-bottom: 8px; }
-    .loading-sub { font-size: 13px; color: var(--muted); margin-bottom: 26px; line-height: 1.6; }
-    .lsteps { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 260px; }
-    .lstep { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); padding: 9px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); transition: all 0.35s; }
-    .lstep.active { color: var(--white); border-color: var(--red); background: rgba(232,25,26,0.1); }
-    .lstep.done { color: var(--success); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.06); }
-    .lstep-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: all 0.35s; }
-    .lstep.active .lstep-dot { background: var(--red); box-shadow: 0 0 8px var(--red); }
-    .lstep.done .lstep-dot { background: var(--success); }
+    /* STATES */
+    .state-box { display: none; border-radius: 14px; padding: 20px; text-align: center; margin-top: 14px; font-size: 14px; line-height: 1.6; }
+    .state-box.show { display: block; }
+    .state-loading { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+    .state-success { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; }
+    .state-error { background: rgba(232,25,26,0.08); border: 1px solid rgba(232,25,26,0.25); color: #f87171; }
 
-    /* PAYWALL */
-    .paywall { display: none; margin-top: 14px; }
-    .paywall.show { display: block; }
-    .paywall-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px 18px; text-align: center; }
-    .pw-icon { font-size: 34px; margin-bottom: 10px; }
-    .pw-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1.5px; margin-bottom: 8px; }
-    .pw-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; }
-    .pw-price { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--red); margin-bottom: 4px; }
-    .pw-price-sub { font-size: 11px; color: var(--muted); margin-bottom: 18px; }
-    .pp-btn { display: block; background: #0070ba; color: white; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1.5px; padding: 14px 20px; border-radius: 12px; text-decoration: none; transition: background 0.15s; margin-bottom: 10px; }
-    .pp-btn:hover { background: #005ea6; }
-    .pw-note { font-size: 10px; color: var(--muted); margin-bottom: 16px; }
-    .ex-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 14px 0 8px; }
-    .ex-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 8px; text-align: left; }
-    .ex-titre { font-weight: 700; font-size: 13px; margin-bottom: 5px; }
-    .ex-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .progress-steps { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+    .progress-step { font-size: 10px; color: var(--muted); padding: 4px 9px; border-radius: 20px; background: var(--surface2); border: 1px solid var(--border); transition: all 0.3s; }
+    .progress-step.active { color: white; border-color: var(--red); background: rgba(232,25,26,0.15); }
+    .progress-step.done { color: var(--success); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.08); }
 
     /* RÉSULTATS */
-    .result-wrap { display: none; margin-top: 14px; }
-    .result-wrap.show { display: block; }
-    .result-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
-    .result-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red); margin-bottom: 12px; }
-    .ann-titre { font-size: 15px; font-weight: 700; padding: 11px 13px; background: var(--surface2); border-radius: 8px; border-left: 3px solid var(--red); margin-bottom: 12px; }
-    .ann-accroche { font-size: 13px; color: var(--warning); font-style: italic; padding: 10px 13px; background: var(--surface2); border-radius: 8px; margin-bottom: 12px; line-height: 1.6; }
-    .ann-block { margin-bottom: 12px; }
-    .ann-block-label { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
-    .ann-block-content { font-size: 13px; color: var(--white); line-height: 1.75; background: var(--surface2); border-radius: 8px; padding: 11px 13px; white-space: pre-wrap; }
-    .copy-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; padding: 9px 14px; transition: all 0.15s; width: 100%; margin-top: 8px; }
+    .result-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 14px; }
+    .annonce-text { font-size: 13px; line-height: 1.75; color: var(--white); white-space: pre-wrap; margin-bottom: 12px; background: var(--surface2); border-radius: 8px; padding: 14px; border: 1px solid var(--border); max-height: 320px; overflow-y: auto; }
+    .copy-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; padding: 9px 14px; transition: all 0.15s; width: 100%; }
     .copy-btn:hover { border-color: var(--success); color: var(--success); }
     .copy-btn.copied { border-color: var(--success); color: var(--success); background: rgba(34,197,94,0.08); }
 
-    .state-error { display: none; background: rgba(232,25,26,0.08); border: 1px solid rgba(232,25,26,0.25); color: #f87171; border-radius: 12px; padding: 14px; text-align: center; margin-top: 12px; font-size: 13px; }
-    .state-error.show { display: block; }
+    /* PAYPAL */
+    .paypal-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.25); border-radius: 12px; padding: 16px 20px; margin-top: 14px; text-align: center; }
+    .paypal-box p { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+    .paypal-btn { display: inline-block; background: #0070ba; color: white; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1.5px; padding: 12px 28px; border-radius: 10px; text-decoration: none; transition: background 0.15s; }
+    .paypal-btn:hover { background: #005ea6; }
 
-    @media (max-width: 400px) {
+    .price-note { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+    .price-note strong { color: var(--white); font-size: 16px; }
+
+    @media (max-width: 420px) {
       .grid3 { grid-template-columns: 1fr 1fr; }
-      .type-grid { grid-template-columns: repeat(3, 1fr); }
+      .pb-grid { grid-template-columns: 1fr; }
     }
-
-    /* TIMELINE */
-    .timeline { display: flex; align-items: flex-start; margin-top: 18px; flex-wrap: wrap; gap: 6px; }
-    .tl-item { display: flex; align-items: flex-start; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; flex: 1; min-width: 80px; }
-    .tl-item.tl-last { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.05); }
-    .tl-num { background: var(--surface3); color: var(--muted); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-    .tl-num-red { background: var(--red) !important; color: white !important; }
-    .tl-content { display: flex; flex-direction: column; gap: 3px; }
-    .tl-title { font-size: 11px; font-weight: 600; color: var(--white); line-height: 1.3; }
-    .tl-time { font-size: 10px; color: var(--muted); }
-    .tl-arrow { color: var(--border); font-size: 18px; padding-top: 10px; display: flex; align-items: flex-start; }
-    @media (max-width: 500px) { .tl-arrow { display: none; } .tl-item { min-width: calc(50% - 6px); } }
   </style>
 </head>
 <body>
-
-<!-- LOADING OVERLAY -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-ring">
-    <svg viewBox="0 0 88 88">
-      <circle class="track" cx="44" cy="44" r="38"/>
-      <circle class="fill" cx="44" cy="44" r="38"/>
-    </svg>
-  </div>
-  <div class="loading-title">Annonce en cours de création</div>
-  <div class="loading-sub">Notre IA rédige votre annonce<br>professionnelle et optimisée.</div>
-  <div class="lsteps">
-    <div class="lstep" id="ls1"><div class="lstep-dot"></div>Analyse de l'article</div>
-    <div class="lstep" id="ls2"><div class="lstep-dot"></div>Rédaction de l'annonce</div>
-    <div class="lstep" id="ls3"><div class="lstep-dot"></div>Optimisation SEO & copywriting</div>
-    <div class="lstep" id="ls4"><div class="lstep-dot"></div>Finalisation</div>
-  </div>
-</div>
 
 <div class="hero">
   <div class="hero-top">
     <div class="logo">Agence d'<em>Annonce</em></div>
     <div class="tag">IA Pro</div>
   </div>
-  <h1>Vendez n'importe quoi<br><span>plus vite, mieux présenté.</span></h1>
-  <p>Notre IA rédige une annonce professionnelle qui se vend mieux et plus vite.</p>
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-num">1</div>
-      <div class="tl-content">
-        <div class="tl-title">Remplissez le formulaire</div>
-        <div class="tl-time">⏱ ~2 minutes</div>
-      </div>
-    </div>
-    <div class="tl-arrow">›</div>
-    <div class="tl-item">
-      <div class="tl-num">2</div>
-      <div class="tl-content">
-        <div class="tl-title">Estimation optionnelle</div>
-        <div class="tl-time">⏱ ~10 secondes</div>
-      </div>
-    </div>
-    <div class="tl-arrow">›</div>
-    <div class="tl-item">
-      <div class="tl-num">3</div>
-      <div class="tl-content">
-        <div class="tl-title">L'IA génère votre annonce</div>
-        <div class="tl-time">⏱ ~15 secondes</div>
-      </div>
-    </div>
-    <div class="tl-arrow">›</div>
-    <div class="tl-item">
-      <div class="tl-num">4</div>
-      <div class="tl-content">
-        <div class="tl-title">Payez 15€</div>
-        <div class="tl-time">⏱ ~30 secondes</div>
-      </div>
-    </div>
-    <div class="tl-arrow">›</div>
-    <div class="tl-item tl-last">
-      <div class="tl-num tl-num-red">5</div>
-      <div class="tl-content">
-        <div class="tl-title">Accédez à votre annonce</div>
-        <div class="tl-time">✅ Prête à publier</div>
-      </div>
-    </div>
+  <h1>Vendez votre voiture<br><span>plus vite, mieux présentée.</span></h1>
+  <p>Remplissez le formulaire. Notre IA génère une annonce professionnelle complète, prête à publier sur LeBonCoin.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div> Remplissez le formulaire</div>
+    <div class="step"><div class="step-num">2</div> L'IA rédige votre annonce</div>
+    <div class="step"><div class="step-num">3</div> Copiez-collez sur LeBonCoin</div>
   </div>
 </div>
 
@@ -249,9 +145,10 @@
 
   <div class="price-note">
     Service professionnel — <strong>15€</strong> par annonce.<br>
-    Vous accédez à votre annonce après paiement.
+    Paiement uniquement après réception et validation de votre annonce.
   </div>
 
+  <!-- LANGUE -->
   <div class="lang-bar">
     <button class="lang-btn active" data-lang="fr">🇫🇷 Français</button>
     <button class="lang-btn" data-lang="en">🇬🇧 English</button>
@@ -260,80 +157,98 @@
     <button class="lang-btn" data-lang="it">🇮🇹 Italiano</button>
   </div>
 
-  <!-- TYPE -->
+  <!-- VEHICULE -->
   <div class="block">
-    <div class="block-title">Type d'article</div>
-    <div class="type-grid">
-      <div class="type-btn active" data-type="voiture"><span>🚗</span>Voiture</div>
-      <div class="type-btn" data-type="moto"><span>🏍️</span>Moto</div>
-      <div class="type-btn" data-type="meuble"><span>🛋️</span>Meuble</div>
-      <div class="type-btn" data-type="electronique"><span>📱</span>Électronique</div>
-      <div class="type-btn" data-type="vetement"><span>👕</span>Vêtement</div>
-      <div class="type-btn" data-type="autre"><span>📦</span>Autre</div>
+    <div class="block-title">Votre véhicule</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Marque <span class="req">*</span></label><input id="brand" placeholder="BMW, Renault…"/></div>
+      <div class="field"><label>Modèle <span class="req">*</span></label><input id="model" placeholder="Série 3, Clio…"/></div>
+    </div>
+    <div class="grid3" style="margin-bottom:10px">
+      <div class="field"><label>Année <span class="req">*</span></label><input id="year" type="number" placeholder="2019"/></div>
+      <div class="field"><label>Kilométrage <span class="req">*</span></label><input id="mileage" type="number" placeholder="75000"/></div>
+      <div class="field"><label>Couleur</label><input id="color" placeholder="Noir nacré…"/></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Nb de portes</label>
+        <select id="doors"><option value="">—</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="field"><label>Nb de sièges</label>
+        <select id="seats"><option value="">—</option><option>2</option><option>4</option><option>5</option><option>7</option></select>
+      </div>
     </div>
   </div>
 
-  <!-- CHAMPS DYNAMIQUES PAR TYPE -->
-  <div id="dynamicSection"></div>
-
-  <!-- PRIX & URGENCE & ESTIMATION -->
+  <!-- MOTEUR -->
   <div class="block">
-    <div class="block-title">Prix & objectif</div>
-    <div class="field">
-      <label>Prix souhaité (€) <span class="req">*</span></label>
-      <input id="price" type="number" placeholder="Ex: 11500"/>
-    </div>
-    <div class="field">
-      <label>Urgence de vente</label>
-      <div class="urgence-grid">
-        <div class="urgence-btn active" data-urgence="normal">⏳ Normal</div>
-        <div class="urgence-btn" data-urgence="rapide">🔥 Rapide</div>
-        <div class="urgence-btn" data-urgence="optimise">💎 Prix max</div>
+    <div class="block-title">Motorisation</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Carburant</label>
+        <select id="fuel"><option value="">—</option><option>Essence</option><option>Diesel</option><option>Hybride</option><option>Électrique</option><option>GPL</option></select>
+      </div>
+      <div class="field"><label>Boîte</label>
+        <select id="gearbox"><option value="">—</option><option>Manuelle</option><option>Automatique</option><option>Semi-auto</option></select>
       </div>
     </div>
-    <button class="estimate-btn" id="estimateBtn" onclick="estimatePrice()">
-      🔍 Estimer la valeur marchande
-    </button>
-    <div class="est-loading" id="estLoading">
-      <div class="est-spinner"></div>
-      <div class="est-steps">
-        <div class="est-step" id="es1">Analyse du marché…</div>
-        <div class="est-step" id="es2">Calcul de la dépréciation…</div>
-        <div class="est-step" id="es3">Estimation en cours…</div>
-      </div>
-    </div>
-    <div class="estimate-result" id="estimateResult">
-      <div style="font-size:11px;color:var(--muted)">Estimation marché actuel</div>
-      <div class="est-grid">
-        <div class="est-col"><div class="est-label">Basse</div><div class="est-val low" id="estLow">—</div></div>
-        <div class="est-col"><div class="est-label">Moyenne</div><div class="est-val mid" id="estMid">—</div></div>
-        <div class="est-col"><div class="est-label">Haute</div><div class="est-val high" id="estHigh">—</div></div>
-      </div>
-      <div class="est-note" id="estNote"></div>
+    <div class="grid3">
+      <div class="field"><label>Puissance (ch)</label><input id="power" type="number" placeholder="130"/></div>
+      <div class="field"><label>Cylindrée (cc)</label><input id="engine" type="number" placeholder="1997"/></div>
+      <div class="field"><label>Conso (L/100)</label><input id="consumption" type="number" step="0.1" placeholder="6.2"/></div>
     </div>
   </div>
 
-  <!-- LOCALISATION & CONTACT -->
+  <!-- EQUIPEMENTS -->
   <div class="block">
-    <div class="block-title">Localisation & contact</div>
-    <div class="grid2">
-      <div class="field"><label>Ville <span class="req">*</span></label><input id="sellerCity" placeholder="Lyon, Paris…"/></div>
-      <div class="field"><label>Livraison</label>
-        <select id="livraison">
-          <option value="">—</option>
-          <option>Non</option>
-          <option>Oui (frais acheteur)</option>
-          <option>Oui (à ma charge)</option>
-        </select>
+    <div class="block-title">Équipements & options</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Toit ouvrant</label>
+        <select id="sunroof"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select>
+      </div>
+      <div class="field"><label>Climatisation</label>
+        <select id="clim"><option value="">—</option><option>Manuelle</option><option>Automatique</option><option>Non</option></select>
       </div>
     </div>
-    <div class="grid2">
-      <div class="field"><label>Prénom <span class="req">*</span></label><input id="sellerName" placeholder="Thomas"/></div>
-      <div class="field"><label>Téléphone <span class="req">*</span></label><input id="sellerPhone" type="tel" placeholder="06 xx xx xx xx"/></div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>GPS / Navigation</label>
+        <select id="gps"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select>
+      </div>
+      <div class="field"><label>Caméra recul</label>
+        <select id="camera"><option value="">—</option><option value="Oui">Oui</option><option value="Non">Non</option></select>
+      </div>
     </div>
     <div class="field">
-      <label>Disponibilité</label>
-      <input id="disponibilite" placeholder="Ex: Weekends, soirs, sur RDV…"/>
+      <label>Autres équipements</label>
+      <textarea id="equipment" placeholder="Sièges chauffants, CarPlay, radar de recul, jantes alu 18'…"></textarea>
+    </div>
+  </div>
+
+  <!-- HISTORIQUE -->
+  <div class="block">
+    <div class="block-title">Historique & état</div>
+    <div class="grid3" style="margin-bottom:10px">
+      <div class="field"><label>Nb propriétaires</label>
+        <select id="owners"><option value="">—</option><option value="1er main">1er main</option><option value="2">2</option><option value="3">3</option><option value="4+">4+</option></select>
+      </div>
+      <div class="field"><label>CT</label>
+        <select id="ct"><option value="">—</option><option>Valide</option><option>À refaire</option><option>Non présenté</option></select>
+      </div>
+      <div class="field"><label>Carnet entretien</label>
+        <select id="carnet"><option value="">—</option><option value="Complet">Complet</option><option value="Partiel">Partiel</option><option value="Non">Non</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Dernier entretien</label>
+      <input id="service" placeholder="Ex : vidange + courroie à 70 000 km en 2023"/>
+    </div>
+  </div>
+
+  <!-- PROBLEMES -->
+  <div class="block">
+    <div class="block-title">Problèmes connus</div>
+    <div class="pb-grid" id="pbGrid"></div>
+    <div class="field" style="margin-top:10px">
+      <label>Autres problèmes</label>
+      <textarea id="otherPb" placeholder="Décris ici tout défaut non listé…"></textarea>
     </div>
   </div>
 
@@ -341,636 +256,90 @@
   <div class="block">
     <div class="block-title">Raison de la vente</div>
     <div class="field">
-      <textarea id="reason" placeholder="Changement de véhicule, plus besoin, déménagement… Ça rassure l'acheteur."></textarea>
+      <label>Pourquoi vous vendez ?</label>
+      <textarea id="reason" placeholder="Changement de véhicule, déménagement, plus besoin…"></textarea>
     </div>
   </div>
 
-  <button class="main-btn" id="submitBtn" onclick="handleSubmit()">
+  <!-- CONTACT -->
+  <div class="block">
+    <div class="block-title">Vos coordonnées</div>
+    <div class="grid2" style="margin-bottom:10px">
+      <div class="field"><label>Prénom <span class="req">*</span></label><input id="sellerName" placeholder="Thomas"/></div>
+      <div class="field"><label>Téléphone <span class="req">*</span></label><input id="sellerPhone" type="tel" placeholder="06 xx xx xx xx"/></div>
+    </div>
+    <div class="field">
+      <label>Ville <span class="req">*</span></label>
+      <input id="sellerCity" placeholder="Lyon, Paris, Marseille…"/>
+    </div>
+  </div>
+
+  <!-- PRIX SOUHAITÉ + ESTIMATION -->
+  <div class="block">
+    <div class="block-title">Prix & estimation</div>
+    <div class="field" style="margin-bottom:12px">
+      <label>Prix souhaité (€) <span class="req">*</span></label>
+      <input id="price" type="number" placeholder="11500"/>
+    </div>
+    <button class="estimate-btn" id="estimateBtn" onclick="estimatePrice()">
+      🔍 Estimer la valeur marchande selon l'état du véhicule
+    </button>
+    <div class="estimate-result" id="estimateResult">
+      <div style="font-size:11px;color:var(--muted)">Estimation marché français actuel</div>
+      <div class="estimate-grid">
+        <div class="estimate-col">
+          <div class="estimate-label">Basse</div>
+          <div class="estimate-value low" id="estLow">—</div>
+        </div>
+        <div class="estimate-col">
+          <div class="estimate-label">Moyenne</div>
+          <div class="estimate-value mid" id="estMid">—</div>
+        </div>
+        <div class="estimate-col">
+          <div class="estimate-label">Haute</div>
+          <div class="estimate-value high" id="estHigh">—</div>
+        </div>
+      </div>
+      <div class="estimate-note" id="estNote"></div>
+    </div>
+  </div>
+
+  <!-- BOUTON GÉNÉRER -->
+  <button class="main-btn red" id="submitBtn" onclick="handleSubmit()">
     ⚡ GÉNÉRER MON ANNONCE PROFESSIONNELLE
   </button>
 
-  <div class="state-error" id="stateError">
-    ❌ Une erreur est survenue. Vérifie ta connexion et réessaie.
+  <div class="state-box state-loading" id="stateLoading">
+    <div class="spinner"></div>
+    <div>Génération de votre annonce en cours…</div>
+    <div class="progress-steps">
+      <div class="progress-step" id="ps1">Analyse</div>
+      <div class="progress-step" id="ps2">Version longue</div>
+      <div class="progress-step" id="ps3">Version courte</div>
+      <div class="progress-step" id="ps4">Envoi</div>
+    </div>
   </div>
 
-  <!-- PAYWALL -->
-  <div class="paywall" id="paywall">
-    <div class="paywall-card">
-      <div class="pw-icon">🔒</div>
-      <div class="pw-title">Votre annonce est prête !</div>
-      <div class="pw-sub">Réglez 15€ pour accéder immédiatement à votre annonce complète — titre optimisé, description convaincante, mots-clés SEO.</div>
-      <div id="orderCodeDisplay" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--muted)">
-        Votre code commande : <span id="orderCodeText" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--white);letter-spacing:2px"></span><br>
-        <span style="font-size:10px">Conservez ce code — il vous permettra de retrouver votre annonce.</span>
-      </div>
-      <div class="pw-price">15€</div>
-      <div class="pw-price-sub">Paiement sécurisé via PayPal</div>
-      <a id="paypalBtn" href="#" target="_blank" class="pp-btn">💳 PAYER 15€ ET VOIR MON ANNONCE</a>
-      <div class="pw-note">Après paiement, cliquez sur "Retour au marchand" pour accéder à votre annonce.</div>
-      <div class="ex-label">Exemples d'annonces générées</div>
-      <div class="ex-card">
-        <div class="ex-titre">🚗 Peugeot 308 SW 1.5 BlueHDi 130 — 1er main, entretien complet</div>
-        <div class="ex-desc">Excellent état général, carnet complet, CT valide. GPS, caméra recul, sièges chauffants. Vendu suite achat neuf. Prix négociable pour vente rapide…</div>
-      </div>
-      <div class="ex-card">
-        <div class="ex-titre">📱 iPhone 13 Pro 256Go — Comme neuf, complet en boîte</div>
-        <div class="ex-desc">Aucune rayure, écran parfait, batterie 94%. Débloqué tous opérateurs. Boîte, câble et chargeur d'origine. Facture disponible. Vendu car passage Android…</div>
-      </div>
-    </div>
+  <div class="state-box state-success" id="stateSuccess">
+    ✅ Votre annonce est prête — copiez-collez sur LeBonCoin !
+  </div>
+
+  <div class="state-box state-error" id="stateError">
+    ❌ Une erreur est survenue. Veuillez réessayer.
   </div>
 
   <!-- RÉSULTATS -->
-  <div class="result-wrap" id="resultWrap">
-    <div class="result-section">
-      <div id="resultOrderCode" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#4ade80;display:none">
-        ✅ Commande <span id="resultCodeText" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px"></span> — Paiement confirmé. Votre annonce est prête.
-      </div>
-      <div class="result-label">VERSION COMPLÈTE — LEBONCOIN</div>
-      <div class="ann-titre" id="annTitre"></div>
-      <div class="ann-accroche" id="annAccroche"></div>
-      <div class="ann-block"><div class="ann-block-label">📋 Description</div><div class="ann-block-content" id="annDesc"></div></div>
-      <div class="ann-block"><div class="ann-block-label">⭐ Points forts</div><div class="ann-block-content" id="annPoints"></div></div>
-      <div class="ann-block"><div class="ann-block-label">🔧 Caractéristiques</div><div class="ann-block-content" id="annCarac"></div></div>
-      <div class="ann-block"><div class="ann-block-label">⚠️ Transparence</div><div class="ann-block-content" id="annTransp"></div></div>
-      <div class="ann-block"><div class="ann-block-label">📍 Infos pratiques</div><div class="ann-block-content" id="annInfos"></div></div>
-      <button class="copy-btn" id="copyLongBtn" onclick="copyFull()">📋 Copier l'annonce complète</button>
+  <div id="resultBlock" style="display:none">
+    <div class="result-block">
+      <div class="block-title">Version longue — LeBonCoin</div>
+      <div class="annonce-text" id="annonceLongueText"></div>
+      <button class="copy-btn" id="copyLongBtn" onclick="copyText('annonceLongueText','copyLongBtn','📋 Copier la version longue')">📋 Copier la version longue</button>
     </div>
-    <div class="result-section">
-      <div class="result-label">VERSION COURTE — FACEBOOK / SMS</div>
-      <div class="ann-block-content" id="annShort"></div>
-      <button class="copy-btn" id="copyShortBtn" onclick="copyShort()">📋 Copier la version courte</button>
+    <div class="result-block">
+      <div class="block-title">Version courte — Facebook / SMS</div>
+      <div class="annonce-text" id="annonceCourteText"></div>
+      <button class="copy-btn" id="copyCortBtn" onclick="copyText('annonceCourteText','copyCortBtn','📋 Copier la version courte')">📋 Copier la version courte</button>
     </div>
-  </div>
 
-</div>
-
-<script>
-const WEBHOOK = 'https://discord.com/api/webhooks/1496525719172288583/BEo40B0s28RT1s17rHOP28aW4bkz7i2Wgf4HfIk2_gupTyt1pUtnki7M2WZOYc46w1o0';
-const PAYPAL_LINK = 'https://www.paypal.com/ncp/payment/G7BVDM3TXQL9L';
-const LANG_NAMES = { fr:'Français', en:'English', es:'Español', de:'Deutsch', it:'Italiano' };
-const REF = new URLSearchParams(window.location.search).get('ref') || 'direct';
-
-// Générateur code commande unique
-function generateOrderCode() {
-  const num = String(Math.floor(Math.random() * 9000) + 1000);
-  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-  const suffix = letters[Math.floor(Math.random()*letters.length)] + letters[Math.floor(Math.random()*letters.length)];
-  return '#' + num + suffix;
-}
-const ORDER_CODE = generateOrderCode();
-const PAID = new URLSearchParams(window.location.search).get('paid') === 'true';
-
-let selectedLang = 'fr', selectedType = 'voiture', selectedUrgence = 'normal';
-let generatedLong = '', generatedShort = '';
-
-// ── CONFIGS CHAMPS PAR TYPE ───────────────────────────────
-const TYPE_CONFIGS = {
-  voiture: {
-    sections: [
-      {
-        title: 'Véhicule',
-        fields: [
-          { id:'brand', label:'Marque', req:true, placeholder:'BMW, Renault, Peugeot…' },
-          { id:'model', label:'Modèle', req:true, placeholder:'Série 3, Clio, 308…' },
-          { id:'year', label:'Année', placeholder:'2019', type:'number', half:true },
-          { id:'version', label:'Version / Finition', placeholder:'Ex: GTI, Sport, Executive…', half:true },
-          { id:'color', label:'Couleur', placeholder:'Noir nacré, Blanc…', half:true },
-          { id:'doors', label:'Nb portes', type:'select', options:['2','3','4','5'], half:true },
-        ]
-      },
-      {
-        title: 'Motorisation',
-        fields: [
-          { id:'fuel', label:'Carburant', type:'select', options:['Essence','Diesel','Hybride','Électrique','GPL'], half:true },
-          { id:'gearbox', label:'Boîte', type:'select', options:['Manuelle','Automatique','Semi-auto'], half:true },
-          { id:'power', label:'Puissance (ch)', placeholder:'130', type:'number', third:true },
-          { id:'engine', label:'Cylindrée (cc)', placeholder:'1997', type:'number', third:true },
-          { id:'consumption', label:'Conso L/100', placeholder:'6.2', type:'number', third:true },
-        ]
-      },
-      {
-        title: 'État & historique',
-        fields: [
-          { id:'mileage', label:'Kilométrage (km)', req:true, placeholder:'75000', type:'number', half:true },
-          { id:'owners', label:'Nb propriétaires', type:'select', options:['1er main','2','3','4+'], half:true },
-          { id:'ct', label:'Contrôle technique', type:'select', options:['Valide','À refaire','Non présenté'], half:true },
-          { id:'carnet', label:'Carnet entretien', type:'select', options:['Complet','Partiel','Non'], half:true },
-          { id:'service', label:'Dernier entretien', placeholder:'Ex: Vidange à 70 000 km en 2023' },
-          { id:'condition', label:'État général', req:true, type:'select', options:['Excellent','Très bon','Bon','Moyen','À réparer'] },
-          { id:'defauts', label:'Défauts connus', type:'textarea', placeholder:'Rayures, bosses, voyants… Soyez honnête, ça inspire confiance.' },
-        ]
-      },
-      {
-        title: 'Équipements',
-        fields: [
-          { id:'sunroof', label:'Toit ouvrant', type:'select', options:['Non','Oui'], half:true },
-          { id:'clim', label:'Climatisation', type:'select', options:['Manuelle','Automatique','Non'], half:true },
-          { id:'gps', label:'GPS', type:'select', options:['Non','Oui'], half:true },
-          { id:'camera', label:'Caméra recul', type:'select', options:['Non','Oui'], half:true },
-          { id:'options', label:'Autres équipements', type:'textarea', placeholder:'Sièges chauffants, CarPlay, radar de recul, jantes alu…' },
-        ]
-      }
-    ]
-  },
-  moto: {
-    sections: [
-      {
-        title: 'Moto / Scooter',
-        fields: [
-          { id:'brand', label:'Marque', req:true, placeholder:'Honda, Yamaha, Kawasaki…' },
-          { id:'model', label:'Modèle', req:true, placeholder:'CB500F, MT-07, Z900…' },
-          { id:'year', label:'Année', placeholder:'2020', type:'number', half:true },
-          { id:'color', label:'Couleur', placeholder:'Noir mat, Rouge…', half:true },
-          { id:'cylindree', label:'Cylindrée (cc)', placeholder:'700', type:'number', half:true },
-          { id:'power', label:'Puissance (ch)', placeholder:'75', type:'number', half:true },
-        ]
-      },
-      {
-        title: 'État & kilométrage',
-        fields: [
-          { id:'mileage', label:'Kilométrage (km)', req:true, placeholder:'18000', type:'number', half:true },
-          { id:'condition', label:'État général', req:true, type:'select', options:['Excellent','Très bon','Bon','Moyen','À réparer'], half:true },
-          { id:'owners', label:'Nb propriétaires', type:'select', options:['1er main','2','3+'], half:true },
-          { id:'ct', label:'Contrôle technique', type:'select', options:['Valide','À refaire','Non présenté'], half:true },
-          { id:'service', label:'Dernier entretien', placeholder:'Ex: Vidange + révision à 15 000 km' },
-          { id:'defauts', label:'Défauts connus', type:'textarea', placeholder:'Chute, rayures, pièces manquantes…' },
-        ]
-      },
-      {
-        title: 'Équipements & options',
-        fields: [
-          { id:'options', label:'Options & accessoires', type:'textarea', placeholder:'Sacoches, bulle, poignées chauffantes, GPS, pot d\'échappement sport…' },
-        ]
-      }
-    ]
-  },
-  meuble: {
-    sections: [
-      {
-        title: 'Meuble / Déco',
-        fields: [
-          { id:'brand', label:'Marque / Fabricant', req:true, placeholder:'Ikea, Maisons du Monde, Artisan…' },
-          { id:'model', label:'Nom / Modèle', req:true, placeholder:'Ex: KALLAX, Canapé d\'angle…' },
-          { id:'year', label:'Année d\'achat', placeholder:'2021', half:true },
-          { id:'color', label:'Couleur / Matière', placeholder:'Chêne, Blanc, Velours gris…', half:true },
-          { id:'dimensions', label:'Dimensions (L x l x H)', placeholder:'Ex: 200 x 90 x 75 cm' },
-        ]
-      },
-      {
-        title: 'État',
-        fields: [
-          { id:'condition', label:'État général', req:true, type:'select', options:['Neuf / jamais utilisé','Très bon','Bon','État moyen','À restaurer'] },
-          { id:'defauts', label:'Défauts connus', type:'textarea', placeholder:'Rayures, taches, pied cassé… Soyez transparent.' },
-          { id:'reparations', label:'Entretien / restauration effectués', type:'textarea', placeholder:'Ex: Nouvelle tapisserie, vernis refait…' },
-        ]
-      },
-      {
-        title: 'Informations pratiques',
-        fields: [
-          { id:'poids', label:'Poids estimé', placeholder:'Ex: 30 kg', half:true },
-          { id:'montage', label:'Démontable ?', type:'select', options:['Oui','Non','Partiellement'], half:true },
-          { id:'options', label:'Éléments inclus', type:'textarea', placeholder:'Coussins, quincaillerie, notice, garantie…' },
-        ]
-      }
-    ]
-  },
-  electronique: {
-    sections: [
-      {
-        title: 'Appareil électronique',
-        fields: [
-          { id:'brand', label:'Marque', req:true, placeholder:'Apple, Samsung, Sony…' },
-          { id:'model', label:'Modèle exact', req:true, placeholder:'iPhone 13 Pro, Galaxy S22, PS5…' },
-          { id:'year', label:'Année d\'achat', placeholder:'2022', half:true },
-          { id:'color', label:'Couleur / Capacité', placeholder:'Noir 256Go, Blanc 1To…', half:true },
-        ]
-      },
-      {
-        title: 'État & fonctionnement',
-        fields: [
-          { id:'condition', label:'État général', req:true, type:'select', options:['Neuf / jamais utilisé','Comme neuf','Très bon','Bon','Fonctionnel avec défauts'] },
-          { id:'battery', label:'État batterie (si applicable)', placeholder:'Ex: 94%, Neuve remplacée…', half:true },
-          { id:'warranty', label:'Garantie restante', placeholder:'Ex: Jusqu\'en 03/2025, Non', half:true },
-          { id:'defauts', label:'Défauts / Dysfonctionnements', type:'textarea', placeholder:'Rayures écran, bouton HS, chargeur manquant…' },
-          { id:'reparations', label:'Réparations effectuées', type:'textarea', placeholder:'Ex: Écran remplacé Apple Store, batterie changée…' },
-        ]
-      },
-      {
-        title: 'Contenu & accessoires',
-        fields: [
-          { id:'options', label:'Éléments inclus', type:'textarea', placeholder:'Boîte originale, câble, chargeur, coque, facture, écouteurs…' },
-          { id:'debloque', label:'Débloqué ?', type:'select', options:['Oui tous opérateurs','Non (opérateur précis)','Non applicable'], half:true },
-          { id:'facture', label:'Facture disponible ?', type:'select', options:['Oui','Non'], half:true },
-        ]
-      }
-    ]
-  },
-  vetement: {
-    sections: [
-      {
-        title: 'Vêtement / Mode',
-        fields: [
-          { id:'brand', label:'Marque', req:true, placeholder:'Nike, Zara, Louis Vuitton…' },
-          { id:'model', label:'Type / Nom article', req:true, placeholder:'Veste, Sneakers Air Force 1, Robe…' },
-          { id:'year', label:'Saison / Année', placeholder:'Hiver 2022, 2023…', half:true },
-          { id:'color', label:'Couleur', placeholder:'Noir, Blanc cassé…', half:true },
-          { id:'size', label:'Taille', placeholder:'M, 42, EU 42, XL…', half:true },
-          { id:'matiere', label:'Matière', placeholder:'100% coton, Cuir, Lin…', half:true },
-        ]
-      },
-      {
-        title: 'État',
-        fields: [
-          { id:'condition', label:'État général', req:true, type:'select', options:['Neuf avec étiquette','Neuf sans étiquette','Très bon','Bon','État moyen'] },
-          { id:'nbport', label:'Nb de fois porté', placeholder:'Ex: 2 fois, Jamais, Régulièrement', half:true },
-          { id:'lavage', label:'Lavage possible ?', type:'select', options:['Oui','Délicat','Sec uniquement'], half:true },
-          { id:'defauts', label:'Défauts connus', type:'textarea', placeholder:'Bouton manquant, légère décoloration, accroc…' },
-        ]
-      },
-      {
-        title: 'Détails',
-        fields: [
-          { id:'options', label:'Inclus avec l\'article', type:'textarea', placeholder:'Boîte, sac, certificat d\'authenticité, étiquette…' },
-          { id:'prixachat', label:'Prix d\'achat original', placeholder:'Ex: 180€', half:true },
-          { id:'authentique', label:'Authenticité', type:'select', options:['Originale','Facture dispo','Certificat dispo','Non vérifiable'], half:true },
-        ]
-      }
-    ]
-  },
-  autre: {
-    sections: [
-      {
-        title: 'Article',
-        fields: [
-          { id:'brand', label:'Marque / Fabricant', req:true, placeholder:'Ex: Bosch, Décathlon, Custom…' },
-          { id:'model', label:'Nom / Type d\'article', req:true, placeholder:'Ex: Perceuse, Vélo, Livre…' },
-          { id:'year', label:'Année', placeholder:'2020', half:true },
-          { id:'color', label:'Couleur / Modèle', placeholder:'Bleu, Taille M…', half:true },
-          { id:'dimensions', label:'Dimensions / Poids', placeholder:'Ex: 30 x 20 cm, 2 kg' },
-        ]
-      },
-      {
-        title: 'État',
-        fields: [
-          { id:'condition', label:'État général', req:true, type:'select', options:['Neuf / jamais utilisé','Très bon','Bon','État moyen','À réparer'] },
-          { id:'defauts', label:'Défauts connus', type:'textarea', placeholder:'Décrivez honnêtement tout défaut.' },
-          { id:'reparations', label:'Réparations / entretien', type:'textarea', placeholder:'Ce qui a été fait, remplacé, réparé…' },
-        ]
-      },
-      {
-        title: 'Inclus & détails',
-        fields: [
-          { id:'options', label:'Éléments inclus / accessoires', type:'textarea', placeholder:'Boîte, notice, accessoires, câbles…' },
-          { id:'usage', label:'Utilisation précédente', placeholder:'Perso, professionnel, collection…', half:true },
-          { id:'facture', label:'Facture disponible ?', type:'select', options:['Oui','Non'], half:true },
-        ]
-      }
-    ]
-  }
-};
-
-// ── RENDU DYNAMIQUE DES CHAMPS ───────────────────────────
-function renderFields(type) {
-  const cfg = TYPE_CONFIGS[type];
-  const section = document.getElementById('dynamicSection');
-  section.innerHTML = '';
-
-  cfg.sections.forEach(s => {
-    const block = document.createElement('div');
-    block.className = 'block';
-
-    const title = document.createElement('div');
-    title.className = 'block-title';
-    title.textContent = s.title;
-    block.appendChild(title);
-
-    // Grouper les half et third
-    let i = 0;
-    while (i < s.fields.length) {
-      const f = s.fields[i];
-      if (f.half) {
-        // Chercher le suivant half
-        const f2 = s.fields[i+1] && s.fields[i+1].half ? s.fields[i+1] : null;
-        const row = document.createElement('div');
-        row.className = 'grid2';
-        row.style.marginBottom = '10px';
-        row.appendChild(buildField(f));
-        if (f2) { row.appendChild(buildField(f2)); i++; }
-        block.appendChild(row);
-      } else if (f.third) {
-        const fields3 = [f];
-        if (s.fields[i+1]?.third) { fields3.push(s.fields[i+1]); i++; }
-        if (s.fields[i+1]?.third) { fields3.push(s.fields[i+1]); i++; }
-        const row = document.createElement('div');
-        row.className = 'grid3';
-        row.style.marginBottom = '10px';
-        fields3.forEach(ff => row.appendChild(buildField(ff)));
-        block.appendChild(row);
-      } else {
-        const wrapper = document.createElement('div');
-        wrapper.style.marginBottom = '10px';
-        wrapper.appendChild(buildField(f));
-        block.appendChild(wrapper);
-      }
-      i++;
-    }
-
-    section.appendChild(block);
-  });
-}
-
-function buildField(f) {
-  const div = document.createElement('div');
-  div.className = 'field';
-  const label = document.createElement('label');
-  label.innerHTML = f.label + (f.req ? ' <span class="req">*</span>' : '');
-  div.appendChild(label);
-
-  let input;
-  if (f.type === 'textarea') {
-    input = document.createElement('textarea');
-    input.placeholder = f.placeholder || '';
-  } else if (f.type === 'select') {
-    input = document.createElement('select');
-    const empty = document.createElement('option');
-    empty.value = ''; empty.textContent = '—';
-    input.appendChild(empty);
-    (f.options || []).forEach(o => {
-      const opt = document.createElement('option');
-      opt.value = o; opt.textContent = o;
-      input.appendChild(opt);
-    });
-  } else {
-    input = document.createElement('input');
-    input.type = f.type || 'text';
-    input.placeholder = f.placeholder || '';
-  }
-  input.id = f.id;
-  div.appendChild(input);
-  return div;
-}
-
-// Init
-renderFields('voiture');
-
-// Type buttons
-document.querySelectorAll('.type-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.type-btn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    selectedType = b.dataset.type;
-    renderFields(selectedType);
-    document.getElementById('estimateResult').classList.remove('show');
-  });
-});
-
-// Lang
-document.querySelectorAll('.lang-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active'); selectedLang = b.dataset.lang;
-  });
-});
-
-// Urgence
-document.querySelectorAll('.urgence-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.urgence-btn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active'); selectedUrgence = b.dataset.urgence;
-  });
-});
-
-const v = id => document.getElementById(id)?.value?.trim() || '';
-
-function buildSpecs() {
-  const cfg = TYPE_CONFIGS[selectedType];
-  const allFields = cfg.sections.flatMap(s => s.fields);
-  const lines = [['Type d\'article', selectedType]];
-  allFields.forEach(f => {
-    const val = v(f.id);
-    if (val) lines.push([f.label, val]);
-  });
-  lines.push(['Prix souhaité', v('price') ? v('price') + ' €' : '']);
-  lines.push(['Urgence', selectedUrgence]);
-  lines.push(['Ville', v('sellerCity')]);
-  lines.push(['Livraison', v('livraison')]);
-  lines.push(['Disponibilité', v('disponibilite')]);
-  lines.push(['Vendeur', v('sellerName')]);
-  lines.push(['Téléphone', v('sellerPhone')]);
-  lines.push(['Raison de vente', v('reason')]);
-  return lines.filter(([,val]) => val).map(([k,val]) => '- ' + k + ': ' + val).join('\n');
-}
-
-function setLoadStep(step) {
-  ['ls1','ls2','ls3','ls4'].forEach((id, i) => {
-    const el = document.getElementById(id);
-    el.classList.remove('active','done');
-    if (i < step) el.classList.add('done');
-    else if (i === step) el.classList.add('active');
-  });
-}
-
-// ── ESTIMATION ───────────────────────────────────────────
-async function estimatePrice() {
-  const brand = v('brand'), model = v('model');
-  if (!brand || !model) { alert('Remplis au minimum la marque et le modèle.'); return; }
-
-  const btn = document.getElementById('estimateBtn');
-  const estLoading = document.getElementById('estLoading');
-  const estResult = document.getElementById('estimateResult');
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Analyse en cours…';
-  estLoading.classList.add('show');
-  estResult.classList.remove('show');
-
-  // Animation des étapes
-  const steps = ['es1','es2','es3'];
-  steps.forEach(id => document.getElementById(id).className = 'est-step');
-  let si = 0;
-  const interval = setInterval(() => {
-    if (si > 0) document.getElementById(steps[si-1]).className = 'est-step done';
-    if (si < steps.length) { document.getElementById(steps[si]).className = 'est-step active'; si++; }
-  }, 600);
-
-  try {
-    const resp = await fetch('/api/estimate', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ specs: buildSpecs() })
-    });
-    if (!resp.ok) throw new Error();
-    const r = await resp.json();
-    clearInterval(interval);
-    steps.forEach(id => document.getElementById(id).className = 'est-step done');
-
-    document.getElementById('estLow').textContent = Number(r.low).toLocaleString('fr-FR') + ' €';
-    document.getElementById('estMid').textContent = Number(r.mid).toLocaleString('fr-FR') + ' €';
-    document.getElementById('estHigh').textContent = Number(r.high).toLocaleString('fr-FR') + ' €';
-    document.getElementById('estNote').textContent = r.note || '';
-
-    estLoading.classList.remove('show');
-    estResult.classList.add('show');
-  } catch(e) {
-    clearInterval(interval);
-    estLoading.classList.remove('show');
-    alert('Erreur estimation. Vérifie ta connexion.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔍 Estimer la valeur marchande';
-  }
-}
-
-// ── GÉNÉRATION ───────────────────────────────────────────
-async function handleSubmit() {
-  const brand = v('brand'), model = v('model'), price = v('price');
-  const sellerName = v('sellerName'), sellerPhone = v('sellerPhone'), sellerCity = v('sellerCity');
-  const condition = v('condition');
-
-  if (!brand || !model || !price || !sellerName || !sellerPhone || !sellerCity || !condition) {
-    alert('Merci de remplir les champs obligatoires (marqués *).');
-    return;
-  }
-
-  const overlay = document.getElementById('loadingOverlay');
-  const errorBox = document.getElementById('stateError');
-  const paywall = document.getElementById('paywall');
-  const btn = document.getElementById('submitBtn');
-
-  btn.disabled = true;
-  errorBox.classList.remove('show');
-  paywall.classList.remove('show');
-  document.getElementById('resultWrap').classList.remove('show');
-  overlay.classList.add('show');
-
-  try {
-    setLoadStep(0); await delay(400);
-    setLoadStep(1);
-
-    const resp = await fetch('/api/generate', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ specs: buildSpecs(), lang: selectedLang, type: selectedType, urgence: selectedUrgence })
-    });
-
-    if (!resp.ok) throw new Error('Erreur API');
-    const data = await resp.json();
-
-    setLoadStep(2); await delay(400);
-    setLoadStep(3); await delay(400);
-
-    generatedLong = data.long;
-    generatedShort = data.short;
-    sessionStorage.setItem('annonce_data', JSON.stringify({ long: data.long, short: data.short }));
-
-    // Discord
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-    const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
-
-    fetch(WEBHOOK, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ embeds: [{ 
-        title: '🆕 Commande ' + ORDER_CODE + ' — ' + selectedType.charAt(0).toUpperCase() + selectedType.slice(1) + ' ' + brand + ' ' + model,
-        color: 0xe8191a,
-        fields: [
-          { name: '🪪 Code commande', value: '**' + ORDER_CODE + '**', inline: true },
-          { name: '📅 Date & heure', value: dateStr + ' à ' + timeStr, inline: true },
-          { name: '💳 Statut paiement', value: '⏳ **EN ATTENTE**', inline: true },
-          { name: '👤 Client', value: (sellerName ? '**' + sellerName + '**' : 'Non renseigné') + (sellerPhone ? ' | 📞 ' + sellerPhone : '') + (sellerCity ? ' | 📍 ' + sellerCity : ''), inline: false },
-          { name: '🤝 Partagé par', value: REF === 'direct' ? 'Accès direct' : '**' + REF + '**', inline: true },
-          { name: '💰 Prix article', value: price + ' €', inline: true },
-          { name: '📦 Type', value: selectedType, inline: true },
-          { name: '📝 Annonce complète', value: data.long.slice(0, 1000), inline: false },
-          { name: '⚡ Version courte', value: data.short.slice(0, 500), inline: false }
-        ],
-        footer: { text: "Agence d'Annonce — Commande " + ORDER_CODE + " — " + dateStr + " " + timeStr }
-      }]})
-    });
-
-    overlay.classList.remove('show');
-    document.getElementById('paypalBtn').href = PAYPAL_LINK;
-    document.getElementById('orderCodeText').textContent = ORDER_CODE;
-    paywall.classList.add('show');
-    setTimeout(() => paywall.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
-
-  } catch(e) {
-    console.error(e);
-    overlay.classList.remove('show');
-    errorBox.classList.add('show');
-    btn.disabled = false;
-  }
-}
-
-// Retour après paiement
-if (PAID) {
-  const saved = sessionStorage.getItem('annonce_data');
-  if (saved) {
-    const d = JSON.parse(saved);
-    generatedLong = d.long; generatedShort = d.short;
-    showResult();
-
-    // Notifier Discord que le paiement est confirmé
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-    const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
-
-    fetch(WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ embeds: [{
-        title: '✅ PAIEMENT CONFIRMÉ — Commande ' + ORDER_CODE,
-        color: 0x22c55e,
-        fields: [
-          { name: '💳 Statut paiement', value: '✅ **PAYÉ**', inline: true },
-          { name: '🪪 Code commande', value: '**' + ORDER_CODE + '**', inline: true },
-          { name: '📅 Heure paiement', value: dateStr + ' à ' + timeStr, inline: false },
-          { name: '🤝 Apporté par', value: REF === 'direct' ? 'Accès direct' : '**' + REF + '**', inline: true },
-          { name: '💰 Montant encaissé', value: '**15€**', inline: true },
-        ],
-        footer: { text: "Agence d'Annonce — Paiement reçu " + timeStr }
-      }]})
-    });
-
-    // Supprimer les données de session pour éviter les doublons
-    sessionStorage.removeItem('annonce_data');
-  }
-}
-
-function showResult() {
-  const get = (pattern) => (generatedLong.match(pattern) || [])[1]?.trim() || '';
-  document.getElementById('annTitre').textContent = get(/TITRE\s*[:\-]\s*(.+)/i) || generatedLong.split('\n')[0];
-  document.getElementById('annAccroche').textContent = get(/ACCROCHE\s*[:\-]\s*([\s\S]+?)(?=DESCRIPTION|POINTS|$)/i);
-  document.getElementById('annDesc').textContent = get(/DESCRIPTION\s*[:\-]?\s*([\s\S]+?)(?=POINTS\s+FORTS|⭐|CARACT|$)/i) || generatedLong;
-  document.getElementById('annPoints').textContent = get(/POINTS?\s+FORTS?\s*[:\-]?\s*([\s\S]+?)(?=CARACT|🔧|TRANSPAR|⚠|INFOS|📍|$)/i);
-  document.getElementById('annCarac').textContent = get(/CARACT[ÉE]RISTIQUES?\s*[:\-]?\s*([\s\S]+?)(?=TRANSPAR|⚠|INFOS|📍|$)/i);
-  document.getElementById('annTransp').textContent = get(/TRANSPAR[EA]NCE\s*[:\-]?\s*([\s\S]+?)(?=INFOS|📍|CONTACT|🎯|$)/i);
-  document.getElementById('annInfos').textContent = get(/(?:INFOS\s+PRATIQUES|CONTACT|🎯)\s*[:\-]?\s*([\s\S]+?)$/i);
-  document.getElementById('annShort').textContent = generatedShort;
-  document.getElementById('resultCodeText').textContent = ORDER_CODE;
-  document.getElementById('resultOrderCode').style.display = 'block';
-  const rw = document.getElementById('resultWrap');
-  rw.classList.add('show');
-  setTimeout(() => rw.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
-}
-
-function copyFull() {
-  const ids = ['annTitre','annAccroche','annDesc','annPoints','annCarac','annTransp','annInfos'];
-  const text = ids.map(id => document.getElementById(id).textContent).filter(t => t).join('\n\n');
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copyLongBtn');
-    btn.textContent = '✅ Copié !'; btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = "📋 Copier l'annonce complète"; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-function copyShort() {
-  navigator.clipboard.writeText(document.getElementById('annShort').textContent).then(() => {
-    const btn = document.getElementById('copyShortBtn');
-    btn.textContent = '✅ Copié !'; btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '📋 Copier la version courte'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-const delay = ms => new Promise(r => setTimeout(r, ms));
-</script>
-</body>
-</html>
+    <!-- PAYPAL -->
+    <div class="paypal-
