@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agence d'Annonce — Vendez plus vite, mieux présenté</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red: #e8191a;
+      --red2: #ff4444;
+      --black: #050505;
+      --s1: #0d0d0d;
+      --s2: #161616;
+      --s3: #1f1f1f;
+      --s4: #2a2a2a;
+      --border: #292929;
+      --border2: #333;
+      --white: #f2f2f2;
+      --muted: #5a5a5a;
+      --muted2: #888;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --stripe: #635bff;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      background: var(--s1);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 20px 28px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(232,25,26,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(99,91,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; line-height: 1; }
+    .logo em { color: var(--red); font-style: normal; }
+    .logo-tag { font-size: 9px; font-weight: 600; letter-spacing: 2px; color: var(--muted2); text-transform: uppercase; display: block; margin-top: 2px; }
+    .badge { background: linear-gradient(135deg, var(--red), #ff6b35); color: white; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; padding: 5px 12px; border-radius: 20px; text-transform: uppercase; }
+    .hero-headline { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 1px; line-height: 1.1; margin-bottom: 10px; }
+    .hero-headline span { color: var(--red); }
+    .hero-sub { color: var(--muted2); font-size: 14px; line-height: 1.65; max-width: 420px; margin-bottom: 22px; }
+
+    /* TIMELINE */
+    .timeline { display: flex; align-items: stretch; gap: 0; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .timeline::-webkit-scrollbar { display: none; }
+    .tl-item { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 80px; position: relative; }
+    .tl-item:not(:last-child)::after { content: ''; position: absolute; top: 16px; right: -1px; width: 2px; height: 2px; background: var(--border2); }
+    .tl-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--s3); border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--muted2); margin-bottom: 6px; position: relative; z-index: 1; transition: all 0.3s; }
+    .tl-item.done .tl-dot { background: var(--red); border-color: var(--red); color: white; }
+    .tl-line { position: absolute; top: 15px; left: calc(50% + 16px); right: calc(-50% + 16px); height: 1.5px; background: var(--border); z-index: 0; }
+    .tl-item:last-child .tl-line { display: none; }
+    .tl-label { font-size: 9px; color: var(--muted); text-align: center; line-height: 1.4; letter-spacing: 0.3px; }
+    .tl-time { font-size: 8px; color: var(--muted); opacity: 0.6; margin-top: 2px; }
+
+    /* TRUST BADGES */
+    .trust-bar { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted2); }
+    .trust-item::before { content: '✓'; color: var(--success); font-weight: 700; font-size: 10px; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 640px; margin: 0 auto; padding: 24px 16px 100px; }
+
+    /* PRICE BANNER */
+    .price-banner {
+      background: linear-gradient(135deg, rgba(232,25,26,0.08), rgba(232,25,26,0.03));
+      border: 1px solid rgba(232,25,26,0.2);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 12px;
+    }
+    .price-banner-left { font-size: 13px; color: var(--muted2); line-height: 1.5; }
+    .price-banner-left strong { color: var(--white); display: block; font-size: 15px; margin-bottom: 2px; }
+    .price-banner-right { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--red); letter-spacing: 2px; flex-shrink: 0; }
+
+    /* LANGUE */
+    .lang-bar { display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+    .lang-btn { background: var(--s2); border: 1.5px solid var(--border); border-radius: 8px; color: var(--muted2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 7px 12px; transition: all 0.15s; }
+    .lang-btn.active { background: rgba(232,25,26,0.1); border-color: var(--red); color: var(--white); }
+
+    /* BLOCKS */
+    .block { background: var(--s1); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; transition: border-color 0.2s; }
+    .block:focus-within { border-color: rgba(232,25,26,0.3); }
+    .block-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .block-icon { width: 32px; height: 32px; background: rgba(232,25,26,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .block-title { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 2px; color: var(--white); }
+    .block-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { font-size: 10px; font-weight: 600; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.8px; }
+    .req { color: var(--red); }
+
+    input, select, textarea {
+      background: var(--s2);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      padding: 10px 13px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--red); background: var(--s3); }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    select option { background: var(--s2); }
+    textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
+
+    /* TYPE SELECTOR */
+    .type-search-wrap { position: relative; margin-bottom: 14px; }
+    .type-search { padding-left: 36px !important; }
+    .type-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+    .type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+    .type-btn { background: var(--s2); border: 1.5px solid var(--border); border-radius: 10px; color: var(--muted2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; padding: 9px 4px; text-align: center; transition: all 0.15s; user-select: none; line-height: 1.3; }
+    .type-btn span { display: block; font-size: 20px; margin-bottom: 3px; }
+    .type-btn.active { background: rgba(232,25,26,0.1); border-color: var(--red); color: var(--white); }
+    .type-btn.hidden { display: none; }
+
+    /* URGENCE */
+    .urgence-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .urgence-btn { background: var(--s2); border: 1.5px solid var(--border); border-radius: 10px; color: var(--muted2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; padding: 10px 4px; text-align: center; transition: all 0.15s; user-select: none; }
+    .urgence-btn.active { border-color: var(--warning); color: var(--warning); background: rgba(245,158,11,0.08); }
+
+    /* ESTIMATION */
+    .estimate-btn { width: 100%; background: transparent; border: 1.5px solid var(--warning); border-radius: 10px; color: var(--warning); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 13px; margin-top: 4px; transition: all 0.15s; }
+    .estimate-btn:hover { background: rgba(245,158,11,0.06); }
+    .estimate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .est-loading { display: none; margin-top: 12px; background: var(--s2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+    .est-loading.show { display: flex; align-items: center; gap: 12px; }
+    .est-spinner { width: 20px; height: 20px; border: 2.5px solid var(--border2); border-top-color: var(--warning); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+    .est-steps { display: flex; flex-direction: column; gap: 3px; }
+    .est-step { font-size: 11px; color: var(--muted); transition: color 0.3s; }
+    .est-step.active { color: var(--warning); }
+    .est-step.done { color: var(--success); }
+    .estimate-result { display: none; margin-top: 12px; background: var(--s2); border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 16px; }
+    .estimate-result.show { display: block; }
+    .est-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .est-col { text-align: center; padding: 12px 4px; background: var(--s1); border-radius: 10px; border: 1px solid var(--border); }
+    .est-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .est-val { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; }
+    .est-val.low { color: #f87171; }
+    .est-val.mid { color: var(--warning); }
+    .est-val.high { color: var(--success); }
+    .est-note { font-size: 11px; color: var(--muted2); margin-top: 10px; line-height: 1.6; font-style: italic; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+
+    /* BOUTON PRINCIPAL */
+    .main-btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      color: white;
+      cursor: pointer;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 3px;
+      padding: 18px;
+      transition: all 0.2s;
+      margin-top: 12px;
+      background: linear-gradient(135deg, var(--red), #c81415);
+      position: relative;
+      overflow: hidden;
+    }
+    .main-btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.06); opacity: 0; transition: opacity 0.2s; }
+    .main-btn:hover::after { opacity: 1; }
+    .main-btn:active { transform: scale(0.99); }
+    .main-btn:disabled { background: var(--s3); color: var(--muted); cursor: not-allowed; transform: none; }
+
+    /* LOADING OVERLAY */
+    .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,5,0.97); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; }
+    .loading-overlay.show { display: flex; }
+    .loading-ring { width: 90px; height: 90px; margin-bottom: 28px; }
+    .loading-ring svg { width: 90px; height: 90px; animation: rotate 1.4s linear infinite; }
+    .loading-ring svg .track { fill: none; stroke: var(--s3); stroke-width: 4; }
+    .loading-ring svg .fill { fill: none; stroke: var(--red); stroke-width: 4; stroke-dasharray: 210; stroke-dashoffset: 52; stroke-linecap: round; }
+    .loading-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; margin-bottom: 8px; }
+    .loading-sub { font-size: 13px; color: var(--muted2); margin-bottom: 28px; line-height: 1.6; }
+    .lsteps { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 260px; }
+    .lstep { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); padding: 9px 14px; border-radius: 10px; background: var(--s1); border: 1px solid var(--border); transition: all 0.35s; }
+    .lstep.active { color: var(--white); border-color: var(--red); background: rgba(232,25,26,0.08); }
+    .lstep.done { color: var(--success); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.05); }
+    .lstep-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); flex-shrink: 0; transition: all 0.35s; }
+    .lstep.active .lstep-dot { background: var(--red); box-shadow: 0 0 8px var(--red); }
+    .lstep.done .lstep-dot { background: var(--success); }
+
+    /* PAYWALL */
+    .paywall { display: none; margin-top: 16px; }
+    .paywall.show { display: block; }
+    .paywall-card { background: var(--s1); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
+    .paywall-top { background: linear-gradient(135deg, rgba(232,25,26,0.08), rgba(99,91,255,0.05)); padding: 28px 22px 22px; text-align: center; border-bottom: 1px solid var(--border); }
+    .pw-lock { font-size: 40px; margin-bottom: 12px; }
+    .pw-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .pw-sub { font-size: 13px; color: var(--muted2); line-height: 1.65; max-width: 340px; margin: 0 auto 20px; }
+    .pw-price-wrap { display: inline-flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+    .pw-price { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--red); letter-spacing: 2px; line-height: 1; }
+    .pw-price-sub { font-size: 11px; color: var(--muted); }
+    .pw-order-code { background: var(--s2); border: 1px solid var(--border2); border-radius: 10px; padding: 10px 16px; margin: 14px 0; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted2); }
+    .pw-order-code strong { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 2px; }
+    .paywall-body { padding: 20px 22px; }
+    .stripe-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--stripe); color: white; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; padding: 15px 24px; border-radius: 12px; text-decoration: none; transition: all 0.2s; margin-bottom: 10px; letter-spacing: 0.3px; }
+    .stripe-btn:hover { background: #4f46e5; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(99,91,255,0.3); }
+    .pw-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
+    .pw-divider::before, .pw-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .pw-divider span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .reveal-btn { width: 100%; background: rgba(34,197,94,0.08); border: 1.5px solid rgba(34,197,94,0.3); border-radius: 12px; color: var(--success); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 14px; transition: all 0.2s; }
+    .reveal-btn:hover { background: rgba(34,197,94,0.12); }
+    .pw-security { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 10px; color: var(--muted); margin-top: 12px; }
+
+    /* EXEMPLES */
+    .examples-section { margin-top: 24px; }
+    .examples-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .examples-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .ex-card { background: var(--s2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+    .ex-tag { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted2); margin-bottom: 8px; }
+    .ex-titre { font-weight: 600; font-size: 13px; margin-bottom: 10px; color: var(--white); line-height: 1.4; }
+    .ex-section { margin-bottom: 8px; }
+    .ex-section-label { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .ex-section-content { font-size: 11px; color: var(--muted2); line-height: 1.65; }
+
+    /* RÉSULTATS */
+    .result-wrap { display: none; margin-top: 16px; }
+    .result-wrap.show { display: block; }
+    .result-paid-banner { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: none; align-items: center; gap: 10px; font-size: 13px; color: var(--success); }
+    .result-paid-banner.show { display: flex; }
+    .result-section { background: var(--s1); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; }
+    .result-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2.5px; color: var(--red); margin-bottom: 14px; opacity: 0.8; }
+    .ann-titre { font-size: 16px; font-weight: 700; padding: 12px 14px; background: var(--s2); border-radius: 10px; border-left: 3px solid var(--red); margin-bottom: 14px; line-height: 1.4; }
+    .ann-accroche { font-size: 13px; color: var(--warning); font-style: italic; padding: 10px 14px; background: var(--s2); border-radius: 10px; margin-bottom: 14px; line-height: 1.65; border-left: 3px solid var(--warning); }
+    .ann-block { margin-bottom: 12px; }
+    .ann-block-label { font-size: 9px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+    .ann-block-content { font-size: 13px; color: var(--white); line-height: 1.75; background: var(--s2); border-radius: 10px; padding: 12px 14px; white-space: pre-wrap; border: 1px solid var(--border); }
+    .copy-btn { background: var(--s2); border: 1.5px solid var(--border); border-radius: 10px; color: var(--muted2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 10px 14px; transition: all 0.15s; width: 100%; margin-top: 10px; }
+    .copy-btn:hover { border-color: var(--success); color: var(--success); }
+    .copy-btn.copied { border-color: var(--success); color: var(--success); background: rgba(34,197,94,0.06); }
+
+    .state-error { display: none; background: rgba(232,25,26,0.06); border: 1px solid rgba(232,25,26,0.2); color: #f87171; border-radius: 12px; padding: 14px 16px; text-align: center; margin-top: 12px; font-size: 13px; line-height: 1.5; }
+    .state-error.show { display: block; }
+
+    @media (max-width: 420px) {
+      .grid3 { grid-template-columns: 1fr 1fr; }
+      .type-grid { grid-template-columns: repeat(4, 1fr); }
+      .hero-headline { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-ring">
+    <svg viewBox="0 0 90 90">
+      <circle class="track" cx="45" cy="45" r="38"/>
+      <circle class="fill" cx="45" cy="45" r="38"/>
+    </svg>
+  </div>
+  <div class="loading-title">Annonce en cours de création</div>
+  <div class="loading-sub">Notre IA analyse votre article et rédige<br>une annonce optimisée pour vendre.</div>
+  <div class="lsteps">
+    <div class="lstep" id="ls1"><div class="lstep-dot"></div>Analyse des informations</div>
+    <div class="lstep" id="ls2"><div class="lstep-dot"></div>Rédaction de l'annonce</div>
+    <div class="lstep" id="ls3"><div class="lstep-dot"></div>Optimisation SEO & copywriting</div>
+    <div class="lstep" id="ls4"><div class="lstep-dot"></div>Finalisation</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="logo">Agence d'<em>Annonce</em></div>
+      <span class="logo-tag">Propulsé par IA</span>
+    </div>
+    <div class="badge">Pro ✦</div>
+  </div>
+  <div class="hero-headline">Vendez n'importe quoi<br><span>plus vite, mieux présenté.</span></div>
+  <div class="hero-sub">Notre IA rédige une annonce professionnelle complète en 15 secondes — titre accrocheur, description convaincante, mots-clés optimisés.</div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot">1</div>
+      <div class="tl-label">Remplissez<br>le formulaire</div>
+      <div class="tl-time">~3 min</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot">2</div>
+      <div class="tl-label">Estimation<br>optionnelle</div>
+      <div class="tl-time">~10 sec</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot">3</div>
+      <div class="tl-label">L'IA génère<br>votre annonce</div>
+      <div class="tl-time">~15 sec</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot">4</div>
+      <div class="tl-label">Paiement<br>sécurisé</div>
+      <div class="tl-time">~30 sec</div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-line"></div>
+      <div class="tl-dot">✓</div>
+      <div class="tl-label">Annonce<br>prête !</div>
+      <div class="tl-time">Publiez</div>
+    </div>
+  </div>
+
+  <div class="trust-bar">
+    <div class="trust-item">Paiement sécurisé Stripe</div>
+    <div class="trust-item">Annonce en 15 secondes</div>
+    <div class="trust-item">Résultat garanti</div>
+    <div class="trust-item">100% confidentiel</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="price-banner">
+    <div class="price-banner-left">
+      <strong>Annonce professionnelle complète</strong>
+      Titre optimisé · Description · Points forts · SEO · Version courte
+    </div>
+    <div class="price-banner-right">15€</div>
+  </div>
+
+  <!-- LANGUE -->
+  <div class="lang-bar">
+    <button class="lang-btn active" data-lang="fr">🇫🇷 Français</button>
+    <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+    <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+    <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+    <button class="lang-btn" data-lang="it">🇮🇹 Italiano</button>
+  </div>
+
+  <!-- TYPE D'ARTICLE -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-icon">📦</div>
+      <div>
+        <div class="block-title">Que vendez-vous ?</div>
+        <div class="block-sub">Sélectionnez la catégorie qui correspond</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Rechercher une catégorie</label>
+      <div class="type-search-wrap">
+        <span class="type-search-icon">🔍</span>
+        <input type="text" class="type-search" id="typeSearch" placeholder="Ex: voiture, téléphone, canapé…" oninput="filterTypes(this.value)"/>
+      </div>
+    </div>
+    <div class="type-grid" id="typeGrid">
+      <div class="type-btn active" data-type="voiture"><span>🚗</span>Voiture</div>
+      <div class="type-btn" data-type="moto"><span>🏍️</span>Moto / Scooter</div>
+      <div class="type-btn" data-type="utilitaire"><span>🚐</span>Utilitaire / Camping</div>
+      <div class="type-btn" data-type="velo"><span>🚲</span>Vélo / Trottinette</div>
+      <div class="type-btn" data-type="smartphone"><span>📱</span>Smartphone</div>
+      <div class="type-btn" data-type="ordinateur"><span>💻</span>Ordinateur</div>
+      <div class="type-btn" data-type="tv_audio"><span>📺</span>TV / Audio</div>
+      <div class="type-btn" data-type="console"><span>🎮</span>Console / Jeux</div>
+      <div class="type-btn" data-type="photo"><span>📷</span>Photo / Vidéo</div>
+      <div class="type-btn" data-type="electromenager"><span>🍳</span>Électroménager</div>
+      <div class="type-btn" data-type="meuble"><span>🛋️</span>Meuble</div>
+      <div class="type-btn" data-type="decoration"><span>🖼️</span>Déco / Art</div>
+      <div class="type-btn" data-type="electromenager_gros"><span>🧺</span>Gros électro</div>
+      <div class="type-btn" data-type="vetement_homme"><span>👔</span>Vêtement homme</div>
+      <div class="type-btn" data-type="vetement_femme"><span>👗</span>Vêtement femme</div>
+      <div class="type-btn" data-type="chaussures"><span>👟</span>Chaussures</div>
+      <div class="type-btn" data-type="montre_bijoux"><span>⌚</span>Montre / Bijoux</div>
+      <div class="type-btn" data-type="sac"><span>👜</span>Sac / Maroquinerie</div>
+      <div class="type-btn" data-type="sport"><span>🏋️</span>Sport / Loisirs</div>
+      <div class="type-btn" data-type="velo_sport"><span>🚴</span>Vélo sport</div>
+      <div class="type-btn" data-type="instrument"><span>🎸</span>Instrument</div>
+      <div class="type-btn" data-type="livre_dvd"><span>📚</span>Livre / DVD / Vinyle</div>
+      <div class="type-btn" data-type="bricolage"><span>🔨</span>Bricolage / Outils</div>
+      <div class="type-btn" data-type="jardin"><span>🌿</span>Jardin / Extérieur</div>
+      <div class="type-btn" data-type="puériculture"><span>👶</span>Puériculture / Jouets</div>
+      <div class="type-btn" data-type="animal"><span>🐾</span>Animalerie</div>
+      <div class="type-btn" data-type="materiel_pro"><span>💼</span>Matériel pro</div>
+      <div class="type-btn" data-type="immobilier"><span>🏠</span>Immobilier</div>
+      <div class="type-btn" data-type="autre"><span>📦</span>Autre</div>
+    </div>
+  </div>
+
+  <!-- CHAMPS DYNAMIQUES -->
+  <div id="dynamicSection"></div>
+
+  <!-- PRIX & URGENCE & ESTIMATION -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-icon">💰</div>
+      <div>
+        <div class="block-title">Prix & objectif</div>
+        <div class="block-sub">Définissez votre stratégie de vente</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Prix souhaité (€) <span class="req">*</span></label>
+      <input id="price" type="number" placeholder="Ex: 11500"/>
+    </div>
+    <div class="field">
+      <label>Urgence de vente</label>
+      <div class="urgence-grid">
+        <div class="urgence-btn active" data-urgence="normal">⏳ Vente normale</div>
+        <div class="urgence-btn" data-urgence="rapide">🔥 Vente rapide</div>
+        <div class="urgence-btn" data-urgence="optimise">💎 Prix maximum</div>
+      </div>
+    </div>
+    <button class="estimate-btn" id="estimateBtn" onclick="estimatePrice()">
+      🔍 Estimer la valeur marchande selon l'état
+    </button>
+    <div class="est-loading" id="estLoading">
+      <div class="est-spinner"></div>
+      <div class="est-steps">
+        <div class="est-step" id="es1">Analyse du marché actuel…</div>
+        <div class="est-step" id="es2">Calcul de la dépréciation…</div>
+        <div class="est-step" id="es3">Génération de l'estimation…</div>
+      </div>
+    </div>
+    <div class="estimate-result" id="estimateResult">
+      <div style="font-size:11px;color:var(--muted2)">Estimation marché français actuel (LeBonCoin / La Centrale)</div>
+      <div class="est-grid">
+        <div class="est-col"><div class="est-label">Basse</div><div class="est-val low" id="estLow">—</div></div>
+        <div class="est-col"><div class="est-label">Moyenne</div><div class="est-val mid" id="estMid">—</div></div>
+        <div class="est-col"><div class="est-label">Haute</div><div class="est-val high" id="estHigh">—</div></div>
+      </div>
+      <div class="est-note" id="estNote"></div>
+    </div>
+  </div>
+
+  <!-- LOCALISATION & CONTACT -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-icon">📍</div>
+      <div>
+        <div class="block-title">Localisation & contact</div>
+        <div class="block-sub">Pour les acheteurs potentiels</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Ville <span class="req">*</span></label><input id="sellerCity" placeholder="Lyon, Paris…"/></div>
+      <div class="field"><label>Livraison possible ?</label>
+        <select id="livraison">
+          <option value="">—</option>
+          <option>Non — retrait uniquement</option>
+          <option>Oui — frais à la charge de l'acheteur</option>
+          <option>Oui — frais à ma charge</option>
+          <option>Négociable</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Prénom <span class="req">*</span></label><input id="sellerName" placeholder="Thomas"/></div>
+      <div class="field"><label>Téléphone <span class="req">*</span></label><input id="sellerPhone" type="tel" placeholder="06 xx xx xx xx"/></div>
+    </div>
+    <div class="field">
+      <label>Disponibilité pour visites / essais</label>
+      <input id="disponibilite" placeholder="Ex: Weekends, soirs après 18h, sur rendez-vous…"/>
+    </div>
+  </div>
+
+  <!-- RAISON -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-icon">💬</div>
+      <div>
+        <div class="block-title">Raison de la vente</div>
+        <div class="block-sub">Rassure l'acheteur et inspire confiance</div>
+      </div>
+    </div>
+    <div class="field">
+      <textarea id="reason" placeholder="Ex: Changement de véhicule, déménagement, mise à jour, plus besoin… Une raison honnête rassure l'acheteur."></textarea>
+    </div>
+  </div>
+
+  <button class="main-btn" id="submitBtn" onclick="handleSubmit()">
+    ⚡ GÉNÉRER MON ANNONCE PROFESSIONNELLE
+  </button>
+
+  <div class="state-error" id="stateError">
+    ❌ Une erreur est survenue. Vérifie ta connexion et réessaie.<br>
+    <span style="font-size:11px;color:var(--muted);margin-top:4px;display:block">Si le problème persiste, contacte le support.</span>
+  </div>
+
+  <!-- PAYWALL -->
+  <div class="paywall" id="paywall">
+    <div class="paywall-card">
+      <div class="paywall-top">
+        <div class="pw-lock">🔒</div>
+        <div class="pw-title">Votre annonce est prête !</div>
+        <div class="pw-sub">Notre IA a rédigé une annonce professionnelle complète pour votre article. Réglez 15€ pour y accéder immédiatement.</div>
+        <div class="pw-price-wrap">
+          <div class="pw-price">15€</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Paiement unique · Accès immédiat · Service garanti</div>
+        <div class="pw-order-code">
+          Code commande : <strong id="orderCodeText">—</strong>
+        </div>
+      </div>
+      <div class="paywall-body">
+        <a id="stripeBtn" href="#" target="_blank" class="stripe-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/></svg>
+          Payer 15€ en toute sécurité
+        </a>
+        <div class="pw-security">🔐 Paiement crypté · Stripe · Aucune donnée bancaire stockée</div>
+        <div class="pw-divider"><span>Déjà payé ?</span></div>
+        <button onclick="revealAfterPayment()" class="reveal-btn">
+          ✅ J'ai payé — Voir mon annonce
+        </button>
+
+        <div class="examples-section">
+          <div class="examples-label">Exemples d'annonces générées</div>
+          <div class="ex-card">
+            <div class="ex-tag">🚗 Exemple voiture</div>
+            <div class="ex-titre">Peugeot 308 SW 1.5 BlueHDi 130ch EAT8 — 1er main, 68 000 km, entretien complet Peugeot</div>
+            <div class="ex-section">
+              <div class="ex-section-label">Accroche</div>
+              <div class="ex-section-content">Rare opportunité — 308 SW 1er propriétaire depuis le neuf, historique entretien irréprochable, zéro frais à prévoir.</div>
+            </div>
+            <div class="ex-section">
+              <div class="ex-section-label">Points forts</div>
+              <div class="ex-section-content">• 1er main — carnet complet tamponné Peugeot<br>• Faible kilométrage pour l'année (68 000 km / 5 ans)<br>• CT valide jusqu'en mars 2026<br>• GPS, caméra recul, sièges chauffants, CarPlay<br>• Prix 800€ sous la cote Argus — vente suite achat neuf</div>
+            </div>
+            <div class="ex-section">
+              <div class="ex-section-label">Transparence</div>
+              <div class="ex-section-content">Légère rayure pare-chocs arrière (2 cm). Mentionnée par honnêteté totale.</div>
+            </div>
+          </div>
+          <div class="ex-card">
+            <div class="ex-tag">📱 Exemple smartphone</div>
+            <div class="ex-titre">iPhone 13 Pro 256Go Graphite — Comme neuf, boîte + facture Apple Store, batterie 94%</div>
+            <div class="ex-section">
+              <div class="ex-section-label">Accroche</div>
+              <div class="ex-section-content">Utilisé avec coque et verre trempé dès le premier jour — dans l'état d'un iPhone sorti de boîte.</div>
+            </div>
+            <div class="ex-section">
+              <div class="ex-section-label">Points forts</div>
+              <div class="ex-section-content">• Écran parfait — zéro rayure visible à l'œil nu<br>• Batterie 94% — autonomie excellente<br>• Débloqué tous opérateurs<br>• Boîte, câble, chargeur 20W d'origine<br>• Facture Apple Store disponible — authenticité certifiée</div>
+            </div>
+            <div class="ex-section">
+              <div class="ex-section-label">Transparence</div>
+              <div class="ex-section-content">Micro-griffure quasi invisible côté gauche du châssis. Non visible avec une coque.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RÉSULTATS -->
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-paid-banner" id="resultPaidBanner">
+      ✅ Paiement confirmé — Commande <strong id="resultCodeText" style="margin-left:4px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px"></strong>
+    </div>
+    <div class="result-section">
+      <div class="result-label">Version complète — LeBonCoin</div>
+      <div class="ann-titre" id="annTitre"></div>
+      <div class="ann-accroche" id="annAccroche"></div>
+      <div class="ann-block"><div class="ann-block-label">📋 Description</div><div class="ann-block-content" id="annDesc"></div></div>
+      <div class="ann-block"><div class="ann-block-label">⭐ Points forts</div><div class="ann-block-content" id="annPoints"></div></div>
+      <div class="ann-block"><div class="ann-block-label">🔧 Caractéristiques</div><div class="ann-block-content" id="annCarac"></div></div>
+      <div class="ann-block"><div class="ann-block-label">⚠️ Transparence</div><div class="ann-block-content" id="annTransp"></div></div>
+      <div class="ann-block"><div class="ann-block-label">📍 Infos pratiques & contact</div><div class="ann-block-content" id="annInfos"></div></div>
+      <button class="copy-btn" id="copyLongBtn" onclick="copyFull()">📋 Copier l'annonce complète</button>
+    </div>
+    <div class="result-section">
+      <div class="result-label">Version courte — Facebook / SMS</div>
+      <div class="ann-block-content" id="annShort"></div>
+      <button class="copy-btn" id="copyShortBtn" onclick="copyShort()">📋 Copier la version courte</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const WEBHOOK = 'REMPLACE_PAR_TON_WEBHOOK';
+const STRIPE_LINK = 'https://buy.stripe.com/bJe5kDcgzfKbf1FbAl4wM03';
+
+const UI = {
+  fr: {
+    hero_title: "Vendez n'importe quoi",
+    hero_title_span: "plus vite, mieux présenté.",
+    hero_sub: "Notre IA rédige une annonce professionnelle complète en 15 secondes — titre accrocheur, description convaincante, mots-clés optimisés.",
+    tl1: "Remplissez le formulaire", tl1t: "~3 min",
+    tl2: "Estimation optionnelle", tl2t: "~10 sec",
+    tl3: "L'IA génère votre annonce", tl3t: "~15 sec",
+    tl4: "Paiement sécurisé", tl4t: "~30 sec",
+    tl5: "Annonce prête !", tl5t: "Publiez",
+    trust1: "Paiement sécurisé Stripe", trust2: "Annonce en 15 secondes", trust3: "Résultat garanti", trust4: "100% confidentiel",
+    price_title: "Annonce professionnelle complète",
+    price_sub: "Titre optimisé · Description · Points forts · SEO · Version courte",
+    cat_title: "Que vendez-vous ?", cat_sub: "Sélectionnez la catégorie qui correspond",
+    cat_search: "Ex: voiture, téléphone, canapé…",
+    price_block_title: "Prix & objectif", price_block_sub: "Définissez votre stratégie de vente",
+    price_label: "Prix souhaité (€)", urgence_label: "Urgence de vente",
+    urg1: "⏳ Vente normale", urg2: "🔥 Vente rapide", urg3: "💎 Prix maximum",
+    estimate_btn: "🔍 Estimer la valeur marchande selon l'état",
+    est_s1: "Analyse du marché actuel…", est_s2: "Calcul de la dépréciation…", est_s3: "Génération de l'estimation…",
+    est_label: "Estimation marché français actuel (LeBonCoin / La Centrale)",
+    est_low: "Basse", est_mid: "Moyenne", est_high: "Haute",
+    loc_title: "Localisation & contact", loc_sub: "Pour les acheteurs potentiels",
+    city_label: "Ville", delivery_label: "Livraison possible ?",
+    delivery_opts: ["Non — retrait uniquement","Oui — frais à la charge de l'acheteur","Oui — frais à ma charge","Négociable"],
+    name_label: "Prénom", phone_label: "Téléphone",
+    dispo_label: "Disponibilité pour visites / essais",
+    dispo_ph: "Ex: Weekends, soirs après 18h, sur rendez-vous…",
+    reason_title: "Raison de la vente", reason_sub: "Rassure l'acheteur et inspire confiance",
+    reason_ph: "Ex: Changement de véhicule, déménagement, mise à jour, plus besoin…",
+    submit_btn: "⚡ GÉNÉRER MON ANNONCE PROFESSIONNELLE",
+    loading_title: "Annonce en cours de création",
+    loading_sub: "Notre IA analyse votre article et rédige une annonce optimisée pour vendre.",
+    ls1: "Analyse des informations", ls2: "Rédaction de l'annonce", ls3: "Optimisation SEO & copywriting", ls4: "Finalisation",
+    pw_title: "Votre annonce est prête !",
+    pw_sub: "Notre IA a rédigé une annonce professionnelle complète. Réglez 15€ pour y accéder immédiatement.",
+    pw_price_sub: "Paiement unique · Accès immédiat · Service garanti",
+    pw_code: "Code commande :",
+    stripe_btn: "💳 Payer 15€ en toute sécurité",
+    pw_security: "🔐 Paiement crypté · Stripe · Aucune donnée bancaire stockée",
+    pw_divider: "Déjà payé ?",
+    reveal_btn: "✅ J'ai payé — Voir mon annonce",
+    ex_label: "Exemples d'annonces générées",
+    result_long: "Version complète — LeBonCoin",
+    result_short: "Version courte — Facebook / SMS",
+    copy_long: "📋 Copier l'annonce complète",
+    copy_short: "📋 Copier la version courte",
+    ann_desc: "📋 Description", ann_points: "⭐ Points forts", ann_carac: "🔧 Caractéristiques",
+    ann_transp: "⚠️ Transparence", ann_infos: "📍 Infos pratiques & contact",
+  },
+  en: {
+    hero_title: "Sell anything",
+    hero_title_span: "faster, better presented.",
+    hero_sub: "Our AI writes a complete professional listing in 15 seconds — catchy title, convincing description, optimized keywords.",
+    tl1: "Fill in the form", tl1t: "~3 min",
+    tl2: "Optional estimate", tl2t: "~10 sec",
+    tl3: "AI writes your listing", tl3t: "~15 sec",
+    tl4: "Secure payment", tl4t: "~30 sec",
+    tl5: "Listing ready!", tl5t: "Publish",
+    trust1: "Secure Stripe payment", trust2: "Listing in 15 seconds", trust3: "Guaranteed result", trust4: "100% confidential",
+    price_title: "Complete professional listing",
+    price_sub: "Optimized title · Description · Key strengths · SEO · Short version",
+    cat_title: "What are you selling?", cat_sub: "Select the matching category",
+    cat_search: "E.g.: car, phone, sofa…",
+    price_block_title: "Price & goal", price_block_sub: "Define your selling strategy",
+    price_label: "Desired price (€)", urgence_label: "Selling urgency",
+    urg1: "⏳ Normal sale", urg2: "🔥 Quick sale", urg3: "💎 Maximum price",
+    estimate_btn: "🔍 Estimate market value based on condition",
+    est_s1: "Analyzing current market…", est_s2: "Calculating depreciation…", est_s3: "Generating estimate…",
+    est_label: "Current French market estimate (LeBonCoin / La Centrale)",
+    est_low: "Low", est_mid: "Average", est_high: "High",
+    loc_title: "Location & contact", loc_sub: "For potential buyers",
+    city_label: "City", delivery_label: "Delivery possible?",
+    delivery_opts: ["No — pickup only","Yes — buyer pays shipping","Yes — I pay shipping","Negotiable"],
+    name_label: "First name", phone_label: "Phone",
+    dispo_label: "Availability for visits / test drives",
+    dispo_ph: "E.g.: Weekends, evenings after 6pm, by appointment…",
+    reason_title: "Reason for selling", reason_sub: "Reassures the buyer and builds trust",
+    reason_ph: "E.g.: Upgrading, moving, no longer needed…",
+    submit_btn: "⚡ GENERATE MY PROFESSIONAL LISTING",
+    loading_title: "Your listing is being created",
+    loading_sub: "Our AI is analyzing your item and writing an optimized listing.",
+    ls1: "Analyzing information", ls2: "Writing the listing", ls3: "SEO & copywriting optimization", ls4: "Finalizing",
+    pw_title: "Your listing is ready!",
+    pw_sub: "Our AI has written a complete professional listing. Pay 15€ to access it immediately.",
+    pw_price_sub: "One-time payment · Immediate access · Guaranteed service",
+    pw_code: "Order code:",
+    stripe_btn: "💳 Pay 15€ securely",
+    pw_security: "🔐 Encrypted payment · Stripe · No banking data stored",
+    pw_divider: "Already paid?",
+    reveal_btn: "✅ I've paid — View my listing",
+    ex_label: "Examples of AI-generated listings",
+    result_long: "Full version — Marketplace listing",
+    result_short: "Short version — Facebook / SMS",
+    copy_long: "📋 Copy full listing",
+    copy_short: "📋 Copy short version",
+    ann_desc: "📋 Description", ann_points: "⭐ Key strengths", ann_carac: "🔧 Specifications",
+    ann_transp: "⚠️ Transparency", ann_infos: "📍 Practical info & contact",
+  },
+  es: {
+    hero_title: "Vende cualquier cosa",
+    hero_title_span: "más rápido, mejor presentado.",
+    hero_sub: "Nuestra IA redacta un anuncio profesional completo en 15 segundos — título atractivo, descripción convincente, palabras clave optimizadas.",
+    tl1: "Rellena el formulario", tl1t: "~3 min",
+    tl2: "Estimación opcional", tl2t: "~10 seg",
+    tl3: "La IA redacta tu anuncio", tl3t: "~15 seg",
+    tl4: "Pago seguro", tl4t: "~30 seg",
+    tl5: "¡Anuncio listo!", tl5t: "Publicar",
+    trust1: "Pago seguro Stripe", trust2: "Anuncio en 15 segundos", trust3: "Resultado garantizado", trust4: "100% confidencial",
+    price_title: "Anuncio profesional completo",
+    price_sub: "Título optimizado · Descripción · Puntos fuertes · SEO · Versión corta",
+    cat_title: "¿Qué vendes?", cat_sub: "Selecciona la categoría correspondiente",
+    cat_search: "Ej: coche, teléfono, sofá…",
+    price_block_title: "Precio & objetivo", price_block_sub: "Define tu estrategia de venta",
+    price_label: "Precio deseado (€)", urgence_label: "Urgencia de venta",
+    urg1: "⏳ Venta normal", urg2: "🔥 Venta rápida", urg3: "💎 Precio máximo",
+    estimate_btn: "🔍 Estimar valor de mercado según estado",
+    est_s1: "Analizando el mercado actual…", est_s2: "Calculando depreciación…", est_s3: "Generando estimación…",
+    est_label: "Estimación del mercado actual",
+    est_low: "Baja", est_mid: "Media", est_high: "Alta",
+    loc_title: "Ubicación & contacto", loc_sub: "Para compradores potenciales",
+    city_label: "Ciudad", delivery_label: "¿Envío posible?",
+    delivery_opts: ["No — solo recogida","Sí — gastos a cargo del comprador","Sí — gastos a mi cargo","Negociable"],
+    name_label: "Nombre", phone_label: "Teléfono",
+    dispo_label: "Disponibilidad para visitas",
+    dispo_ph: "Ej: Fines de semana, tardes, con cita previa…",
+    reason_title: "Motivo de venta", reason_sub: "Tranquiliza al comprador",
+    reason_ph: "Ej: Cambio de vehículo, mudanza, ya no lo necesito…",
+    submit_btn: "⚡ GENERAR MI ANUNCIO PROFESIONAL",
+    loading_title: "Tu anuncio está siendo creado",
+    loading_sub: "Nuestra IA analiza tu artículo y redacta un anuncio optimizado.",
+    ls1: "Analizando información", ls2: "Redactando el anuncio", ls3: "Optimización SEO", ls4: "Finalizando",
+    pw_title: "¡Tu anuncio está listo!",
+    pw_sub: "Nuestra IA ha redactado un anuncio profesional completo. Paga 15€ para acceder inmediatamente.",
+    pw_price_sub: "Pago único · Acceso inmediato · Servicio garantizado",
+    pw_code: "Código de pedido:",
+    stripe_btn: "💳 Pagar 15€ de forma segura",
+    pw_security: "🔐 Pago cifrado · Stripe · Sin datos bancarios almacenados",
+    pw_divider: "¿Ya has pagado?",
+    reveal_btn: "✅ Ya pagué — Ver mi anuncio",
+    ex_label: "Ejemplos de anuncios generados",
+    result_long: "Versión completa — Anuncio marketplace",
+    result_short: "Versión corta — Facebook / SMS",
+    copy_long: "📋 Copiar anuncio completo",
+    copy_short: "📋 Copiar versión corta",
+    ann_desc: "📋 Descripción", ann_points: "⭐ Puntos fuertes", ann_carac: "🔧 Características",
+    ann_transp: "⚠️ Transparencia", ann_infos: "📍 Info práctica & contacto",
+  },
+  de: {
+    hero_title: "Verkaufe alles",
+    hero_title_span: "schneller, besser präsentiert.",
+    hero_sub: "Unsere KI schreibt in 15 Sekunden eine vollständige professionelle Anzeige — catchy Titel, überzeugende Beschreibung, optimierte Keywords.",
+    tl1: "Formular ausfüllen", tl1t: "~3 Min",
+    tl2: "Optionale Schätzung", tl2t: "~10 Sek",
+    tl3: "KI erstellt Anzeige", tl3t: "~15 Sek",
+    tl4: "Sichere Zahlung", tl4t: "~30 Sek",
+    tl5: "Anzeige fertig!", tl5t: "Veröffentlichen",
+    trust1: "Sichere Stripe-Zahlung", trust2: "Anzeige in 15 Sekunden", trust3: "Garantiertes Ergebnis", trust4: "100% vertraulich",
+    price_title: "Vollständige professionelle Anzeige",
+    price_sub: "Optimierter Titel · Beschreibung · Stärken · SEO · Kurzversion",
+    cat_title: "Was verkaufen Sie?", cat_sub: "Wählen Sie die passende Kategorie",
+    cat_search: "z.B.: Auto, Handy, Sofa…",
+    price_block_title: "Preis & Ziel", price_block_sub: "Definieren Sie Ihre Verkaufsstrategie",
+    price_label: "Gewünschter Preis (€)", urgence_label: "Verkaufsdringlichkeit",
+    urg1: "⏳ Normaler Verkauf", urg2: "🔥 Schneller Verkauf", urg3: "💎 Maximaler Preis",
+    estimate_btn: "🔍 Marktwert nach Zustand schätzen",
+    est_s1: "Aktuellen Markt analysieren…", est_s2: "Abschreibung berechnen…", est_s3: "Schätzung generieren…",
+    est_label: "Aktuelle Marktschätzung",
+    est_low: "Niedrig", est_mid: "Mittel", est_high: "Hoch",
+    loc_title: "Standort & Kontakt", loc_sub: "Für potenzielle Käufer",
+    city_label: "Stadt", delivery_label: "Lieferung möglich?",
+    delivery_opts: ["Nein — nur Abholung","Ja — Käufer zahlt Versand","Ja — ich zahle Versand","Verhandelbar"],
+    name_label: "Vorname", phone_label: "Telefon",
+    dispo_label: "Verfügbarkeit für Besichtigungen",
+    dispo_ph: "z.B.: Wochenenden, Abends, nach Vereinbarung…",
+    reason_title: "Verkaufsgrund", reason_sub: "Beruhigt den Käufer",
+    reason_ph: "z.B.: Fahrzeugwechsel, Umzug, nicht mehr benötigt…",
+    submit_btn: "⚡ MEINE PROFESSIONELLE ANZEIGE ERSTELLEN",
+    loading_title: "Ihre Anzeige wird erstellt",
+    loading_sub: "Unsere KI analysiert Ihren Artikel und erstellt eine optimierte Anzeige.",
+    ls1: "Informationen analysieren", ls2: "Anzeige verfassen", ls3: "SEO-Optimierung", ls4: "Finalisieren",
+    pw_title: "Ihre Anzeige ist fertig!",
+    pw_sub: "Unsere KI hat eine vollständige professionelle Anzeige erstellt. Zahlen Sie 15€ für sofortigen Zugang.",
+    pw_price_sub: "Einmalige Zahlung · Sofortiger Zugang · Garantierter Service",
+    pw_code: "Bestellcode:",
+    stripe_btn: "💳 15€ sicher bezahlen",
+    pw_security: "🔐 Verschlüsselte Zahlung · Stripe · Keine Bankdaten gespeichert",
+    pw_divider: "Bereits bezahlt?",
+    reveal_btn: "✅ Ich habe bezahlt — Meine Anzeige anzeigen",
+    ex_label: "Beispiele von KI-generierten Anzeigen",
+    result_long: "Vollständige Version — Marktplatz-Anzeige",
+    result_short: "Kurzversion — Facebook / SMS",
+    copy_long: "📋 Vollständige Anzeige kopieren",
+    copy_short: "📋 Kurzversion kopieren",
+    ann_desc: "📋 Beschreibung", ann_points: "⭐ Stärken", ann_carac: "🔧 Eigenschaften",
+    ann_transp: "⚠️ Transparenz", ann_infos: "📍 Praktische Infos & Kontakt",
+  }
+};
+
+function applyLang(lang) {
+  const t = UI[lang] || UI.fr;
+  // Hero
+  const h1 = document.querySelector('.hero-headline');
+  if (h1) h1.innerHTML = t.hero_title + '<br><span>' + t.hero_title_span + '</span>';
+  const sub = document.querySelector('.hero-sub');
+  if (sub) sub.textContent = t.hero_sub;
+  // Timeline
+  const tls = document.querySelectorAll('.tl-label');
+  const tlt = document.querySelectorAll('.tl-time');
+  const tlData = [[t.tl1,t.tl1t],[t.tl2,t.tl2t],[t.tl3,t.tl3t],[t.tl4,t.tl4t],[t.tl5,t.tl5t]];
+  tlData.forEach(([label, time], i) => {
+    if (tls[i]) tls[i].innerHTML = label.replace(' ', '<br>');
+    if (tlt[i]) tlt[i].textContent = time;
+  });
+  // Trust bar
+  const trusts = document.querySelectorAll('.trust-item');
+  [t.trust1,t.trust2,t.trust3,t.trust4].forEach((txt,i) => { if (trusts[i]) trusts[i].textContent = txt; });
+  // Price banner
+  const pb = document.querySelector('.price-banner-left strong');
+  if (pb) pb.textContent = t.price_title;
+  const pbsub = document.querySelector('.price-banner-left');
+  if (pbsub) pbsub.innerHTML = '<strong>' + t.price_title + '</strong>' + t.price_sub;
+  // Category
+  const catTitle = document.querySelector('#typeGrid')?.closest('.block')?.querySelector('.block-title');
+  if (catTitle) catTitle.textContent = t.cat_title;
+  const catSub = document.querySelector('#typeGrid')?.closest('.block')?.querySelector('.block-sub');
+  if (catSub) catSub.textContent = t.cat_sub;
+  const catSearch = document.getElementById('typeSearch');
+  if (catSearch) catSearch.placeholder = t.cat_search;
+  // Price block
+  const priceTitle = document.querySelector('#price')?.closest('.block')?.querySelector('.block-title');
+  if (priceTitle) priceTitle.textContent = t.price_block_title;
+  // Price label
+  const priceLabel = document.querySelector("label[for='price'], #price")?.closest('.field')?.querySelector('label');
+  // Urgence buttons
+  const urgBtns = document.querySelectorAll('.urgence-btn');
+  [t.urg1,t.urg2,t.urg3].forEach((txt,i) => { if (urgBtns[i]) urgBtns[i].textContent = txt; });
+  // Estimate button
+  const estBtn = document.getElementById('estimateBtn');
+  if (estBtn && !estBtn.disabled) estBtn.textContent = t.estimate_btn;
+  // Estimate steps
+  ['es1','es2','es3'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = [t.est_s1,t.est_s2,t.est_s3][i];
+  });
+  // Estimate result labels
+  const estLabels = document.querySelectorAll('.est-label');
+  [t.est_low,t.est_mid,t.est_high].forEach((txt,i) => { if (estLabels[i]) estLabels[i].textContent = txt; });
+  // Submit button
+  const submitBtn = document.getElementById('submitBtn');
+  if (submitBtn) submitBtn.textContent = t.submit_btn;
+  // Loading
+  const loadTitle = document.querySelector('.loading-title');
+  if (loadTitle) loadTitle.textContent = t.loading_title;
+  const loadSub = document.querySelector('.loading-sub');
+  if (loadSub) loadSub.innerHTML = t.loading_sub;
+  ['ls1','ls2','ls3','ls4'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    if (el) { const dot = el.querySelector('.lstep-dot'); el.textContent = [t.ls1,t.ls2,t.ls3,t.ls4][i]; if (dot) el.prepend(dot); }
+  });
+  // Paywall
+  const pwTitle = document.querySelector('.pw-title');
+  if (pwTitle) pwTitle.textContent = t.pw_title;
+  const pwSub = document.querySelector('.pw-sub');
+  if (pwSub) pwSub.textContent = t.pw_sub;
+  const pwPriceSub = document.querySelector('.pw-price-sub');
+  if (pwPriceSub) pwPriceSub.textContent = t.pw_price_sub;
+  const stripeBtn = document.getElementById('stripeBtn');
+  if (stripeBtn) stripeBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/></svg> ' + t.stripe_btn;
+  const pwSecurity = document.querySelector('.pw-security');
+  if (pwSecurity) pwSecurity.textContent = t.pw_security;
+  const revealBtn = document.querySelector('.reveal-btn');
+  if (revealBtn) revealBtn.textContent = t.reveal_btn;
+  // Result labels
+  const resultLabels = document.querySelectorAll('.result-label');
+  if (resultLabels[0]) resultLabels[0].textContent = t.result_long;
+  if (resultLabels[1]) resultLabels[1].textContent = t.result_short;
+  const copyLong = document.getElementById('copyLongBtn');
+  if (copyLong) copyLong.textContent = t.copy_long;
+  const copyShort = document.getElementById('copyShortBtn');
+  if (copyShort) copyShort.textContent = t.copy_short;
+  // Ann block labels
+  const annLabels = document.querySelectorAll('.ann-block-label');
+  [t.ann_desc,t.ann_points,t.ann_carac,t.ann_transp,t.ann_infos].forEach((txt,i) => { if (annLabels[i]) annLabels[i].textContent = txt; });
+}
+const REF = new URLSearchParams(window.location.search).get('ref') || 'direct';
+const SESSION_ID = new URLSearchParams(window.location.search).get('session_id') || '';
+
+function generateOrderCode() {
+  const num = String(Math.floor(Math.random() * 9000) + 1000);
+  const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  return '#' + num + L[Math.floor(Math.random()*L.length)] + L[Math.floor(Math.random()*L.length)];
+}
+const ORDER_CODE = generateOrderCode();
+
+let selectedLang = 'fr', selectedType = 'voiture', selectedUrgence = 'normal';
+let generatedLong = '', generatedShort = '';
+
+// ── CONFIGS CHAMPS PAR TYPE ───────────────────────────────────────────
+const CONFIGS = {
+  voiture: { icon:'🚗', sections:[
+    { title:'Véhicule', icon:'🚗', sub:'Informations générales', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'BMW, Renault, Peugeot…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'Série 3, 308, Clio…'},
+      {id:'year',label:'Année',placeholder:'2019',type:'number',half:true},
+      {id:'version',label:'Version / Finition',placeholder:'GTI, Business, Sport…',half:true},
+      {id:'color',label:'Couleur',placeholder:'Noir nacré, Blanc…',half:true},
+      {id:'doors',label:'Nb portes',type:'select',options:['2','3','4','5'],half:true},
+    ]},
+    { title:'Motorisation', icon:'⚙️', sub:'Moteur et performances', fields:[
+      {id:'fuel',label:'Carburant',type:'select',options:['Essence','Diesel','Hybride rechargeable','Hybride simple','Électrique','GPL','Éthanol'],half:true},
+      {id:'gearbox',label:'Boîte de vitesses',type:'select',options:['Manuelle 5v','Manuelle 6v','Automatique','Robotisée','CVT'],half:true},
+      {id:'power',label:'Puissance (ch)',placeholder:'130',type:'number',third:true},
+      {id:'engine',label:'Cylindrée (cc)',placeholder:'1997',type:'number',third:true},
+      {id:'consumption',label:'Conso mixte (L/100)',placeholder:'6.2',type:'number',third:true},
+      {id:'co2',label:'Émissions CO2 (g/km)',placeholder:'120',type:'number',half:true},
+      {id:'traction',label:'Traction',type:'select',options:['Traction avant','Propulsion','4x4 / AWD','4WD'],half:true},
+    ]},
+    { title:'État & historique', icon:'📋', sub:'Condition et passé du véhicule', fields:[
+      {id:'mileage',label:'Kilométrage (km)',req:true,placeholder:'75000',type:'number',half:true},
+      {id:'owners',label:'Nombre de propriétaires',type:'select',options:['1er main','2 propriétaires','3 propriétaires','4 ou plus'],half:true},
+      {id:'ct',label:'Contrôle technique',type:'select',options:['Valide (date ?)','À refaire','Non présenté'],half:true},
+      {id:'carnet',label:'Carnet entretien',type:'select',options:['Complet et tamponné','Partiel','Non disponible'],half:true},
+      {id:'service',label:'Dernier entretien effectué',placeholder:'Ex: Vidange + filtre à 70 000 km en mars 2023'},
+      {id:'condition',label:'État général',req:true,type:'select',options:['Excellent — aucun défaut','Très bon — micro-défauts','Bon — défauts mineurs','Moyen — défauts visibles','À réparer']},
+      {id:'defauts',label:'Défauts connus (soyez honnête — ça inspire confiance)',type:'textarea',placeholder:'Rayures, bosses, voyant allumé, bruit moteur, clim HS…'},
+      {id:'reparations',label:'Réparations / entretien récents',type:'textarea',placeholder:'Courroie de distribution changée, embrayage neuf, pneus neufs…'},
+    ]},
+    { title:'Équipements & options', icon:'✨', sub:'Ce qui rend votre voiture attractive', fields:[
+      {id:'sunroof',label:'Toit ouvrant / panoramique',type:'select',options:['Non','Ouvrant standard','Panoramique'],half:true},
+      {id:'clim',label:'Climatisation',type:'select',options:['Non','Manuelle','Automatique bizone','Automatique trizone'],half:true},
+      {id:'gps',label:'Navigation / GPS',type:'select',options:['Non','GPS intégré','CarPlay / Android Auto','GPS + CarPlay'],half:true},
+      {id:'camera',label:'Aide au stationnement',type:'select',options:['Non','Radars arrière','Radars avant + arrière','Caméra recul','360° + radars'],half:true},
+      {id:'seats',label:'Sièges',type:'select',options:['Standard','Chauffants','Chauffants + ventilés','Massants','Sport / baquet'],half:true},
+      {id:'lights',label:'Éclairage',type:'select',options:['Halogène','Xénon','Full LED','LED Matrix'],half:true},
+      {id:'options',label:'Autres équipements',type:'textarea',placeholder:'Jantes alu, toit ouvrant, sono premium, démarrage sans clé, siège conducteur électrique, régulateur adaptatif…'},
+    ]}
+  ]},
+  moto: { icon:'🏍️', sections:[
+    { title:'Moto / Scooter', icon:'🏍️', sub:'Informations du deux-roues', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Honda, Yamaha, Kawasaki, BMW…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'CB500F, MT-07, GSX-S750…'},
+      {id:'year',label:'Année',placeholder:'2020',type:'number',half:true},
+      {id:'color',label:'Couleur',placeholder:'Noir mat, Rouge…',half:true},
+      {id:'type_moto',label:'Type',type:'select',options:['Roadster','Sportive','Trail / Adventure','Cruiser','Enduro','Scooter','Custom'],half:true},
+      {id:'cylindree',label:'Cylindrée (cc)',placeholder:'700',type:'number',half:true},
+      {id:'power',label:'Puissance (ch)',placeholder:'75',type:'number',half:true},
+      {id:'permis',label:'Permis requis',type:'select',options:['A1 (125cc)','A2','A (illimité)'],half:true},
+    ]},
+    { title:'État & kilométrage', icon:'📋', sub:'', fields:[
+      {id:'mileage',label:'Kilométrage (km)',req:true,placeholder:'18000',type:'number',half:true},
+      {id:'condition',label:'État général',req:true,type:'select',options:['Excellent','Très bon','Bon','Moyen','À réparer'],half:true},
+      {id:'owners',label:'Nb propriétaires',type:'select',options:['1er main','2','3+'],half:true},
+      {id:'ct',label:'CT (si applicable)',type:'select',options:['Valide','À refaire','Non requis'],half:true},
+      {id:'service',label:'Dernier entretien',placeholder:'Révision complète à 15 000 km'},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Chute(s), rayures, pièces remplacées, consommation huile…'},
+    ]},
+    { title:'Équipements & accessoires', icon:'✨', sub:'', fields:[
+      {id:'options',label:'Options & accessoires inclus',type:'textarea',placeholder:'Sacoches, bulle, poignées chauffantes, GPS, pot sport, protège-mains, support téléphone…'},
+      {id:'equipements_inclus',label:'Équipements de protection inclus',type:'textarea',placeholder:'Casque, veste, gants, bottes… (si vendus avec)'},
+    ]}
+  ]},
+  utilitaire: { icon:'🚐', sections:[
+    { title:'Utilitaire / Camping-car / Caravane', icon:'🚐', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Renault, Peugeot, Mercedes, Fiat…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'Master, Trafic, Sprinter, Ducato…'},
+      {id:'year',label:'Année',placeholder:'2018',type:'number',half:true},
+      {id:'type_utilitaire',label:'Type',type:'select',options:['Fourgon','Camionnette plateau','Benne','Camping-car intégral','Camping-car profilé','Caravane','Van aménagé'],half:true},
+      {id:'fuel',label:'Carburant',type:'select',options:['Diesel','Essence','Électrique'],half:true},
+      {id:'mileage',label:'Kilométrage (km)',req:true,placeholder:'120000',type:'number',half:true},
+      {id:'payload',label:'Charge utile (kg)',placeholder:'1200',half:true},
+      {id:'volume',label:'Volume (m³)',placeholder:'8',half:true},
+    ]},
+    { title:'État & aménagement', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Excellent','Très bon','Bon','Moyen','À réparer']},
+      {id:'amenagement',label:'Aménagement intérieur',type:'textarea',placeholder:'Rayonnages, benne, hayon élévateur, lit, cuisine, douche, panneau solaire…'},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rouille, problème mécanique, carrosserie…'},
+    ]}
+  ]},
+  velo: { icon:'🚲', sections:[
+    { title:'Vélo / Trottinette / Engin de mobilité', icon:'🚲', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Trek, Giant, Decathlon, Xiaomi…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'FX3, Crossrider, M365…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2022',half:true},
+      {id:'type_velo',label:'Type',type:'select',options:['VTT','Vélo de route','Vélo électrique','Vélo de ville','Trottinette électrique','Trottinette manuelle','Skateboard électrique','Gyropode'],half:true},
+      {id:'color',label:'Couleur',placeholder:'Noir, Blanc, Vert…',half:true},
+      {id:'taille',label:'Taille / Cadre',placeholder:'M, 54cm, 19 pouces…',half:true},
+    ]},
+    { title:'État & caractéristiques', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Neuf / jamais utilisé','Comme neuf','Très bon','Bon','Moyen']},
+      {id:'battery',label:'Autonomie / Batterie (si électrique)',placeholder:'Ex: 50 km, batterie 36V 10Ah, 80% de capacité…'},
+      {id:'vitesses',label:'Vitesses / Transmission',placeholder:'Ex: 21 vitesses Shimano, mono-vitesse, dérailleur neuf…'},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Pneu usé, frein à régler, rayure cadre…'},
+      {id:'options',label:'Accessoires inclus',type:'textarea',placeholder:'Antivol, sacoche, lumières, chargeur, bidon, casque…'},
+    ]}
+  ]},
+  smartphone: { icon:'📱', sections:[
+    { title:'Smartphone / Téléphone', icon:'📱', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Apple, Samsung, Google, OnePlus…'},
+      {id:'model',label:'Modèle exact',req:true,placeholder:'iPhone 15 Pro, Galaxy S24, Pixel 8…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2023',half:true},
+      {id:'color',label:'Couleur / Capacité',placeholder:'Noir Titane 256Go…',half:true},
+    ]},
+    { title:'État & fonctionnement', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Neuf / jamais utilisé','Comme neuf','Très bon','Bon','Fonctionnel avec défauts']},
+      {id:'battery',label:'État de la batterie',placeholder:'94%, rapport Apple dispo, neuve remplacée…',half:true},
+      {id:'warranty',label:'Garantie restante',placeholder:'Jusqu\'en 06/2025, AppleCare, Non',half:true},
+      {id:'defauts',label:'Défauts / problèmes',type:'textarea',placeholder:'Rayure écran, bouton volume raide, micro qui grésille…'},
+      {id:'reparations',label:'Réparations effectuées',type:'textarea',placeholder:'Écran remplacé Apple Store, batterie changée, coque changée…'},
+    ]},
+    { title:'Contenu & accessoires', icon:'📦', sub:'', fields:[
+      {id:'options',label:'Éléments inclus dans la vente',type:'textarea',placeholder:'Boîte originale, câble, chargeur 20W, AirPods, coque, verre trempé, facture…'},
+      {id:'debloque',label:'Débloqué tous opérateurs ?',type:'select',options:['Oui — débloqué tous opérateurs','Non — opérateur spécifique','Non applicable'],half:true},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+      {id:'icloud',label:'iCloud / Compte désactivé ?',type:'select',options:['Oui — prêt à configurer','N/A (Android)'],half:true},
+      {id:'imei',label:'IMEI propre (non volé) ?',type:'select',options:['Oui — vérifiable','Non vérifié'],half:true},
+    ]}
+  ]},
+  ordinateur: { icon:'💻', sections:[
+    { title:'Ordinateur portable / PC bureau', icon:'💻', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Apple, Dell, HP, ASUS, Lenovo…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'MacBook Pro 14" M3, XPS 15, ROG…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2022',half:true},
+      {id:'color',label:'Couleur / Finition',placeholder:'Argent, Noir, Gris sidéral…',half:true},
+    ]},
+    { title:'Configuration technique', icon:'⚙️', sub:'', fields:[
+      {id:'cpu',label:'Processeur (CPU)',placeholder:'Apple M3 Pro, Intel i7-12700H, Ryzen 7…',half:true},
+      {id:'ram',label:'RAM',placeholder:'16 Go, 32 Go…',half:true},
+      {id:'storage',label:'Stockage',placeholder:'512 Go SSD NVMe, 1 To…',half:true},
+      {id:'gpu',label:'Carte graphique (GPU)',placeholder:'RTX 4060, AMD RX 7600, intégrée…',half:true},
+      {id:'screen',label:'Écran',placeholder:'15.6" 4K OLED, 14" Retina…',half:true},
+      {id:'battery',label:'Autonomie / Batterie',placeholder:'10h, 80% de capacité, neuve…',half:true},
+    ]},
+    { title:'État & contenu', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','État moyen']},
+      {id:'warranty',label:'Garantie restante',placeholder:'AppleCare jusqu\'en 2026, Non'},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rayure écran, touche collante, batterie faible…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Boîte, chargeur, souris, sacoche, licences logiciels…'},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+      {id:'os',label:'Système d\'exploitation',type:'select',options:['macOS','Windows 11','Windows 10','Linux','ChromeOS'],half:true},
+    ]}
+  ]},
+  tv_audio: { icon:'📺', sections:[
+    { title:'TV / Audio / Hi-Fi', icon:'📺', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Samsung, LG, Sony, Bose, Devialet…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'OLED65C3, Q990C, HomePod…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2022',half:true},
+      {id:'type_tv',label:'Type',type:'select',options:['TV','Barre de son','Enceinte','Ampli Hi-Fi','Platine vinyle','Casque audio','Système Home Cinéma','Projecteur'],half:true},
+    ]},
+    { title:'Caractéristiques & état', icon:'⚙️', sub:'', fields:[
+      {id:'taille',label:'Taille / Dimensions',placeholder:'65 pouces, 120cm…',half:true},
+      {id:'resolution',label:'Résolution / Technologie',placeholder:'4K OLED, QLED, 8K…',half:true},
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Fonctionnel avec défauts']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Pixel mort, rayure écran, télécommande manquante…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Télécommande, câbles HDMI, support mural, notice, boîte…'},
+    ]}
+  ]},
+  console: { icon:'🎮', sections:[
+    { title:'Console / Jeux vidéo', icon:'🎮', sub:'', fields:[
+      {id:'brand',label:'Marque / Plateforme',req:true,placeholder:'Sony, Microsoft, Nintendo…'},
+      {id:'model',label:'Modèle exact',req:true,placeholder:'PS5 Disc, Xbox Series X, Switch OLED…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2022',half:true},
+      {id:'color',label:'Couleur / Édition',placeholder:'Blanc standard, Édition limitée Spider-Man…',half:true},
+      {id:'storage',label:'Stockage',placeholder:'825 Go, 1 To avec SSD extension…',half:true},
+      {id:'manettes',label:'Nombre de manettes',placeholder:'2 manettes DualSense',half:true},
+    ]},
+    { title:'État & contenu', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Fonctionnel avec défauts']},
+      {id:'jeux',label:'Jeux inclus',type:'textarea',placeholder:'The Last of Us Part I, Demon\'s Souls, Spider-Man 2… (précisez physique ou numérique)'},
+      {id:'accessoires',label:'Accessoires inclus',type:'textarea',placeholder:'Câble HDMI, alimentation, casque, volant, PlayStation Camera…'},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rayure sur la coque, stick gauche qui dérive, lecteur bruyant…'},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+      {id:'warranty',label:'Garantie restante',placeholder:'Jusqu\'en 01/2025, Non',half:true},
+    ]}
+  ]},
+  photo: { icon:'📷', sections:[
+    { title:'Appareil photo / Vidéo / Optique', icon:'📷', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Sony, Canon, Nikon, Fujifilm, DJI…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'A7 IV, EOS R6, Z6 III, X-T5…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2022',half:true},
+      {id:'type_photo',label:'Type',type:'select',options:['Hybride plein format','Hybride APS-C','Reflex','Compact','Action cam','Drone','Objectif','Stabilisateur','Caméra vidéo'],half:true},
+      {id:'declenchements',label:'Nombre de déclenchements',placeholder:'Ex: 12 500 déclenchements',half:true},
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Fonctionnel avec défauts'],half:true},
+    ]},
+    { title:'Contenu & défauts', icon:'📦', sub:'', fields:[
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Boîte, objectif 24-70mm, batterie x2, chargeur, sangle, filtre UV, carte SD 128Go…'},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rayure capteur, poussière sur objectif, grip usé, écran fissuré…'},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+      {id:'warranty',label:'Garantie restante',placeholder:'Jusqu\'en 03/2025, Non',half:true},
+    ]}
+  ]},
+  electromenager: { icon:'🍳', sections:[
+    { title:'Petit électroménager / Cuisine', icon:'🍳', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Thermomix, KitchenAid, De\'Longhi…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'TM6, Artisan, Dinamica…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2021',half:true},
+      {id:'type_electro',label:'Type',type:'select',options:['Robot cuiseur','Robot pâtissier','Machine à café','Aspirateur robot','Aspirateur','Mixeur / Blender','Friteuse à air','Four','Micro-ondes','Autre'],half:true},
+    ]},
+    { title:'État & contenu', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Fonctionnel avec défauts']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rayures, pièce manquante, fonction défaillante…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Boîte, accessoires d\'origine, livres de recettes, tapis, filtres de rechange…'},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+      {id:'warranty',label:'Garantie restante',placeholder:'Jusqu\'en 2025, Non',half:true},
+    ]}
+  ]},
+  meuble: { icon:'🛋️', sections:[
+    { title:'Meuble', icon:'🛋️', sub:'', fields:[
+      {id:'brand',label:'Marque / Fabricant',req:true,placeholder:'Ikea, Maisons du Monde, Roche Bobois…'},
+      {id:'model',label:'Nom / Modèle',req:true,placeholder:'KALLAX, Canapé Mellow, Table Eames…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2021',half:true},
+      {id:'type_meuble',label:'Type',type:'select',options:['Canapé / Sofa','Lit / Literie','Table','Chaise / Fauteuil','Bureau','Bibliothèque / Étagère','Armoire / Dressing','Commode','Table basse','Buffet','Autre'],half:true},
+      {id:'color',label:'Couleur / Matière',placeholder:'Chêne naturel, Blanc laqué, Velours gris…',half:true},
+      {id:'dimensions',label:'Dimensions (L x l x H)',placeholder:'200 x 90 x 75 cm',half:true},
+    ]},
+    { title:'État & informations pratiques', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Neuf / jamais utilisé','Très bon','Bon','État moyen','À restaurer']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rayures, taches, pied cassé, tissu élimé…'},
+      {id:'reparations',label:'Restauration / entretien effectués',type:'textarea',placeholder:'Nouvelle tapisserie, vernis refait, pied réparé…'},
+      {id:'poids',label:'Poids estimé',placeholder:'30 kg',half:true},
+      {id:'montage',label:'Démontable ?',type:'select',options:['Oui — facilement','Partiellement','Non'],half:true},
+      {id:'options',label:'Éléments inclus',type:'textarea',placeholder:'Coussins, quincaillerie, notice de montage, pieds de rechange…'},
+    ]}
+  ]},
+  decoration: { icon:'🖼️', sections:[
+    { title:'Décoration / Art / Luminaire', icon:'🖼️', sub:'', fields:[
+      {id:'brand',label:'Créateur / Marque',req:true,placeholder:'Flos, Hay, Serge Mouille, Artiste…'},
+      {id:'model',label:'Nom / Description',req:true,placeholder:'Lampe Arco, Tableau abstrait, Vase soliflore…'},
+      {id:'year',label:'Année / Époque',placeholder:'2020, Années 70, Contemporain…',half:true},
+      {id:'type_deco',label:'Type',type:'select',options:['Luminaire','Tableau / Œuvre','Vase / Céramique','Miroir','Tapis','Plante / Pot','Objet décoratif','Autre'],half:true},
+      {id:'dimensions',label:'Dimensions',placeholder:'60 x 80 cm, H: 45 cm…',half:true},
+      {id:'color',label:'Couleur / Matière',placeholder:'Laiton, Marbre blanc, Huile sur toile…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Parfait état','Très bon','Bon','État moyen']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Éclat, fissure, usure normale…'},
+      {id:'certificat',label:'Certificat d\'authenticité',type:'select',options:['Oui','Non','Non applicable'],half:true},
+      {id:'facture',label:'Facture / Provenance',type:'select',options:['Oui','Non'],half:true},
+    ]}
+  ]},
+  electromenager_gros: { icon:'🧺', sections:[
+    { title:'Gros électroménager', icon:'🧺', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Bosch, Samsung, Miele, LG, Smeg…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'WGB254A0FR, RF65A977FSR…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2020',half:true},
+      {id:'type_gros',label:'Type',type:'select',options:['Lave-linge','Sèche-linge','Lave-vaisselle','Réfrigérateur','Congélateur','Réfrigérateur américain','Piano de cuisson','Hotte','Cave à vin','Autre'],half:true},
+      {id:'capacite',label:'Capacité',placeholder:'9 kg, 500L, 60cm…',half:true},
+      {id:'classe',label:'Classe énergétique',placeholder:'A+++, A, B…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Très bon','Bon','Fonctionnel avec défauts']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Bruit anormal, joint usé, programmateur capricieux…'},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+      {id:'warranty',label:'Garantie restante',placeholder:'Jusqu\'en 2025, Non',half:true},
+    ]}
+  ]},
+  vetement_homme: { icon:'👔', sections:[
+    { title:'Vêtement homme', icon:'👔', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Nike, Ralph Lauren, Hugo Boss…'},
+      {id:'model',label:'Type / Nom article',req:true,placeholder:'Veste bomber, Chino, Chemise Oxford…'},
+      {id:'year',label:'Saison / Année',placeholder:'Automne-Hiver 2023…',half:true},
+      {id:'color',label:'Couleur',placeholder:'Navy, Blanc cassé…',half:true},
+      {id:'size',label:'Taille',placeholder:'M, L, 42, EU 50…',half:true},
+      {id:'matiere',label:'Matière',placeholder:'100% coton, Laine mérinos…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Neuf avec étiquette','Neuf sans étiquette','Très bon','Bon','État moyen']},
+      {id:'nbport',label:'Nombre de fois porté',placeholder:'Jamais, 2 fois, Quelques fois…',half:true},
+      {id:'lavage',label:'Instructions lavage',type:'select',options:['Machine 30°','Machine 40°','Lavage délicat','Nettoyage à sec uniquement'],half:true},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Bouton manquant, décoloration légère, accroc…'},
+      {id:'options',label:'Inclus',type:'textarea',placeholder:'Étiquette, sac d\'origine, ceinture assortie…'},
+      {id:'prixachat',label:'Prix d\'achat original',placeholder:'Ex: 180€',half:true},
+    ]}
+  ]},
+  vetement_femme: { icon:'👗', sections:[
+    { title:'Vêtement femme', icon:'👗', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Zara, Jacquemus, Sandro, Maje…'},
+      {id:'model',label:'Type / Nom article',req:true,placeholder:'Robe midi, Manteau laine, Blouse…'},
+      {id:'year',label:'Saison / Année',placeholder:'Printemps-Été 2024…',half:true},
+      {id:'color',label:'Couleur',placeholder:'Écru, Terracotta, Kaki…',half:true},
+      {id:'size',label:'Taille',placeholder:'S, 36, T2…',half:true},
+      {id:'matiere',label:'Matière',placeholder:'Lin, Soie, Viscose…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Neuf avec étiquette','Neuf sans étiquette','Très bon','Bon','État moyen']},
+      {id:'nbport',label:'Nombre de fois porté',placeholder:'Jamais, 1 fois, Porté 2-3x…',half:true},
+      {id:'lavage',label:'Instructions lavage',type:'select',options:['Machine 30°','Lavage délicat','Nettoyage à sec','À la main'],half:true},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Fil tiré, légère décoloration, fermeture éclair à revoir…'},
+      {id:'prixachat',label:'Prix d\'achat original',placeholder:'Ex: 120€',half:true},
+      {id:'options',label:'Inclus',type:'textarea',placeholder:'Étiquette, housse, sac d\'origine…'},
+    ]}
+  ]},
+  chaussures: { icon:'👟', sections:[
+    { title:'Chaussures / Sneakers', icon:'👟', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Nike, Adidas, New Balance, Vans…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'Air Force 1, Samba, 550, Old Skool…'},
+      {id:'year',label:'Année',placeholder:'2023',half:true},
+      {id:'color',label:'Coloris',placeholder:'White/White, Core Black…',half:true},
+      {id:'size',label:'Pointure',placeholder:'EU 42, US 9, UK 8…',half:true},
+      {id:'matiere',label:'Matière',placeholder:'Cuir pleine fleur, Suède, Mesh…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Deadstock (neuf jamais porté)','Très bon (1-2 sorties)','Bon (quelques sorties)','État moyen (usage régulier)']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Semelle jaunie, crease sur le toe box, lacets usés…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Boîte originale, lacets de rechange, chausse-pieds, sac à poussière…'},
+      {id:'prixachat',label:'Prix d\'achat',placeholder:'Ex: 140€ chez Snkrs',half:true},
+      {id:'facture',label:'Facture / Reçu',type:'select',options:['Oui','Non'],half:true},
+    ]}
+  ]},
+  montre_bijoux: { icon:'⌚', sections:[
+    { title:'Montre / Bijoux', icon:'⌚', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Rolex, Omega, Seiko, Swarovski…'},
+      {id:'model',label:'Modèle / Référence',req:true,placeholder:'Submariner 116610LN, Speedmaster…'},
+      {id:'year',label:'Année d\'acquisition',placeholder:'2020',half:true},
+      {id:'type_montre',label:'Type',type:'select',options:['Montre automatique','Montre à quartz','Montre connectée','Bracelet','Collier / Pendentif','Bague','Boucles d\'oreilles','Autre'],half:true},
+      {id:'matiere',label:'Matière / Métal',placeholder:'Or 18k, Acier inoxydable, Argent 925…',half:true},
+      {id:'taille',label:'Taille / Diamètre',placeholder:'40mm, Tour de doigt 54…',half:true},
+    ]},
+    { title:'État & documents', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon — traces d\'usure normales','État moyen']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rayures sur la lunette, bracelet à changer, couronne raide…'},
+      {id:'revision',label:'Dernière révision',placeholder:'Ex: Révision complète en 2022 chez Omega',half:true},
+      {id:'authenticite',label:'Authenticité',type:'select',options:['Certificat d\'authenticité + boîte','Boîte originale sans certificat','Facture boutique','Authentique sans documents'],half:true},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Boîte originale, certificat, bracelet supplémentaire, chiffon, notice…'},
+    ]}
+  ]},
+  sac: { icon:'👜', sections:[
+    { title:'Sac / Maroquinerie', icon:'👜', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Louis Vuitton, Gucci, Longchamp, A.P.C…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'Neverfull MM, Ophidia GG, Pliage…'},
+      {id:'year',label:'Année d\'acquisition',placeholder:'2021',half:true},
+      {id:'type_sac',label:'Type',type:'select',options:['Sac à main','Sac à dos','Sac bandoulière','Sac de voyage','Portefeuille','Clutch','Ceinture'],half:true},
+      {id:'color',label:'Couleur / Matière',placeholder:'Monogram Canvas, Cuir grain noir…',half:true},
+      {id:'dimensions',label:'Dimensions',placeholder:'30 x 25 x 15 cm',half:true},
+    ]},
+    { title:'État & authenticité', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','État moyen']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Coins usés, marque sur le cuir, fermeture éclair à lubrifier…'},
+      {id:'authenticite',label:'Authenticité',type:'select',options:['Authentique + boîte + facture','Authentique + boîte','Authentique — facture non disponible','Non applicable']},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Sac à poussière, boîte, cadenas, clés, anse de rechange…'},
+    ]}
+  ]},
+  sport: { icon:'🏋️', sections:[
+    { title:'Sport / Fitness / Loisirs', icon:'🏋️', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Technogym, Domyos, Wilson, Callaway…'},
+      {id:'model',label:'Modèle / Type',req:true,placeholder:'Vélo elliptique, Raquette de tennis, Set de golf…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2021',half:true},
+      {id:'type_sport',label:'Sport / Discipline',placeholder:'Fitness, Tennis, Golf, Natation, Escalade…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Fonctionnel avec défauts']},
+      {id:'usage',label:'Fréquence d\'utilisation',placeholder:'Peu utilisé, Hebdomadaire, Utilisé régulièrement…'},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Usure normale, câble à changer, pneu crevé…'},
+      {id:'options',label:'Accessoires inclus',type:'textarea',placeholder:'Raquettes, balles, tapis, chargeur, notice, sacoche…'},
+    ]}
+  ]},
+  velo_sport: { icon:'🚴', sections:[
+    { title:'Vélo sport / Route / Gravel', icon:'🚴', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Trek, Specialized, Cannondale, Pinarello…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'Emonda SL6, Tarmac SL7, Topstone…'},
+      {id:'year',label:'Année',placeholder:'2021',half:true},
+      {id:'type_velo2',label:'Type',type:'select',options:['Route','Gravel','VTT cross-country','VTT enduro','BMX','Piste'],half:true},
+      {id:'taille',label:'Taille cadre',placeholder:'M, 54cm, L…',half:true},
+      {id:'color',label:'Coloris',placeholder:'Matte Black, Carbon Raw…',half:true},
+      {id:'groupset',label:'Groupe',placeholder:'Shimano Ultegra Di2, SRAM Force AXS…',half:true},
+      {id:'roues',label:'Roues',placeholder:'Mavic Ksyrium, Zipp 303…',half:true},
+    ]},
+    { title:'État & modifications', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Excellent','Très bon','Bon','Moyen']},
+      {id:'km',label:'Kilométrage estimé',placeholder:'Ex: ~3000 km',half:true},
+      {id:'defauts',label:'Défauts / usure',type:'textarea',placeholder:'Usure chaîne, cassette, câbles, pneus…'},
+      {id:'options',label:'Accessoires inclus',type:'textarea',placeholder:'Ordinateur, pédales, cale-pieds, bidon, pompe, sacoche…'},
+    ]}
+  ]},
+  instrument: { icon:'🎸', sections:[
+    { title:'Instrument de musique', icon:'🎸', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Fender, Gibson, Yamaha, Roland…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'Stratocaster, Les Paul, P-45, RD-88…'},
+      {id:'year',label:'Année de fabrication',placeholder:'2018',half:true},
+      {id:'type_instrument',label:'Type',type:'select',options:['Guitare électrique','Guitare acoustique','Basse','Piano / Clavier','Batterie','Saxophone','Violon','Trompette','Autre'],half:true},
+      {id:'color',label:'Couleur / Finition',placeholder:'Sunburst, Blanc Artic, Noir mat…',half:true},
+      {id:'origine',label:'Lieu de fabrication',placeholder:'USA, Japon, Mexique…',half:true},
+    ]},
+    { title:'État & accessoires', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon — légères marques d\'utilisation','Moyen']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rayures, sillets usés, mécaniques à graisser, touche à nettoyer…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Étui/housse, câble jack, pédalier, ampli, médiators, courroie…'},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+    ]}
+  ]},
+  livre_dvd: { icon:'📚', sections:[
+    { title:'Livre / DVD / Vinyle / BD', icon:'📚', sub:'', fields:[
+      {id:'brand',label:'Auteur / Artiste / Réalisateur',req:true,placeholder:'Victor Hugo, Pink Floyd, Spielberg…'},
+      {id:'model',label:'Titre',req:true,placeholder:'Les Misérables, The Wall, Jurassic Park…'},
+      {id:'year',label:'Année d\'édition',placeholder:'2019',half:true},
+      {id:'type_media',label:'Type',type:'select',options:['Livre','Roman','BD / Manga','DVD / Blu-ray','Vinyle 33T','Vinyle 45T','CD','Coffret'],half:true},
+      {id:'editeur',label:'Éditeur / Label',placeholder:'Gallimard, Atlantic, Universal…',half:true},
+      {id:'edition',label:'Édition',placeholder:'1ère édition, Édition collector, Limitée…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Neuf sous blister','Comme neuf','Très bon','Bon','État moyen']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Jaquette cornée, dédicace, notes au crayon, rayure disque…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Jaquette, insert, poster, livret, boîte slip…'},
+    ]}
+  ]},
+  bricolage: { icon:'🔨', sections:[
+    { title:'Bricolage / Outillage / Électroportatif', icon:'🔨', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Bosch, Makita, Dewalt, Milwaukee…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'GKS 18V, DHP481, DCF887…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2021',half:true},
+      {id:'type_outil',label:'Type',type:'select',options:['Perceuse / Visseuse','Scie circulaire','Ponceuse','Meuleuse','Laser / Mesure','Compresseur','Générateur','Outillage à main','Échafaudage','Autre'],half:true},
+      {id:'voltage',label:'Tension / Motorisation',placeholder:'18V, 230V, thermique…',half:true},
+      {id:'usage',label:'Utilisation',placeholder:'Professionnel, chantier, DIY maison…',half:true},
+    ]},
+    { title:'État & contenu', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Fonctionnel avec usure']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Usure des charbons, fuite, câble abîmé…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Batterie x2, chargeur, coffret, accessoires (forets, lames…), notice…'},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+    ]}
+  ]},
+  jardin: { icon:'🌿', sections:[
+    { title:'Jardin / Terrasse / Extérieur', icon:'🌿', sub:'', fields:[
+      {id:'brand',label:'Marque / Fabricant',req:true,placeholder:'Husqvarna, Bosch, Fermob, Unopiu…'},
+      {id:'model',label:'Modèle / Type d\'article',req:true,placeholder:'Tondeuse robot, Salon de jardin, Barbecue…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2021',half:true},
+      {id:'type_jardin',label:'Type',type:'select',options:['Tondeuse','Robot tondeuse','Taille-haie','Salon de jardin','Barbecue / Plancha','Piscine / Spa','Abri de jardin','Serre','Plantes','Poterie / Décoration extérieure','Autre'],half:true},
+      {id:'dimensions',label:'Dimensions',placeholder:'Table 180cm, Piscine 5x3m…',half:true},
+      {id:'color',label:'Couleur / Matière',placeholder:'Teck, Aluminium gris anthracite…',half:true},
+    ]},
+    { title:'État & contenu', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Moyen — à nettoyer / réparer']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Rouille légère, bâche percée, moteur à réviser…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Housse de protection, accessoires, câble périmétrique, notice…'},
+    ]}
+  ]},
+  puériculture: { icon:'👶', sections:[
+    { title:'Puériculture / Jouets / Enfants', icon:'👶', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Stokke, Bugaboo, Lego, Fisher-Price…'},
+      {id:'model',label:'Modèle / Nom article',req:true,placeholder:'Tripp Trapp, Fox 5, Technic 42143…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2022',half:true},
+      {id:'type_puer',label:'Type',type:'select',options:['Poussette / Landau','Siège auto','Lit bébé / Cododo','Chaise haute','Jouet','Jeu de société','Vélo / Draisienne','Porteur','Trottinette enfant','Autre'],half:true},
+      {id:'age_cible',label:'Tranche d\'âge',placeholder:'0-6 mois, 3-8 ans, Tous âges…',half:true},
+      {id:'color',label:'Couleur',placeholder:'Natural, Bleu, Rose…',half:true},
+    ]},
+    { title:'État & sécurité', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Moyen']},
+      {id:'securite',label:'Normes de sécurité',placeholder:'NF, CE, EN 1888…',half:true},
+      {id:'rappel',label:'Rappel produit',type:'select',options:['Non concerné','Vérifié — aucun rappel'],half:true},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Déchirure tissu, roue à recentrer, pièce manquante…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Nacelle, ombrelle, housse, mode d\'emploi, pièces de rechange…'},
+    ]}
+  ]},
+  animal: { icon:'🐾', sections:[
+    { title:'Animalerie / Accessoires animaux', icon:'🐾', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Kong, Royal Canin, Ferplast, Pawhut…'},
+      {id:'model',label:'Type d\'article',req:true,placeholder:'Cage, Niche, Griffoir, Gamelle, Laisse…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2022',half:true},
+      {id:'type_animal',label:'Pour quel animal ?',placeholder:'Chien, Chat, Lapin, Oiseau, Reptile…',half:true},
+      {id:'dimensions',label:'Dimensions / Taille',placeholder:'Pour chien 20-30kg, L: 80cm…',half:true},
+      {id:'color',label:'Couleur / Matière',placeholder:'Beige, Plastique robuste, Bois…',half:true},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Comme neuf','Très bon','Bon','Moyen']},
+      {id:'defauts',label:'Défauts / usure',type:'textarea',placeholder:'Griffe, morsure, tache lavable, pièce manquante…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Accessoires, gamelles, jouets, coussin, notice…'},
+      {id:'raison_vente_animal',label:'Raison de la vente',placeholder:'Animal décédé, changement d\'animal, upgrade…'},
+    ]}
+  ]},
+  materiel_pro: { icon:'💼', sections:[
+    { title:'Matériel professionnel / Bureautique', icon:'💼', sub:'', fields:[
+      {id:'brand',label:'Marque',req:true,placeholder:'Brother, Epson, Cisco, Zebra…'},
+      {id:'model',label:'Modèle',req:true,placeholder:'HL-L8360CDW, WorkForce, SG350…'},
+      {id:'year',label:'Année d\'achat',placeholder:'2020',half:true},
+      {id:'type_pro',label:'Type',type:'select',options:['Imprimante','Scanner','Photocopieur','Switch réseau','Serveur','Caisse enregistreuse','Terminal de paiement','Mobilier de bureau','Autre'],half:true},
+      {id:'usage',label:'Utilisation antérieure',placeholder:'Usage bureau, chantier, restaurant…',half:true},
+      {id:'pages',label:'Compteur (si applicable)',placeholder:'Ex: 12 500 pages imprimées',half:true},
+    ]},
+    { title:'État & contenu', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Très bon','Bon','Fonctionnel — à réviser']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Bourrage fréquent, bac papier à remplacer, câble manquant…'},
+      {id:'options',label:'Inclus dans la vente',type:'textarea',placeholder:'Câbles, cartouches, toners, notice, rack, licence logiciel…'},
+      {id:'facture',label:'Facture / Amortissement',type:'select',options:['Oui — facture disponible','Non'],half:true},
+    ]}
+  ]},
+  immobilier: { icon:'🏠', sections:[
+    { title:'Bien immobilier', icon:'🏠', sub:'', fields:[
+      {id:'brand',label:'Adresse / Quartier',req:true,placeholder:'Centre-ville Lyon 6e, Proche métro…'},
+      {id:'model',label:'Type de bien',req:true,placeholder:'Appartement T3, Maison 4 pièces, Studio…'},
+      {id:'year',label:'Année de construction',placeholder:'1970, 2015, Neuf…',half:true},
+      {id:'surface',label:'Surface (m²)',placeholder:'65 m²',type:'number',half:true},
+      {id:'etage',label:'Étage / Situation',placeholder:'3ème sur 5, RDC avec jardin, Maison…',half:true},
+      {id:'exposition',label:'Exposition',placeholder:'Sud, Plein ouest, Double exposition…',half:true},
+    ]},
+    { title:'Caractéristiques', icon:'⚙️', sub:'', fields:[
+      {id:'pieces',label:'Nombre de pièces',placeholder:'3 pièces (2 chambres)',half:true},
+      {id:'dpe',label:'DPE (étiquette énergie)',type:'select',options:['A','B','C','D','E','F','G','Non communiqué'],half:true},
+      {id:'charges',label:'Charges mensuelles',placeholder:'180€/mois',half:true},
+      {id:'taxe',label:'Taxe foncière',placeholder:'1200€/an',half:true},
+      {id:'options',label:'Équipements & caractéristiques',type:'textarea',placeholder:'Cave, parking, terrasse, balcon, gardien, interphone, digicode, double vitrage, parquet…'},
+      {id:'defauts',label:'Points négatifs / travaux',type:'textarea',placeholder:'Ravalement prévu, copropriété en travaux, vis-à-vis, bruit…'},
+    ]}
+  ]},
+  autre: { icon:'📦', sections:[
+    { title:'Article divers', icon:'📦', sub:'Décrivez votre article en détail', fields:[
+      {id:'brand',label:'Marque / Fabricant',req:true,placeholder:'Marque, artisan, fabrication maison…'},
+      {id:'model',label:'Nom / Type d\'article',req:true,placeholder:'Décrivez ce que vous vendez…'},
+      {id:'year',label:'Année',placeholder:'2020',half:true},
+      {id:'color',label:'Couleur / Modèle',placeholder:'Bleu, Standard, XL…',half:true},
+      {id:'dimensions',label:'Dimensions / Poids',placeholder:'30 x 20 cm, 2 kg…'},
+    ]},
+    { title:'État', icon:'📋', sub:'', fields:[
+      {id:'condition',label:'État général',req:true,type:'select',options:['Neuf / jamais utilisé','Très bon','Bon','Moyen','À réparer']},
+      {id:'defauts',label:'Défauts connus',type:'textarea',placeholder:'Décrivez honnêtement tout défaut visible.'},
+      {id:'reparations',label:'Réparations / entretien',type:'textarea',placeholder:'Ce qui a été fait, remplacé, réparé…'},
+    ]},
+    { title:'Contenu', icon:'📦', sub:'', fields:[
+      {id:'options',label:'Éléments inclus / accessoires',type:'textarea',placeholder:'Boîte, notice, accessoires, câbles, housse…'},
+      {id:'usage',label:'Utilisation précédente',placeholder:'Perso, professionnel, collection…',half:true},
+      {id:'facture',label:'Facture disponible ?',type:'select',options:['Oui','Non'],half:true},
+    ]}
+  ]}
+};
+
+// ── RENDU DYNAMIQUE ───────────────────────────────────────
+function renderFields(type) {
+  const cfg = CONFIGS[type];
+  if (!cfg) return;
+  const section = document.getElementById('dynamicSection');
+  section.innerHTML = '';
+  cfg.sections.forEach(s => {
+    const block = document.createElement('div');
+    block.className = 'block';
+    const header = document.createElement('div');
+    header.className = 'block-header';
+    header.innerHTML = '<div class="block-icon">' + s.icon + '</div><div><div class="block-title">' + s.title + '</div>' + (s.sub ? '<div class="block-sub">' + s.sub + '</div>' : '') + '</div>';
+    block.appendChild(header);
+    let i = 0;
+    while (i < s.fields.length) {
+      const f = s.fields[i];
+      if (f.half) {
+        const f2 = s.fields[i+1]?.half ? s.fields[i+1] : null;
+        const row = document.createElement('div');
+        row.className = 'grid2'; row.style.marginBottom = '10px';
+        row.appendChild(buildField(f));
+        if (f2) { row.appendChild(buildField(f2)); i++; }
+        block.appendChild(row);
+      } else if (f.third) {
+        const fields3 = [f];
+        if (s.fields[i+1]?.third) { fields3.push(s.fields[i+1]); i++; }
+        if (s.fields[i+1]?.third) { fields3.push(s.fields[i+1]); i++; }
+        const row = document.createElement('div');
+        row.className = 'grid3'; row.style.marginBottom = '10px';
+        fields3.forEach(ff => row.appendChild(buildField(ff)));
+        block.appendChild(row);
+      } else {
+        const w = document.createElement('div'); w.style.marginBottom = '10px';
+        w.appendChild(buildField(f)); block.appendChild(w);
+      }
+      i++;
+    }
+    section.appendChild(block);
+  });
+}
+
+function buildField(f) {
+  const div = document.createElement('div');
+  div.className = 'field';
+  const label = document.createElement('label');
+  label.innerHTML = f.label + (f.req ? ' <span class="req">*</span>' : '');
+  div.appendChild(label);
+  let el;
+  if (f.type === 'textarea') {
+    el = document.createElement('textarea');
+    el.placeholder = f.placeholder || '';
+  } else if (f.type === 'select') {
+    el = document.createElement('select');
+    const empty = document.createElement('option');
+    empty.value = ''; empty.textContent = '— Sélectionner';
+    el.appendChild(empty);
+    (f.options || []).forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o; opt.textContent = o; el.appendChild(opt);
+    });
+  } else {
+    el = document.createElement('input');
+    el.type = f.type || 'text';
+    el.placeholder = f.placeholder || '';
+  }
+  el.id = f.id;
+  div.appendChild(el);
+  return div;
+}
+
+renderFields('voiture');
+
+// Type buttons
+document.querySelectorAll('.type-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.type-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); selectedType = b.dataset.type;
+    renderFields(selectedType);
+    document.getElementById('estimateResult').classList.remove('show');
+    document.getElementById('estLoading').classList.remove('show');
+  });
+});
+
+// Recherche type
+function filterTypes(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('.type-btn').forEach(b => {
+    const text = b.textContent.toLowerCase();
+    b.classList.toggle('hidden', q.length > 0 && !text.includes(q));
+  });
+}
+
+// Lang
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    selectedLang = b.dataset.lang;
+    applyLang(selectedLang);
+  });
+});
+
+// Urgence
+document.querySelectorAll('.urgence-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.urgence-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); selectedUrgence = b.dataset.urgence;
+  });
+});
+
+const v = id => document.getElementById(id)?.value?.trim() || '';
+
+function buildSpecs() {
+  const cfg = CONFIGS[selectedType];
+  if (!cfg) return '';
+  const allFields = cfg.sections.flatMap(s => s.fields);
+  const lines = [['Type d\'article', selectedType]];
+  allFields.forEach(f => { const val = v(f.id); if (val) lines.push([f.label, val]); });
+  lines.push(['Prix souhaité', v('price') ? v('price') + ' €' : '']);
+  lines.push(['Urgence de vente', selectedUrgence]);
+  lines.push(['Ville', v('sellerCity')]);
+  lines.push(['Livraison', v('livraison')]);
+  lines.push(['Disponibilité', v('disponibilite')]);
+  lines.push(['Vendeur', v('sellerName')]);
+  lines.push(['Téléphone', v('sellerPhone')]);
+  lines.push(['Raison de vente', v('reason')]);
+  return lines.filter(([,val]) => val).map(([k,val]) => '- ' + k + ': ' + val).join('\n');
+}
+
+function setLoadStep(step) {
+  ['ls1','ls2','ls3','ls4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('active','done');
+    if (i < step) el.classList.add('done');
+    else if (i === step) el.classList.add('active');
+  });
+}
+
+// ── ESTIMATION ────────────────────────────────────────────
+async function estimatePrice() {
+  const brand = v('brand'), model = v('model');
+  if (!brand || !model) { alert('Remplis au minimum la marque et le modèle.'); return; }
+  const btn = document.getElementById('estimateBtn');
+  const estLoading = document.getElementById('estLoading');
+  const estResult = document.getElementById('estimateResult');
+  btn.disabled = true; btn.textContent = '⏳ Analyse en cours…';
+  estLoading.classList.add('show'); estResult.classList.remove('show');
+  const steps = ['es1','es2','es3'];
+  steps.forEach(id => document.getElementById(id).className = 'est-step');
+  let si = 0;
+  const interval = setInterval(() => {
+    if (si > 0) document.getElementById(steps[si-1]).className = 'est-step done';
+    if (si < steps.length) { document.getElementById(steps[si]).className = 'est-step active'; si++; }
+  }, 800);
+  try {
+    const resp = await fetch('/api/estimate', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ specs: buildSpecs().slice(0, 500) })
+    });
+    if (!resp.ok) throw new Error();
+    const r = await resp.json();
+    if (!r.low) throw new Error();
+    clearInterval(interval);
+    steps.forEach(id => document.getElementById(id).className = 'est-step done');
+    document.getElementById('estLow').textContent = Number(r.low).toLocaleString('fr-FR') + ' €';
+    document.getElementById('estMid').textContent = Number(r.mid).toLocaleString('fr-FR') + ' €';
+    document.getElementById('estHigh').textContent = Number(r.high).toLocaleString('fr-FR') + ' €';
+    document.getElementById('estNote').textContent = r.note || '';
+    estLoading.classList.remove('show'); estResult.classList.add('show');
+  } catch(e) {
+    clearInterval(interval); estLoading.classList.remove('show');
+    alert('Erreur estimation. Vérifie ta connexion et réessaie.');
+  } finally {
+    btn.disabled = false; btn.textContent = '🔍 Estimer la valeur marchande selon l\'état';
+  }
+}
+
+// ── GÉNÉRATION ────────────────────────────────────────────
+async function handleSubmit() {
+  const brand = v('brand'), model = v('model'), price = v('price');
+  const sellerName = v('sellerName'), sellerPhone = v('sellerPhone'), sellerCity = v('sellerCity');
+  const condition = v('condition');
+  if (!brand || !model || !price || !sellerName || !sellerPhone || !sellerCity || !condition) {
+    alert('Merci de remplir tous les champs obligatoires (marqués *).'); return;
+  }
+  const overlay = document.getElementById('loadingOverlay');
+  const errorBox = document.getElementById('stateError');
+  const paywall = document.getElementById('paywall');
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; errorBox.classList.remove('show');
+  paywall.classList.remove('show'); document.getElementById('resultWrap').classList.remove('show');
+  overlay.classList.add('show');
+  try {
+    setLoadStep(0); await delay(400); setLoadStep(1);
+    const resp = await fetch('/api/generate', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ specs: buildSpecs(), lang: selectedLang, type: selectedType, urgence: selectedUrgence })
+    });
+    if (!resp.ok) throw new Error('Erreur API');
+    const data = await resp.json();
+    if (!data.long) throw new Error('Réponse vide');
+    setLoadStep(2); await delay(400); setLoadStep(3); await delay(400);
+    generatedLong = data.long; generatedShort = data.short;
+    sessionStorage.setItem('annonce_data', JSON.stringify({ long: data.long, short: data.short }));
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+    fetch(WEBHOOK, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: '> 📬 **Nouvelle commande reçue** — paiement en attente',
+        embeds: [{
+          title: '🆕 ' + ORDER_CODE + '  ·  ' + selectedType.charAt(0).toUpperCase() + selectedType.slice(1) + '  ·  ' + brand + ' ' + model,
+          color: 0xe8191a,
+          fields: [
+            { name: '🪪 Code commande', value: '```' + ORDER_CODE + '```', inline: true },
+            { name: '💳 Statut paiement', value: '⏳ En attente', inline: true },
+            { name: '📅 Date & heure', value: dateStr + '
+🕐 ' + timeStr, inline: true },
+            { name: '👤 Client', value: '**' + sellerName + '**
+📞 ' + (sellerPhone || 'Non renseigné') + '
+📍 ' + (sellerCity || 'Non renseignée'), inline: true },
+            { name: '📦 Article vendu', value: '**' + selectedType + '**
+' + brand + ' ' + model + '
+💰 Prix : **' + price + ' €**', inline: true },
+            { name: '🤝 Partagé par', value: REF === 'direct' ? '🌐 Accès direct (sans affilié)' : '👤 **' + REF + '**
+💸 Commission due : **5€**', inline: true },
+            { name: '📝 Annonce générée', value: data.long.slice(0, 1000), inline: false },
+            { name: '⚡ Version courte (Facebook/SMS)', value: data.short.slice(0, 500), inline: false },
+          ],
+          footer: { text: "Agence d'Annonce Pro · " + ORDER_CODE + " · " + timeStr },
+          timestamp: new Date().toISOString()
+        }]
+      })
+    });
+    overlay.classList.remove('show');
+    document.getElementById('orderCodeText').textContent = ORDER_CODE;
+    document.getElementById('stripeBtn').href = STRIPE_LINK;
+    paywall.classList.add('show');
+    setTimeout(() => paywall.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+  } catch(e) {
+    console.error(e); overlay.classList.remove('show');
+    errorBox.classList.add('show'); btn.disabled = false;
+  }
+}
+
+// ── RÉVÉLATION APRÈS PAIEMENT ─────────────────────────────
+async function revealAfterPayment() {
+  const saved = sessionStorage.getItem('annonce_data');
+  if (!saved) { alert('Aucune annonce trouvée. Merci de remplir le formulaire à nouveau.'); return; }
+
+  const d = JSON.parse(saved);
+  generatedLong = d.long; generatedShort = d.short;
+  document.getElementById('paywall').classList.remove('show');
+  showResult(true);
+
+  // Notifier Discord
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  fetch(WEBHOOK, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      content: '> 💰 **Paiement confirmé — 15€ encaissés !**',
+      embeds: [{
+        title: '✅ PAIEMENT REÇU · ' + ORDER_CODE,
+        color: 0x22c55e,
+        fields: [
+          { name: '💳 Statut', value: '✅ **PAYÉ — 15€**', inline: true },
+          { name: '🪪 Code commande', value: '```' + ORDER_CODE + '```', inline: true },
+          { name: '⏰ Heure de paiement', value: '🕐 ' + timeStr, inline: true },
+          { name: '🤝 Apporté par', value: REF === 'direct' ? '🌐 Accès direct' : '👤 **' + REF + '**
+💸 À payer : **5€**', inline: true },
+          { name: '💼 Bénéfice net', value: REF === 'direct' ? '**15€**' : '**10€**', inline: true },
+          { name: '📊 Action requise', value: REF === 'direct' ? '✅ Aucune' : '⚠️ Virer 5€ à **' + REF + '**', inline: true },
+        ],
+        footer: { text: "Agence d'Annonce Pro · Paiement confirmé · " + timeStr },
+        timestamp: new Date().toISOString()
+      }]
+    })
+  });
+  sessionStorage.removeItem('annonce_data');
+}
+
+// ── AFFICHAGE RÉSULTATS ───────────────────────────────────
+function showResult(paid = false) {
+  const get = (p) => (generatedLong.match(p) || [])[1]?.trim() || '';
+  document.getElementById('annTitre').textContent = get(/TITRE\s*[:\-]\s*(.+)/i) || generatedLong.split('\n')[0];
+  document.getElementById('annAccroche').textContent = get(/ACCROCHE\s*[:\-]\s*([\s\S]+?)(?=DESCRIPTION|POINTS|$)/i);
+  document.getElementById('annDesc').textContent = get(/DESCRIPTION\s*[:\-]?\s*([\s\S]+?)(?=POINTS\s+FORTS|⭐|CARACT|$)/i) || generatedLong;
+  document.getElementById('annPoints').textContent = get(/POINTS?\s+FORTS?\s*[:\-]?\s*([\s\S]+?)(?=CARACT|🔧|TRANSPAR|⚠|INFOS|📍|$)/i);
+  document.getElementById('annCarac').textContent = get(/CARACT[ÉE]RISTIQUES?\s*[:\-]?\s*([\s\S]+?)(?=TRANSPAR|⚠|INFOS|📍|$)/i);
+  document.getElementById('annTransp').textContent = get(/TRANSPAR[EA]NCE\s*[:\-]?\s*([\s\S]+?)(?=INFOS|📍|CONTACT|🎯|$)/i);
+  document.getElementById('annInfos').textContent = get(/(?:INFOS\s+PRATIQUES|CONTACT|🎯)\s*[:\-]?\s*([\s\S]+?)$/i);
+  document.getElementById('annShort').textContent = generatedShort;
+  if (paid) {
+    document.getElementById('resultCodeText').textContent = ORDER_CODE;
+    document.getElementById('resultPaidBanner').classList.add('show');
+  }
+  const rw = document.getElementById('resultWrap');
+  rw.classList.add('show');
+  setTimeout(() => rw.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+}
+
+function copyFull() {
+  const ids = ['annTitre','annAccroche','annDesc','annPoints','annCarac','annTransp','annInfos'];
+  const text = ids.map(id => document.getElementById(id).textContent).filter(t => t && t !== '—').join('\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyLongBtn');
+    btn.textContent = '✅ Copié !'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = "📋 Copier l'annonce complète"; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyShort() {
+  navigator.clipboard.writeText(document.getElementById('annShort').textContent).then(() => {
+    const btn = document.getElementById('copyShortBtn');
+    btn.textContent = '✅ Copié !'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copier la version courte'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
+</script>
+</body>
+</html>
