@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { specs, lang, urgence } = req.body;
-  const API_KEY = process.env.GEMINI_API_KEY;
+  const API_KEY = process.env.ANTHROPIC_API_KEY;
 
   const LANG = {
     fr: 'Rédige UNIQUEMENT en français.',
@@ -21,10 +21,7 @@ export default async function handler(req, res) {
     normal: 'Ton professionnel et équilibré.'
   };
 
-  const l = LANG[lang] || LANG.fr;
-  const u = URGENCE[urgence] || URGENCE.normal;
-
-  const promptLong = `${l} ${u}
+  const promptLong = `${LANG[lang] || LANG.fr} ${URGENCE[urgence] || URGENCE.normal}
 
 Tu es expert en rédaction d'annonces de vente (LeBonCoin, Vinted, etc).
 
@@ -49,38 +46,33 @@ INFOS PRATIQUES: [localisation, dispo, call to action]
 
 Règles : minimaliste, structuré, professionnel, sans bullshit.`;
 
-  const promptCourt = `${l} Rédige une annonce COURTE (5 lignes max) pour : ${(specs||'').slice(0,300)}. Format : titre + 3 points clés + prix + contact.`;
+  const promptCourt = `${LANG[lang] || LANG.fr} Rédige une annonce COURTE (5 lignes max) pour : ${(specs||'').slice(0,300)}. Format : titre + 3 points clés + prix + contact.`;
 
-  async function callGemini(prompt, tokens) {
-    // Essaie plusieurs modèles dans l'ordre
-    const models = ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-1.0-pro'];
-    for (const model of models) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { maxOutputTokens: tokens, temperature: 0.7 }
-          })
-        });
-        const data = await resp.json();
-        if (data?.error?.code === 429) continue; // quota dépassé, essaie le suivant
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        if (text) return text;
-      } catch(e) {
-        console.error('Model', model, 'failed:', e.message);
-      }
-    }
-    throw new Error('Tous les modèles ont échoué');
+  async function callClaude(prompt, tokens) {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: tokens,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data?.error?.message || 'Erreur ' + resp.status);
+    return data?.content?.[0]?.text || '';
   }
 
   try {
     const [long, short] = await Promise.all([
-      callGemini(promptLong, 1200),
-      callGemini(promptCourt, 300)
+      callClaude(promptLong, 1200),
+      callClaude(promptCourt, 300)
     ]);
+    if (!long) throw new Error('Réponse vide');
     res.status(200).json({ long, short });
   } catch(e) {
     console.error('Generate error:', e.message);
