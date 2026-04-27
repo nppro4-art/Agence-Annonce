@@ -6,30 +6,23 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { specs, lang, type, urgence } = req.body;
-  const API_KEY = process.env.GEMINI_API_KEY;
+  const API_KEY = process.env.ANTHROPIC_API_KEY;
 
-  // Essayer gemini-2.0-flash d'abord, fallback sur gemini-1.5-flash
-  const MODELS = [
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
-    'gemini-1.5-flash-8b'
-  ];
-
-  const LANG_INSTRUCTIONS = {
+  const LANG = {
     fr: 'Rédige UNIQUEMENT en français.',
     en: 'Write ONLY in English.',
     es: 'Redacta ÚNICAMENTE en español.',
     de: 'Schreibe AUSSCHLIESSLICH auf Deutsch.',
   };
 
-  const URGENCE_HINTS = {
-    rapide: 'Vente urgente — prix attractif, disponibilité immédiate.',
-    optimise: 'Maximise la valeur perçue pour justifier le prix.',
+  const URGENCE = {
+    rapide: 'Vente urgente — mets en avant le prix attractif et la disponibilité immédiate.',
+    optimise: 'Maximise la valeur perçue pour justifier le prix demandé.',
     normal: 'Ton professionnel et équilibré.'
   };
 
-  const l = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS.fr;
-  const u = URGENCE_HINTS[urgence] || URGENCE_HINTS.normal;
+  const l = LANG[lang] || LANG.fr;
+  const u = URGENCE[urgence] || URGENCE.normal;
 
   const promptLong = `${l} ${u}
 
@@ -58,41 +51,31 @@ Règles : minimaliste, structuré, professionnel, sans bullshit.`;
 
   const promptCourt = `${l} Rédige une annonce COURTE (5 lignes max) pour : ${(specs || '').slice(0, 300)}. Format : titre + 3 points clés + prix + contact.`;
 
-  async function callGemini(model, prompt, tokens) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
-    const resp = await fetch(url, {
+  async function callClaude(prompt, tokens) {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: tokens, temperature: 0.7 }
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: tokens,
+        messages: [{ role: 'user', content: prompt }]
       })
     });
     const data = await resp.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    if (!text) {
-      const reason = data?.candidates?.[0]?.finishReason || 'unknown';
-      throw new Error(`Empty response from ${model} — reason: ${reason}`);
-    }
+    if (!resp.ok) throw new Error(data?.error?.message || 'Erreur API Anthropic ' + resp.status);
+    const text = data?.content?.[0]?.text || '';
+    if (!text) throw new Error('Réponse vide');
     return text;
-  }
-
-  async function tryModels(prompt, tokens) {
-    for (const model of MODELS) {
-      try {
-        const result = await callGemini(model, prompt, tokens);
-        if (result) return result;
-      } catch (e) {
-        console.error(`Model ${model} failed:`, e.message);
-      }
-    }
-    throw new Error('All models failed');
   }
 
   try {
     const [long, short] = await Promise.all([
-      tryModels(promptLong, 1200),
-      tryModels(promptCourt, 300)
+      callClaude(promptLong, 1200),
+      callClaude(promptCourt, 300)
     ]);
     res.status(200).json({ long, short });
   } catch (e) {
