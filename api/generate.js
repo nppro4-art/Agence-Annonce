@@ -7,34 +7,60 @@ export default async function handler(req, res) {
 
   const { specs, lang, type, urgence } = req.body;
   const API_KEY = process.env.GEMINI_API_KEY;
-  const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+  // Essayer gemini-2.0-flash d'abord, fallback sur gemini-1.5-flash
+  const MODELS = [
+    'gemini-2.0-flash',
+    'gemini-1.5-flash',
+    'gemini-1.5-flash-8b'
+  ];
 
   const LANG_INSTRUCTIONS = {
-    fr: 'Tu dois rédiger UNIQUEMENT en français. Toute la réponse doit être en français.',
-    en: 'You MUST write ONLY in English. The entire response must be in English.',
-    es: 'Debes escribir ÚNICAMENTE en español. Toda la respuesta debe estar en español.',
-    de: 'Du musst AUSSCHLIESSLICH auf Deutsch schreiben. Die gesamte Antwort muss auf Deutsch sein.',
+    fr: 'Rédige UNIQUEMENT en français.',
+    en: 'Write ONLY in English.',
+    es: 'Redacta ÚNICAMENTE en español.',
+    de: 'Schreibe AUSSCHLIESSLICH auf Deutsch.',
   };
 
   const URGENCE_HINTS = {
-    rapide: { fr:'Vente urgente — mets en avant le prix attractif et la disponibilité immédiate.', en:'Urgent sale — emphasize the attractive price and immediate availability.', es:'Venta urgente — destaca el precio atractivo y disponibilidad inmediata.', de:'Dringender Verkauf — betone den attraktiven Preis und sofortige Verfügbarkeit.' },
-    optimise: { fr:'Maximise la valeur perçue pour justifier le prix demandé.', en:'Maximize the perceived value to justify the asking price.', es:'Maximiza el valor percibido para justificar el precio pedido.', de:'Maximiere den wahrgenommenen Wert um den Preis zu rechtfertigen.' },
-    normal: { fr:'Ton professionnel et équilibré.', en:'Professional and balanced tone.', es:'Tono profesional y equilibrado.', de:'Professioneller und ausgewogener Ton.' }
-  };
-
-  const SECTION_LABELS = {
-    fr: { titre:'TITRE', accroche:'ACCROCHE', desc:'DESCRIPTION', points:'POINTS FORTS', carac:'CARACTÉRISTIQUES', transp:'TRANSPARENCE', infos:'INFOS PRATIQUES' },
-    en: { titre:'TITLE', accroche:'HOOK', desc:'DESCRIPTION', points:'KEY STRENGTHS', carac:'SPECIFICATIONS', transp:'TRANSPARENCY', infos:'PRACTICAL INFO' },
-    es: { titre:'TÍTULO', accroche:'GANCHO', desc:'DESCRIPCIÓN', points:'PUNTOS FUERTES', carac:'CARACTERÍSTICAS', transp:'TRANSPARENCIA', infos:'INFORMACIÓN PRÁCTICA' },
-    de: { titre:'TITEL', accroche:'AUFHÄNGER', desc:'BESCHREIBUNG', points:'STÄRKEN', carac:'EIGENSCHAFTEN', transp:'TRANSPARENZ', infos:'PRAKTISCHE INFOS' },
+    rapide: 'Vente urgente — prix attractif, disponibilité immédiate.',
+    optimise: 'Maximise la valeur perçue pour justifier le prix.',
+    normal: 'Ton professionnel et équilibré.'
   };
 
   const l = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS.fr;
-  const u = (URGENCE_HINTS[urgence] || URGENCE_HINTS.normal)[lang] || (URGENCE_HINTS[urgence] || URGENCE_HINTS.normal).fr;
-  const labels = SECTION_LABELS[lang] || SECTION_LABELS.fr;
+  const u = URGENCE_HINTS[urgence] || URGENCE_HINTS.normal;
 
-  async function call(prompt, tokens) {
-    const r = await fetch(URL, {
+  const promptLong = `${l} ${u}
+
+Tu es expert en rédaction d'annonces de vente (LeBonCoin, Vinted, etc).
+
+Article à vendre :
+${specs}
+
+Rédige une annonce complète avec ces sections exactes :
+
+TITRE: [max 70 caractères, accrocheur]
+ACCROCHE: [1-2 phrases percutantes]
+DESCRIPTION: [3-4 phrases sur l'état et le contexte]
+POINTS FORTS:
+• [point 1]
+• [point 2]
+• [point 3]
+• [point 4]
+CARACTÉRISTIQUES:
+• [spec 1]
+• [spec 2]
+TRANSPARENCE: [défauts honnêtes]
+INFOS PRATIQUES: [localisation, dispo, call to action]
+
+Règles : minimaliste, structuré, professionnel, sans bullshit.`;
+
+  const promptCourt = `${l} Rédige une annonce COURTE (5 lignes max) pour : ${(specs || '').slice(0, 300)}. Format : titre + 3 points clés + prix + contact.`;
+
+  async function callGemini(model, prompt, tokens) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+    const resp = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -42,45 +68,31 @@ export default async function handler(req, res) {
         generationConfig: { maxOutputTokens: tokens, temperature: 0.7 }
       })
     });
-    const d = await r.json();
-    return d?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const data = await resp.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    if (!text) {
+      const reason = data?.candidates?.[0]?.finishReason || 'unknown';
+      throw new Error(`Empty response from ${model} — reason: ${reason}`);
+    }
+    return text;
   }
 
-  const promptLong = `${l}
-${u}
-
-Tu es expert en copywriting d'annonces de vente en ligne (LeBonCoin, Vinted, etc).
-
-Informations de l'article à vendre :
-${specs}
-
-Génère une annonce complète avec ces sections dans cet ordre (utilise exactement ces labels) :
-
-${labels.titre}: [max 70 caractères, accrocheur, optimisé recherche]
-${labels.accroche}: [1-2 phrases percutantes qui donnent envie]
-${labels.desc}: [3-4 phrases sur l'état, contexte, historique]
-${labels.points}:
-• [point 1]
-• [point 2]
-• [point 3]
-• [point 4]
-${labels.carac}:
-• [spec 1]
-• [spec 2]
-${labels.transp}: [défauts honnêtes — l'honnêteté inspire confiance]
-${labels.infos}: [localisation, disponibilité, call to action]
-
-Règles absolues : minimaliste, structuré, professionnel, zéro bullshit.`;
-
-  const promptCourt = `${l}
-
-Rédige une annonce COURTE (5 lignes max) pour cet article : ${specs.slice(0, 400)}
-Format : titre + 3 points clés + prix + contact. Zéro fioriture.`;
+  async function tryModels(prompt, tokens) {
+    for (const model of MODELS) {
+      try {
+        const result = await callGemini(model, prompt, tokens);
+        if (result) return result;
+      } catch (e) {
+        console.error(`Model ${model} failed:`, e.message);
+      }
+    }
+    throw new Error('All models failed');
+  }
 
   try {
     const [long, short] = await Promise.all([
-      call(promptLong, 1200),
-      call(promptCourt, 300)
+      tryModels(promptLong, 1200),
+      tryModels(promptCourt, 300)
     ]);
     res.status(200).json({ long, short });
   } catch (e) {
