@@ -6,68 +6,63 @@
 <title>Agence d'Annonce — Vendez plus vite</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --red: #ff2d2d;
-  --red-glow: rgba(255,45,45,0.15);
-  --black: #050505;
-  --s1: #0c0c0c;
-  --s2: #141414;
-  --s3: #1c1c1c;
-  --s4: #252525;
-  --border: #242424;
-  --border2: #2e2e2e;
-  --white: #f5f5f5;
-  --muted: #555;
-  --muted2: #888;
-  --success: #00d97e;
-  --warning: #ffb020;
-  --stripe: #6772e5;
+:root{
+  --red:#ff2d2d;--black:#050505;--s1:#0c0c0c;--s2:#141414;--s3:#1c1c1c;--s4:#252525;
+  --border:#242424;--border2:#2e2e2e;--white:#f5f5f5;--muted:#555;--muted2:#888;
+  --success:#00d97e;--warning:#ffb020;--stripe:#6772e5;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-/* ── NOISE OVERLAY ── */
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
-
-/* ── HERO ── */
+/* HERO */
 .hero{position:relative;padding:40px 20px 36px;overflow:hidden;border-bottom:1px solid var(--border)}
 .hero-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(255,45,45,0.08) 0%,transparent 65%);pointer-events:none}
 .hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
-.logo{font-family:'Bebas Neue',sans-serif;font-weight:800;font-size:22px;letter-spacing:-0.5px}
+.logo{font-family:'Bebas Neue',sans-serif;font-weight:800;font-size:24px;letter-spacing:2px}
 .logo em{color:var(--red);font-style:normal}
 .logo-sub{font-size:9px;color:var(--muted2);letter-spacing:2px;text-transform:uppercase;display:block;margin-top:1px}
-.badge{background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;padding:5px 12px;border-radius:4px;text-transform:uppercase}
-
-.headline{font-family:'Bebas Neue',sans-serif;font-weight:800;font-size:clamp(28px,8vw,42px);line-height:1.05;letter-spacing:-1px;margin-bottom:14px}
-.headline em{color:var(--red);font-style:normal;position:relative}
-.headline em::after{content:'';position:absolute;bottom:2px;left:0;width:100%;height:2px;background:var(--red);opacity:.4}
-.sub{color:var(--muted2);font-size:14px;line-height:1.7;max-width:440px;margin-bottom:28px}
-
-/* STEPS */
+.badge{background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:9px;letter-spacing:2px;padding:5px 12px;border-radius:4px;text-transform:uppercase}
+.headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,8vw,44px);line-height:1.05;letter-spacing:-1px;margin-bottom:14px}
+.headline em{color:var(--red);font-style:normal}
+.sub{color:var(--muted2);font-size:14px;line-height:1.75;max-width:440px;margin-bottom:28px}
 .steps{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin-bottom:24px}
 .steps::-webkit-scrollbar{display:none}
 .step-item{flex:1;min-width:70px;display:flex;flex-direction:column;align-items:center;position:relative;padding:0 4px}
-.step-item:not(:last-child)::after{content:'';position:absolute;top:14px;right:-2px;width:4px;height:1px;background:var(--border2)}
-.step-dot{width:28px;height:28px;border-radius:50%;background:var(--s3);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;transition:all .3s}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--s3);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:11px;color:var(--muted);margin-bottom:6px}
 .step-item:last-child .step-dot{background:rgba(0,217,126,.1);border-color:var(--success);color:var(--success)}
 .step-label{font-size:9px;color:var(--muted);text-align:center;line-height:1.4}
 .step-time{font-size:8px;color:var(--muted);opacity:.5;margin-top:2px;text-align:center}
-
-/* TRUST */
-.trust{display:flex;flex-wrap:wrap;gap:10px}
+.trust{display:flex;flex-wrap:wrap;gap:8px}
 .trust-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted2);background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:5px 10px}
 .trust-pill::before{content:'✓';color:var(--success);font-weight:700;font-size:10px}
 
-/* ── CONTAINER ── */
+/* CONTAINER */
 .container{max-width:640px;margin:0 auto;padding:24px 16px 100px;position:relative;z-index:1}
 
-/* PRICE BANNER */
-.price-banner{background:linear-gradient(135deg,rgba(255,45,45,.07),rgba(255,45,45,.02));border:1px solid rgba(255,45,45,.2);border-radius:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
-.pb-left strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px}
-.pb-left span{font-size:12px;color:var(--muted2)}
-.pb-right{font-family:'Bebas Neue',sans-serif;font-size:44px;font-weight:800;color:var(--red);letter-spacing:-2px;flex-shrink:0}
+/* OFFRES */
+.offers-section{margin-bottom:28px}
+.offers-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--muted2);margin-bottom:14px;text-transform:uppercase}
+.offers-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.offer-card{background:var(--s1);border:1.5px solid var(--border);border-radius:16px;padding:18px 20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.offer-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,45,45,.04),transparent);pointer-events:none}
+.offer-card:hover{border-color:rgba(255,45,45,.4);transform:translateY(-1px)}
+.offer-card.selected{border-color:var(--red);background:rgba(255,45,45,.05)}
+.offer-card.popular{border-color:var(--warning)}
+.offer-popular-badge{position:absolute;top:12px;right:12px;background:var(--warning);color:var(--black);font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;text-transform:uppercase}
+.offer-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.offer-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px}
+.offer-price{text-align:right}
+.offer-price-main{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);letter-spacing:-1px;line-height:1}
+.offer-price-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.offer-desc{font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:10px}
+.offer-features{display:flex;flex-direction:column;gap:4px}
+.offer-feature{font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:6px}
+.offer-feature::before{content:'✓';color:var(--success);font-size:10px;font-weight:700;flex-shrink:0}
+.offer-radio{width:18px;height:18px;border:2px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.offer-card.selected .offer-radio{border-color:var(--red)}
+.offer-card.selected .offer-radio::after{content:'';width:8px;height:8px;background:var(--red);border-radius:50%;display:block}
 
 /* LANG */
 .lang-bar{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
@@ -75,26 +70,25 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .lang-btn.active{background:rgba(255,45,45,.1);border-color:var(--red);color:var(--white)}
 
 /* BLOCKS */
-.block{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px;transition:border-color .2s}
+.block{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:12px;transition:border-color .2s}
 .block:focus-within{border-color:rgba(255,45,45,.3)}
 .block-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .block-ico{width:34px;height:34px;background:rgba(255,45,45,.08);border:1px solid rgba(255,45,45,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.block-title{font-family:'Bebas Neue',sans-serif;font-size:13px;font-weight:700;letter-spacing:.3px}
+.block-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.3px}
 .block-sub{font-size:11px;color:var(--muted);margin-top:1px}
-
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
 .field:last-child{margin-bottom:0}
 .field label{font-size:10px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px}
 .req{color:var(--red)}
-input,select,textarea{background:var(--s2);border:1.5px solid var(--border);border-radius:10px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;outline:none;width:100%;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
+input,select,textarea{background:var(--s2);border:1.5px solid var(--border);border-radius:10px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 13px;outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;appearance:none;line-height:1.5}
 input:focus,select:focus,textarea:focus{border-color:var(--red);background:var(--s3)}
 input::placeholder,textarea::placeholder{color:var(--muted)}
 select option{background:var(--s2)}
-textarea{resize:vertical;min-height:72px;line-height:1.8}
+textarea{resize:vertical;min-height:72px;line-height:1.7}
 
-/* TYPE GRID */
+/* TYPE */
 .type-search-wrap{position:relative;margin-bottom:12px}
 .type-search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
 .type-search{padding-left:36px!important}
@@ -125,15 +119,18 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 .est-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
 .est-col{text-align:center;padding:12px 4px;background:var(--s1);border-radius:10px;border:1px solid var(--border)}
 .est-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-.est-val{font-family:'Bebas Neue',sans-serif;font-size:20px;font-weight:800}
+.est-val{font-family:'Bebas Neue',sans-serif;font-size:20px}
 .est-val.low{color:#f87171}
 .est-val.mid{color:var(--warning)}
 .est-val.high{color:var(--success)}
 .est-note{font-size:11px;color:var(--muted2);margin-top:10px;line-height:1.6;font-style:italic}
 
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rotate{to{transform:rotate(360deg)}}
+
 /* MAIN BTN */
-.main-btn{width:100%;border:none;border-radius:14px;color:white;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:18px;font-weight:700;letter-spacing:.5px;padding:18px;transition:all .2s;margin-top:12px;background:var(--red);position:relative;overflow:hidden}
-.main-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);pointer-events:none}
+.main-btn{width:100%;border:none;border-radius:14px;color:white;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.5px;padding:18px;transition:all .2s;margin-top:12px;background:var(--red);position:relative;overflow:hidden}
+.main-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);pointer-events:none}
 .main-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(255,45,45,.3)}
 .main-btn:active{transform:scale(.99)}
 .main-btn:disabled{background:var(--s4);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
@@ -145,10 +142,8 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 .loading-ring svg{width:80px;height:80px;animation:rotate 1.4s linear infinite}
 .ring-track{fill:none;stroke:var(--s3);stroke-width:4}
 .ring-fill{fill:none;stroke:var(--red);stroke-width:4;stroke-dasharray:190;stroke-dashoffset:48;stroke-linecap:round}
-@keyframes rotate{to{transform:rotate(360deg)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-title{font-family:'Bebas Neue',sans-serif;font-weight:800;font-size:22px;margin-bottom:8px;letter-spacing:-.3px}
-.loading-sub{font-size:13px;color:var(--muted2);margin-bottom:28px;line-height:1.8}
+.loading-title{font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:8px;letter-spacing:-.3px}
+.loading-sub{font-size:13px;color:var(--muted2);margin-bottom:28px;line-height:1.65}
 .lsteps{display:flex;flex-direction:column;gap:7px;width:100%;max-width:260px}
 .lstep{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);padding:9px 14px;border-radius:10px;background:var(--s2);border:1px solid var(--border);transition:all .35s}
 .lstep.active{color:var(--white);border-color:var(--red);background:rgba(255,45,45,.07)}
@@ -161,16 +156,17 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 .paywall{display:none;margin-top:16px}
 .paywall.show{display:block}
 .pw-card{background:var(--s1);border:1px solid var(--border);border-radius:20px;overflow:hidden}
-.pw-top{background:linear-gradient(135deg,rgba(255,45,45,.07),rgba(103,114,229,.04));padding:30px 22px 24px;text-align:center;border-bottom:1px solid var(--border)}
-.pw-icon{font-size:38px;margin-bottom:14px;display:block}
-.pw-title{font-family:'Bebas Neue',sans-serif;font-weight:800;font-size:24px;letter-spacing:-.5px;margin-bottom:8px}
-.pw-sub{font-size:13px;color:var(--muted2);line-height:1.65;max-width:340px;margin:0 auto 20px}
-.pw-price{font-family:'Bebas Neue',sans-serif;font-weight:800;font-size:56px;color:var(--red);letter-spacing:-3px;line-height:1;margin-bottom:4px}
-.pw-price-note{font-size:11px;color:var(--muted);margin-bottom:14px}
+.pw-top{background:linear-gradient(135deg,rgba(255,45,45,.07),rgba(103,114,229,.04));padding:28px 22px 22px;text-align:center;border-bottom:1px solid var(--border)}
+.pw-icon{font-size:36px;margin-bottom:12px;display:block}
+.pw-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:-.3px;margin-bottom:8px}
+.pw-sub{font-size:13px;color:var(--muted2);line-height:1.65;max-width:340px;margin:0 auto 16px}
+.pw-offer-recap{background:var(--s2);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:inline-flex;align-items:center;gap:12px}
+.pw-offer-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px}
+.pw-offer-price{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red);letter-spacing:-1px}
 .pw-code-wrap{display:inline-flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border2);border-radius:10px;padding:10px 16px;font-size:12px;color:var(--muted2)}
-.pw-code-val{font-family:'Bebas Neue',sans-serif;font-size:17px;font-weight:700;color:var(--white);letter-spacing:2px}
+.pw-code-val{font-family:'Bebas Neue',sans-serif;font-size:17px;color:var(--white);letter-spacing:2px}
 .pw-body{padding:22px}
-.stripe-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--stripe);color:white;font-family:'Bebas Neue',sans-serif;font-size:15px;font-weight:700;padding:16px 24px;border-radius:12px;text-decoration:none;transition:all .2s;margin-bottom:10px;letter-spacing:.2px}
+.stripe-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--stripe);color:white;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.5px;padding:16px 24px;border-radius:12px;text-decoration:none;transition:all .2s;margin-bottom:10px}
 .stripe-btn:hover{background:#5469d4;transform:translateY(-1px);box-shadow:0 8px 28px rgba(103,114,229,.35)}
 .pw-secure{display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;color:var(--muted);margin-bottom:18px}
 .pw-divider{display:flex;align-items:center;gap:10px;margin:16px 0}
@@ -183,35 +179,30 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 .ex-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
 .ex-card{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:8px}
 .ex-type{font-size:9px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
-.ex-title{font-family:'Bebas Neue',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px;line-height:1.4}
+.ex-title{font-family:'Bebas Neue',sans-serif;font-size:14px;margin-bottom:10px;line-height:1.4}
 .ex-row{margin-bottom:7px}
 .ex-row-lbl{font-size:9px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
-.ex-row-val{font-size:11px;color:var(--muted2);line-height:1.8}
+.ex-row-val{font-size:12px;color:var(--muted2);line-height:1.7}
 
 /* RESULTS */
 .result-wrap{display:none;margin-top:16px}
 .result-wrap.show{display:block}
 .paid-banner{display:none;align-items:center;gap:10px;background:rgba(0,217,126,.06);border:1px solid rgba(0,217,126,.2);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:13px;color:var(--success)}
 .paid-banner.show{display:flex}
-.result-block{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:12px}
-.result-lbl{font-family:'Bebas Neue',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--red);margin-bottom:14px;opacity:.8}
-.ann-title{font-family:'Bebas Neue',sans-serif;font-size:18px;font-weight:700;padding:12px 14px;background:var(--s2);border-radius:10px;border-left:3px solid var(--red);margin-bottom:12px;line-height:1.4}
-.ann-hook{font-size:15px;color:var(--warning);font-style:italic;padding:10px 14px;background:var(--s2);border-radius:10px;margin-bottom:12px;line-height:1.65;border-left:3px solid var(--warning)}
-.ann-section{margin-bottom:12px}
+.result-block{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px}
+.result-lbl{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--red);margin-bottom:14px;opacity:.8}
+.ann-title{font-family:'Bebas Neue',sans-serif;font-size:18px;padding:13px 16px;background:var(--s2);border-radius:10px;border-left:3px solid var(--red);margin-bottom:14px;line-height:1.4}
+.ann-hook{font-size:14px;color:var(--warning);font-style:italic;padding:12px 16px;background:var(--s2);border-radius:10px;margin-bottom:14px;line-height:1.7;border-left:3px solid var(--warning)}
+.ann-section{margin-bottom:14px}
 .ann-section-lbl{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
-.ann-section-val{font-size:14px;color:var(--white);line-height:1.9;background:var(--s2);border-radius:10px;padding:16px 18px;white-space:pre-wrap;border:1px solid var(--border);letter-spacing:0.2px}
+.ann-section-val{font-size:14px;color:var(--white);line-height:1.85;background:var(--s2);border-radius:10px;padding:14px 16px;white-space:pre-wrap;border:1px solid var(--border);letter-spacing:.2px}
 .copy-btn{background:var(--s2);border:1.5px solid var(--border);border-radius:10px;color:var(--muted2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:10px 14px;transition:all .15s;width:100%;margin-top:10px}
 .copy-btn:hover{border-color:var(--success);color:var(--success)}
 .copy-btn.copied{border-color:var(--success);color:var(--success);background:rgba(0,217,126,.05)}
-
 .err-box{display:none;background:rgba(255,45,45,.06);border:1px solid rgba(255,45,45,.2);color:#f87171;border-radius:12px;padding:14px;text-align:center;margin-top:12px;font-size:13px;line-height:1.5}
 .err-box.show{display:block}
 
-@media(max-width:420px){
-  .g3{grid-template-columns:1fr 1fr}
-  .type-grid{grid-template-columns:repeat(4,1fr)}
-  .headline{font-size:28px}
-}
+@media(max-width:420px){.g3{grid-template-columns:1fr 1fr}.type-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -220,7 +211,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-ring"><svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34"/></svg></div>
   <div class="loading-title" id="lTitle">Annonce en cours de création</div>
-  <div class="loading-sub" id="lSub">Notre IA analyse votre article et rédige<br>une annonce optimisée pour vendre.</div>
+  <div class="loading-sub" id="lSub">Notre IA analyse votre article et rédige une annonce optimisée.</div>
   <div class="lsteps">
     <div class="lstep" id="ls1"><div class="lstep-dot"></div><span id="ls1t">Analyse des informations</span></div>
     <div class="lstep" id="ls2"><div class="lstep-dot"></div><span id="ls2t">Rédaction de l'annonce</span></div>
@@ -234,39 +225,101 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
   <div class="hero-glow"></div>
   <div class="hero-inner">
     <div class="topbar">
-      <div>
-        <div class="logo">Agence d'<em>Annonce</em></div>
-        <span class="logo-sub">Propulsé par IA</span>
-      </div>
+      <div><div class="logo">Agence d'<em>Annonce</em></div><span class="logo-sub">Propulsé par IA</span></div>
       <div class="badge">Pro ✦</div>
     </div>
-    <div class="headline" id="heroHeadline">Vendez n'importe quoi<br><em>plus vite, mieux présenté.</em></div>
-    <div class="sub" id="heroSub">Notre IA rédige une annonce professionnelle complète en 15 secondes — titre accrocheur, description convaincante, mots-clés optimisés.</div>
-    <div class="steps" id="stepsRow">
-      <div class="step-item"><div class="step-dot">1</div><div class="step-label" id="sl1">Remplissez<br>le formulaire</div><div class="step-time" id="st1">~3 min</div></div>
-      <div class="step-item"><div class="step-dot">2</div><div class="step-label" id="sl2">Estimation<br>optionnelle</div><div class="step-time" id="st2">~10 sec</div></div>
-      <div class="step-item"><div class="step-dot">3</div><div class="step-label" id="sl3">L'IA génère<br>votre annonce</div><div class="step-time" id="st3">~15 sec</div></div>
-      <div class="step-item"><div class="step-dot">4</div><div class="step-label" id="sl4">Paiement<br>sécurisé</div><div class="step-time" id="st4">~30 sec</div></div>
-      <div class="step-item"><div class="step-dot" style="background:rgba(0,217,126,.1);border-color:var(--success);color:var(--success)">✓</div><div class="step-label" id="sl5">Annonce<br>prête !</div><div class="step-time" id="st5">Publiez</div></div>
+    <div class="headline" id="heroH">Vendez n'importe quoi<br><em>plus vite, mieux présenté.</em></div>
+    <div class="sub" id="heroS">Notre IA rédige une annonce professionnelle complète en 15 secondes — titre accrocheur, description convaincante, mots-clés optimisés.</div>
+    <div class="steps">
+      <div class="step-item"><div class="step-dot">1</div><div class="step-label">Choisissez<br>votre offre</div><div class="step-time">~1 min</div></div>
+      <div class="step-item"><div class="step-dot">2</div><div class="step-label">Remplissez<br>le formulaire</div><div class="step-time">~3 min</div></div>
+      <div class="step-item"><div class="step-dot">3</div><div class="step-label">L'IA génère<br>votre annonce</div><div class="step-time">~15 sec</div></div>
+      <div class="step-item"><div class="step-dot">4</div><div class="step-label">Payez &<br>accédez</div><div class="step-time">~30 sec</div></div>
+      <div class="step-item"><div class="step-dot" style="background:rgba(0,217,126,.1);border-color:var(--success);color:var(--success)">✓</div><div class="step-label">Annonce<br>prête !</div><div class="step-time">Publiez</div></div>
     </div>
     <div class="trust">
-      <div class="trust-pill" id="tp1">Paiement sécurisé Stripe</div>
-      <div class="trust-pill" id="tp2">Annonce en 15 secondes</div>
-      <div class="trust-pill" id="tp3">Résultat garanti</div>
-      <div class="trust-pill" id="tp4">100% confidentiel</div>
+      <div class="trust-pill">Paiement sécurisé Stripe</div>
+      <div class="trust-pill">Annonce en 15 secondes</div>
+      <div class="trust-pill">Sans abonnement</div>
+      <div class="trust-pill">100% confidentiel</div>
     </div>
   </div>
 </div>
 
 <div class="container">
 
-  <!-- PRICE BANNER -->
-  <div class="price-banner">
-    <div class="pb-left">
-      <strong id="pbTitle">Annonce professionnelle complète</strong>
-      <span id="pbSub">Titre optimisé · Description · Points forts · SEO · Version courte</span>
+  <!-- OFFRES -->
+  <div class="offers-section">
+    <div class="offers-title">Choisissez votre offre</div>
+    <div class="offers-grid">
+
+      <div class="offer-card selected" data-offer="solo" onclick="selectOffer(this)">
+        <div class="offer-header">
+          <div>
+            <div class="offer-name">Solo</div>
+            <div class="offer-desc">1 annonce professionnelle complète</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div class="offer-price">
+              <div class="offer-price-main">6,99€</div>
+              <div class="offer-price-sub">paiement unique</div>
+            </div>
+            <div class="offer-radio"></div>
+          </div>
+        </div>
+        <div class="offer-features">
+          <div class="offer-feature">Titre optimisé + description complète</div>
+          <div class="offer-feature">Version courte Facebook / SMS</div>
+          <div class="offer-feature">Estimation du prix du marché</div>
+        </div>
+      </div>
+
+      <div class="offer-card popular" data-offer="pack" onclick="selectOffer(this)">
+        <div class="offer-popular-badge">⭐ Populaire</div>
+        <div class="offer-header">
+          <div>
+            <div class="offer-name">Pack 5</div>
+            <div class="offer-desc">5 annonces par mois</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div class="offer-price">
+              <div class="offer-price-main">14,99€</div>
+              <div class="offer-price-sub">par mois</div>
+            </div>
+            <div class="offer-radio"></div>
+          </div>
+        </div>
+        <div class="offer-features">
+          <div class="offer-feature">5 annonces professionnelles / mois</div>
+          <div class="offer-feature">Toutes les fonctionnalités Solo</div>
+          <div class="offer-feature">Priorité de traitement</div>
+          <div class="offer-feature">Économisez 20% vs Solo</div>
+        </div>
+      </div>
+
+      <div class="offer-card" data-offer="illimite" onclick="selectOffer(this)">
+        <div class="offer-header">
+          <div>
+            <div class="offer-name">Illimité</div>
+            <div class="offer-desc">Annonces illimitées par mois</div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div class="offer-price">
+              <div class="offer-price-main">84,99€</div>
+              <div class="offer-price-sub">par mois</div>
+            </div>
+            <div class="offer-radio"></div>
+          </div>
+        </div>
+        <div class="offer-features">
+          <div class="offer-feature">Annonces illimitées chaque mois</div>
+          <div class="offer-feature">Toutes les fonctionnalités Pack 5</div>
+          <div class="offer-feature">Support prioritaire</div>
+          <div class="offer-feature">Idéal pour revendeurs & pros</div>
+        </div>
+      </div>
+
     </div>
-    <div class="pb-right">15€</div>
   </div>
 
   <!-- LANGUE -->
@@ -279,10 +332,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 
   <!-- TYPE -->
   <div class="block">
-    <div class="block-hd">
-      <div class="block-ico">📦</div>
-      <div><div class="block-title" id="catTitle">Que vendez-vous ?</div><div class="block-sub" id="catSub">Sélectionnez la catégorie</div></div>
-    </div>
+    <div class="block-hd"><div class="block-ico">📦</div><div><div class="block-title">Que vendez-vous ?</div><div class="block-sub">Sélectionnez la catégorie</div></div></div>
     <div class="field">
       <div class="type-search-wrap">
         <span class="type-search-icon">🔍</span>
@@ -293,23 +343,22 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
       <div class="type-btn active" data-type="voiture"><span>🚗</span>Voiture</div>
       <div class="type-btn" data-type="moto"><span>🏍️</span>Moto</div>
       <div class="type-btn" data-type="utilitaire"><span>🚐</span>Utilitaire</div>
-      <div class="type-btn" data-type="velo"><span>🚲</span>Vélo / Trott.</div>
+      <div class="type-btn" data-type="velo"><span>🚲</span>Vélo</div>
       <div class="type-btn" data-type="smartphone"><span>📱</span>Smartphone</div>
       <div class="type-btn" data-type="ordinateur"><span>💻</span>Ordinateur</div>
       <div class="type-btn" data-type="tv_audio"><span>📺</span>TV / Audio</div>
-      <div class="type-btn" data-type="console"><span>🎮</span>Console / Jeux</div>
-      <div class="type-btn" data-type="photo"><span>📷</span>Photo / Vidéo</div>
+      <div class="type-btn" data-type="console"><span>🎮</span>Console</div>
+      <div class="type-btn" data-type="photo"><span>📷</span>Photo</div>
       <div class="type-btn" data-type="electromenager"><span>🍳</span>Électroménager</div>
       <div class="type-btn" data-type="gros_electro"><span>🧺</span>Gros électro</div>
       <div class="type-btn" data-type="meuble"><span>🛋️</span>Meuble</div>
-      <div class="type-btn" data-type="deco"><span>🖼️</span>Déco / Art</div>
+      <div class="type-btn" data-type="deco"><span>🖼️</span>Déco</div>
       <div class="type-btn" data-type="vetement_h"><span>👔</span>Vêtement H</div>
       <div class="type-btn" data-type="vetement_f"><span>👗</span>Vêtement F</div>
       <div class="type-btn" data-type="chaussures"><span>👟</span>Chaussures</div>
-      <div class="type-btn" data-type="montre"><span>⌚</span>Montre / Bijoux</div>
-      <div class="type-btn" data-type="sac"><span>👜</span>Sac / Maroquin.</div>
-      <div class="type-btn" data-type="sport"><span>🏋️</span>Sport / Loisirs</div>
-      <div class="type-btn" data-type="velo_sport"><span>🚴</span>Vélo sport</div>
+      <div class="type-btn" data-type="montre"><span>⌚</span>Montre</div>
+      <div class="type-btn" data-type="sac"><span>👜</span>Sac</div>
+      <div class="type-btn" data-type="sport"><span>🏋️</span>Sport</div>
       <div class="type-btn" data-type="instrument"><span>🎸</span>Instrument</div>
       <div class="type-btn" data-type="livre"><span>📚</span>Livre / DVD</div>
       <div class="type-btn" data-type="bricolage"><span>🔨</span>Bricolage</div>
@@ -322,42 +371,38 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
     </div>
   </div>
 
-  <!-- CHAMPS DYNAMIQUES -->
   <div id="dynSection"></div>
 
   <!-- PRIX & ESTIMATION -->
   <div class="block">
-    <div class="block-hd">
-      <div class="block-ico">💰</div>
-      <div><div class="block-title" id="priceBlockTitle">Prix & objectif</div><div class="block-sub" id="priceBlockSub">Définissez votre stratégie de vente</div></div>
-    </div>
+    <div class="block-hd"><div class="block-ico">💰</div><div><div class="block-title">Prix & objectif</div><div class="block-sub">Définissez votre stratégie de vente</div></div></div>
     <div class="field">
-      <label id="priceLbl">Prix souhaité (€) <span class="req">*</span></label>
+      <label>Prix souhaité (€) <span class="req">*</span></label>
       <input id="price" type="number" placeholder="Ex: 11500"/>
     </div>
     <div class="field">
-      <label id="urgLbl">Urgence de vente</label>
+      <label>Urgence de vente</label>
       <div class="urg-grid">
         <div class="urg-btn active" data-urg="normal" id="urgBtn1">⏳ Vente normale</div>
         <div class="urg-btn" data-urg="rapide" id="urgBtn2">🔥 Vente rapide</div>
         <div class="urg-btn" data-urg="optimise" id="urgBtn3">💎 Prix maximum</div>
       </div>
     </div>
-    <button class="est-btn" id="estBtn" onclick="estimatePrice()">🔍 Estimer la valeur marchande selon l'état</button>
+    <button class="est-btn" id="estBtn" onclick="estimatePrice()">🔍 Estimer la valeur marchande</button>
     <div class="est-loading" id="estLoading">
       <div class="est-spinner"></div>
       <div class="est-steps-wrap">
-        <div class="est-step" id="es1">Analyse du marché actuel…</div>
-        <div class="est-step" id="es2">Calcul de la dépréciation…</div>
-        <div class="est-step" id="es3">Génération de l'estimation…</div>
+        <div class="est-step" id="es1">Analyse du marché…</div>
+        <div class="est-step" id="es2">Calcul dépréciation…</div>
+        <div class="est-step" id="es3">Génération estimation…</div>
       </div>
     </div>
     <div class="est-result" id="estResult">
-      <div style="font-size:11px;color:var(--muted2)" id="estLblText">Estimation marché actuel</div>
+      <div style="font-size:11px;color:var(--muted2)">Estimation marché actuel</div>
       <div class="est-grid">
-        <div class="est-col"><div class="est-lbl" id="estLow_lbl">Basse</div><div class="est-val low" id="estLow">—</div></div>
-        <div class="est-col"><div class="est-lbl" id="estMid_lbl">Moyenne</div><div class="est-val mid" id="estMid">—</div></div>
-        <div class="est-col"><div class="est-lbl" id="estHigh_lbl">Haute</div><div class="est-val high" id="estHigh">—</div></div>
+        <div class="est-col"><div class="est-lbl">Basse</div><div class="est-val low" id="estLow">—</div></div>
+        <div class="est-col"><div class="est-lbl">Moyenne</div><div class="est-val mid" id="estMid">—</div></div>
+        <div class="est-col"><div class="est-lbl">Haute</div><div class="est-val high" id="estHigh">—</div></div>
       </div>
       <div class="est-note" id="estNote"></div>
     </div>
@@ -365,41 +410,33 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 
   <!-- LOCALISATION -->
   <div class="block">
-    <div class="block-hd">
-      <div class="block-ico">📍</div>
-      <div><div class="block-title" id="locTitle">Localisation & contact</div><div class="block-sub" id="locSub">Pour les acheteurs potentiels</div></div>
-    </div>
+    <div class="block-hd"><div class="block-ico">📍</div><div><div class="block-title">Localisation & contact</div><div class="block-sub">Pour les acheteurs potentiels</div></div></div>
     <div class="g2">
-      <div class="field"><label id="cityLbl">Ville <span class="req">*</span></label><input id="sellerCity" placeholder="Lyon, Paris…"/></div>
-      <div class="field">
-        <label id="delivLbl">Livraison possible ?</label>
+      <div class="field"><label>Ville <span class="req">*</span></label><input id="sellerCity" placeholder="Lyon, Paris…"/></div>
+      <div class="field"><label>Livraison</label>
         <select id="livraison">
           <option value="">—</option>
-          <option id="deliv1">Non — retrait uniquement</option>
-          <option id="deliv2">Oui — frais à la charge de l'acheteur</option>
-          <option id="deliv3">Oui — frais à ma charge</option>
-          <option id="deliv4">Négociable</option>
+          <option>Non — retrait uniquement</option>
+          <option>Oui — frais acheteur</option>
+          <option>Oui — frais à ma charge</option>
+          <option>Négociable</option>
         </select>
       </div>
     </div>
     <div class="g2">
-      <div class="field"><label id="nameLbl">Prénom <span class="req">*</span></label><input id="sellerName" placeholder="Thomas"/></div>
-      <div class="field"><label id="phoneLbl">Téléphone <span class="req">*</span></label><input id="sellerPhone" type="tel" placeholder="06 xx xx xx xx"/></div>
+      <div class="field"><label>Prénom <span class="req">*</span></label><input id="sellerName" placeholder="Thomas"/></div>
+      <div class="field"><label>Téléphone <span class="req">*</span></label><input id="sellerPhone" type="tel" placeholder="06 xx xx xx xx"/></div>
     </div>
-    <div class="field"><label id="dispoLbl">Disponibilité</label><input id="disponibilite" placeholder="Ex: Weekends, soirs après 18h, sur RDV…"/></div>
+    <div class="field"><label>Disponibilité</label><input id="disponibilite" placeholder="Weekends, soirs, sur RDV…"/></div>
   </div>
 
   <!-- RAISON -->
   <div class="block">
-    <div class="block-hd">
-      <div class="block-ico">💬</div>
-      <div><div class="block-title" id="reasonTitle">Raison de la vente</div><div class="block-sub" id="reasonSub">Rassure l'acheteur et inspire confiance</div></div>
-    </div>
-    <div class="field"><textarea id="reason" placeholder="Ex: Changement de véhicule, déménagement, mise à jour, plus besoin…"></textarea></div>
+    <div class="block-hd"><div class="block-ico">💬</div><div><div class="block-title">Raison de la vente</div><div class="block-sub">Rassure l'acheteur</div></div></div>
+    <div class="field"><textarea id="reason" placeholder="Changement de véhicule, déménagement, plus besoin…"></textarea></div>
   </div>
 
   <button class="main-btn" id="submitBtn" onclick="handleSubmit()">⚡ GÉNÉRER MON ANNONCE PROFESSIONNELLE</button>
-
   <div class="err-box" id="errBox">❌ Une erreur est survenue. Vérifie ta connexion et réessaie.</div>
 
   <!-- PAYWALL -->
@@ -407,38 +444,39 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
     <div class="pw-card">
       <div class="pw-top">
         <span class="pw-icon">🔒</span>
-        <div class="pw-title" id="pwTitle">Votre annonce est prête !</div>
-        <div class="pw-sub" id="pwSub">Notre IA a rédigé une annonce professionnelle complète. Réglez 15€ pour y accéder immédiatement.</div>
-        <div class="pw-price">15€</div>
-        <div class="pw-price-note" id="pwNote">Paiement unique · Accès immédiat · Service garanti</div>
-        <div class="pw-code-wrap">
-          <span id="pwCodeLbl">Code commande :</span>
-          <span class="pw-code-val" id="orderCodeText">—</span>
+        <div class="pw-title">Votre annonce est prête !</div>
+        <div class="pw-sub">Réglez maintenant pour accéder immédiatement à votre annonce professionnelle complète.</div>
+        <div class="pw-offer-recap">
+          <div>
+            <div class="pw-offer-name" id="pwOfferName">Solo</div>
+            <div style="font-size:11px;color:var(--muted)" id="pwOfferDesc">1 annonce</div>
+          </div>
+          <div class="pw-offer-price" id="pwOfferPrice">6,99€</div>
         </div>
+        <br/>
+        <div class="pw-code-wrap">Code : <span class="pw-code-val" id="orderCodeText">—</span></div>
       </div>
       <div class="pw-body">
         <a id="stripeBtn" href="#" target="_blank" class="stripe-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/></svg>
-          <span id="stripeBtnText">Payer 15€ en toute sécurité</span>
+          <span id="stripeBtnTxt">Payer 6,99€ en toute sécurité</span>
         </a>
-        <div class="pw-secure" id="pwSecure">🔐 Paiement crypté · Stripe · Aucune donnée bancaire stockée</div>
-        <div class="pw-divider"><span id="pwDivider">Déjà payé ?</span></div>
-        <button class="reveal-btn" id="revealBtn" onclick="revealAfterPayment()">✅ J'ai payé — Voir mon annonce</button>
+        <div class="pw-secure">🔐 Paiement crypté · Stripe · Aucune donnée bancaire stockée</div>
+        <div class="pw-divider"><span>Déjà payé ?</span></div>
+        <button class="reveal-btn" onclick="revealAfterPayment()">✅ J'ai payé — Voir mon annonce</button>
         <div class="ex-section">
-          <div class="ex-lbl" id="exLbl">Exemples d'annonces générées</div>
+          <div class="ex-lbl">Exemples d'annonces générées</div>
           <div class="ex-card">
             <div class="ex-type">🚗 Exemple voiture</div>
-            <div class="ex-title">Peugeot 308 SW 1.5 BlueHDi 130ch — 1er main, 68 000 km, entretien complet Peugeot</div>
-            <div class="ex-row"><div class="ex-row-lbl">Accroche</div><div class="ex-row-val">Rare opportunité — 308 SW 1er propriétaire depuis le neuf, historique irréprochable, zéro frais à prévoir.</div></div>
-            <div class="ex-row"><div class="ex-row-lbl">Points forts</div><div class="ex-row-val">• 1er main — carnet complet tamponné Peugeot<br>• Faible kilométrage pour l'année (68 000 km / 5 ans)<br>• CT valide jusqu'en mars 2026<br>• GPS, caméra recul, sièges chauffants, CarPlay<br>• Prix 800€ sous la cote Argus</div></div>
-            <div class="ex-row"><div class="ex-row-lbl">Transparence</div><div class="ex-row-val">Légère rayure pare-chocs arrière (2 cm). Mentionnée par honnêteté totale.</div></div>
+            <div class="ex-title">Peugeot 308 SW 1.5 BlueHDi 130ch — 1er main, 68 000 km, entretien complet</div>
+            <div class="ex-row"><div class="ex-row-lbl">Accroche</div><div class="ex-row-val">Rare opportunité — 308 SW 1er propriétaire, historique irréprochable, zéro frais à prévoir.</div></div>
+            <div class="ex-row"><div class="ex-row-lbl">Points forts</div><div class="ex-row-val">• 1er main — carnet complet tamponné<br>• CT valide jusqu'en 2026<br>• GPS, caméra, sièges chauffants, CarPlay<br>• Prix sous la cote Argus</div></div>
           </div>
           <div class="ex-card">
             <div class="ex-type">📱 Exemple smartphone</div>
-            <div class="ex-title">iPhone 13 Pro 256Go Graphite — Comme neuf, boîte + facture Apple, batterie 94%</div>
-            <div class="ex-row"><div class="ex-row-lbl">Accroche</div><div class="ex-row-val">Utilisé avec coque et verre trempé dès le premier jour — dans l'état d'un iPhone sorti de boîte.</div></div>
-            <div class="ex-row"><div class="ex-row-lbl">Points forts</div><div class="ex-row-val">• Écran parfait — zéro rayure visible<br>• Batterie 94% — autonomie excellente<br>• Débloqué tous opérateurs<br>• Boîte, câble, chargeur 20W d'origine<br>• Facture Apple Store — authenticité certifiée</div></div>
-            <div class="ex-row"><div class="ex-row-lbl">Transparence</div><div class="ex-row-val">Micro-griffure quasi invisible côté gauche. Non visible avec une coque.</div></div>
+            <div class="ex-title">iPhone 13 Pro 256Go — Comme neuf, boîte + facture Apple, batterie 94%</div>
+            <div class="ex-row"><div class="ex-row-lbl">Accroche</div><div class="ex-row-val">Utilisé avec coque dès le premier jour — dans l'état d'un iPhone sorti de boîte.</div></div>
+            <div class="ex-row"><div class="ex-row-lbl">Points forts</div><div class="ex-row-val">• Écran parfait, batterie 94%<br>• Débloqué tous opérateurs<br>• Facture Apple Store disponible</div></div>
           </div>
         </div>
       </div>
@@ -447,22 +485,20 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 
   <!-- RÉSULTATS -->
   <div class="result-wrap" id="resultWrap">
-    <div class="paid-banner" id="paidBanner">
-      ✅ Paiement confirmé — Commande <strong id="paidCode" style="margin-left:4px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px"></strong>
-    </div>
+    <div class="paid-banner" id="paidBanner">✅ Paiement confirmé — Commande <strong id="paidCode" style="margin-left:4px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px"></strong></div>
     <div class="result-block">
-      <div class="result-lbl" id="resLbl1">VERSION COMPLÈTE — LEBONCOIN</div>
+      <div class="result-lbl">VERSION COMPLÈTE — LEBONCOIN</div>
       <div class="ann-title" id="annTitle"></div>
       <div class="ann-hook" id="annHook"></div>
-      <div class="ann-section"><div class="ann-section-lbl" id="annDescLbl">📋 Description</div><div class="ann-section-val" id="annDesc"></div></div>
-      <div class="ann-section"><div class="ann-section-lbl" id="annPtsLbl">⭐ Points forts</div><div class="ann-section-val" id="annPts"></div></div>
-      <div class="ann-section"><div class="ann-section-lbl" id="annCaracLbl">🔧 Caractéristiques</div><div class="ann-section-val" id="annCarac"></div></div>
-      <div class="ann-section"><div class="ann-section-lbl" id="annTranspLbl">⚠️ Transparence</div><div class="ann-section-val" id="annTransp"></div></div>
-      <div class="ann-section"><div class="ann-section-lbl" id="annInfosLbl">📍 Infos pratiques & contact</div><div class="ann-section-val" id="annInfos"></div></div>
+      <div class="ann-section"><div class="ann-section-lbl">📋 Description</div><div class="ann-section-val" id="annDesc"></div></div>
+      <div class="ann-section"><div class="ann-section-lbl">⭐ Points forts</div><div class="ann-section-val" id="annPts"></div></div>
+      <div class="ann-section"><div class="ann-section-lbl">🔧 Caractéristiques</div><div class="ann-section-val" id="annCarac"></div></div>
+      <div class="ann-section"><div class="ann-section-lbl">⚠️ Transparence</div><div class="ann-section-val" id="annTransp"></div></div>
+      <div class="ann-section"><div class="ann-section-lbl">📍 Infos pratiques</div><div class="ann-section-val" id="annInfos"></div></div>
       <button class="copy-btn" id="copyLongBtn" onclick="copyFull()">📋 Copier l'annonce complète</button>
     </div>
     <div class="result-block">
-      <div class="result-lbl" id="resLbl2">VERSION COURTE — FACEBOOK / SMS</div>
+      <div class="result-lbl">VERSION COURTE — FACEBOOK / SMS</div>
       <div class="ann-section-val" id="annShort"></div>
       <button class="copy-btn" id="copyShortBtn" onclick="copyShort()">📋 Copier la version courte</button>
     </div>
@@ -470,488 +506,191 @@ textarea{resize:vertical;min-height:72px;line-height:1.8}
 
 </div>
 <script>
-const WEBHOOK='REMPLACE_PAR_TON_WEBHOOK';
-const STRIPE_LINK='https://buy.stripe.com/bJe5kDcgzfKbf1FbAl4wM03';
-const REF=new URLSearchParams(window.location.search).get('ref')||'direct';
-
-function genCode(){const n=String(Math.floor(Math.random()*9000)+1000);const L='ABCDEFGHJKLMNPQRSTUVWXYZ';return '#'+n+L[Math.floor(Math.random()*L.length)]+L[Math.floor(Math.random()*L.length)]}
-const ORDER_CODE=genCode();
-let lang='fr',type='voiture',urg='normal',longTxt='',shortTxt='';
-
-// ── TABLE DE CORRESPONDANCE CODES → PRÉNOMS ──────────────
-// Modifie ici pour ajouter tes employés
+const WEBHOOK = "REMPLACE_PAR_TON_WEBHOOK";
+const STRIPE_LINKS = {
+  solo: "https://buy.stripe.com/LIEN_SOLO_699",
+  pack: "https://buy.stripe.com/LIEN_PACK_1499",
+  illimite: "https://buy.stripe.com/LIEN_ILLIMITE_8499"
+};
+const OFFER_NAMES = { solo: "Solo", pack: "Pack 5", illimite: "Illimite" };
+const OFFER_PRICES = { solo: "6,99", pack: "14,99", illimite: "84,99" };
+const OFFER_DESCS = { solo: "1 annonce", pack: "5 annonces / mois", illimite: "Annonces illimitees" };
 const AGENTS = {
-  'JoJo4': 'Johan',
-  '78352': 'Mattias',
-  // Ajoute tes autres employés ici : 'CODE': 'Prénom',
+  "JoJo4": "Johan",
 };
+const REF = new URLSearchParams(window.location.search).get("ref") || "direct";
 
-// ── TRADUCTIONS ──────────────────────────────────────────
-const T={
-  fr:{
-    heroH:"Vendez n'importe quoi<br><em>plus vite, mieux présenté.</em>",
-    heroS:"Notre IA rédige une annonce professionnelle complète en 15 secondes — titre accrocheur, description convaincante, mots-clés optimisés.",
-    sl1:"Remplissez<br>le formulaire",st1:"~3 min",sl2:"Estimation<br>optionnelle",st2:"~10 sec",sl3:"L'IA génère<br>votre annonce",st3:"~15 sec",sl4:"Paiement<br>sécurisé",st4:"~30 sec",sl5:"Annonce<br>prête !",st5:"Publiez",
-    tp1:"Paiement sécurisé Stripe",tp2:"Annonce en 15 secondes",tp3:"Résultat garanti",tp4:"100% confidentiel",
-    pbTitle:"Annonce professionnelle complète",pbSub:"Titre optimisé · Description · Points forts · SEO · Version courte",
-    catTitle:"Que vendez-vous ?",catSub:"Sélectionnez la catégorie",catPh:"Ex: voiture, téléphone, canapé…",
-    priceBlockTitle:"Prix & objectif",priceBlockSub:"Définissez votre stratégie de vente",
-    priceLbl:"Prix souhaité (€)",urgLbl:"Urgence de vente",
-    urg1:"⏳ Vente normale",urg2:"🔥 Vente rapide",urg3:"💎 Prix maximum",
-    estBtn:"🔍 Estimer la valeur marchande selon l'état",
-    es1:"Analyse du marché actuel…",es2:"Calcul de la dépréciation…",es3:"Génération de l'estimation…",
-    estLbl:"Estimation marché actuel",estLow:"Basse",estMid:"Moyenne",estHigh:"Haute",
-    locTitle:"Localisation & contact",locSub:"Pour les acheteurs potentiels",
-    cityLbl:"Ville",delivLbl:"Livraison possible ?",
-    d1:"Non — retrait uniquement",d2:"Oui — frais acheteur",d3:"Oui — frais à ma charge",d4:"Négociable",
-    nameLbl:"Prénom",phoneLbl:"Téléphone",dispoLbl:"Disponibilité",dispoPh:"Ex: Weekends, soirs après 18h, sur RDV…",
-    reasonTitle:"Raison de la vente",reasonSub:"Rassure l'acheteur et inspire confiance",
-    reasonPh:"Ex: Changement de véhicule, déménagement, mise à jour, plus besoin…",
-    submitBtn:"⚡ GÉNÉRER MON ANNONCE PROFESSIONNELLE",
-    lTitle:"Annonce en cours de création",lSub:"Notre IA analyse votre article et rédige<br>une annonce optimisée pour vendre.",
-    ls1:"Analyse des informations",ls2:"Rédaction de l'annonce",ls3:"Optimisation SEO & copywriting",ls4:"Finalisation",
-    pwTitle:"Votre annonce est prête !",pwSub:"Notre IA a rédigé une annonce complète. Réglez 15€ pour y accéder.",
-    pwNote:"Paiement unique · Accès immédiat · Service garanti",pwCode:"Code commande :",
-    stripeBtn:"Payer 15€ en toute sécurité",pwSecure:"🔐 Paiement crypté · Stripe · Aucune donnée bancaire stockée",
-    pwDiv:"Déjà payé ?",revealBtn:"✅ J'ai payé — Voir mon annonce",exLbl:"Exemples d'annonces générées",
-    resLbl1:"VERSION COMPLÈTE — LEBONCOIN",resLbl2:"VERSION COURTE — FACEBOOK / SMS",
-    copyLong:"📋 Copier l'annonce complète",copyShort:"📋 Copier la version courte",
-    annDescLbl:"📋 Description",annPtsLbl:"⭐ Points forts",annCaracLbl:"🔧 Caractéristiques",annTranspLbl:"⚠️ Transparence",annInfosLbl:"📍 Infos pratiques & contact",
-  },
-  en:{
-    heroH:"Sell anything<br><em>faster, better presented.</em>",
-    heroS:"Our AI writes a complete professional listing in 15 seconds — catchy title, convincing description, optimized keywords.",
-    sl1:"Fill in<br>the form",st1:"~3 min",sl2:"Optional<br>estimate",st2:"~10 sec",sl3:"AI writes<br>your listing",st3:"~15 sec",sl4:"Secure<br>payment",st4:"~30 sec",sl5:"Listing<br>ready!",st5:"Publish",
-    tp1:"Secure Stripe payment",tp2:"Listing in 15 seconds",tp3:"Guaranteed result",tp4:"100% confidential",
-    pbTitle:"Complete professional listing",pbSub:"Optimized title · Description · Key strengths · SEO · Short version",
-    catTitle:"What are you selling?",catSub:"Select the matching category",catPh:"E.g.: car, phone, sofa…",
-    priceBlockTitle:"Price & goal",priceBlockSub:"Define your selling strategy",
-    priceLbl:"Desired price (€)",urgLbl:"Selling urgency",
-    urg1:"⏳ Normal sale",urg2:"🔥 Quick sale",urg3:"💎 Maximum price",
-    estBtn:"🔍 Estimate market value based on condition",
-    es1:"Analyzing current market…",es2:"Calculating depreciation…",es3:"Generating estimate…",
-    estLbl:"Current market estimate",estLow:"Low",estMid:"Average",estHigh:"High",
-    locTitle:"Location & contact",locSub:"For potential buyers",
-    cityLbl:"City",delivLbl:"Delivery possible?",
-    d1:"No — pickup only",d2:"Yes — buyer pays shipping",d3:"Yes — I pay shipping",d4:"Negotiable",
-    nameLbl:"First name",phoneLbl:"Phone",dispoLbl:"Availability",dispoPh:"E.g.: Weekends, evenings, by appointment…",
-    reasonTitle:"Reason for selling",reasonSub:"Reassures the buyer and builds trust",
-    reasonPh:"E.g.: Upgrading, moving, no longer needed…",
-    submitBtn:"⚡ GENERATE MY PROFESSIONAL LISTING",
-    lTitle:"Your listing is being created",lSub:"Our AI is analyzing your item and writing<br>an optimized listing.",
-    ls1:"Analyzing information",ls2:"Writing the listing",ls3:"SEO & copywriting optimization",ls4:"Finalizing",
-    pwTitle:"Your listing is ready!",pwSub:"Our AI wrote a complete listing. Pay 15€ to access it immediately.",
-    pwNote:"One-time payment · Immediate access · Guaranteed service",pwCode:"Order code:",
-    stripeBtn:"Pay 15€ securely",pwSecure:"🔐 Encrypted payment · Stripe · No banking data stored",
-    pwDiv:"Already paid?",revealBtn:"✅ I've paid — View my listing",exLbl:"Examples of generated listings",
-    resLbl1:"FULL VERSION — MARKETPLACE",resLbl2:"SHORT VERSION — FACEBOOK / SMS",
-    copyLong:"📋 Copy full listing",copyShort:"📋 Copy short version",
-    annDescLbl:"📋 Description",annPtsLbl:"⭐ Key strengths",annCaracLbl:"🔧 Specifications",annTranspLbl:"⚠️ Transparency",annInfosLbl:"📍 Practical info & contact",
-  },
-  es:{
-    heroH:"Vende cualquier cosa<br><em>más rápido, mejor presentado.</em>",
-    heroS:"Nuestra IA redacta un anuncio profesional completo en 15 segundos — título atractivo, descripción convincente, palabras clave optimizadas.",
-    sl1:"Rellena<br>el formulario",st1:"~3 min",sl2:"Estimación<br>opcional",st2:"~10 seg",sl3:"La IA redacta<br>tu anuncio",st3:"~15 seg",sl4:"Pago<br>seguro",st4:"~30 seg",sl5:"¡Anuncio<br>listo!",st5:"Publicar",
-    tp1:"Pago seguro Stripe",tp2:"Anuncio en 15 segundos",tp3:"Resultado garantizado",tp4:"100% confidencial",
-    pbTitle:"Anuncio profesional completo",pbSub:"Título optimizado · Descripción · Puntos fuertes · SEO · Versión corta",
-    catTitle:"¿Qué vendes?",catSub:"Selecciona la categoría",catPh:"Ej: coche, teléfono, sofá…",
-    priceBlockTitle:"Precio & objetivo",priceBlockSub:"Define tu estrategia de venta",
-    priceLbl:"Precio deseado (€)",urgLbl:"Urgencia de venta",
-    urg1:"⏳ Venta normal",urg2:"🔥 Venta rápida",urg3:"💎 Precio máximo",
-    estBtn:"🔍 Estimar valor de mercado según estado",
-    es1:"Analizando el mercado actual…",es2:"Calculando depreciación…",es3:"Generando estimación…",
-    estLbl:"Estimación del mercado actual",estLow:"Baja",estMid:"Media",estHigh:"Alta",
-    locTitle:"Ubicación & contacto",locSub:"Para compradores potenciales",
-    cityLbl:"Ciudad",delivLbl:"¿Envío posible?",
-    d1:"No — solo recogida",d2:"Sí — gastos comprador",d3:"Sí — gastos a mi cargo",d4:"Negociable",
-    nameLbl:"Nombre",phoneLbl:"Teléfono",dispoLbl:"Disponibilidad",dispoPh:"Ej: Fines de semana, tardes, con cita previa…",
-    reasonTitle:"Motivo de venta",reasonSub:"Tranquiliza al comprador",
-    reasonPh:"Ej: Cambio de vehículo, mudanza, ya no lo necesito…",
-    submitBtn:"⚡ GENERAR MI ANUNCIO PROFESIONAL",
-    lTitle:"Tu anuncio está siendo creado",lSub:"Nuestra IA analiza tu artículo y redacta<br>un anuncio optimizado.",
-    ls1:"Analizando información",ls2:"Redactando el anuncio",ls3:"Optimización SEO",ls4:"Finalizando",
-    pwTitle:"¡Tu anuncio está listo!",pwSub:"Nuestra IA redactó un anuncio completo. Paga 15€ para acceder.",
-    pwNote:"Pago único · Acceso inmediato · Servicio garantizado",pwCode:"Código de pedido:",
-    stripeBtn:"Pagar 15€ de forma segura",pwSecure:"🔐 Pago cifrado · Stripe · Sin datos bancarios almacenados",
-    pwDiv:"¿Ya has pagado?",revealBtn:"✅ Ya pagué — Ver mi anuncio",exLbl:"Ejemplos de anuncios generados",
-    resLbl1:"VERSIÓN COMPLETA — MARKETPLACE",resLbl2:"VERSIÓN CORTA — FACEBOOK / SMS",
-    copyLong:"📋 Copiar anuncio completo",copyShort:"📋 Copiar versión corta",
-    annDescLbl:"📋 Descripción",annPtsLbl:"⭐ Puntos fuertes",annCaracLbl:"🔧 Características",annTranspLbl:"⚠️ Transparencia",annInfosLbl:"📍 Info práctica & contacto",
-  },
-  de:{
-    heroH:"Verkaufe alles<br><em>schneller, besser präsentiert.</em>",
-    heroS:"Unsere KI schreibt in 15 Sekunden eine vollständige professionelle Anzeige — catchy Titel, überzeugende Beschreibung, optimierte Keywords.",
-    sl1:"Formular<br>ausfüllen",st1:"~3 Min",sl2:"Optionale<br>Schätzung",st2:"~10 Sek",sl3:"KI erstellt<br>Anzeige",st3:"~15 Sek",sl4:"Sichere<br>Zahlung",st4:"~30 Sek",sl5:"Anzeige<br>fertig!",st5:"Veröffentlichen",
-    tp1:"Sichere Stripe-Zahlung",tp2:"Anzeige in 15 Sekunden",tp3:"Garantiertes Ergebnis",tp4:"100% vertraulich",
-    pbTitle:"Vollständige professionelle Anzeige",pbSub:"Optimierter Titel · Beschreibung · Stärken · SEO · Kurzversion",
-    catTitle:"Was verkaufen Sie?",catSub:"Wählen Sie die Kategorie",catPh:"z.B.: Auto, Handy, Sofa…",
-    priceBlockTitle:"Preis & Ziel",priceBlockSub:"Definieren Sie Ihre Verkaufsstrategie",
-    priceLbl:"Gewünschter Preis (€)",urgLbl:"Verkaufsdringlichkeit",
-    urg1:"⏳ Normaler Verkauf",urg2:"🔥 Schneller Verkauf",urg3:"💎 Maximaler Preis",
-    estBtn:"🔍 Marktwert nach Zustand schätzen",
-    es1:"Markt analysieren…",es2:"Abschreibung berechnen…",es3:"Schätzung generieren…",
-    estLbl:"Aktuelle Marktschätzung",estLow:"Niedrig",estMid:"Mittel",estHigh:"Hoch",
-    locTitle:"Standort & Kontakt",locSub:"Für potenzielle Käufer",
-    cityLbl:"Stadt",delivLbl:"Lieferung möglich?",
-    d1:"Nein — nur Abholung",d2:"Ja — Käufer zahlt Versand",d3:"Ja — ich zahle Versand",d4:"Verhandelbar",
-    nameLbl:"Vorname",phoneLbl:"Telefon",dispoLbl:"Verfügbarkeit",dispoPh:"z.B.: Wochenenden, Abends, nach Vereinbarung…",
-    reasonTitle:"Verkaufsgrund",reasonSub:"Beruhigt den Käufer",
-    reasonPh:"z.B.: Fahrzeugwechsel, Umzug, nicht mehr benötigt…",
-    submitBtn:"⚡ MEINE PROFESSIONELLE ANZEIGE ERSTELLEN",
-    lTitle:"Ihre Anzeige wird erstellt",lSub:"Unsere KI analysiert Ihren Artikel und erstellt<br>eine optimierte Anzeige.",
-    ls1:"Informationen analysieren",ls2:"Anzeige verfassen",ls3:"SEO-Optimierung",ls4:"Finalisieren",
-    pwTitle:"Ihre Anzeige ist fertig!",pwSub:"Unsere KI hat eine vollständige Anzeige erstellt. Zahlen Sie 15€ für sofortigen Zugang.",
-    pwNote:"Einmalige Zahlung · Sofortiger Zugang · Garantierter Service",pwCode:"Bestellcode:",
-    stripeBtn:"15€ sicher bezahlen",pwSecure:"🔐 Verschlüsselte Zahlung · Stripe · Keine Bankdaten gespeichert",
-    pwDiv:"Bereits bezahlt?",revealBtn:"✅ Ich habe bezahlt — Meine Anzeige anzeigen",exLbl:"Beispiele generierter Anzeigen",
-    resLbl1:"VOLLSTÄNDIGE VERSION — MARKTPLATZ",resLbl2:"KURZVERSION — FACEBOOK / SMS",
-    copyLong:"📋 Vollständige Anzeige kopieren",copyShort:"📋 Kurzversion kopieren",
-    annDescLbl:"📋 Beschreibung",annPtsLbl:"⭐ Stärken",annCaracLbl:"🔧 Eigenschaften",annTranspLbl:"⚠️ Transparenz",annInfosLbl:"📍 Praktische Infos & Kontakt",
-  }
-};
+function genCode() {
+  const n = String(Math.floor(Math.random() * 9000) + 1000);
+  const L = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  return "#" + n + L[Math.floor(Math.random() * L.length)] + L[Math.floor(Math.random() * L.length)];
+}
+const ORDER_CODE = genCode();
 
-function applyLang(l){
-  const t=T[l]||T.fr;
-  const s=id=>document.getElementById(id);
-  const sHTML=(id,v)=>{if(s(id))s(id).innerHTML=v};
-  const sTXT=(id,v)=>{if(s(id))s(id).textContent=v};
-  const sPH=(id,v)=>{if(s(id))s(id).placeholder=v};
-  sHTML('heroHeadline',t.heroH);sTXT('heroSub',t.heroS);
-  sHTML('sl1',t.sl1);sTXT('st1',t.st1);sHTML('sl2',t.sl2);sTXT('st2',t.st2);
-  sHTML('sl3',t.sl3);sTXT('st3',t.st3);sHTML('sl4',t.sl4);sTXT('st4',t.st4);
-  sHTML('sl5',t.sl5);sTXT('st5',t.st5);
-  sTXT('tp1',t.tp1);sTXT('tp2',t.tp2);sTXT('tp3',t.tp3);sTXT('tp4',t.tp4);
-  sTXT('pbTitle',t.pbTitle);sTXT('pbSub',t.pbSub);
-  sTXT('catTitle',t.catTitle);sTXT('catSub',t.catSub);sPH('typeSearch',t.catPh);
-  sTXT('priceBlockTitle',t.priceBlockTitle);sTXT('priceBlockSub',t.priceBlockSub);
-  const pl=s('priceLbl');if(pl)pl.innerHTML=t.priceLbl+' <span class="req">*</span>';
-  sTXT('urgLbl',t.urgLbl);
-  sTXT('urgBtn1',t.urg1);sTXT('urgBtn2',t.urg2);sTXT('urgBtn3',t.urg3);
-  const eb=s('estBtn');if(eb&&!eb.disabled)eb.textContent=t.estBtn;
-  sTXT('es1',t.es1);sTXT('es2',t.es2);sTXT('es3',t.es3);
-  sTXT('estLblText',t.estLbl);sTXT('estLow_lbl',t.estLow);sTXT('estMid_lbl',t.estMid);sTXT('estHigh_lbl',t.estHigh);
-  sTXT('locTitle',t.locTitle);sTXT('locSub',t.locSub);
-  const cl=s('cityLbl');if(cl)cl.innerHTML=t.cityLbl+' <span class="req">*</span>';
-  sTXT('delivLbl',t.delivLbl);
-  sTXT('deliv1',t.d1);sTXT('deliv2',t.d2);sTXT('deliv3',t.d3);sTXT('deliv4',t.d4);
-  const nl=s('nameLbl');if(nl)nl.innerHTML=t.nameLbl+' <span class="req">*</span>';
-  const phl=s('phoneLbl');if(phl)phl.innerHTML=t.phoneLbl+' <span class="req">*</span>';
-  sTXT('dispoLbl',t.dispoLbl);sPH('disponibilite',t.dispoPh);
-  sTXT('reasonTitle',t.reasonTitle);sTXT('reasonSub',t.reasonSub);
-  const ra=s('reason');if(ra)ra.placeholder=t.reasonPh;
-  sTXT('submitBtn',t.submitBtn);
-  sTXT('lTitle',t.lTitle);sHTML('lSub',t.lSub);
-  sTXT('ls1t',t.ls1);sTXT('ls2t',t.ls2);sTXT('ls3t',t.ls3);sTXT('ls4t',t.ls4);
-  sTXT('pwTitle',t.pwTitle);sTXT('pwSub',t.pwSub);sTXT('pwNote',t.pwNote);sTXT('pwCodeLbl',t.pwCode);
-  const sb=s('stripeBtn');if(sb){const svg=sb.querySelector('svg');const sp=sb.querySelector('#stripeBtnText')||sb;if(sp.id==='stripeBtnText')sp.textContent=t.stripeBtn;else sb.innerHTML=(svg?svg.outerHTML:'')+' <span id="stripeBtnText">'+t.stripeBtn+'</span>';}
-  sTXT('pwSecure',t.pwSecure);sTXT('pwDivider',t.pwDiv);sTXT('revealBtn',t.revealBtn);sTXT('exLbl',t.exLbl);
-  sTXT('resLbl1',t.resLbl1);sTXT('resLbl2',t.resLbl2);
-  sTXT('copyLongBtn',t.copyLong);sTXT('copyShortBtn',t.copyShort);
-  sTXT('annDescLbl',t.annDescLbl);sTXT('annPtsLbl',t.annPtsLbl);sTXT('annCaracLbl',t.annCaracLbl);sTXT('annTranspLbl',t.annTranspLbl);sTXT('annInfosLbl',t.annInfosLbl);
+let lang = "fr", type = "voiture", urg = "normal", longTxt = "", shortTxt = "", selectedOffer = "solo";
+
+// OFFRES
+function selectOffer(card) {
+  document.querySelectorAll(".offer-card").forEach(c => c.classList.remove("selected"));
+  card.classList.add("selected");
+  selectedOffer = card.dataset.offer;
+  document.getElementById("pwOfferName").textContent = OFFER_NAMES[selectedOffer];
+  document.getElementById("pwOfferPrice").textContent = OFFER_PRICES[selectedOffer] + "€";
+  document.getElementById("pwOfferDesc").textContent = OFFER_DESCS[selectedOffer];
+  document.getElementById("stripeBtnTxt").textContent = "Payer " + OFFER_PRICES[selectedOffer] + "€ en toute securite";
 }
 
-// LANG BUTTONS
-document.querySelectorAll('.lang-btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.lang-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');lang=b.dataset.lang;applyLang(lang);
+// LANG
+document.querySelectorAll(".lang-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".lang-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active"); lang = b.dataset.lang;
   });
 });
 
-// TYPE BUTTONS
-document.querySelectorAll('.type-btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.type-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');type=b.dataset.type;renderFields(type);
-    document.getElementById('estResult').classList.remove('show');
-    document.getElementById('estLoading').classList.remove('show');
+// TYPE
+document.querySelectorAll(".type-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".type-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active"); type = b.dataset.type;
+    renderFields(type);
+    document.getElementById("estResult").classList.remove("show");
+    document.getElementById("estLoading").classList.remove("show");
   });
 });
 
-function filterTypes(q){
-  document.querySelectorAll('.type-btn').forEach(b=>{
-    b.classList.toggle('hidden',q.length>0&&!b.textContent.toLowerCase().includes(q.toLowerCase()));
+function filterTypes(q) {
+  document.querySelectorAll(".type-btn").forEach(b => {
+    b.classList.toggle("hidden", q.length > 0 && !b.textContent.toLowerCase().includes(q.toLowerCase()));
   });
 }
 
 // URGENCE
-document.querySelectorAll('.urg-btn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.urg-btn').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');urg=b.dataset.urg;
+document.querySelectorAll(".urg-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".urg-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active"); urg = b.dataset.urg;
   });
 });
 
-// ── CONFIGS CHAMPS ──────────────────────────────────────
-const CONFIGS={
-  voiture:{icon:'🚗',sections:[
-    {title:'Véhicule',icon:'🚗',sub:'Informations générales',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'BMW, Renault, Peugeot…'},
-      {id:'model',label:'Modèle',req:true,ph:'Série 3, 308, Clio…'},
-      {id:'year',label:'Année',ph:'2019',type:'number',half:true},
-      {id:'version',label:'Version / Finition',ph:'GTI, Business, Sport…',half:true},
-      {id:'color',label:'Couleur',ph:'Noir nacré…',half:true},
-      {id:'doors',label:'Nb portes',type:'select',opts:['2','3','4','5'],half:true},
+// CONFIGS CHAMPS
+const CONFIGS = {
+  voiture: { sections: [
+    { title:"Vehicule", icon:"🚗", sub:"Informations generales", fields:[
+      {id:"brand",label:"Marque",req:true,ph:"BMW, Renault, Peugeot..."},
+      {id:"model",label:"Modele",req:true,ph:"Serie 3, 308, Clio..."},
+      {id:"year",label:"Annee",ph:"2019",type:"number",half:true},
+      {id:"version",label:"Version / Finition",ph:"GTI, Business...",half:true},
+      {id:"color",label:"Couleur",ph:"Noir nacre...",half:true},
+      {id:"doors",label:"Nb portes",type:"select",opts:["2","3","4","5"],half:true},
     ]},
-    {title:'Motorisation',icon:'⚙️',sub:'',fields:[
-      {id:'fuel',label:'Carburant',type:'select',opts:['Essence','Diesel','Hybride','Hybride rechargeable','Électrique','GPL'],half:true},
-      {id:'gearbox',label:'Boîte',type:'select',opts:['Manuelle','Automatique','Robotisée','CVT'],half:true},
-      {id:'power',label:'Puissance (ch)',ph:'130',type:'number',third:true},
-      {id:'engine',label:'Cylindrée (cc)',ph:'1997',type:'number',third:true},
-      {id:'consumption',label:'Conso L/100',ph:'6.2',type:'number',third:true},
-      {id:'traction',label:'Traction',type:'select',opts:['Traction avant','Propulsion','4x4 / AWD'],half:true},
-      {id:'co2',label:'CO2 (g/km)',ph:'120',type:'number',half:true},
+    { title:"Motorisation", icon:"⚙️", sub:"", fields:[
+      {id:"fuel",label:"Carburant",type:"select",opts:["Essence","Diesel","Hybride","Electrique","GPL"],half:true},
+      {id:"gearbox",label:"Boite",type:"select",opts:["Manuelle","Automatique","Semi-auto"],half:true},
+      {id:"power",label:"Puissance (ch)",ph:"130",type:"number",third:true},
+      {id:"engine",label:"Cylindree (cc)",ph:"1997",type:"number",third:true},
+      {id:"consumption",label:"Conso L/100",ph:"6.2",type:"number",third:true},
     ]},
-    {title:'État & historique',icon:'📋',sub:'',fields:[
-      {id:'mileage',label:'Kilométrage (km)',req:true,ph:'75000',type:'number',half:true},
-      {id:'owners',label:'Nb propriétaires',type:'select',opts:['1er main','2','3','4+'],half:true},
-      {id:'ct',label:'Contrôle technique',type:'select',opts:['Valide','À refaire','Non présenté'],half:true},
-      {id:'carnet',label:'Carnet entretien',type:'select',opts:['Complet','Partiel','Non'],half:true},
-      {id:'service',label:'Dernier entretien',ph:'Vidange à 70 000 km en 2023'},
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Excellent','Très bon','Bon','Moyen','À réparer']},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Rayures, bosses, voyant, bruit moteur…'},
-      {id:'reparations',label:'Réparations récentes',type:'textarea',ph:'Courroie changée, embrayage neuf, pneus neufs…'},
+    { title:"Etat & historique", icon:"📋", sub:"", fields:[
+      {id:"mileage",label:"Kilometrage (km)",req:true,ph:"75000",type:"number",half:true},
+      {id:"owners",label:"Nb proprietaires",type:"select",opts:["1er main","2","3","4+"],half:true},
+      {id:"ct",label:"Controle technique",type:"select",opts:["Valide","A refaire","Non presente"],half:true},
+      {id:"carnet",label:"Carnet entretien",type:"select",opts:["Complet","Partiel","Non"],half:true},
+      {id:"service",label:"Dernier entretien",ph:"Vidange a 70 000 km en 2023"},
+      {id:"condition",label:"Etat general",req:true,type:"select",opts:["Excellent","Tres bon","Bon","Moyen","A reparer"]},
+      {id:"defauts",label:"Defauts connus",type:"textarea",ph:"Rayures, bosses, voyants..."},
     ]},
-    {title:'Équipements',icon:'✨',sub:'',fields:[
-      {id:'sunroof',label:'Toit ouvrant',type:'select',opts:['Non','Standard','Panoramique'],half:true},
-      {id:'clim',label:'Climatisation',type:'select',opts:['Non','Manuelle','Auto','Bizone'],half:true},
-      {id:'gps',label:'GPS / Navigation',type:'select',opts:['Non','GPS intégré','CarPlay / Android Auto','GPS + CarPlay'],half:true},
-      {id:'camera',label:'Aide stationnement',type:'select',opts:['Non','Radars arrière','Radars AV+AR','Caméra recul','360°'],half:true},
-      {id:'seats',label:'Sièges',type:'select',opts:['Standard','Chauffants','Chauffants + ventilés','Massants'],half:true},
-      {id:'lights',label:'Éclairage',type:'select',opts:['Halogène','Xénon','Full LED','LED Matrix'],half:true},
-      {id:'options',label:'Autres équipements',type:'textarea',ph:'Jantes alu, sono premium, démarrage sans clé, régulateur adaptatif…'},
+    { title:"Equipements", icon:"✨", sub:"", fields:[
+      {id:"sunroof",label:"Toit ouvrant",type:"select",opts:["Non","Oui"],half:true},
+      {id:"clim",label:"Climatisation",type:"select",opts:["Non","Manuelle","Automatique"],half:true},
+      {id:"gps",label:"GPS",type:"select",opts:["Non","Oui","CarPlay"],half:true},
+      {id:"camera",label:"Camera recul",type:"select",opts:["Non","Oui"],half:true},
+      {id:"options",label:"Autres equipements",type:"textarea",ph:"Sieges chauffants, jantes alu, CarPlay..."},
     ]},
   ]},
-  moto:{icon:'🏍️',sections:[
-    {title:'Moto / Scooter',icon:'🏍️',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Honda, Yamaha, Kawasaki…'},
-      {id:'model',label:'Modèle',req:true,ph:'CB500F, MT-07, GSX-S750…'},
-      {id:'year',label:'Année',ph:'2020',type:'number',half:true},
-      {id:'color',label:'Couleur',ph:'Noir mat, Rouge…',half:true},
-      {id:'type_moto',label:'Type',type:'select',opts:['Roadster','Sportive','Trail / Adventure','Cruiser','Enduro','Scooter','Custom'],half:true},
-      {id:'cylindree',label:'Cylindrée (cc)',ph:'700',type:'number',half:true},
-      {id:'power',label:'Puissance (ch)',ph:'75',type:'number',half:true},
-      {id:'permis',label:'Permis requis',type:'select',opts:['A1 (125cc)','A2','A (illimité)'],half:true},
+  smartphone: { sections: [
+    { title:"Smartphone", icon:"📱", sub:"", fields:[
+      {id:"brand",label:"Marque",req:true,ph:"Apple, Samsung, Google..."},
+      {id:"model",label:"Modele exact",req:true,ph:"iPhone 15 Pro, Galaxy S24..."},
+      {id:"year",label:"Annee achat",ph:"2023",half:true},
+      {id:"color",label:"Couleur / Capacite",ph:"Noir 256Go...",half:true},
     ]},
-    {title:'État & kilométrage',icon:'📋',sub:'',fields:[
-      {id:'mileage',label:'Kilométrage (km)',req:true,ph:'18000',type:'number',half:true},
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Excellent','Très bon','Bon','Moyen','À réparer'],half:true},
-      {id:'owners',label:'Nb propriétaires',type:'select',opts:['1er main','2','3+'],half:true},
-      {id:'ct',label:'CT',type:'select',opts:['Valide','À refaire','Non requis'],half:true},
-      {id:'service',label:'Dernier entretien',ph:'Révision à 15 000 km'},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Chute, rayures, pièces manquantes…'},
+    { title:"Etat", icon:"📋", sub:"", fields:[
+      {id:"condition",label:"Etat general",req:true,type:"select",opts:["Neuf","Comme neuf","Tres bon","Bon","Avec defauts"]},
+      {id:"battery",label:"Etat batterie",ph:"94%, rapport Apple...",half:true},
+      {id:"warranty",label:"Garantie restante",ph:"06/2025, Non",half:true},
+      {id:"defauts",label:"Defauts",type:"textarea",ph:"Rayure ecran, bouton HS..."},
     ]},
-    {title:'Équipements',icon:'✨',sub:'',fields:[
-      {id:'options',label:'Options & accessoires inclus',type:'textarea',ph:'Sacoches, bulle, poignées chauffantes, GPS, pot sport…'},
+    { title:"Contenu", icon:"📦", sub:"", fields:[
+      {id:"options",label:"Elements inclus",type:"textarea",ph:"Boite, cable, chargeur, facture..."},
+      {id:"debloque",label:"Debloque tous operateurs ?",type:"select",opts:["Oui","Non"],half:true},
+      {id:"facture",label:"Facture disponible ?",type:"select",opts:["Oui","Non"],half:true},
     ]},
   ]},
-  smartphone:{icon:'📱',sections:[
-    {title:'Smartphone',icon:'📱',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Apple, Samsung, Google…'},
-      {id:'model',label:'Modèle exact',req:true,ph:'iPhone 15 Pro, Galaxy S24…'},
-      {id:'year',label:'Année d\'achat',ph:'2023',half:true},
-      {id:'color',label:'Couleur / Capacité',ph:'Noir Titane 256Go…',half:true},
+  meuble: { sections: [
+    { title:"Meuble", icon:"🛋️", sub:"", fields:[
+      {id:"brand",label:"Marque",req:true,ph:"Ikea, Maisons du Monde..."},
+      {id:"model",label:"Nom / Modele",req:true,ph:"KALLAX, Canape d'angle..."},
+      {id:"year",label:"Annee achat",ph:"2021",half:true},
+      {id:"type_meuble",label:"Type",type:"select",opts:["Canape","Lit","Table","Chaise","Bureau","Bibliotheque","Armoire","Autre"],half:true},
+      {id:"color",label:"Couleur / Matiere",ph:"Chene naturel, Blanc laque...",half:true},
+      {id:"dimensions",label:"Dimensions",ph:"200 x 90 x 75 cm",half:true},
     ]},
-    {title:'État & fonctionnement',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Neuf / jamais utilisé','Comme neuf','Très bon','Bon','Fonctionnel avec défauts']},
-      {id:'battery',label:'État batterie',ph:'94%, rapport Apple dispo…',half:true},
-      {id:'warranty',label:'Garantie restante',ph:'Jusqu\'en 06/2025, Non',half:true},
-      {id:'defauts',label:'Défauts / problèmes',type:'textarea',ph:'Rayure écran, bouton HS…'},
-      {id:'reparations',label:'Réparations effectuées',type:'textarea',ph:'Écran remplacé Apple Store…'},
-    ]},
-    {title:'Contenu & accessoires',icon:'📦',sub:'',fields:[
-      {id:'options',label:'Éléments inclus',type:'textarea',ph:'Boîte, câble, chargeur, coque, facture…'},
-      {id:'debloque',label:'Débloqué tous opérateurs ?',type:'select',opts:['Oui','Non','N/A'],half:true},
-      {id:'facture',label:'Facture disponible ?',type:'select',opts:['Oui','Non'],half:true},
-    ]},
-  ]},
-  ordinateur:{icon:'💻',sections:[
-    {title:'Ordinateur',icon:'💻',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Apple, Dell, HP, ASUS…'},
-      {id:'model',label:'Modèle',req:true,ph:'MacBook Pro M3, XPS 15…'},
-      {id:'year',label:'Année d\'achat',ph:'2022',half:true},
-      {id:'color',label:'Couleur / Finition',ph:'Argent, Noir…',half:true},
-    ]},
-    {title:'Configuration',icon:'⚙️',sub:'',fields:[
-      {id:'cpu',label:'Processeur (CPU)',ph:'Apple M3 Pro, Intel i7…',half:true},
-      {id:'ram',label:'RAM',ph:'16 Go, 32 Go…',half:true},
-      {id:'storage',label:'Stockage',ph:'512 Go SSD, 1 To…',half:true},
-      {id:'gpu',label:'Carte graphique',ph:'RTX 4060, AMD RX 7600…',half:true},
-      {id:'screen',label:'Écran',ph:'15.6" 4K OLED, 14" Retina…',half:true},
-      {id:'battery',label:'Autonomie / Batterie',ph:'10h, 80% de capacité…',half:true},
-    ]},
-    {title:'État & contenu',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Comme neuf','Très bon','Bon','Moyen']},
-      {id:'warranty',label:'Garantie restante',ph:'AppleCare 2026, Non'},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Rayure écran, touche collante…'},
-      {id:'options',label:'Inclus dans la vente',type:'textarea',ph:'Boîte, chargeur, souris, sacoche…'},
-      {id:'facture',label:'Facture disponible ?',type:'select',opts:['Oui','Non'],half:true},
-      {id:'os',label:'Système d\'exploitation',type:'select',opts:['macOS','Windows 11','Windows 10','Linux'],half:true},
-    ]},
-  ]},
-  meuble:{icon:'🛋️',sections:[
-    {title:'Meuble',icon:'🛋️',sub:'',fields:[
-      {id:'brand',label:'Marque / Fabricant',req:true,ph:'Ikea, Maisons du Monde…'},
-      {id:'model',label:'Nom / Modèle',req:true,ph:'KALLAX, Canapé Mellow…'},
-      {id:'year',label:'Année d\'achat',ph:'2021',half:true},
-      {id:'type_meuble',label:'Type',type:'select',opts:['Canapé / Sofa','Lit / Literie','Table','Chaise / Fauteuil','Bureau','Bibliothèque','Armoire','Commode','Table basse','Buffet','Autre'],half:true},
-      {id:'color',label:'Couleur / Matière',ph:'Chêne naturel, Blanc laqué…',half:true},
-      {id:'dimensions',label:'Dimensions (L x l x H)',ph:'200 x 90 x 75 cm',half:true},
-    ]},
-    {title:'État & pratique',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Neuf / jamais utilisé','Très bon','Bon','Moyen','À restaurer']},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Rayures, taches, pied cassé…'},
-      {id:'poids',label:'Poids estimé',ph:'30 kg',half:true},
-      {id:'montage',label:'Démontable ?',type:'select',opts:['Oui','Partiellement','Non'],half:true},
-      {id:'options',label:'Éléments inclus',type:'textarea',ph:'Coussins, quincaillerie, notice…'},
-    ]},
-  ]},
-  vetement_h:{icon:'👔',sections:[
-    {title:'Vêtement homme',icon:'👔',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Nike, Ralph Lauren, Hugo Boss…'},
-      {id:'model',label:'Type / Nom article',req:true,ph:'Veste bomber, Chino, Chemise…'},
-      {id:'year',label:'Saison / Année',ph:'Automne-Hiver 2023…',half:true},
-      {id:'color',label:'Couleur',ph:'Navy, Blanc cassé…',half:true},
-      {id:'size',label:'Taille',ph:'M, L, 42, EU 50…',half:true},
-      {id:'matiere',label:'Matière',ph:'100% coton, Laine…',half:true},
-    ]},
-    {title:'État',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Neuf avec étiquette','Neuf sans étiquette','Très bon','Bon','Moyen']},
-      {id:'nbport',label:'Nb de fois porté',ph:'Jamais, 2 fois…',half:true},
-      {id:'prixachat',label:'Prix d\'achat original',ph:'180€',half:true},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Bouton manquant, décoloration…'},
-    ]},
-  ]},
-  vetement_f:{icon:'👗',sections:[
-    {title:'Vêtement femme',icon:'👗',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Zara, Jacquemus, Sandro…'},
-      {id:'model',label:'Type / Nom article',req:true,ph:'Robe midi, Manteau, Blouse…'},
-      {id:'year',label:'Saison / Année',ph:'Printemps-Été 2024…',half:true},
-      {id:'color',label:'Couleur',ph:'Écru, Terracotta…',half:true},
-      {id:'size',label:'Taille',ph:'S, 36, T2…',half:true},
-      {id:'matiere',label:'Matière',ph:'Lin, Soie, Viscose…',half:true},
-    ]},
-    {title:'État',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Neuf avec étiquette','Neuf sans étiquette','Très bon','Bon','Moyen']},
-      {id:'nbport',label:'Nb de fois porté',ph:'Jamais, 1 fois…',half:true},
-      {id:'prixachat',label:'Prix d\'achat original',ph:'120€',half:true},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Fil tiré, légère décoloration…'},
-    ]},
-  ]},
-  chaussures:{icon:'👟',sections:[
-    {title:'Chaussures / Sneakers',icon:'👟',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Nike, Adidas, New Balance…'},
-      {id:'model',label:'Modèle',req:true,ph:'Air Force 1, Samba, 550…'},
-      {id:'year',label:'Année',ph:'2023',half:true},
-      {id:'color',label:'Coloris',ph:'White/White, Core Black…',half:true},
-      {id:'size',label:'Pointure',ph:'EU 42, US 9…',half:true},
-      {id:'matiere',label:'Matière',ph:'Cuir, Suède, Mesh…',half:true},
-    ]},
-    {title:'État',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Deadstock (neuf jamais porté)','Très bon (1-2 sorties)','Bon','Moyen']},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Semelle jaunie, crease…'},
-      {id:'options',label:'Inclus',type:'textarea',ph:'Boîte, lacets de rechange…'},
-      {id:'prixachat',label:'Prix d\'achat',ph:'140€',half:true},
-      {id:'facture',label:'Facture / Reçu',type:'select',opts:['Oui','Non'],half:true},
-    ]},
-  ]},
-  sport:{icon:'🏋️',sections:[
-    {title:'Sport / Fitness / Loisirs',icon:'🏋️',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Technogym, Domyos, Wilson…'},
-      {id:'model',label:'Modèle / Type',req:true,ph:'Vélo elliptique, Raquette…'},
-      {id:'year',label:'Année d\'achat',ph:'2021',half:true},
-      {id:'type_sport',label:'Sport / Discipline',ph:'Fitness, Tennis, Golf…',half:true},
-    ]},
-    {title:'État',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Comme neuf','Très bon','Bon','Fonctionnel avec défauts']},
-      {id:'usage',label:'Fréquence d\'utilisation',ph:'Peu utilisé, Hebdomadaire…'},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Usure normale, câble à changer…'},
-      {id:'options',label:'Accessoires inclus',type:'textarea',ph:'Raquettes, balles, tapis…'},
-    ]},
-  ]},
-  instrument:{icon:'🎸',sections:[
-    {title:'Instrument de musique',icon:'🎸',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Fender, Gibson, Yamaha…'},
-      {id:'model',label:'Modèle',req:true,ph:'Stratocaster, Les Paul…'},
-      {id:'year',label:'Année',ph:'2018',half:true},
-      {id:'type_inst',label:'Type',type:'select',opts:['Guitare électrique','Guitare acoustique','Basse','Piano / Clavier','Batterie','Saxophone','Violon','Autre'],half:true},
-      {id:'color',label:'Couleur / Finition',ph:'Sunburst, Blanc Artic…',half:true},
-      {id:'origine',label:'Pays de fabrication',ph:'USA, Japon, Mexique…',half:true},
-    ]},
-    {title:'État & accessoires',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Comme neuf','Très bon','Bon','Moyen']},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Rayures, sillets usés…'},
-      {id:'options',label:'Inclus dans la vente',type:'textarea',ph:'Étui, câble, pédalier, ampli…'},
-      {id:'facture',label:'Facture disponible ?',type:'select',opts:['Oui','Non'],half:true},
-    ]},
-  ]},
-  bricolage:{icon:'🔨',sections:[
-    {title:'Bricolage / Outillage',icon:'🔨',sub:'',fields:[
-      {id:'brand',label:'Marque',req:true,ph:'Bosch, Makita, Dewalt…'},
-      {id:'model',label:'Modèle',req:true,ph:'GKS 18V, DHP481…'},
-      {id:'year',label:'Année d\'achat',ph:'2021',half:true},
-      {id:'type_outil',label:'Type',type:'select',opts:['Perceuse / Visseuse','Scie circulaire','Ponceuse','Meuleuse','Compresseur','Outillage à main','Autre'],half:true},
-      {id:'voltage',label:'Tension / Motorisation',ph:'18V, 230V, thermique…',half:true},
-      {id:'usage',label:'Utilisation',ph:'Professionnel, DIY…',half:true},
-    ]},
-    {title:'État & contenu',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Comme neuf','Très bon','Bon','Fonctionnel avec usure']},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Usure des charbons, câble abîmé…'},
-      {id:'options',label:'Inclus',type:'textarea',ph:'Batterie x2, chargeur, coffret, accessoires…'},
-      {id:'facture',label:'Facture disponible ?',type:'select',opts:['Oui','Non'],half:true},
-    ]},
-  ]},
-  autre:{icon:'📦',sections:[
-    {title:'Article divers',icon:'📦',sub:'Décrivez votre article en détail',fields:[
-      {id:'brand',label:'Marque / Fabricant',req:true,ph:'Marque, artisan…'},
-      {id:'model',label:'Nom / Type d\'article',req:true,ph:'Décrivez ce que vous vendez…'},
-      {id:'year',label:'Année',ph:'2020',half:true},
-      {id:'color',label:'Couleur / Modèle',ph:'Bleu, Standard, XL…',half:true},
-      {id:'dimensions',label:'Dimensions / Poids',ph:'30 x 20 cm, 2 kg…'},
-    ]},
-    {title:'État',icon:'📋',sub:'',fields:[
-      {id:'condition',label:'État général',req:true,type:'select',opts:['Neuf / jamais utilisé','Très bon','Bon','Moyen','À réparer']},
-      {id:'defauts',label:'Défauts connus',type:'textarea',ph:'Décrivez honnêtement tout défaut.'},
-      {id:'options',label:'Éléments inclus',type:'textarea',ph:'Boîte, notice, accessoires…'},
-      {id:'usage',label:'Utilisation précédente',ph:'Perso, professionnel…',half:true},
-      {id:'facture',label:'Facture disponible ?',type:'select',opts:['Oui','Non'],half:true},
+    { title:"Etat", icon:"📋", sub:"", fields:[
+      {id:"condition",label:"Etat general",req:true,type:"select",opts:["Neuf","Tres bon","Bon","Moyen","A restaurer"]},
+      {id:"defauts",label:"Defauts connus",type:"textarea",ph:"Rayures, taches, pied casse..."},
+      {id:"montage",label:"Demontable ?",type:"select",opts:["Oui","Partiellement","Non"],half:true},
+      {id:"options",label:"Elements inclus",type:"textarea",ph:"Coussins, quincaillerie, notice..."},
     ]},
   ]},
 };
-// Configs identiques pour les types sans config dédiée
-['utilitaire','velo','tv_audio','console','photo','electromenager','gros_electro','deco','montre','sac','velo_sport','livre','jardin','puericulture','animal','pro','immo'].forEach(t=>{
-  if(!CONFIGS[t])CONFIGS[t]=CONFIGS['autre'];
+["moto","utilitaire","velo","ordinateur","tv_audio","console","photo","electromenager","gros_electro","deco","vetement_h","vetement_f","chaussures","montre","sac","sport","instrument","livre","bricolage","jardin","puericulture","animal","pro","immo","autre"].forEach(t => {
+  if (!CONFIGS[t]) CONFIGS[t] = {
+    sections: [
+      { title:"Article", icon:"📦", sub:"Decrivez votre article en detail", fields:[
+        {id:"brand",label:"Marque / Fabricant",req:true,ph:"Marque, artisan..."},
+        {id:"model",label:"Nom / Type",req:true,ph:"Decrivez ce que vous vendez..."},
+        {id:"year",label:"Annee",ph:"2020",half:true},
+        {id:"color",label:"Couleur / Modele",ph:"Bleu, Standard...",half:true},
+      ]},
+      { title:"Etat", icon:"📋", sub:"", fields:[
+        {id:"condition",label:"Etat general",req:true,type:"select",opts:["Neuf","Tres bon","Bon","Moyen","A reparer"]},
+        {id:"defauts",label:"Defauts connus",type:"textarea",ph:"Decrivez honnêtement tout defaut."},
+        {id:"options",label:"Elements inclus",type:"textarea",ph:"Boite, notice, accessoires..."},
+      ]},
+    ]
+  };
 });
 
-function renderFields(t){
-  const cfg=CONFIGS[t]||CONFIGS['autre'];
-  const section=document.getElementById('dynSection');
-  section.innerHTML='';
-  cfg.sections.forEach(s=>{
-    const block=document.createElement('div');
-    block.className='block';
-    const hd=document.createElement('div');hd.className='block-hd';
-    hd.innerHTML='<div class="block-ico">'+s.icon+'</div><div><div class="block-title">'+s.title+'</div>'+(s.sub?'<div class="block-sub">'+s.sub+'</div>':'')+'</div>';
+function renderFields(t) {
+  const cfg = CONFIGS[t] || CONFIGS["autre"];
+  const section = document.getElementById("dynSection");
+  section.innerHTML = "";
+  cfg.sections.forEach(s => {
+    const block = document.createElement("div");
+    block.className = "block";
+    const hd = document.createElement("div"); hd.className = "block-hd";
+    hd.innerHTML = "<div class='block-ico'>" + s.icon + "</div><div><div class='block-title'>" + s.title + "</div>" + (s.sub ? "<div class='block-sub'>" + s.sub + "</div>" : "") + "</div>";
     block.appendChild(hd);
-    let i=0;
-    while(i<s.fields.length){
-      const f=s.fields[i];
-      if(f.half){
-        const f2=s.fields[i+1]?.half?s.fields[i+1]:null;
-        const row=document.createElement('div');row.className='g2';row.style.marginBottom='10px';
+    let i = 0;
+    while (i < s.fields.length) {
+      const f = s.fields[i];
+      if (f.half) {
+        const f2 = s.fields[i+1]?.half ? s.fields[i+1] : null;
+        const row = document.createElement("div"); row.className = "g2"; row.style.marginBottom = "10px";
         row.appendChild(buildField(f));
-        if(f2){row.appendChild(buildField(f2));i++;}
+        if (f2) { row.appendChild(buildField(f2)); i++; }
         block.appendChild(row);
-      }else if(f.third){
-        const f3=[];f3.push(f);
-        if(s.fields[i+1]?.third){f3.push(s.fields[i+1]);i++;}
-        if(s.fields[i+1]?.third){f3.push(s.fields[i+1]);i++;}
-        const row=document.createElement('div');row.className='g3';row.style.marginBottom='10px';
-        f3.forEach(ff=>row.appendChild(buildField(ff)));
+      } else if (f.third) {
+        const f3 = [f];
+        if (s.fields[i+1]?.third) { f3.push(s.fields[i+1]); i++; }
+        if (s.fields[i+1]?.third) { f3.push(s.fields[i+1]); i++; }
+        const row = document.createElement("div"); row.className = "g3"; row.style.marginBottom = "10px";
+        f3.forEach(ff => row.appendChild(buildField(ff)));
         block.appendChild(row);
-      }else{
-        const w=document.createElement('div');w.style.marginBottom='10px';
-        w.appendChild(buildField(f));block.appendChild(w);
+      } else {
+        const w = document.createElement("div"); w.style.marginBottom = "10px";
+        w.appendChild(buildField(f)); block.appendChild(w);
       }
       i++;
     }
@@ -959,132 +698,128 @@ function renderFields(t){
   });
 }
 
-function buildField(f){
-  const div=document.createElement('div');div.className='field';
-  const lbl=document.createElement('label');
-  lbl.innerHTML=f.label+(f.req?' <span class="req">*</span>':'');
+function buildField(f) {
+  const div = document.createElement("div"); div.className = "field";
+  const lbl = document.createElement("label");
+  lbl.innerHTML = f.label + (f.req ? " <span class='req'>*</span>" : "");
   div.appendChild(lbl);
   let el;
-  if(f.type==='textarea'){el=document.createElement('textarea');el.placeholder=f.ph||'';}
-  else if(f.type==='select'){
-    el=document.createElement('select');
-    const e=document.createElement('option');e.value='';e.textContent='— Sélectionner';el.appendChild(e);
-    (f.opts||[]).forEach(o=>{const opt=document.createElement('option');opt.value=o;opt.textContent=o;el.appendChild(opt);});
-  }else{
-    el=document.createElement('input');el.type=f.type||'text';el.placeholder=f.ph||'';
+  if (f.type === "textarea") { el = document.createElement("textarea"); el.placeholder = f.ph || ""; }
+  else if (f.type === "select") {
+    el = document.createElement("select");
+    const e = document.createElement("option"); e.value = ""; e.textContent = "— Selectionner"; el.appendChild(e);
+    (f.opts || []).forEach(o => { const opt = document.createElement("option"); opt.value = o; opt.textContent = o; el.appendChild(opt); });
+  } else {
+    el = document.createElement("input"); el.type = f.type || "text"; el.placeholder = f.ph || "";
   }
-  el.id=f.id;div.appendChild(el);return div;
+  el.id = f.id; div.appendChild(el); return div;
 }
 
-renderFields('voiture');
+renderFields("voiture");
 
-const v=id=>document.getElementById(id)?.value?.trim()||'';
+const v = id => document.getElementById(id)?.value?.trim() || "";
 
-function buildSpecs(){
-  const cfg=CONFIGS[type]||CONFIGS['autre'];
-  const allF=cfg.sections.flatMap(s=>s.fields);
-  const lines=[['Type d\'article',type]];
-  allF.forEach(f=>{const val=v(f.id);if(val)lines.push([f.label,val]);});
-  lines.push(['Prix souhaité',v('price')?v('price')+' €':'']);
-  lines.push(['Urgence de vente',urg]);
-  lines.push(['Ville',v('sellerCity')]);
-  lines.push(['Livraison',v('livraison')]);
-  lines.push(['Disponibilité',v('disponibilite')]);
-  lines.push(['Vendeur',v('sellerName')]);
-  lines.push(['Téléphone',v('sellerPhone')]);
-  lines.push(['Raison de vente',v('reason')]);
-  return lines.filter(([,val])=>val).map(([k,val])=>'- '+k+': '+val).join('\n');
+function buildSpecs() {
+  const cfg = CONFIGS[type] || CONFIGS["autre"];
+  const allF = cfg.sections.flatMap(s => s.fields);
+  const lines = [["Type d'article", type]];
+  allF.forEach(f => { const val = v(f.id); if (val) lines.push([f.label, val]); });
+  lines.push(["Prix souhaite", v("price") ? v("price") + " EUR" : ""]);
+  lines.push(["Urgence", urg]);
+  lines.push(["Ville", v("sellerCity")]);
+  lines.push(["Livraison", v("livraison")]);
+  lines.push(["Disponibilite", v("disponibilite")]);
+  lines.push(["Vendeur", v("sellerName")]);
+  lines.push(["Telephone", v("sellerPhone")]);
+  lines.push(["Raison vente", v("reason")]);
+  return lines.filter(([,val]) => val).map(([k, val]) => "- " + k + ": " + val).join("\n");
 }
 
-function setLoadStep(step){
-  ['ls1','ls2','ls3','ls4'].forEach((id,i)=>{
-    const el=document.getElementById(id);
-    el.classList.remove('active','done');
-    if(i<step)el.classList.add('done');
-    else if(i===step)el.classList.add('active');
+function setLoadStep(step) {
+  ["ls1","ls2","ls3","ls4"].forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.remove("active","done");
+    if (i < step) el.classList.add("done");
+    else if (i === step) el.classList.add("active");
   });
 }
 
-// ── ESTIMATION ────────────────────────────────────────────
-async function estimatePrice(){
-  const brand=v('brand'),model=v('model');
-  if(!brand||!model){alert('Remplis au minimum la marque et le modèle.');return;}
-  const btn=document.getElementById('estBtn');
-  const loading=document.getElementById('estLoading');
-  const result=document.getElementById('estResult');
-  btn.disabled=true;btn.textContent='⏳ Analyse en cours…';
-  loading.classList.add('show');result.classList.remove('show');
-  const steps=['es1','es2','es3'];
-  steps.forEach(id=>document.getElementById(id).className='est-step');
-  let si=0;
-  const interval=setInterval(()=>{
-    if(si>0)document.getElementById(steps[si-1]).className='est-step done';
-    if(si<steps.length){document.getElementById(steps[si]).className='est-step active';si++;}
-  },800);
-  try{
-    const resp=await fetch('/api/estimate',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({specs:buildSpecs().slice(0,500)})
+async function estimatePrice() {
+  const brand = v("brand"), model = v("model");
+  if (!brand || !model) { alert("Remplis au minimum la marque et le modele."); return; }
+  const btn = document.getElementById("estBtn");
+  const loading = document.getElementById("estLoading");
+  const result = document.getElementById("estResult");
+  btn.disabled = true; btn.textContent = "Analyse en cours...";
+  loading.classList.add("show"); result.classList.remove("show");
+  const steps = ["es1","es2","es3"];
+  steps.forEach(id => document.getElementById(id).className = "est-step");
+  let si = 0;
+  const interval = setInterval(() => {
+    if (si > 0) document.getElementById(steps[si-1]).className = "est-step done";
+    if (si < steps.length) { document.getElementById(steps[si]).className = "est-step active"; si++; }
+  }, 800);
+  try {
+    const resp = await fetch("/api/estimate", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ specs: buildSpecs().slice(0, 500) })
     });
-    if(!resp.ok)throw new Error();
-    const r=await resp.json();
-    if(!r.low)throw new Error();
+    if (!resp.ok) throw new Error();
+    const r = await resp.json();
+    if (!r.low) throw new Error();
     clearInterval(interval);
-    steps.forEach(id=>document.getElementById(id).className='est-step done');
-    document.getElementById('estLow').textContent=Number(r.low).toLocaleString('fr-FR')+' €';
-    document.getElementById('estMid').textContent=Number(r.mid).toLocaleString('fr-FR')+' €';
-    document.getElementById('estHigh').textContent=Number(r.high).toLocaleString('fr-FR')+' €';
-    document.getElementById('estNote').textContent=r.note||'';
-    loading.classList.remove('show');result.classList.add('show');
-  }catch(e){
-    clearInterval(interval);loading.classList.remove('show');
-    alert('Erreur estimation. Vérifie ta connexion.');
-  }finally{
-    btn.disabled=false;btn.textContent=T[lang].estBtn;
+    steps.forEach(id => document.getElementById(id).className = "est-step done");
+    document.getElementById("estLow").textContent = Number(r.low).toLocaleString("fr-FR") + " EUR";
+    document.getElementById("estMid").textContent = Number(r.mid).toLocaleString("fr-FR") + " EUR";
+    document.getElementById("estHigh").textContent = Number(r.high).toLocaleString("fr-FR") + " EUR";
+    document.getElementById("estNote").textContent = r.note || "";
+    loading.classList.remove("show"); result.classList.add("show");
+  } catch(e) {
+    clearInterval(interval); loading.classList.remove("show");
+    alert("Erreur estimation. Verifie ta connexion.");
+  } finally {
+    btn.disabled = false; btn.textContent = "Estimer la valeur marchande";
   }
 }
 
-// ── GÉNÉRATION ────────────────────────────────────────────
-async function handleSubmit(){
-  const brand=v('brand'),model=v('model'),price=v('price');
-  const sellerName=v('sellerName'),sellerPhone=v('sellerPhone'),sellerCity=v('sellerCity');
-  const condition=v('condition');
-  if(!brand||!model||!price||!sellerName||!sellerPhone||!sellerCity||!condition){
-    alert('Merci de remplir tous les champs obligatoires (marqués *). Assurez-vous d\'avoir sélectionné un état général.');return;
+async function handleSubmit() {
+  const brand = v("brand"), model = v("model"), price = v("price");
+  const sellerName = v("sellerName"), sellerPhone = v("sellerPhone"), sellerCity = v("sellerCity");
+  const condition = v("condition");
+  if (!brand || !model || !price || !sellerName || !sellerPhone || !sellerCity || !condition) {
+    alert("Merci de remplir tous les champs obligatoires (marques *)."); return;
   }
-  const overlay=document.getElementById('loadingOverlay');
-  const errBox=document.getElementById('errBox');
-  const paywall=document.getElementById('paywall');
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;errBox.classList.remove('show');
-  paywall.classList.remove('show');document.getElementById('resultWrap').classList.remove('show');
-  overlay.classList.add('show');
-  try{
-    setLoadStep(0);await delay(400);setLoadStep(1);
-    const resp=await fetch('/api/generate',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({specs:buildSpecs(),lang,type,urgence:urg})
+  const overlay = document.getElementById("loadingOverlay");
+  const errBox = document.getElementById("errBox");
+  const paywall = document.getElementById("paywall");
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true; errBox.classList.remove("show");
+  paywall.classList.remove("show"); document.getElementById("resultWrap").classList.remove("show");
+  overlay.classList.add("show");
+  try {
+    setLoadStep(0); await delay(400); setLoadStep(1);
+    const resp = await fetch("/api/generate", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ specs: buildSpecs(), lang, type, urgence: urg })
     });
-    if(!resp.ok)throw new Error('Erreur API '+resp.status);
-    const data=await resp.json();
-    if(!data.long)throw new Error('Réponse vide');
-    setLoadStep(2);await delay(400);setLoadStep(3);await delay(400);
-    longTxt=data.long;shortTxt=data.short;
-    sessionStorage.setItem('annonce_data',JSON.stringify({long:data.long,short:data.short}));
-    const now=new Date();
-    const dateStr=now.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-    const timeStr=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-    // Construire le message Discord formaté
-    const annonceFull = data.long || '';
-    const annonceShortMsg = data.short || '';
-    const vendeur = AGENTS[REF] || (REF === 'direct' ? 'Accès direct' : REF);
-    const commission = REF === 'direct' ? 'Aucune' : '5€';
-
+    if (!resp.ok) throw new Error("Erreur API " + resp.status);
+    const data = await resp.json();
+    if (!data.long) throw new Error("Reponse vide");
+    setLoadStep(2); await delay(400); setLoadStep(3); await delay(400);
+    longTxt = data.long; shortTxt = data.short;
+    sessionStorage.setItem("annonce_data", JSON.stringify({ long: data.long, short: data.short }));
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("fr-FR", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+    const timeStr = now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+    const vendeur = AGENTS[REF] || (REF === "direct" ? "Acces direct" : REF);
+    const commission = REF === "direct" ? "Aucune" : "5EUR";
+    const offerLabel = OFFER_NAMES[selectedOffer] + " (" + OFFER_PRICES[selectedOffer] + "EUR)";
     const discordMsg = [
       "**Nouvelle commande - paiement en attente**",
       "",
       "**Espace Infos**",
       "Code commande : " + ORDER_CODE,
+      "Offre : " + offerLabel,
       "Statut : En attente",
       "Date & heure : " + dateStr + " a " + timeStr,
       "──────────────────",
@@ -1099,109 +834,105 @@ async function handleSubmit(){
       "──────────────────",
       "**Espace Private**",
       "",
-      annonceFull.slice(0, 1500),
+      data.long.slice(0, 1500),
       "──────────────────",
       "+ Version courte",
-      annonceShortMsg.slice(0, 500),
+      data.short.slice(0, 500),
       "──────────────────",
       "Agence Annonce Pro - " + ORDER_CODE + " - " + timeStr,
     ].join("\n");
-
     fetch(WEBHOOK, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content: discordMsg })
     });
-    overlay.classList.remove('show');
-    document.getElementById('orderCodeText').textContent=ORDER_CODE;
-    document.getElementById('stripeBtn').href=STRIPE_LINK;
-    paywall.classList.add('show');
-    setTimeout(()=>paywall.scrollIntoView({behavior:'smooth',block:'start'}),200);
-  }catch(e){
-    console.error(e);overlay.classList.remove('show');
-    errBox.classList.add('show');btn.disabled=false;
+    overlay.classList.remove("show");
+    document.getElementById("orderCodeText").textContent = ORDER_CODE;
+    document.getElementById("pwOfferName").textContent = OFFER_NAMES[selectedOffer];
+    document.getElementById("pwOfferPrice").textContent = OFFER_PRICES[selectedOffer] + "EUR";
+    document.getElementById("pwOfferDesc").textContent = OFFER_DESCS[selectedOffer];
+    document.getElementById("stripeBtnTxt").textContent = "Payer " + OFFER_PRICES[selectedOffer] + "EUR en toute securite";
+    document.getElementById("stripeBtn").href = STRIPE_LINKS[selectedOffer] || STRIPE_LINKS.solo;
+    paywall.classList.add("show");
+    setTimeout(() => paywall.scrollIntoView({ behavior:"smooth", block:"start" }), 200);
+  } catch(e) {
+    console.error(e); overlay.classList.remove("show");
+    errBox.classList.add("show"); btn.disabled = false;
   }
 }
 
-// ── RÉVÉLATION APRÈS PAIEMENT ─────────────────────────────
-function revealAfterPayment(){
-  const saved=sessionStorage.getItem('annonce_data');
-  if(!saved){alert('Aucune annonce trouvée. Merci de remplir le formulaire à nouveau.');return;}
-  const d=JSON.parse(saved);
-  longTxt=d.long;shortTxt=d.short;
-  document.getElementById('paywall').classList.remove('show');
+function revealAfterPayment() {
+  const saved = sessionStorage.getItem("annonce_data");
+  if (!saved) { alert("Aucune annonce trouvee. Merci de remplir le formulaire a nouveau."); return; }
+  const d = JSON.parse(saved);
+  longTxt = d.long; shortTxt = d.short;
+  document.getElementById("paywall").classList.remove("show");
   showResult(true);
-  const now=new Date();
-  const timeStr=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  const dateStr=now.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const now2 = new Date();
-  const timeStr2 = now2.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  const dateStr2 = now2.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const vendeur2 = AGENTS[REF] || (REF === 'direct' ? 'Accès direct' : REF);
-  const benefice = REF === 'direct' ? '15€' : '10€';
-  const action = REF === 'direct' ? 'Aucune' : 'Virer 5€ à ' + vendeur2;
-
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+  const dateStr = now.toLocaleDateString("fr-FR", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+  const vendeur = AGENTS[REF] || (REF === "direct" ? "Acces direct" : REF);
+  const benefice = REF === "direct" ? OFFER_PRICES[selectedOffer] + "EUR" : (parseFloat(OFFER_PRICES[selectedOffer].replace(",",".")) - 5).toFixed(2) + "EUR";
+  const action = REF === "direct" ? "Aucune" : "Virer 5EUR a " + vendeur;
   const paidMsg = [
-    "PAIEMENT CONFIRME - 15 euros encaisses",
+    "PAIEMENT CONFIRME",
     "",
     "**Espace Infos**",
     "Code commande : " + ORDER_CODE,
+    "Offre : " + OFFER_NAMES[selectedOffer] + " (" + OFFER_PRICES[selectedOffer] + "EUR)",
     "Statut : PAYE",
-    "Heure de paiement : " + dateStr2 + " a " + timeStr2,
+    "Heure : " + dateStr + " a " + timeStr,
     "──────────────────",
     "**Espace Vendeur**",
-    "Vendeur : " + vendeur2,
+    "Vendeur : " + vendeur,
     "Benefice net : " + benefice,
     "Action requise : " + action,
     "──────────────────",
-    "Agence Annonce Pro - " + ORDER_CODE + " - " + timeStr2,
+    "Agence Annonce Pro - " + ORDER_CODE + " - " + timeStr,
   ].join("\n");
-
   fetch(WEBHOOK, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: paidMsg })
   });
-  sessionStorage.removeItem('annonce_data');
+  sessionStorage.removeItem("annonce_data");
 }
 
-function showResult(paid=false){
-  const get=p=>(longTxt.match(p)||[])[1]?.trim()||'';
-  document.getElementById('annTitle').textContent=get(/TITRE\s*[:\-]\s*(.+)/i)||get(/TITLE\s*[:\-]\s*(.+)/i)||get(/TÍTULO\s*[:\-]\s*(.+)/i)||get(/TITEL\s*[:\-]\s*(.+)/i)||longTxt.split('\n')[0];
-  document.getElementById('annHook').textContent=get(/ACCROCHE\s*[:\-]\s*([\s\S]+?)(?=DESCRIPTION|POINTS|DESC|$)/i)||get(/HOOK\s*[:\-]\s*([\s\S]+?)(?=DESCRIPTION|POINTS|$)/i)||get(/GANCHO\s*[:\-]\s*([\s\S]+?)(?=DESCRIPCI|PUNTOS|$)/i)||get(/AUFH.NGER\s*[:\-]\s*([\s\S]+?)(?=BESCHREI|ST.RKEN|$)/i);
-  document.getElementById('annDesc').textContent=get(/DESCRIPTION\s*[:\-]?\s*([\s\S]+?)(?=POINTS?\s+FORTS?|⭐|CARACT|KEY|SPEC|PUNTOS|ST.RKEN|$)/i)||get(/DESCRIPCI.N\s*[:\-]?\s*([\s\S]+?)(?=PUNTOS|$)/i)||get(/BESCHREIBUNG\s*[:\-]?\s*([\s\S]+?)(?=ST.RKEN|$)/i)||longTxt;
-  document.getElementById('annPts').textContent=get(/POINTS?\s+FORTS?\s*[:\-]?\s*([\s\S]+?)(?=CARACT|🔧|TRANSP|⚠|INFOS|📍|SPEC|$)/i)||get(/KEY\s+STRENGTHS?\s*[:\-]?\s*([\s\S]+?)(?=SPEC|TRANSP|PRACT|$)/i)||get(/PUNTOS\s+FUERTES?\s*[:\-]?\s*([\s\S]+?)(?=CARACT|TRANSP|INFO|$)/i)||get(/ST.RKEN\s*[:\-]?\s*([\s\S]+?)(?=EIGEN|TRANSP|PRAKT|$)/i);
-  document.getElementById('annCarac').textContent=get(/CARACT[ÉE]RISTIQUES?\s*[:\-]?\s*([\s\S]+?)(?=TRANSP|⚠|INFOS|📍|$)/i)||get(/SPECIFICATIONS?\s*[:\-]?\s*([\s\S]+?)(?=TRANSP|PRACT|$)/i)||get(/CARACTER[ÍI]STICAS?\s*[:\-]?\s*([\s\S]+?)(?=TRANSP|INFO|$)/i)||get(/EIGENSCHAFTEN\s*[:\-]?\s*([\s\S]+?)(?=TRANSP|PRAKT|$)/i);
-  document.getElementById('annTransp').textContent=get(/TRANSPAR[EA]NCE\s*[:\-]?\s*([\s\S]+?)(?=INFOS|📍|CONTACT|🎯|PRACT|$)/i)||get(/TRANSPARENCY\s*[:\-]?\s*([\s\S]+?)(?=PRACT|$)/i)||get(/TRANSPARENCIA\s*[:\-]?\s*([\s\S]+?)(?=INFO|$)/i)||get(/TRANSPARENZ\s*[:\-]?\s*([\s\S]+?)(?=PRAKT|$)/i);
-  document.getElementById('annInfos').textContent=get(/(?:INFOS?\s+PRATIQUES?|PRACTICAL\s+INFO|INFORMACI.N\s+PR.CTICA|PRAKTISCHE\s+INFOS?)\s*[:\-]?\s*([\s\S]+?)$/i);
-  document.getElementById('annShort').textContent=shortTxt;
-  if(paid){
-    document.getElementById('paidCode').textContent=ORDER_CODE;
-    document.getElementById('paidBanner').classList.add('show');
+function showResult(paid = false) {
+  const get = p => (longTxt.match(p) || [])[1]?.trim() || "";
+  document.getElementById("annTitle").textContent = get(/TITRE\s*[:\-]\s*(.+)/i) || get(/TITLE\s*[:\-]\s*(.+)/i) || longTxt.split("\n")[0];
+  document.getElementById("annHook").textContent = get(/ACCROCHE\s*[:\-]\s*([\s\S]+?)(?=DESCRIPTION|POINTS|$)/i) || get(/HOOK\s*[:\-]\s*([\s\S]+?)(?=DESCRIPTION|$)/i);
+  document.getElementById("annDesc").textContent = get(/DESCRIPTION\s*[:\-]?\s*([\s\S]+?)(?=POINTS?\s+FORTS?|CARACT|KEY|$)/i) || longTxt;
+  document.getElementById("annPts").textContent = get(/POINTS?\s+FORTS?\s*[:\-]?\s*([\s\S]+?)(?=CARACT|TRANSP|INFOS|$)/i) || get(/KEY\s+STRENGTHS?\s*[:\-]?\s*([\s\S]+?)(?=SPEC|TRANSP|$)/i);
+  document.getElementById("annCarac").textContent = get(/CARACT[EÉ]RISTIQUES?\s*[:\-]?\s*([\s\S]+?)(?=TRANSP|INFOS|$)/i);
+  document.getElementById("annTransp").textContent = get(/TRANSPAR[EA]NCE\s*[:\-]?\s*([\s\S]+?)(?=INFOS|CONTACT|$)/i);
+  document.getElementById("annInfos").textContent = get(/(?:INFOS?\s+PRATIQUES?|PRACTICAL\s+INFO)\s*[:\-]?\s*([\s\S]+?)$/i);
+  document.getElementById("annShort").textContent = shortTxt;
+  if (paid) {
+    document.getElementById("paidCode").textContent = ORDER_CODE;
+    document.getElementById("paidBanner").classList.add("show");
   }
-  document.getElementById('resultWrap').classList.add('show');
-  setTimeout(()=>document.getElementById('resultWrap').scrollIntoView({behavior:'smooth',block:'start'}),300);
+  document.getElementById("resultWrap").classList.add("show");
+  setTimeout(() => document.getElementById("resultWrap").scrollIntoView({ behavior:"smooth", block:"start" }), 300);
 }
 
-function copyFull(){
-  const ids=['annTitle','annHook','annDesc','annPts','annCarac','annTransp','annInfos'];
-  const text=ids.map(id=>document.getElementById(id).textContent).filter(t=>t&&t!=='—').join('\n\n');
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn=document.getElementById('copyLongBtn');
-    btn.textContent='✅ Copié !';btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent=T[lang].copyLong;btn.classList.remove('copied');},2000);
+function copyFull() {
+  const ids = ["annTitle","annHook","annDesc","annPts","annCarac","annTransp","annInfos"];
+  const text = ids.map(id => document.getElementById(id).textContent).filter(t => t).join("\n\n");
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copyLongBtn");
+    btn.textContent = "Copie !"; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copier l'annonce complete"; btn.classList.remove("copied"); }, 2000);
   });
 }
 
-function copyShort(){
-  navigator.clipboard.writeText(document.getElementById('annShort').textContent).then(()=>{
-    const btn=document.getElementById('copyShortBtn');
-    btn.textContent='✅ Copié !';btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent=T[lang].copyShort;btn.classList.remove('copied');},2000);
+function copyShort() {
+  navigator.clipboard.writeText(document.getElementById("annShort").textContent).then(() => {
+    const btn = document.getElementById("copyShortBtn");
+    btn.textContent = "Copie !"; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copier la version courte"; btn.classList.remove("copied"); }, 2000);
   });
 }
 
-const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const delay = ms => new Promise(r => setTimeout(r, ms));
 </script>
 </body>
 </html>
