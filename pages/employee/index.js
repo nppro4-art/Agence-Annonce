@@ -30,7 +30,7 @@ export default function EmployeeDashboard() {
         </div>
         <input
           style={{ background: 'var(--s2)', border: '1.5px solid var(--border)', borderRadius: 10, color: 'var(--white)', fontSize: 14, padding: '11px 13px', outline: 'none', width: '100%', marginBottom: 12, textAlign: 'center', letterSpacing: 2 }}
-          placeholder="Votre code (ex: JoJo4)"
+          placeholder="Votre code"
           value={code} onChange={e => setCode(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && loadStats(code)}
         />
