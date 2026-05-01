@@ -20,7 +20,8 @@
     "jsonwebtoken": "9.0.2",
     "cookie": "0.6.0",
     "@anthropic-ai/sdk": "0.24.0",
-    "recharts": "2.12.7"
+    "recharts": "2.12.7",
+    "micro": "10.0.1"
   },
   "devDependencies": {
     "@types/node": "20.14.0",
