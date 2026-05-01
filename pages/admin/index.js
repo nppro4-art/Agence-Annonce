@@ -1,6 +1,120 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
+
+function SettingsTab({ card, inp, secTitle, showToast }) {
+  const [form, setForm] = useState({
+    commissionFirst: '6',
+    commissionRecurring: '2',
+    stripePrice: '5.99',
+    adminWebhook: '',
+    stripeLinkWeekly: '',
+    stripeLinkMonthly: '',
+    stripeLinkPack5: '',
+    stripeLinkPack10: '',
+    stripeLinkRep20: '',
+  })
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/admin/settings').then(r => r.json()).then(data => {
+      if (data.settings) {
+        setForm(f => ({
+          ...f,
+          commissionFirst: String(data.settings.commissionFirst || 6),
+          commissionRecurring: String(data.settings.commissionRecurring || 2),
+          stripePrice: String(data.settings.stripePrice || 5.99),
+          adminWebhook: data.settings.adminWebhook || '',
+        }))
+      }
+      setLoading(false)
+    }).catch(() => setLoading(false))
+  }, [])
+
+  const save = async () => {
+    setSaving(true)
+    const res = await fetch('/api/admin/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    })
+    const data = await res.json()
+    setSaving(false)
+    if (data.success) showToast('Paramètres sauvegardés !')
+    else showToast('Erreur lors de la sauvegarde')
+  }
+
+  const lbl = { fontSize: 10, fontWeight: 600, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: '.8px', display: 'block', marginBottom: 5 }
+
+  if (loading) return <div style={{ fontSize: 13, color: 'var(--muted2)', padding: 20 }}>Chargement...</div>
+
+  return (
+    <div>
+      <div style={secTitle}>COMMISSIONS</div>
+      <div style={card}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+          <div>
+            <label style={lbl}>Commission 1er paiement (€)</label>
+            <input style={inp} type="number" step="0.5" value={form.commissionFirst} onChange={e => setForm({...form, commissionFirst: e.target.value})}/>
+          </div>
+          <div>
+            <label style={lbl}>Commission récurrente (€)</label>
+            <input style={inp} type="number" step="0.5" value={form.commissionRecurring} onChange={e => setForm({...form, commissionRecurring: e.target.value})}/>
+          </div>
+        </div>
+      </div>
+
+      <div style={secTitle}>PRIX & ABONNEMENTS</div>
+      <div style={card}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+          <div>
+            <label style={lbl}>Prix abonnement hebdo (€/semaine)</label>
+            <input style={inp} type="number" step="0.01" value={form.stripePrice} onChange={e => setForm({...form, stripePrice: e.target.value})}/>
+          </div>
+        </div>
+        <div style={{ marginBottom: 10 }}>
+          <label style={lbl}>Lien Stripe — Abonnement hebdomadaire (5,99€/sem)</label>
+          <input style={inp} placeholder="https://buy.stripe.com/..." value={form.stripeLinkWeekly} onChange={e => setForm({...form, stripeLinkWeekly: e.target.value})}/>
+        </div>
+        <div style={{ marginBottom: 10 }}>
+          <label style={lbl}>Lien Stripe — Abonnement mensuel (19,99€/mois)</label>
+          <input style={inp} placeholder="https://buy.stripe.com/..." value={form.stripeLinkMonthly} onChange={e => setForm({...form, stripeLinkMonthly: e.target.value})}/>
+        </div>
+      </div>
+
+      <div style={secTitle}>LIENS STRIPE — PACKS</div>
+      <div style={card}>
+        <div style={{ marginBottom: 10 }}>
+          <label style={lbl}>Pack 5 annonces (7,99€)</label>
+          <input style={inp} placeholder="https://buy.stripe.com/..." value={form.stripeLinkPack5} onChange={e => setForm({...form, stripeLinkPack5: e.target.value})}/>
+        </div>
+        <div style={{ marginBottom: 10 }}>
+          <label style={lbl}>Pack 10 annonces (13,99€)</label>
+          <input style={inp} placeholder="https://buy.stripe.com/..." value={form.stripeLinkPack10} onChange={e => setForm({...form, stripeLinkPack10: e.target.value})}/>
+        </div>
+        <div>
+          <label style={lbl}>Pack 20 réponses (9,99€)</label>
+          <input style={inp} placeholder="https://buy.stripe.com/..." value={form.stripeLinkRep20} onChange={e => setForm({...form, stripeLinkRep20: e.target.value})}/>
+        </div>
+      </div>
+
+      <div style={secTitle}>NOTIFICATIONS</div>
+      <div style={card}>
+        <div>
+          <label style={lbl}>Webhook Discord admin (global)</label>
+          <input style={inp} placeholder="https://discord.com/api/webhooks/..." value={form.adminWebhook} onChange={e => setForm({...form, adminWebhook: e.target.value})}/>
+        </div>
+      </div>
+
+      <button onClick={save} disabled={saving}
+        style={{ width: '100%', background: saving ? 'var(--s4)' : 'var(--red)', border: 'none', borderRadius: 10, color: 'white', cursor: saving ? 'not-allowed' : 'pointer', fontFamily: 'Bebas Neue', fontSize: 15, letterSpacing: 1, padding: '14px', marginTop: 4, transition: 'all .2s' }}>
+        {saving ? 'SAUVEGARDE EN COURS...' : '💾 SAUVEGARDER LES PARAMÈTRES'}
+      </button>
+    </div>
+  )
+}
+
 export default function Admin() {
   const router = useRouter()
   const [stats, setStats] = useState(null)
@@ -272,27 +386,7 @@ export default function Admin() {
 
         {/* SETTINGS */}
         {tab === 'settings' && (
-          <div>
-            <div style={secTitle}>PARAMÈTRES GÉNÉRAUX</div>
-            <div style={card}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
-                {[
-                  ['Prix abonnement (€/semaine)', '5.99'],
-                  ['Commission 1er mois (€)', '6'],
-                  ['Commission récurrente (€)', '2'],
-                  ['Email admin', 'ton@email.com']
-                ].map(([label, placeholder]) => (
-                  <div key={label}>
-                    <label style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: '.8px', display: 'block', marginBottom: 5 }}>{label}</label>
-                    <input style={inp} placeholder={placeholder}/>
-                  </div>
-                ))}
-              </div>
-              <button style={{ width: '100%', background: 'var(--red)', border: 'none', borderRadius: 10, color: 'white', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 15, letterSpacing: 1, padding: '12px' }}>
-                SAUVEGARDER
-              </button>
-            </div>
-          </div>
+          <SettingsTab card={card} inp={inp} secTitle={secTitle} showToast={showToast} />
         )}
 
       </div>
