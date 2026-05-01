@@ -71,7 +71,7 @@ export default async function handler(req, res) {
         '✅ NOUVEL ABONNE PRO',
         'Email : ' + user.email,
         'Ref : ' + (ref || 'Direct'),
-        'Montant : 19,99EUR'
+        'Montant : 5,99EUR'
       ].join('\n'))
     }
   }
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
           ].join('\n'))
         }
       }
-      await sendDiscord(adminWebhook, '🔄 RENOUVELLEMENT : ' + (user?.email || 'Inconnu') + ' — 19,99EUR')
+      await sendDiscord(adminWebhook, '🔄 RENOUVELLEMENT : ' + (user?.email || 'Inconnu') + ' — 5,99EUR')
     }
   }
 
