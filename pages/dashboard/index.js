@@ -104,9 +104,9 @@ function HomeTab({ user, isPro, upgradePro, manageSubscription, setTab, card, bt
         <div style={{ ...card, border: '1.5px solid rgba(255,45,45,.3)', background: 'rgba(255,45,45,.04)' }}>
           <div style={{ fontFamily: 'Bebas Neue', fontSize: 18, marginBottom: 8 }}>Passer à la version Pro</div>
           <div style={{ fontSize: 13, color: 'var(--muted2)', marginBottom: 16, lineHeight: 1.6 }}>
-            Annonces illimitées, réponses acheteurs, historique complet. 19,99€/mois, résiliable à tout moment.
+            Annonces illimitées, réponses acheteurs, historique complet. 5,99€/semaine, annulable à tout moment — non remboursable.
           </div>
-          <button onClick={upgradePro} style={btn()}>⚡ PASSER PRO — 19,99€/MOIS</button>
+          <button onClick={upgradePro} style={btn()}>⚡ PASSER PRO — 5,99€/MOIS</button>
         </div>
       )}
 
@@ -115,7 +115,7 @@ function HomeTab({ user, isPro, upgradePro, manageSubscription, setTab, card, bt
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, color: 'var(--success)', marginBottom: 4 }}>Abonnement Pro Actif</div>
-              <div style={{ fontSize: 12, color: 'var(--muted2)' }}>19,99€/mois · Toutes fonctionnalités incluses</div>
+              <div style={{ fontSize: 12, color: 'var(--muted2)' }}>5,99€/semaine · Toutes fonctionnalités incluses</div>
             </div>
             <button onClick={manageSubscription} style={{ background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--muted2)', cursor: 'pointer', fontSize: 11, padding: '7px 12px' }}>Gérer</button>
           </div>
@@ -136,7 +136,7 @@ function AnnonceTab({ user, isPro, upgradePro, card, btn }) {
       <div style={{ fontSize: 32, marginBottom: 12 }}>🔒</div>
       <div style={{ fontFamily: 'Bebas Neue', fontSize: 20, marginBottom: 8 }}>Fonctionnalité Pro</div>
       <div style={{ fontSize: 13, color: 'var(--muted2)', marginBottom: 20 }}>Passez à la version Pro pour créer des annonces illimitées.</div>
-      <button onClick={upgradePro} style={btn()}>PASSER PRO — 19,99€/MOIS</button>
+      <button onClick={upgradePro} style={btn()}>PASSER PRO — 5,99€/MOIS</button>
     </div>
   )
 
@@ -263,7 +263,7 @@ function ReponseTab({ user, isPro, upgradePro, card, btn }) {
       <div style={{ fontSize: 32, marginBottom: 12 }}>🔒</div>
       <div style={{ fontFamily: 'Bebas Neue', fontSize: 20, marginBottom: 8 }}>Fonctionnalité Pro</div>
       <div style={{ fontSize: 13, color: 'var(--muted2)', marginBottom: 20 }}>Passez Pro pour répondre aux acheteurs avec l'IA.</div>
-      <button onClick={upgradePro} style={btn()}>PASSER PRO — 19,99€/MOIS</button>
+      <button onClick={upgradePro} style={btn()}>PASSER PRO — 5,99€/MOIS</button>
     </div>
   )
 
