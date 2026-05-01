@@ -5,8 +5,8 @@ export default function Pricing() {
   const router = useRouter()
 
   const packs = [
-    { id: 'pack5', name: '5 annonces', price: '7,99€', unit: '1,60€/annonce', desc: 'Paiement unique', features: ['5 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_PACK5 || '#' },
-    { id: 'pack10', name: '10 annonces', price: '13,99€', unit: '1,40€/annonce', desc: 'Paiement unique', features: ['10 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_PACK10 || '#' },
+    { id: 'pack5', name: '5 annonces', price: '9,99€', unit: '2,00€/annonce', desc: 'Paiement unique', features: ['5 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_PACK5 || '#' },
+    { id: 'pack10', name: '10 annonces', price: '17,99€', unit: '1,80€/annonce', desc: 'Paiement unique', features: ['10 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_PACK10 || '#' },
     { id: 'rep50', name: '50 réponses', price: '14,99€', unit: '0,30€/réponse', desc: 'Paiement unique', features: ['50 réponses acheteurs', 'Conseil négociation inclus', 'Ton professionnel garanti'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_REP50 || '#' },
     { id: 'rep500', name: '500 réponses', price: '39,99€', unit: '0,08€/réponse', desc: 'Paiement unique', features: ['500 réponses acheteurs', 'Conseil négociation inclus', 'Meilleure valeur réponses'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_REP500 || '#' },
   ]
@@ -114,7 +114,7 @@ export default function Pricing() {
         <div className="fade-up d2" style={{ background: 'rgba(255,176,32,.05)', border: '1px solid rgba(255,176,32,.2)', borderRadius: 12, padding: '14px 18px', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ fontSize: 16 }}>💡</span>
           <div style={{ fontSize: 13, color: 'var(--muted2)', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--warning)' }}>Pourquoi l&apos;abonnement ?</strong> Avec Elite à 5,99€/sem, chaque annonce te coûte <strong style={{ color: 'var(--white)' }}>moins de 0,01€</strong>. Le pack 5 annonces revient à <strong style={{ color: '#f87171' }}>1,60€ par annonce</strong>. Le pack 50 réponses à <strong style={{ color: '#f87171' }}>0,30€/réponse</strong>. Avec Elite, tout est inclus.
+            <strong style={{ color: 'var(--warning)' }}>Pourquoi l&apos;abonnement ?</strong> Avec Elite à 5,99€/sem, chaque annonce te coûte <strong style={{ color: 'var(--white)' }}>moins de 0,01€</strong>. Le pack 5 annonces revient à <strong style={{ color: '#f87171' }}>2,00€/annonce</strong>, le pack 10 à <strong style={{ color: '#f87171' }}>1,80€/annonce</strong>. Avec Elite à 5,99€/sem, tout est illimité pour moins de 0,01€ par annonce.
           </div>
         </div>
 
