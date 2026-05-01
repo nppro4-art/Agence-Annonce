@@ -14,7 +14,7 @@ export default function Pricing() {
           <h1 style={{ fontFamily: 'Bebas Neue', fontSize: 36, letterSpacing: -1, marginTop: 32, marginBottom: 12 }}>
             Choisissez votre plan
           </h1>
-          <p style={{ fontSize: 14, color: 'var(--muted2)' }}>Simple, sans engagement, résiliable à tout moment.</p>
+          <p style={{ fontSize: 14, color: 'var(--muted2)' }}>Simple, sans engagement, annulable à tout moment — non remboursable.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -40,15 +40,15 @@ export default function Pricing() {
               RECOMMANDÉ
             </div>
             <div style={{ fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: 1, marginBottom: 6 }}>Pro</div>
-            <div style={{ fontFamily: 'Bebas Neue', fontSize: 40, color: 'var(--red)', marginBottom: 4 }}>19,99€</div>
-            <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 20 }}>par mois · résiliable à tout moment</div>
+            <div style={{ fontFamily: 'Bebas Neue', fontSize: 40, color: 'var(--red)', marginBottom: 4 }}>5,99€</div>
+            <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 20 }}>par semaine · annulable à tout moment — non remboursable</div>
             {[
               'Annonces (usage raisonnable — 200/mois)',
               'Réponses acheteurs (100/mois)',
               'Estimations de prix (50/mois)',
               'Score qualité de vos annonces',
               'Historique complet',
-              'Résiliable à tout moment'
+              'Annulable à tout moment — non remboursable'
             ].map(f => (
               <div key={f} style={{ fontSize: 12, color: 'var(--white)', display: 'flex', gap: 8, marginBottom: 8 }}>
                 <span style={{ color: 'var(--success)' }}>✓</span>{f}
@@ -56,7 +56,7 @@ export default function Pricing() {
             ))}
             <button onClick={() => router.push('/auth/register?plan=pro')}
               style={{ width: '100%', marginTop: 20, background: 'var(--red)', border: 'none', borderRadius: 10, color: 'white', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 14, letterSpacing: 1, padding: '12px', transition: 'all .2s' }}>
-              COMMENCER — 19,99€/MOIS
+              COMMENCER — 5,99€/MOIS
             </button>
           </div>
         </div>
