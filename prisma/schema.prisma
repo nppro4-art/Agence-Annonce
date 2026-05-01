@@ -1,1 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  password         String
+  name             String?
+  plan             String    @default("free")
+  stripeCustomerId String?   @unique
+  stripeSubId      String?   @unique
+  subStatus        String    @default("inactive")
+  refBy            String?
+  referralCode     String?   @unique
+  referralUsed     String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  annonces         Annonce[]
+  reponses         Reponse[]
+}
+
+model Employee {
+  id          String       @id @default(cuid())
+  name        String
+  code        String       @unique
+  email       String?
+  webhook     String?
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  clicks      Click[]
+  commissions Commission[]
+}
+
+model Click {
+  id         String   @id @default(cuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  ip         String?
+  converted  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Commission {
+  id         String   @id @default(cuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  userId     String
+  amount     Float
+  type       String
+  paid       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Annonce {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  type         String
+  inputData    Json
+  titre        String?
+  description  String?
+  pointsForts  String?
+  defauts      String?
+  prixConseil  String?
+  shortVersion String?
+  score        Int?
+  scoreGrade   String?
+  createdAt    DateTime @default(now())
+}
+
+model Reponse {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  messageAcheteur String
+  reponsePrete    String
+  suggestion      String?
+  createdAt       DateTime @default(now())
+}
+
+model Settings {
+  id                  String  @id @default("main")
+  commissionFirst     Float   @default(6)
+  commissionRecurring Float   @default(2)
+  stripePrice         Float   @default(19.99)
+  adminWebhook        String?
+}
