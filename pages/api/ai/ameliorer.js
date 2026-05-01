@@ -2,7 +2,7 @@ import { requireAuth } from '../../../lib/auth'
 import { prisma } from '../../../lib/db'
 import { generateAnnonce } from '../../../lib/ai'
 import { scoreAnnonce } from '../../../lib/score'
-import { aiLimiter } from '../../../lib/rateLimit'
+import { aiAnnonceLimiter as aiLimiter } from '../../../lib/rateLimit'
 
 export default requireAuth(async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
