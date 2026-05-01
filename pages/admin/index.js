@@ -12,14 +12,15 @@ export default function Admin() {
 
   useEffect(() => {
     fetch('/api/auth/me').then(r => r.json()).then(data => {
-      if (!data.user || data.user.role !== 'admin') { router.push('/auth/login'); return }
+      if (!data.user) { router.push('/auth/login'); return }
+      if (data.user.role !== 'admin') { router.push('/dashboard'); return }
       loadStats()
     })
   }, [])
 
   const loadStats = () => {
     setLoading(true)
-    Promise.all([
+    Elitemise.all([
       fetch('/api/admin/stats').then(r => r.json()),
       fetch('/api/admin/employees').then(r => r.json()),
       fetch('/api/admin/commissions').then(r => r.json()),
@@ -90,7 +91,7 @@ export default function Admin() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10, marginBottom: 20 }}>
               {[
                 ['👥', 'Utilisateurs', stats.users, 'Total inscrits'],
-                ['✅', 'Abonnés Pro', stats.proUsers, 'Actifs ce mois'],
+                ['✅', 'Abonnés Elite', stats.proUsers, 'Actifs ce mois'],
                 ['💰', 'CA Brut', stats.CABrut?.toFixed(2) + '€', 'Ce mois'],
                 ['📈', 'Bénéfice net', stats.beneficeNet?.toFixed(2) + '€', 'Après commissions'],
                 ['💸', 'Commissions', stats.commTotal + '€', 'Dues aux employés'],
