@@ -109,6 +109,7 @@ export default function Dashboard() {
           ['estimation', '💰', 'Estimer'],
           ['historique', '📋', 'Historique'],
           ['profil', '👤', 'Profil'],
+          ['tarifs', '💎', 'Tarifs'],
         ].map(([id, icon, label]) => (
           <div key={id} className="tab-item"
             onClick={() => setTab(id)}
@@ -218,8 +219,64 @@ export default function Dashboard() {
         {/* HISTORIQUE */}
         {tab === 'historique' && <HistoriqueTab/>}
 
+        {/* TARIFS */}
+        {tab === 'tarifs' && (
+          <div>
+            <div style={{ background: 'linear-gradient(135deg,rgba(255,45,45,.08),rgba(255,45,45,.02))', border: '1.5px solid rgba(255,45,45,.3)', borderRadius: 16, padding: '22px 20px', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
+                <div>
+                  <div style={{ fontFamily: 'Bebas Neue', fontSize: 22, marginBottom: 4 }}>Plan Elite</div>
+                  <div style={{ fontSize: 13, color: 'var(--muted2)' }}>Tout illimité — annonces, réponses, estimations</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontFamily: 'Bebas Neue', fontSize: 40, color: 'var(--red)', letterSpacing: -2, lineHeight: 1 }}>5,99€</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted2)' }}>par semaine</div>
+                </div>
+              </div>
+              {isPro ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 8, height: 8, background: 'var(--success)', borderRadius: '50%' }}></div>
+                  <div style={{ fontSize: 13, color: 'var(--success)', fontWeight: 600 }}>Plan Elite actif ✓</div>
+                </div>
+              ) : (
+                <button onClick={upgradePro} style={{ width: '100%', background: 'var(--red)', border: 'none', borderRadius: 10, color: 'white', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: 1, padding: '13px', transition: 'all .2s' }}>
+                  ⚡ PASSER ELITE — 5,99€/SEMAINE
+                </button>
+              )}
+            </div>
+
+            <div style={{ fontFamily: 'Bebas Neue', fontSize: 12, letterSpacing: 2, color: 'var(--muted2)', marginBottom: 12 }}>PACKS À L'UNITÉ</div>
+            {[
+              { name: '5 annonces', price: '9,99€', unit: '2,00€/annonce', key: 'NEXT_PUBLIC_STRIPE_PACK5' },
+              { name: '10 annonces', price: '17,99€', unit: '1,80€/annonce', key: 'NEXT_PUBLIC_STRIPE_PACK10' },
+              { name: '50 réponses', price: '14,99€', unit: '0,30€/réponse', key: 'NEXT_PUBLIC_STRIPE_REP50' },
+              { name: '500 réponses', price: '39,99€', unit: '0,08€/réponse', key: 'NEXT_PUBLIC_STRIPE_REP500' },
+            ].map(p => (
+              <div key={p.name} style={{ background: 'var(--s1)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+                <div>
+                  <div style={{ fontFamily: 'Bebas Neue', fontSize: 15, letterSpacing: .5 }}>{p.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted2)' }}>{p.unit} · Paiement unique</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                  <div style={{ fontFamily: 'Bebas Neue', fontSize: 20, color: 'var(--muted2)' }}>{p.price}</div>
+                  <button onClick={() => window.open(process.env['NEXT_PUBLIC_STRIPE_PACK5'] || '#', '_blank')}
+                    style={{ background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--muted2)', cursor: 'pointer', fontSize: 11, fontWeight: 600, padding: '7px 12px', transition: 'all .15s', whiteSpace: 'nowrap' }}>
+                    Acheter →
+                  </button>
+                </div>
+              </div>
+            ))}
+            <div style={{ fontSize: 11, color: 'var(--muted)', textAlign: 'center', marginTop: 12 }}>
+              Paiements sécurisés par Stripe · Non remboursables
+            </div>
+          </div>
+        )}
+
         {/* PROFIL */}
         {tab === 'profil' && <ProfilTab user={user} isPro={isPro} upgradePro={upgradePro} manageSubscription={manageSubscription} usage={usage} limitAnnonces={LIMIT_ANNONCES} limitReponses={LIMIT_REPONSES}/>}
+
+        {/* TARIFS */}
+        {tab === 'tarifs' && <TarifsTab user={user} isPro={isPro} upgradePro={upgradePro}/>}
 
       </div>
     </div>
@@ -670,6 +727,77 @@ function ReferralSection() {
         style={{ width: '100%', background: copied ? 'rgba(0,217,126,.1)' : 'var(--s2)', border: copied ? '1px solid rgba(0,217,126,.3)' : '1px solid var(--border)', borderRadius: 8, color: copied ? 'var(--success)' : 'var(--muted2)', cursor: 'pointer', fontSize: 12, fontWeight: 600, padding: '9px', transition: 'all .15s' }}>
         {copied ? '✅ Lien copié !' : '📋 Copier mon lien de parrainage'}
       </button>
+    </div>
+  )
+}
+
+// ── TARIFS TAB ───────────────────────────────────────────
+function TarifsTab({ user, isPro, upgradePro }) {
+  const card = { background: 'var(--s1)', border: '1px solid var(--border)', borderRadius: 14, padding: 18, marginBottom: 12 }
+
+  const handlePack = (link, name) => {
+    if (!link || link === '#') { alert('Lien non configuré pour ce pack.'); return }
+    window.open(link, '_blank')
+  }
+
+  const packs = [
+    { name: '5 annonces', price: '9,99€', unit: '2,00€/annonce', link: process.env.NEXT_PUBLIC_STRIPE_PACK5 || '#' },
+    { name: '10 annonces', price: '17,99€', unit: '1,80€/annonce', link: process.env.NEXT_PUBLIC_STRIPE_PACK10 || '#' },
+    { name: '50 réponses', price: '14,99€', unit: '0,30€/réponse', link: process.env.NEXT_PUBLIC_STRIPE_REP50 || '#' },
+    { name: '500 réponses', price: '39,99€', unit: '0,08€/réponse', link: process.env.NEXT_PUBLIC_STRIPE_REP500 || '#' },
+  ]
+
+  return (
+    <div>
+      {/* Plan Elite */}
+      {!isPro ? (
+        <div style={{ background: 'linear-gradient(135deg, rgba(255,45,45,.08), rgba(255,45,45,.02))', border: '2px solid rgba(255,45,45,.3)', borderRadius: 16, padding: '24px 20px', marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+            <div>
+              <div style={{ fontFamily: 'Bebas Neue', fontSize: 24, letterSpacing: 1, marginBottom: 4 }}>Plan Elite ⭐</div>
+              <div style={{ fontSize: 13, color: 'var(--muted2)', lineHeight: 1.6 }}>Tout illimité — annonces, réponses, estimations.</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: 'Bebas Neue', fontSize: 40, color: 'var(--red)', letterSpacing: -2, lineHeight: 1 }}>5,99€</div>
+              <div style={{ fontSize: 11, color: 'var(--muted2)' }}>par semaine</div>
+            </div>
+          </div>
+          {['✍️ Annonces illimitées', '💬 Réponses illimitées', '💰 Estimations (50/mois)', '📊 Score qualité', '📋 Historique complet'].map(f => (
+            <div key={f} style={{ fontSize: 13, color: 'var(--white)', display: 'flex', gap: 8, marginBottom: 6 }}>
+              {f}
+            </div>
+          ))}
+          <button onClick={upgradePro}
+            style={{ width: '100%', marginTop: 16, background: 'var(--red)', border: 'none', borderRadius: 10, color: 'white', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: 1, padding: '14px', transition: 'all .2s' }}>
+            ⚡ PASSER ELITE — 5,99€/SEMAINE
+          </button>
+          <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 8, textAlign: 'center' }}>Annulable à tout moment · Non remboursable</div>
+        </div>
+      ) : (
+        <div style={{ background: 'rgba(0,217,126,.05)', border: '1px solid rgba(0,217,126,.25)', borderRadius: 14, padding: '16px 18px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 20 }}>✅</span>
+          <div>
+            <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, color: 'var(--success)' }}>Plan Elite actif</div>
+            <div style={{ fontSize: 12, color: 'var(--muted2)' }}>Vous bénéficiez déjà de toutes les fonctionnalités.</div>
+          </div>
+        </div>
+      )}
+
+      {/* Packs */}
+      <div style={{ fontFamily: 'Bebas Neue', fontSize: 12, letterSpacing: 2, color: 'var(--muted2)', marginBottom: 10 }}>PACKS À L&apos;UNITÉ</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        {packs.map(p => (
+          <div key={p.name} style={card}>
+            <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: .5, marginBottom: 2 }}>{p.name}</div>
+            <div style={{ fontFamily: 'Bebas Neue', fontSize: 24, color: 'var(--muted2)', letterSpacing: -1, marginBottom: 2 }}>{p.price}</div>
+            <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 12 }}>{p.unit} · Paiement unique</div>
+            <button onClick={() => handlePack(p.link, p.name)}
+              style={{ width: '100%', background: 'transparent', border: '1.5px solid var(--border2)', borderRadius: 8, color: 'var(--muted2)', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 12, letterSpacing: 1, padding: '9px', transition: 'all .15s' }}>
+              Acheter
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
