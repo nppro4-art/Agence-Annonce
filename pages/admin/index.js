@@ -219,7 +219,7 @@ export default function Admin() {
             <div style={secTitle}>PARAMÈTRES GÉNÉRAUX</div>
             <div style={card}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                {[['Commission 1er mois (€)', '6'],['Commission récurrente (€)', '2'],['Prix abonnement (€)', '19.99'],['Email admin', 'admin@exemple.com']].map(([label, placeholder]) => (
+                {[['Commission 1er mois (€)', '6'],['Commission récurrente (€)', '2'],['Prix abonnement (€)', '5.99'],['Email admin', 'admin@exemple.com']].map(([label, placeholder]) => (
                   <div key={label}>
                     <label style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: '.8px', display: 'block', marginBottom: 5 }}>{label}</label>
                     <input style={inp} placeholder={placeholder}/>
