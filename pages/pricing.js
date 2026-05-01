@@ -1,8 +1,40 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
 export default function Pricing() {
   const router = useRouter()
+  const [user, setUser] = useState(null)
+  const [checkingAuth, setCheckingAuth] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/auth/me').then(r => r.json()).then(data => {
+      setUser(data.user || null)
+      setCheckingAuth(false)
+    }).catch(() => setCheckingAuth(false))
+  }, [])
+
+  const handlePay = (link, packName) => {
+    if (!user) {
+      // Sauvegarder l'intention pour rediriger après inscription
+      sessionStorage.setItem('after_login_redirect', link)
+      sessionStorage.setItem('after_login_pack', packName)
+      router.push('/auth/register?intent=pack')
+      return
+    }
+    window.open(link, '_blank')
+  }
+
+  const handleElite = () => {
+    if (!user) {
+      router.push('/auth/register?plan=elite')
+      return
+    }
+    // Déjà connecté, créer la subscription
+    fetch('/api/stripe/create-subscription', { method: 'POST' })
+      .then(r => r.json())
+      .then(data => { if (data.url) window.location.href = data.url })
+  }
 
   const packs = [
     { id: 'pack5', name: '5 annonces', price: '9,99€', unit: '2,00€/annonce', desc: 'Paiement unique', features: ['5 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_PACK5 || '#' },
@@ -98,9 +130,9 @@ export default function Pricing() {
           </div>
 
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <button className="cta-btn" onClick={() => router.push('/auth/register?plan=elite')}
+            <button className="cta-btn" onClick={handleElite}
               style={{ flex: 1, minWidth: 200, background: 'var(--red)', border: 'none', borderRadius: 12, color: 'white', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 17, letterSpacing: 1.5, padding: '16px 24px', boxShadow: '0 4px 20px rgba(255,45,45,.25)' }}>
-              ⚡ COMMENCER — 5,99€/SEMAINE
+              {user ? '⚡ PASSER ELITE — 5,99€/SEMAINE' : '⚡ COMMENCER — 5,99€/SEMAINE'}
             </button>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ fontSize: 11, color: 'var(--muted2)' }}>✓ Annulable à tout moment</div>
@@ -138,11 +170,10 @@ export default function Pricing() {
                     <span style={{ color: 'var(--success)', fontSize: 10 }}>✓</span>{f}
                   </div>
                 ))}
-                <a href={p.link} target="_blank" rel="noreferrer">
-                  <button className="outline-btn" style={{ width: '100%', marginTop: 14, background: 'transparent', border: '1.5px solid var(--border2)', borderRadius: 10, color: 'var(--muted2)', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 13, letterSpacing: 1, padding: '11px' }}>
-                    {p.cta}
-                  </button>
-                </a>
+                <button className="outline-btn" onClick={() => handlePay(p.link, p.name)}
+                  style={{ width: '100%', marginTop: 14, background: 'transparent', border: '1.5px solid var(--border2)', borderRadius: 10, color: 'var(--muted2)', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 13, letterSpacing: 1, padding: '11px' }}>
+                  {p.cta}
+                </button>
               </div>
             ))}
           </div>
@@ -154,7 +185,7 @@ export default function Pricing() {
             <div style={{ fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: .5, marginBottom: 4 }}>Gratuit</div>
             <div style={{ fontSize: 12, color: 'var(--muted2)' }}>3 estimations de prix par jour · Sans carte bancaire</div>
           </div>
-          <button className="outline-btn" onClick={() => router.push('/auth/register')}
+          <button className="outline-btn" onClick={() => user ? router.push('/dashboard') : router.push('/auth/register')}
             style={{ background: 'transparent', border: '1.5px solid var(--border2)', borderRadius: 10, color: 'var(--muted2)', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 13, letterSpacing: 1, padding: '11px 20px' }}>
             COMMENCER GRATUITEMENT
           </button>
