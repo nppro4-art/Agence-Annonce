@@ -23,6 +23,33 @@ model User {
   updatedAt        DateTime  @updatedAt
   annonces         Annonce[]
   reponses         Reponse[]
+  credits          Credit[]
+  purchases        Purchase[]
+}
+
+model Credit {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // annonces | reponses
+  total     Int      @default(0)
+  used      Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, type])
+}
+
+model Purchase {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  packName    String
+  packType    String   // annonces | reponses
+  quantity    Int
+  amount      Float
+  stripeId    String?
+  createdAt   DateTime @default(now())
 }
 
 model Employee {
@@ -88,6 +115,6 @@ model Settings {
   id                  String  @id @default("main")
   commissionFirst     Float   @default(6)
   commissionRecurring Float   @default(2)
-  stripePrice         Float   @default(19.99)
+  stripePrice         Float   @default(5.99)
   adminWebhook        String?
 }
