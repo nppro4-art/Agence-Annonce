@@ -375,7 +375,7 @@ function AnnonceTab({ isPro, upgradePro, onUsed }) {
         { key: 'ct', label: 'Contrôle technique', type: 'select', opts: ['—','Valide','À refaire sous 2 mois','Non présenté','Non applicable'] },
         { key: 'carnet', label: "Carnet d'entretien", type: 'select', opts: ['—','Complet','Partiel','Absent','Non applicable'] },
         { key: 'facture', label: "Facture d'achat", type: 'select', opts: ['—','Disponible','Non disponible'] },
-        { key: 'garantie', label: 'Garantie restante', ph: 'Jusqu'au 03/2026, 6 mois…' },
+        { key: 'garantie', label: 'Garantie restante', ph: "Jusqu'au 03/2026, 6 mois…" },
       ]
     },
     {
