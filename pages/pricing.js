@@ -36,11 +36,18 @@ export default function Pricing() {
       .then(data => { if (data.url) window.location.href = data.url })
   }
 
+  const PACK_LINKS = {
+    pack5:  process.env.NEXT_PUBLIC_STRIPE_PACK5  || '',
+    pack10: process.env.NEXT_PUBLIC_STRIPE_PACK10 || '',
+    rep50:  process.env.NEXT_PUBLIC_STRIPE_REP50  || '',
+    rep500: process.env.NEXT_PUBLIC_STRIPE_REP500 || '',
+  }
+
   const packs = [
-    { id: 'pack5', name: '5 annonces', price: '9,99€', unit: '2,00€/annonce', desc: 'Paiement unique', features: ['5 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_PACK5 || '#' },
-    { id: 'pack10', name: '10 annonces', price: '17,99€', unit: '1,80€/annonce', desc: 'Paiement unique', features: ['10 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_PACK10 || '#' },
-    { id: 'rep50', name: '50 réponses', price: '14,99€', unit: '0,30€/réponse', desc: 'Paiement unique', features: ['50 réponses acheteurs', 'Conseil négociation inclus', 'Ton professionnel garanti'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_REP50 || '#' },
-    { id: 'rep500', name: '500 réponses', price: '39,99€', unit: '0,08€/réponse', desc: 'Paiement unique', features: ['500 réponses acheteurs', 'Conseil négociation inclus', 'Meilleure valeur réponses'], cta: 'Acheter ce pack', link: process.env.NEXT_PUBLIC_STRIPE_REP500 || '#' },
+    { id: 'pack5',  name: '5 annonces',   price: '9,99€',  unit: '2,00€/annonce', desc: 'Paiement unique', features: ['5 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'],    cta: 'Acheter ce pack', link: PACK_LINKS.pack5  },
+    { id: 'pack10', name: '10 annonces',  price: '17,99€', unit: '1,80€/annonce', desc: 'Paiement unique', features: ['10 annonces professionnelles', 'Version courte incluse', 'Score qualité inclus'],   cta: 'Acheter ce pack', link: PACK_LINKS.pack10 },
+    { id: 'rep50',  name: '50 réponses',  price: '14,99€', unit: '0,30€/réponse', desc: 'Paiement unique', features: ['50 réponses acheteurs', 'Conseil négociation inclus', 'Ton professionnel garanti'], cta: 'Acheter ce pack', link: PACK_LINKS.rep50  },
+    { id: 'rep500', name: '500 réponses', price: '39,99€', unit: '0,08€/réponse', desc: 'Paiement unique', features: ['500 réponses acheteurs', 'Conseil négociation inclus', 'Meilleure valeur réponses'], cta: 'Acheter ce pack', link: PACK_LINKS.rep500 },
   ]
 
   return (
