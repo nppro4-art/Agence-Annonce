@@ -1,35 +1,34 @@
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 export default function Merci() {
-  const router = useRouter()
   const [user, setUser] = useState(null)
-
   useEffect(() => {
     fetch('/api/auth/me').then(r => r.json()).then(data => setUser(data.user))
   }, [])
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-      <div style={{ background: 'var(--s1)', border: '1px solid rgba(0,217,126,.3)', borderRadius: 20, padding: '40px 28px', width: '100%', maxWidth: 420, textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
-        <div style={{ fontFamily: 'Bebas Neue', fontSize: 28, letterSpacing: 1, marginBottom: 8 }}>
-          Bienvenue dans la version Pro !
-        </div>
-        <div style={{ fontSize: 14, color: 'var(--muted2)', lineHeight: 1.7, marginBottom: 28 }}>
-          Votre abonnement est actif. Vous avez maintenant accès à toutes les fonctionnalités illimitées.
-        </div>
-        <div style={{ background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 12, padding: 16, marginBottom: 24, textAlign: 'left' }}>
-          {['Annonces illimitées', 'Réponses acheteurs illimitées', 'Estimation de prix avancée', 'Historique complet'].map(f => (
-            <div key={f} style={{ fontSize: 13, color: 'var(--white)', display: 'flex', gap: 8, marginBottom: 6 }}>
-              <span style={{ color: 'var(--success)' }}>✓</span>{f}
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--black)', padding: 24, position: 'relative' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(201,168,76,.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
+      <div style={{ textAlign: 'center', maxWidth: 440 }}>
+        <div className="ornament" style={{ marginBottom: 28 }}><span>+</span></div>
+        <div style={{ fontFamily: 'var(--font-display)', fontSize: 48, color: 'var(--gold2)', marginBottom: 16, lineHeight: 1 }}>+</div>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 600, letterSpacing: -.5, marginBottom: 8 }}>
+          Abonnement active !
+        </h1>
+        <p style={{ fontSize: 14, color: 'var(--muted2)', marginBottom: 28, lineHeight: 1.7 }}>
+          Bienvenue {user?.name || ''}. Votre acces est immediatement disponible.
+        </p>
+        <div style={{ background: 'var(--s1)', border: '1px solid var(--gold-border)', borderRadius: 3, padding: '20px 24px', marginBottom: 28 }}>
+          {['Annonces incluses', 'Reponses acheteurs', 'Estimation de prix', 'Historique complet'].map(f => (
+            <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: 'var(--cream)', marginBottom: 8 }}>
+              <span style={{ color: 'var(--gold3)', fontSize: 10 }}>+</span>{f}
             </div>
           ))}
         </div>
         <Link href="/dashboard">
-          <button style={{ width: '100%', background: 'var(--red)', border: 'none', borderRadius: 12, color: 'white', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: 1, padding: 16 }}>
-            ACCÉDER À MON ESPACE →
+          <button className="btn-gold" style={{ width: '100%', fontSize: 13, padding: '16px', letterSpacing: 2 }}>
+            ACCEDER A MON ESPACE
           </button>
         </Link>
       </div>
