@@ -51,9 +51,10 @@ export default function Dashboard() {
     if (data.url) window.location.href = data.url
   }
 
+  const [showSubModal, setShowSubModal] = useState(false)
   const isPro = user?.plan === 'pro' && user?.subStatus === 'active'
   const LIMIT_ANNONCES = 200
-  const LIMIT_REPONSES = 100
+  const LIMIT_REPONSES = 300
 
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--black)' }}>
@@ -148,8 +149,8 @@ export default function Dashboard() {
                 </span>
               </div>
               {isPro ? (
-                <button onClick={manageSubscription} style={{ background: 'none', border: '1px solid var(--border2)', borderRadius: 2, color: 'var(--muted2)', cursor: 'pointer', fontSize: 11, padding: '5px 12px', letterSpacing: .5 }}>
-                  Gérer →
+                <button onClick={() => setShowSubModal(true)} style={{ background: 'none', border: '1px solid var(--border2)', borderRadius: 2, color: 'var(--muted2)', cursor: 'pointer', fontSize: 11, padding: '5px 12px', letterSpacing: .5 }}>
+                  Mon abonnement →
                 </button>
               ) : (
                 <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 11, padding: '8px 18px', letterSpacing: 1.5 }}>
@@ -202,7 +203,7 @@ export default function Dashboard() {
                       <div style={{ width: pct + '%', height: '100%', background: pct > 80 ? 'var(--red)' : s.color, transition: 'width 1.2s cubic-bezier(.4,0,.2,1)' }}/>
                     </div>
                     <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 6 }}>
-                      {s.isPack ? (s.limit === 0 ? 'Aucun crédit — achetez un pack' : `${remaining} restant${remaining > 1 ? 's' : ''} sur ${s.limit}`) : `Ce mois · ${LIMIT_ANNONCES - s.val >= 0 ? LIMIT_ANNONCES - s.val : 0} restantes`}
+                      {s.isPack ? (s.limit === 0 ? 'Aucun crédit — achetez un pack' : `${remaining} restant${remaining > 1 ? 's' : ''} sur ${s.limit}`) : `Cette semaine · ${Math.max(0, LIMIT_ANNONCES - s.val)} restantes`}
                     </div>
                   </div>
                 )
@@ -227,7 +228,47 @@ export default function Dashboard() {
           </div>
         )}
 
-        {tab === 'annonce'    && <AnnonceTab    isPro={isPro} upgradePro={upgradePro} onUsed={() => setUsage(u => ({...u, annonces: u.annonces + 1}))}/>}
+        {/* MODAL ABONNEMENT */}
+      {showSubModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.85)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={() => setShowSubModal(false)}>
+          <div style={{ background: 'var(--s1)', border: '1px solid var(--gold-border)', borderRadius: 4, padding: '32px 28px', width: '100%', maxWidth: 440, position: 'relative' }}
+            onClick={e => e.stopPropagation()}>
+            <button onClick={() => setShowSubModal(false)}
+              style={{ position: 'absolute', top: 14, right: 16, background: 'none', border: 'none', color: 'var(--muted2)', cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>×</button>
+
+            <div style={{ fontFamily: 'var(--font-label)', fontSize: 9, letterSpacing: 3, color: 'var(--gold3)', marginBottom: 12 }}>MON ABONNEMENT</div>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 600, letterSpacing: -.3, marginBottom: 20 }}>Plan Elite</h3>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
+              {[
+                ['Prix', '5,99€/semaine'],
+                ['Statut', 'Actif ✓'],
+                ['Annonces', '200/semaine'],
+                ['Réponses', '300/semaine'],
+                ['Estimations', '50/mois'],
+                ['Accès', 'Tout illimité'],
+              ].map(([label, val]) => (
+                <div key={label} style={{ background: 'var(--ink)', padding: '12px 16px' }}>
+                  <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>{label}</div>
+                  <div style={{ fontSize: 13, color: 'var(--cream)', fontWeight: 500 }}>{val}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: 'rgba(200,57,43,.06)', border: '1px solid rgba(200,57,43,.2)', borderRadius: 3, padding: '12px 16px', marginBottom: 16, fontSize: 12, color: 'var(--muted2)', lineHeight: 1.65 }}>
+              ⚠️ En cas d&apos;annulation, vous conservez l&apos;accès Elite pendant <strong style={{ color: 'var(--cream)' }}>7 jours</strong> à partir de la date de votre dernier paiement. Aucun remboursement.
+            </div>
+
+            <button onClick={() => { manageSubscription(); setShowSubModal(false) }}
+              style={{ width: '100%', background: 'none', border: '1px solid rgba(200,57,43,.3)', borderRadius: 3, color: 'var(--red2)', cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '12px', letterSpacing: .5, transition: 'all .2s' }}>
+              Annuler mon abonnement →
+            </button>
+          </div>
+        </div>
+      )}
+
+      {tab === 'annonce'    && <AnnonceTab    isPro={isPro} upgradePro={upgradePro} onUsed={() => setUsage(u => ({...u, annonces: u.annonces + 1}))}/>}
         {tab === 'reponse'    && <ReponseTab    isPro={isPro} upgradePro={upgradePro} onUsed={() => setUsage(u => ({...u, reponses: u.reponses + 1}))}/>}
         {tab === 'estimation' && <EstimationTab onUsed={() => { const n = parseInt(localStorage.getItem('est_count')||'0')+1; localStorage.setItem('est_count',n); setUsage(u=>({...u,estimations:n})) }}/>}
         {tab === 'historique' && <HistoriqueTab/>}
@@ -269,26 +310,108 @@ function LockScreen({ upgradePro, feature }) {
 // ANNONCE TAB
 // ─────────────────────────────────────────────────────────
 function AnnonceTab({ isPro, upgradePro, onUsed }) {
-  const [form, setForm] = useState({ marque: '', modele: '', annee: '', kilometrage: '', etat: '', carburant: '', defauts: '', options: '', prix: '', ville: '', urgence: 'normal', raison: '' })
+  const [form, setForm] = useState({
+    // Infos de base
+    categorie: '', marque: '', modele: '', annee: '', reference: '',
+    // Etat
+    etat: '', kilometrage: '', heuresUsage: '', nbProprietaires: '',
+    // Technique
+    carburant: '', boite: '', puissance: '', cylindree: '', couleur: '',
+    // Documents
+    ct: '', carnet: '', facture: '', garantie: '',
+    // Details
+    defauts: '', reparations: '', options: '', accessoires: '',
+    // Vente
+    prix: '', negociable: '', ville: '', disponibilite: '', raison: '',
+    // Livraison
+    livraison: '', fraisLivraison: '',
+    // Urgence
+    urgence: 'normal',
+  })
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [section, setSection] = useState(0)
 
   if (!isPro) return <LockScreen upgradePro={upgradePro} feature="La création d'annonces"/>
 
-  const specs = Object.entries(form).filter(([,v]) => v).map(([k,v]) => `- ${k}: ${v}`).join('\n')
+  const SECTIONS = [
+    {
+      title: 'Article', icon: '◈',
+      fields: [
+        { key: 'categorie', label: 'Catégorie *', type: 'select', opts: ['Voiture','Moto','Vélo','Électronique','Informatique','Téléphone','Mobilier','Électroménager','Vêtements','Sport','Jeux vidéo','Livre','Bijou','Outil','Autre'] },
+        { key: 'marque', label: 'Marque *', ph: 'BMW, Apple, Samsung…' },
+        { key: 'modele', label: 'Modèle *', ph: 'Série 3, iPhone 15…' },
+        { key: 'annee', label: 'Année de fabrication', ph: '2021', type: 'number' },
+        { key: 'reference', label: 'Référence / Version', ph: 'M Sport, 128Go, XL…' },
+        { key: 'couleur', label: 'Couleur', ph: 'Noir, Blanc, Rouge…' },
+      ]
+    },
+    {
+      title: 'État & Usage', icon: '◎',
+      fields: [
+        { key: 'etat', label: 'État général *', type: 'select', opts: ['Neuf jamais utilisé','Comme neuf','Très bon état','Bon état','État correct','À réparer'] },
+        { key: 'kilometrage', label: 'Kilométrage (si véhicule)', ph: '75 000', type: 'number' },
+        { key: 'heuresUsage', label: "Heures d'usage (si machine)", ph: '120h' },
+        { key: 'nbProprietaires', label: 'Nombre de propriétaires', ph: '1', type: 'number' },
+        { key: 'defauts', label: 'Défauts & imperfections', ph: 'Rayures, bosses, voyants, usure…', type: 'textarea' },
+        { key: 'reparations', label: 'Réparations effectuées', ph: 'Embrayage refait, écran changé…', type: 'textarea' },
+      ]
+    },
+    {
+      title: 'Technique', icon: '✦',
+      fields: [
+        { key: 'carburant', label: 'Carburant', type: 'select', opts: ['—','Essence','Diesel','Hybride','Hybride rechargeable','Électrique','GPL','Non applicable'] },
+        { key: 'boite', label: 'Boîte de vitesse', type: 'select', opts: ['—','Manuelle','Automatique','Semi-automatique','Non applicable'] },
+        { key: 'puissance', label: 'Puissance (CV ou W)', ph: '120 CV / 500W' },
+        { key: 'cylindree', label: 'Cylindrée (si véhicule)', ph: '1598 cc' },
+        { key: 'options', label: 'Équipements & options', ph: 'GPS, caméra recul, sièges chauffants…', type: 'textarea' },
+        { key: 'accessoires', label: 'Accessoires inclus', ph: 'Chargeur, housse, télécommande…', type: 'textarea' },
+      ]
+    },
+    {
+      title: 'Documents', icon: '≡',
+      fields: [
+        { key: 'ct', label: 'Contrôle technique', type: 'select', opts: ['—','Valide','À refaire sous 2 mois','Non présenté','Non applicable'] },
+        { key: 'carnet', label: "Carnet d'entretien", type: 'select', opts: ['—','Complet','Partiel','Absent','Non applicable'] },
+        { key: 'facture', label: "Facture d'achat", type: 'select', opts: ['—','Disponible','Non disponible'] },
+        { key: 'garantie', label: 'Garantie restante', ph: 'Jusqu'au 03/2026, 6 mois…' },
+      ]
+    },
+    {
+      title: 'Vente', icon: '◇',
+      fields: [
+        { key: 'prix', label: 'Prix demandé (€) *', ph: '11 500', type: 'number' },
+        { key: 'negociable', label: 'Prix négociable', type: 'select', opts: ['—','Oui','Non','Légèrement'] },
+        { key: 'ville', label: 'Ville *', ph: 'Lyon, Paris, Bordeaux…' },
+        { key: 'disponibilite', label: 'Disponibilité', ph: 'Immédiate, weekend seulement…' },
+        { key: 'livraison', label: 'Livraison possible', type: 'select', opts: ['—','Oui','Non','À discuter'] },
+        { key: 'fraisLivraison', label: 'Frais de livraison', ph: 'Gratuite, 15€, À charge acheteur…' },
+        { key: 'raison', label: 'Raison de la vente', ph: 'Upgrade, déménagement, plus utilisé…' },
+        { key: 'urgence', label: 'Urgence de vente', type: 'urgence' },
+      ]
+    },
+  ]
+
+  const current = SECTIONS[section]
+  const specs = Object.entries(form).filter(([,v]) => v && v !== '—').map(([k,v]) => `- ${k}: ${v}`).join('\n')
 
   const generate = async () => {
-    if (!form.marque || !form.modele) { alert('Marque et modèle obligatoires'); return }
+    if (!form.marque || !form.modele || !form.prix || !form.ville) {
+      alert('Marque, modèle, prix et ville sont obligatoires'); return
+    }
     setLoading(true)
     const res = await fetch('/api/ai/annonce', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ specs, lang: 'fr', urgence: form.urgence, type: 'article', inputData: form })
+      body: JSON.stringify({ specs, lang: 'fr', urgence: form.urgence, type: form.categorie || 'article', inputData: form })
     })
     const data = await res.json()
     setResult(data); setLoading(false)
     if (!data.error) onUsed()
   }
+
+  const filled = Object.values(form).filter(v => v && v !== '—').length
+  const total = Object.keys(form).length
 
   return (
     <div className="db-fade">
@@ -297,120 +420,115 @@ function AnnonceTab({ isPro, upgradePro, onUsed }) {
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 400, letterSpacing: -.5 }}>Créer une annonce</h2>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 1 }}>
-        {[
-          { key: 'marque', label: 'Marque *', ph: 'BMW, Apple, Ikea…', req: true },
-          { key: 'modele', label: 'Modèle *', ph: 'Série 3, iPhone 15…', req: true },
-          { key: 'annee', label: 'Année', ph: '2021', type: 'number' },
-          { key: 'kilometrage', label: 'Kilométrage', ph: '75 000', type: 'number' },
-          { key: 'prix', label: 'Prix (€) *', ph: '11 500', type: 'number', req: true },
-          { key: 'ville', label: 'Ville *', ph: 'Lyon, Paris…', req: true },
-        ].map(f => (
-          <div key={f.key} style={{ background: 'var(--ink)', padding: '16px 20px' }}>
-            <label style={S.lbl}>{f.label}</label>
-            <input style={S.inp} type={f.type || 'text'} placeholder={f.ph}
-              value={form[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})}/>
+      {/* Barre de progression */}
+      <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '14px 20px', marginBottom: 1, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+            <span style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1 }}>Formulaire complété</span>
+            <span style={{ fontSize: 11, color: 'var(--gold2)', fontWeight: 600 }}>{Math.round((filled/total)*100)}%</span>
+          </div>
+          <div style={{ background: 'var(--s3)', borderRadius: 1, height: 3 }}>
+            <div style={{ width: Math.round((filled/total)*100) + '%', height: '100%', background: 'linear-gradient(90deg,var(--gold3),var(--gold2))', transition: 'width .5s' }}/>
+          </div>
+        </div>
+        <div style={{ fontSize: 11, color: 'var(--muted)', flexShrink: 0 }}>Plus vous remplissez, meilleure est l&apos;annonce</div>
+      </div>
+
+      {/* Navigation sections */}
+      <div style={{ display: 'flex', gap: 0, background: 'var(--border)', marginBottom: 1 }}>
+        {SECTIONS.map((s, i) => (
+          <div key={i} onClick={() => setSection(i)}
+            style={{ flex: 1, background: section === i ? 'var(--s1)' : 'var(--ink)', borderBottom: section === i ? '2px solid var(--gold)' : '2px solid transparent', padding: '10px 8px', textAlign: 'center', cursor: 'pointer', transition: 'all .15s' }}>
+            <div style={{ fontSize: 14, marginBottom: 3 }}>{s.icon}</div>
+            <div style={{ fontSize: 9, color: section === i ? 'var(--gold2)' : 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1 }}>{s.title}</div>
           </div>
         ))}
       </div>
 
+      {/* Champs de la section courante */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 1 }}>
-        <div style={{ background: 'var(--ink)', padding: '16px 20px' }}>
-          <label style={S.lbl}>État général *</label>
-          <select style={{ ...S.inp, appearance: 'none' }} value={form.etat} onChange={e => setForm({...form, etat: e.target.value})}>
-            <option value="">— Sélectionner</option>
-            {['Excellent','Très bon','Bon','Moyen','À réparer'].map(o => <option key={o}>{o}</option>)}
-          </select>
-        </div>
-        <div style={{ background: 'var(--ink)', padding: '16px 20px' }}>
-          <label style={S.lbl}>Carburant</label>
-          <select style={{ ...S.inp, appearance: 'none' }} value={form.carburant} onChange={e => setForm({...form, carburant: e.target.value})}>
-            <option value="">—</option>
-            {['Essence','Diesel','Hybride','Électrique','Non applicable'].map(o => <option key={o}>{o}</option>)}
-          </select>
-        </div>
+        {current.fields.map(f => (
+          <div key={f.key} style={{ background: 'var(--ink)', padding: '16px 20px', gridColumn: f.type === 'textarea' ? '1/-1' : 'auto' }}>
+            <label style={{ fontSize: 10, color: 'var(--muted2)', letterSpacing: 1, textTransform: 'uppercase', display: 'block', marginBottom: 8 }}>{f.label}</label>
+            {f.type === 'select' ? (
+              <select style={{ background: 'transparent', border: 'none', borderBottom: '1px solid var(--border2)', color: 'var(--white)', fontSize: 14, padding: '6px 0', width: '100%', outline: 'none', appearance: 'none' }}
+                value={form[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})}>
+                <option value="">— Sélectionner</option>
+                {f.opts.map(o => <option key={o} value={o}>{o}</option>)}
+              </select>
+            ) : f.type === 'textarea' ? (
+              <textarea style={{ background: 'transparent', border: 'none', borderBottom: '1px solid var(--border2)', color: 'var(--white)', fontSize: 13, padding: '6px 0', width: '100%', outline: 'none', resize: 'vertical', minHeight: 64, lineHeight: 1.65 }}
+                placeholder={f.ph} value={form[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})}/>
+            ) : f.type === 'urgence' ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'var(--border)', marginTop: 4 }}>
+                {[['normal','⏳ Normal'],['rapide','🔥 Rapide'],['optimise','◈ Max prix']].map(([v,l]) => (
+                  <div key={v} onClick={() => setForm({...form, urgence: v})}
+                    style={{ background: form.urgence === v ? 'rgba(201,168,76,.08)' : 'var(--s2)', borderBottom: form.urgence === v ? '2px solid var(--gold)' : '2px solid transparent', padding: '10px', textAlign: 'center', fontSize: 11, color: form.urgence === v ? 'var(--gold2)' : 'var(--muted2)', cursor: 'pointer', transition: 'all .15s' }}>
+                    {l}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <input style={{ background: 'transparent', border: 'none', borderBottom: '1px solid var(--border2)', color: 'var(--white)', fontSize: 14, padding: '6px 0', width: '100%', outline: 'none' }}
+                type={f.type || 'text'} placeholder={f.ph}
+                value={form[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})}/>
+            )}
+          </div>
+        ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 1 }}>
-        <div style={{ background: 'var(--ink)', padding: '16px 20px' }}>
-          <label style={S.lbl}>Défauts connus</label>
-          <textarea style={{ ...S.inp, minHeight: 72, resize: 'vertical', lineHeight: 1.6 }}
-            placeholder="Rayures, défauts, voyants…" value={form.defauts} onChange={e => setForm({...form, defauts: e.target.value})}/>
-        </div>
-        <div style={{ background: 'var(--ink)', padding: '16px 20px' }}>
-          <label style={S.lbl}>Équipements inclus</label>
-          <textarea style={{ ...S.inp, minHeight: 72, resize: 'vertical', lineHeight: 1.6 }}
-            placeholder="GPS, caméra, boîte d'origine…" value={form.options} onChange={e => setForm({...form, options: e.target.value})}/>
-        </div>
+      {/* Navigation bas */}
+      <div style={{ display: 'flex', gap: 1, background: 'var(--border)', marginBottom: 1 }}>
+        {section > 0 && (
+          <button onClick={() => setSection(s => s - 1)} className="btn-ghost" style={{ flex: 1, borderRadius: 0, borderColor: 'transparent', background: 'var(--ink)', fontSize: 12 }}>
+            ← {SECTIONS[section - 1].title}
+          </button>
+        )}
+        {section < SECTIONS.length - 1 ? (
+          <button onClick={() => setSection(s => s + 1)} className="btn-primary" style={{ flex: 1, borderRadius: 0, fontSize: 12, padding: '14px' }}>
+            {SECTIONS[section + 1].title} →
+          </button>
+        ) : (
+          <button onClick={generate} disabled={loading} className="btn-primary"
+            style={{ flex: 1, borderRadius: 0, fontSize: 13, padding: '16px', opacity: loading ? .6 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+            {loading ? <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin .8s linear infinite' }}/> Génération…</> : '⚡ GÉNÉRER MON ANNONCE'}
+          </button>
+        )}
       </div>
-
-      <div style={{ background: 'var(--ink)', border: '1px solid var(--border)', padding: '16px 20px', marginBottom: 1 }}>
-        <label style={S.lbl}>Urgence de vente</label>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'var(--border)' }}>
-          {[['normal','⏳ Normal'],['rapide','🔥 Rapide'],['optimise','◈ Prix max']].map(([v,l]) => (
-            <div key={v} onClick={() => setForm({...form, urgence: v})}
-              style={{ background: form.urgence === v ? 'rgba(201,168,76,.08)' : 'var(--s1)', borderBottom: form.urgence === v ? '2px solid var(--gold)' : '2px solid transparent', padding: '12px', textAlign: 'center', fontSize: 12, color: form.urgence === v ? 'var(--gold2)' : 'var(--muted2)', cursor: 'pointer', transition: 'all .15s' }}>
-              {l}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <button onClick={generate} disabled={loading}
-        className="btn-primary" style={{ width: '100%', marginTop: 1, fontSize: 13, padding: '16px', opacity: loading ? .6 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-        {loading ? <><div style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin .8s linear infinite' }}/> Génération en cours…</> : '⚡ GÉNÉRER MON ANNONCE'}
-      </button>
 
       {result && !result.error && (
         <div style={{ marginTop: 24 }}>
-          {/* Score */}
           {result.score && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'var(--s1)', border: '1px solid var(--border)', padding: '14px 20px', marginBottom: 1 }}>
-              <div style={{ fontFamily: 'var(--font-label)', fontSize: 40, letterSpacing: -2, color: result.score.score >= 70 ? 'var(--gold2)' : result.score.score >= 50 ? 'var(--warning)' : 'var(--red2)', lineHeight: 1 }}>
-                {result.score.score}
-              </div>
+              <div style={{ fontFamily: 'var(--font-label)', fontSize: 40, letterSpacing: -2, color: result.score.score >= 70 ? 'var(--gold2)' : result.score.score >= 50 ? 'var(--warning)' : 'var(--red2)', lineHeight: 1 }}>{result.score.score}</div>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--cream)', marginBottom: 4 }}>Score qualité — {result.score.grade}</div>
-                {result.score.suggestions?.slice(0,2).map((s,i) => (
-                  <div key={i} style={{ fontSize: 11, color: 'var(--muted2)' }}>→ {s}</div>
-                ))}
+                {result.score.suggestions?.slice(0,2).map((s,i) => <div key={i} style={{ fontSize: 11, color: 'var(--muted2)' }}>→ {s}</div>)}
               </div>
             </div>
           )}
-
-          {/* Titre */}
           {result.annonce?.titre && (
             <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', borderLeft: '3px solid var(--gold)', padding: '16px 20px', marginBottom: 1 }}>
-              <div style={S.lbl}>Titre</div>
+              <div style={{ fontSize: 10, color: 'var(--muted2)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>Titre</div>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, lineHeight: 1.4 }}>{result.annonce.titre}</div>
             </div>
           )}
-
-          {/* Sections */}
-          {[
-            ['📋 Description', result.annonce?.description],
-            ['⭐ Points forts', result.annonce?.pointsForts],
-            ['⚠️ Transparence', result.annonce?.defauts],
-            ['💰 Prix conseillé', result.annonce?.prixConseil],
-          ].filter(([,v]) => v).map(([label, val]) => (
+          {[['Description', result.annonce?.description], ['Points forts', result.annonce?.pointsForts], ['Transparence', result.annonce?.defauts], ['Prix conseillé', result.annonce?.prixConseil]].filter(([,v]) => v).map(([label, val]) => (
             <div key={label} style={{ background: 'var(--ink)', border: '1px solid var(--border)', padding: '16px 20px', marginBottom: 1 }}>
-              <div style={S.lbl}>{label}</div>
+              <div style={{ fontSize: 10, color: 'var(--muted2)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>{label}</div>
               <div style={{ fontSize: 13, color: 'var(--cream)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{val}</div>
             </div>
           ))}
-
-          {/* Version courte */}
           {result.annonce?.shortVersion && (
             <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', borderLeft: '3px solid var(--red)', padding: '16px 20px', marginBottom: 1 }}>
-              <div style={S.lbl}>Version courte — Facebook / SMS</div>
+              <div style={{ fontSize: 10, color: 'var(--muted2)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>Version courte — Facebook / SMS</div>
               <div style={{ fontSize: 13, color: 'var(--muted3)', lineHeight: 1.8, fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>{result.annonce.shortVersion}</div>
             </div>
           )}
-
           <button className="copy-btn"
             onClick={() => { navigator.clipboard.writeText(result.raw || ''); setCopied(true); setTimeout(() => setCopied(false), 2000) }}
-            style={{ width: '100%', background: 'var(--s1)', border: '1px solid var(--border)', borderRadius: 2, color: copied ? 'var(--gold2)' : 'var(--muted2)', cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '12px', marginTop: 1, letterSpacing: .5 }}>
-            {copied ? '✦ Copié dans le presse-papiers' : '□ Copier l\'annonce complète'}
+            style={{ width: '100%', background: 'var(--s1)', border: '1px solid var(--border)', borderRadius: 2, color: copied ? 'var(--gold2)' : 'var(--muted2)', cursor: 'pointer', fontSize: 12, fontWeight: 500, padding: '12px', marginTop: 1 }}>
+            {copied ? '✦ Copié dans le presse-papiers' : '□ Copier l'annonce complète'}
           </button>
         </div>
       )}
