@@ -2,7 +2,6 @@ import { requireAuth } from '../../../lib/auth'
 import { prisma } from '../../../lib/db'
 import { generateAnnonce } from '../../../lib/ai'
 import { scoreAnnonce } from '../../../lib/score'
-import { aiAnnonceLimiter } from '../../../lib/rateLimit'
 import { canUse, useCredit } from '../../../lib/credits'
 
 export default requireAuth(async function handler(req, res) {
@@ -10,23 +9,15 @@ export default requireAuth(async function handler(req, res) {
   const user = await prisma.user.findUnique({ where: { id: req.user.id } })
   if (!user) return res.status(404).end()
 
-  // Vérifier si le user peut utiliser la fonctionnalité
-  const { allowed, source, remaining } = await canUse(user.id, 'annonces', user.plan)
+  const plan = user.planKey || user.plan
+  const { allowed, source, remaining } = await canUse(user.id, 'annonces', plan)
+
   if (!allowed) return res.status(403).json({
-    error: 'Crédits épuisés',
-    message: 'Vous n\'avez plus de crédits annonces. Achetez un pack ou passez Elite.',
-    upgrade: true,
+    error: 'Limite atteinte',
+    message: 'Vous avez utilise toutes vos annonces cette semaine. Elles se renouvellent lundi.',
+    upgrade: plan === 'free',
     remaining: 0
   })
-
-  // Rate limiting pour les abonnés Elite
-  if (source === 'elite') {
-    const { limited } = aiAnnonceLimiter(user.id)
-    if (limited) return res.status(429).json({
-      error: 'Limite atteinte',
-      message: 'Limite de 200 annonces par mois atteinte.',
-    })
-  }
 
   const { specs, lang, urgence, inputData, type } = req.body
   if (!specs) return res.status(400).json({ error: 'Specs manquantes' })
@@ -46,13 +37,9 @@ export default requireAuth(async function handler(req, res) {
     const annonce = await prisma.annonce.create({
       data: { userId: user.id, type: type || 'autre', inputData: inputData || {}, ...annonceData, score: scoreResult.score, scoreGrade: scoreResult.grade }
     })
-
-    // Consommer un crédit si c'est un pack
     if (source === 'pack') await useCredit(user.id, 'annonces')
-
-    res.status(200).json({ annonce, raw: result, score: scoreResult, remaining: source === 'pack' ? remaining - 1 : null, source })
+    res.status(200).json({ annonce, raw: result, score: scoreResult, remaining: remaining - 1, source })
   } catch(e) {
-    console.error(e)
     res.status(500).json({ error: e.message })
   }
 })
