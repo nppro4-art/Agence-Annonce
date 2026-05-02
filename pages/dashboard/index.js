@@ -8,6 +8,8 @@ export default function Dashboard() {
   const [tab, setTab] = useState('home')
   const [loading, setLoading] = useState(true)
   const [usage, setUsage] = useState({ annonces: 0, reponses: 0, estimations: 0 })
+  const [credits, setCredits] = useState({ annonces: { total: 0, used: 0, remaining: 0 }, reponses: { total: 0, used: 0, remaining: 0 } })
+  const [purchases, setPurchases] = useState([])
 
   useEffect(() => {
     fetch('/api/auth/me').then(r => r.json()).then(data => {
@@ -17,16 +19,18 @@ export default function Dashboard() {
       if (router.query.subscribed) setTab('home')
     }).catch(() => router.push('/auth/login'))
 
-    // Charger l'usage
     Promise.all([
       fetch('/api/dashboard/annonces').then(r => r.json()),
       fetch('/api/dashboard/reponses').then(r => r.json()),
-    ]).then(([a, r]) => {
+      fetch('/api/dashboard/credits').then(r => r.json()),
+    ]).then(([a, r, c]) => {
       setUsage({
         annonces: a.annonces?.length || 0,
         reponses: r.reponses?.length || 0,
         estimations: parseInt(localStorage.getItem('est_count') || '0')
       })
+      if (c.credits) setCredits(c.credits)
+      if (c.purchases) setPurchases(c.purchases)
     }).catch(() => {})
   }, [])
 
@@ -142,35 +146,87 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Usage du mois */}
-            {isPro && (
-              <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', borderRadius: 16, padding: '18px 20px', marginBottom: 20 }}>
-                <div style={{ fontFamily: 'Bebas Neue', fontSize: 12, letterSpacing: 2, color: 'var(--muted2)', marginBottom: 14 }}>UTILISATION CE MOIS</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {[
-                    { label: '✍️ Annonces', used: usage.annonces, limit: LIMIT_ANNONCES, color: 'var(--red)' },
-                    { label: '💬 Réponses', used: usage.reponses, limit: LIMIT_REPONSES, color: 'var(--stripe)' },
-                    { label: '💰 Estimations', used: usage.estimations, limit: LIMIT_EST, color: 'var(--warning)' },
-                  ].map(({ label, used, limit, color }) => {
-                    const pct = Math.min((used / limit) * 100, 100)
-                    const remaining = limit - used
-                    return (
-                      <div key={label}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                          <span style={{ fontSize: 12, color: 'var(--muted2)' }}>{label}</span>
-                          <span style={{ fontSize: 12, color: remaining <= 10 ? '#f87171' : 'var(--muted2)' }}>
-                            {used} / {limit} — <strong style={{ color: remaining <= 10 ? '#f87171' : 'var(--white)' }}>{remaining} restantes</strong>
-                          </span>
-                        </div>
-                        <div style={{ background: 'var(--s3)', borderRadius: 4, height: 6, overflow: 'hidden' }}>
-                          <div className="progress-bar" style={{ width: pct + '%', height: '100%', background: pct > 80 ? '#f87171' : color, borderRadius: 4 }}></div>
-                        </div>
-                      </div>
-                    )
-                  })}
+            {/* Crédits & Usage */}
+            <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', borderRadius: 16, padding: '18px 20px', marginBottom: 20 }}>
+              <div style={{ fontFamily: 'Bebas Neue', fontSize: 12, letterSpacing: 2, color: 'var(--muted2)', marginBottom: 14 }}>
+                {isPro ? 'UTILISATION CE MOIS (ELITE)' : 'MES CRÉDITS'}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {/* Annonces */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, alignItems: 'center' }}>
+                    <span style={{ fontSize: 13, color: 'var(--white)', fontWeight: 500 }}>✍️ Annonces</span>
+                    <span style={{ fontSize: 12 }}>
+                      {isPro ? (
+                        <span style={{ color: 'var(--muted2)' }}>{usage.annonces} utilisées / {LIMIT_ANNONCES} ce mois</span>
+                      ) : (
+                        <span style={{ color: credits.annonces.remaining <= 2 ? '#f87171' : 'var(--success)', fontWeight: 700 }}>
+                          {credits.annonces.remaining} crédit{credits.annonces.remaining > 1 ? 's' : ''} restant{credits.annonces.remaining > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  {isPro ? (
+                    <div style={{ background: 'var(--s3)', borderRadius: 4, height: 5, overflow: 'hidden' }}>
+                      <div className="progress-bar" style={{ width: Math.min((usage.annonces/LIMIT_ANNONCES)*100, 100) + '%', height: '100%', background: usage.annonces > LIMIT_ANNONCES*0.8 ? '#f87171' : 'var(--red)', borderRadius: 4 }}></div>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                      {credits.annonces.total === 0 ? (
+                        <div style={{ fontSize: 11, color: 'var(--muted)', fontStyle: 'italic' }}>Aucun crédit — achetez un pack ou passez Elite</div>
+                      ) : (
+                        Array.from({ length: Math.min(credits.annonces.total, 20) }).map((_, i) => (
+                          <div key={i} style={{ width: 14, height: 14, borderRadius: 3, background: i < credits.annonces.used ? 'var(--s4)' : 'var(--red)', border: '1px solid ' + (i < credits.annonces.used ? 'var(--border)' : 'rgba(255,45,45,.4)'), transition: 'all .3s' }}></div>
+                        ))
+                      )}
+                      {credits.annonces.total > 20 && <span style={{ fontSize: 11, color: 'var(--muted2)' }}>+{credits.annonces.total - 20} autres</span>}
+                    </div>
+                  )}
+                </div>
+
+                {/* Réponses */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, alignItems: 'center' }}>
+                    <span style={{ fontSize: 13, color: 'var(--white)', fontWeight: 500 }}>💬 Réponses acheteurs</span>
+                    <span style={{ fontSize: 12 }}>
+                      {isPro ? (
+                        <span style={{ color: 'var(--muted2)' }}>{usage.reponses} utilisées / {LIMIT_REPONSES} ce mois</span>
+                      ) : (
+                        <span style={{ color: credits.reponses.remaining <= 5 ? '#f87171' : 'var(--stripe)', fontWeight: 700 }}>
+                          {credits.reponses.remaining} crédit{credits.reponses.remaining > 1 ? 's' : ''} restant{credits.reponses.remaining > 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  {isPro ? (
+                    <div style={{ background: 'var(--s3)', borderRadius: 4, height: 5, overflow: 'hidden' }}>
+                      <div className="progress-bar" style={{ width: Math.min((usage.reponses/LIMIT_REPONSES)*100, 100) + '%', height: '100%', background: usage.reponses > LIMIT_REPONSES*0.8 ? '#f87171' : 'var(--stripe)', borderRadius: 4 }}></div>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                      {credits.reponses.total === 0 ? (
+                        <div style={{ fontSize: 11, color: 'var(--muted)', fontStyle: 'italic' }}>Aucun crédit — achetez un pack ou passez Elite</div>
+                      ) : (
+                        Array.from({ length: Math.min(credits.reponses.total, 20) }).map((_, i) => (
+                          <div key={i} style={{ width: 14, height: 14, borderRadius: 3, background: i < credits.reponses.used ? 'var(--s4)' : 'var(--stripe)', border: '1px solid ' + (i < credits.reponses.used ? 'var(--border)' : 'rgba(103,114,229,.4)'), transition: 'all .3s' }}></div>
+                        ))
+                      )}
+                      {credits.reponses.total > 20 && <span style={{ fontSize: 11, color: 'var(--muted2)' }}>+{credits.reponses.total - 20} autres</span>}
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+
+              {/* Bouton racheter si pas Elite et crédits bas */}
+              {!isPro && (credits.annonces.remaining <= 2 || credits.reponses.remaining <= 5) && (
+                <div style={{ marginTop: 14, padding: '10px 14px', background: 'rgba(255,45,45,.05)', border: '1px solid rgba(255,45,45,.2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+                  <div style={{ fontSize: 12, color: 'var(--muted2)' }}>⚠️ Crédits bientôt épuisés</div>
+                  <button onClick={() => setTab('tarifs')} style={{ background: 'var(--red)', border: 'none', borderRadius: 8, color: 'white', cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 12, letterSpacing: 1, padding: '7px 14px' }}>
+                    Recharger →
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Actions rapides */}
             <div style={{ fontFamily: 'Bebas Neue', fontSize: 12, letterSpacing: 2, color: 'var(--muted2)', marginBottom: 12 }}>ACTIONS RAPIDES</div>
@@ -273,7 +329,7 @@ export default function Dashboard() {
         )}
 
         {/* PROFIL */}
-        {tab === 'profil' && <ProfilTab user={user} isPro={isPro} upgradePro={upgradePro} manageSubscription={manageSubscription} usage={usage} limitAnnonces={LIMIT_ANNONCES} limitReponses={LIMIT_REPONSES}/>}
+        {tab === 'profil' && <ProfilTab user={user} isPro={isPro} upgradePro={upgradePro} manageSubscription={manageSubscription} usage={usage} limitAnnonces={LIMIT_ANNONCES} limitReponses={LIMIT_REPONSES} credits={credits} purchases={purchases}/>}
 
         {/* TARIFS */}
         {tab === 'tarifs' && <TarifsTab user={user} isPro={isPro} upgradePro={upgradePro}/>}
@@ -618,7 +674,7 @@ function HistoriqueTab() {
 }
 
 // ── PROFIL TAB ───────────────────────────────────────────
-function ProfilTab({ user, isPro, upgradePro, manageSubscription, usage, limitAnnonces, limitReponses }) {
+function ProfilTab({ user, isPro, upgradePro, manageSubscription, usage, limitAnnonces, limitReponses, credits, purchases }) {
   const card = { background: 'var(--s1)', border: '1px solid var(--border)', borderRadius: 14, padding: 18, marginBottom: 12 }
 
   return (
@@ -664,6 +720,25 @@ function ProfilTab({ user, isPro, upgradePro, manageSubscription, usage, limitAn
           ))}
         </div>
       </div>
+
+      {/* Historique des achats */}
+      {purchases && purchases.length > 0 && (
+        <div style={card}>
+          <div style={{ fontFamily: 'Bebas Neue', fontSize: 13, letterSpacing: 2, color: 'var(--muted2)', marginBottom: 14 }}>HISTORIQUE DES ACHATS</div>
+          {purchases.map(p => (
+            <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500 }}>{p.packName}</div>
+                <div style={{ fontSize: 11, color: 'var(--muted2)' }}>{new Date(p.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, color: 'var(--success)' }}>{p.amount}€</div>
+                <div style={{ fontSize: 10, color: 'var(--muted2)' }}>{p.quantity} {p.packType}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Parrainage si pro */}
       {isPro && (
