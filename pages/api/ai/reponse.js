@@ -1,7 +1,6 @@
 import { requireAuth } from '../../../lib/auth'
 import { prisma } from '../../../lib/db'
 import { generateReponse } from '../../../lib/ai'
-import { aiReponseLimiter } from '../../../lib/rateLimit'
 import { canUse, useCredit } from '../../../lib/credits'
 
 export default requireAuth(async function handler(req, res) {
@@ -9,18 +8,15 @@ export default requireAuth(async function handler(req, res) {
   const user = await prisma.user.findUnique({ where: { id: req.user.id } })
   if (!user) return res.status(404).end()
 
-  const { allowed, source, remaining } = await canUse(user.id, 'reponses', user.plan)
+  const plan = user.planKey || user.plan
+  const { allowed, source, remaining } = await canUse(user.id, 'reponses', plan)
+
   if (!allowed) return res.status(403).json({
-    error: 'Crédits épuisés',
-    message: 'Vous n\'avez plus de crédits réponses. Achetez un pack ou passez Elite.',
-    upgrade: true,
+    error: 'Limite atteinte',
+    message: 'Vous avez utilise toutes vos reponses cette semaine. Elles se renouvellent lundi.',
+    upgrade: plan === 'free',
     remaining: 0
   })
-
-  if (source === 'elite') {
-    const { limited } = aiReponseLimiter(user.id)
-    if (limited) return res.status(429).json({ error: 'Limite mensuelle atteinte' })
-  }
 
   const { message, contexte } = req.body
   if (!message) return res.status(400).json({ error: 'Message manquant' })
@@ -37,7 +33,7 @@ export default requireAuth(async function handler(req, res) {
       }
     })
     if (source === 'pack') await useCredit(user.id, 'reponses')
-    res.status(200).json({ reponse, raw: result, remaining: source === 'pack' ? remaining - 1 : null, source })
+    res.status(200).json({ reponse, raw: result, remaining: remaining - 1, source })
   } catch(e) {
     res.status(500).json({ error: e.message })
   }
