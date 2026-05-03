@@ -116,10 +116,10 @@ export default function Dashboard() {
               x
             </button>
             <div style={{ fontFamily: 'var(--font-label)', fontSize: 9, letterSpacing: 3, color: 'var(--gold3)', marginBottom: 10 }}>MON ABONNEMENT</div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, marginBottom: 20 }}>Plan Elite</h3>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, marginBottom: 20 }}>Abonnement actif</h3>
             <div className="db-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
               {[
-                ['Nom', 'Plan Elite'],
+                ['Nom', 'Abonnement actif'],
                 ['Prix', '5,99 EUR / semaine'],
                 ['Duree', '7 jours renouvelable'],
                 ['Statut', cancelDone ? 'Annulation planifiee' : 'Actif'],
@@ -165,11 +165,26 @@ export default function Dashboard() {
               </button>
             ))}
           </nav>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {isPro && (
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <div style={{ background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 2, padding: '4px 10px', fontSize: 10, color: 'var(--muted2)' }}>
+                  ✍ <span style={{ color: 'var(--gold2)', fontWeight: 700 }}>{Math.max(0, LIMIT_ANNONCES - usage.annonces)}</span>
+                </div>
+                <div style={{ background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 2, padding: '4px 10px', fontSize: 10, color: 'var(--muted2)' }}>
+                  ◎ <span style={{ color: 'var(--gold2)', fontWeight: 700 }}>{Math.max(0, LIMIT_REPONSES - usage.reponses)}</span>
+                </div>
+              </div>
+            )}
+            {!isPro && credits.annonces.remaining > 0 && (
+              <div style={{ background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 2, padding: '4px 10px', fontSize: 10, color: 'var(--muted2)' }}>
+                ✍ <span style={{ color: 'var(--warning)', fontWeight: 700 }}>{credits.annonces.remaining}</span> credits
+              </div>
+            )}
             {isPro ? (
-              <span style={{ fontFamily: 'var(--font-label)', fontSize: 9, letterSpacing: 2, color: 'var(--gold2)', background: 'rgba(201,168,76,.08)', border: '1px solid var(--gold-border)', borderRadius: 2, padding: '3px 8px' }}>ELITE</span>
+              <span style={{ fontFamily: 'var(--font-label)', fontSize: 9, letterSpacing: 2, color: 'var(--gold2)', background: 'rgba(201,168,76,.08)', border: '1px solid var(--gold-border)', borderRadius: 2, padding: '3px 8px', whiteSpace: 'nowrap' }}>♛ Subscriber Only</span>
             ) : (
-              <button onClick={upgradePro} className="btn-primary" style={{ fontSize: 11, padding: '7px 14px', letterSpacing: 1.5 }}>Elite</button>
+              <button onClick={upgradePro} className="btn-primary" style={{ fontSize: 11, padding: '7px 14px', letterSpacing: 1.5, whiteSpace: 'nowrap' }}>S&apos;abonner</button>
             )}
             <button onClick={logout} style={{ background: 'none', border: '1px solid var(--border2)', borderRadius: 2, color: 'var(--muted)', cursor: 'pointer', fontSize: 11, padding: '6px 12px' }}>
               Quitter
@@ -193,7 +208,7 @@ export default function Dashboard() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: isPro ? 'var(--gold)' : 'var(--muted)', animation: isPro ? 'pulse 2s infinite' : 'none' }} />
                 <span style={{ fontSize: 13, color: 'var(--muted3)' }}>
-                  Plan <strong style={{ color: isPro ? 'var(--gold2)' : 'var(--muted2)', fontFamily: 'var(--font-label)', letterSpacing: 1 }}>{isPro ? 'ELITE' : 'GRATUIT'}</strong>
+                  Plan <strong style={{ color: isPro ? 'var(--gold2)' : 'var(--muted2)', fontFamily: 'var(--font-label)', letterSpacing: 1 }}>{isPro ? 'Subscriber Only' : 'GRATUIT'}</strong>
                   {isPro && <span style={{ marginLeft: 8, fontSize: 11, color: 'var(--muted)' }}>5,99 EUR / semaine</span>}
                 </span>
               </div>
@@ -202,7 +217,7 @@ export default function Dashboard() {
                   Mon abonnement
                 </button>
               ) : (
-                <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 11, padding: '8px 18px', letterSpacing: 1.5 }}>PASSER ELITE</button>
+                <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 11, padding: '8px 18px', letterSpacing: 1.5 }}>S'ABONNER</button>
               )}
             </div>
 
@@ -215,7 +230,7 @@ export default function Dashboard() {
                 <div key={a.tab} className="action-tile" onClick={() => setTab(a.tab)}
                   style={{ background: 'var(--ink)', padding: '24px 16px', cursor: 'pointer', position: 'relative', textAlign: 'center' }}>
                   <div style={{ position: 'absolute', top: 10, right: 12, fontFamily: 'var(--font-label)', fontSize: 7, letterSpacing: 1.5, color: a.pro ? 'var(--gold3)' : 'var(--success2)' }}>
-                    {a.pro ? '♛ Abonne' : 'Gratuit'}
+                    {a.pro ? '♛ Subscriber Only' : 'Gratuit'}
                   </div>
                   <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600, lineHeight: 1 }}>{a.title}</div>
                   <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontStyle: 'italic', fontWeight: 300, color: 'var(--muted2)', marginTop: 3 }}>{a.sub}</div>
@@ -256,10 +271,10 @@ export default function Dashboard() {
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(201,168,76,.04), transparent)', pointerEvents: 'none' }} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
                   <div>
-                    <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, marginBottom: 4 }}>Passez Elite</div>
+                    <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, marginBottom: 4 }}>Passez a un abonnement</div>
                     <div style={{ fontSize: 13, color: 'var(--muted2)' }}>Annonces et reponses incluses - 5,99 EUR / semaine</div>
                   </div>
-                  <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 11, padding: '12px 24px', letterSpacing: 2, flexShrink: 0 }}>PASSER ELITE</button>
+                  <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 11, padding: '12px 24px', letterSpacing: 2, flexShrink: 0 }}>S'ABONNER</button>
                 </div>
               </div>
             )}
@@ -293,7 +308,7 @@ function LockScreen({ upgradePro, feature }) {
         Pour acceder a ce systeme, abonnez-vous a 5,99 EUR/semaine ou achetez un pack.
       </div>
       <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 12, padding: '13px 32px', letterSpacing: 2 }}>
-        PASSER ELITE - 5,99 EUR / SEMAINE
+        S'ABONNER - 5,99 EUR / SEMAINE
       </button>
     </div>
   )
@@ -313,8 +328,6 @@ function AnnonceTab({ isPro, upgradePro, onUsed }) {
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
   const [section, setSection] = useState(0)
-
-  if (!isPro) return <LockScreen upgradePro={upgradePro} feature="La creation d'annonces" />
 
   const SECTIONS = [
     {
@@ -390,6 +403,26 @@ function AnnonceTab({ isPro, upgradePro, onUsed }) {
     setLoading(false)
     if (!data.error) onUsed()
   }
+
+  if (!isPro) return (
+    <LockScreen upgradePro={upgradePro} feature="La creation d'annonces">
+      <div style={{ marginBottom: 20 }}>
+        <div className="label" style={{ marginBottom: 8 }}>Outil IA</div>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 400, letterSpacing: -.5 }}>Creer une annonce</h2>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 1 }}>
+        {[['Marque','BMW, Apple...'],['Modele','Serie 3...'],['Annee','2021'],['Prix','11500'],['Etat','Tres bon etat'],['Ville','Lyon']].map(([label,ph]) => (
+          <div key={label} style={{ background: 'var(--ink)', padding: '16px 20px' }}>
+            <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>{label}</div>
+            <div style={{ background: 'transparent', borderBottom: '1px solid var(--border2)', padding: '6px 0', color: 'var(--muted)', fontSize: 13 }}>{ph}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: 'var(--ink)', border: '1px solid var(--border)', padding: '14px 20px', marginBottom: 1, opacity: .5 }}>
+        <div style={{ fontSize: 12, color: 'var(--muted2)' }}>Defauts, options, livraison, urgence...</div>
+      </div>
+    </LockScreen>
+  )
 
   return (
     <div className="db-fade">
@@ -525,7 +558,22 @@ function ReponseTab({ isPro, upgradePro, onUsed }) {
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  if (!isPro) return <LockScreen upgradePro={upgradePro} feature="La reponse aux acheteurs" />
+  if (!isPro) return (
+    <LockScreen upgradePro={upgradePro} feature="La reponse aux acheteurs">
+      <div style={{ marginBottom: 20 }}>
+        <div className="label" style={{ marginBottom: 8 }}>Outil IA</div>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 400, letterSpacing: -.5 }}>Repondre a un acheteur</h2>
+      </div>
+      <div style={{ background: 'var(--ink)', border: '1px solid var(--border)', padding: '16px 20px', marginBottom: 1 }}>
+        <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Message recu</div>
+        <div style={{ height: 80, background: 'var(--s3)', borderRadius: 2 }} />
+      </div>
+      <div style={{ background: 'var(--ink)', border: '1px solid var(--border)', padding: '16px 20px', marginBottom: 1 }}>
+        <div style={{ fontSize: 10, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Contexte</div>
+        <div style={{ height: 40, background: 'var(--s3)', borderRadius: 2 }} />
+      </div>
+    </LockScreen>
+  )
 
   const generate = async () => {
     if (!message) return
@@ -723,7 +771,7 @@ function TarifsTab({ isPro, upgradePro }) {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(201,168,76,.04),transparent)', pointerEvents: 'none' }} />
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: isPro ? 0 : 16 }}>
           <div>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 600, marginBottom: 4 }}>Plan Elite</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 600, marginBottom: 4 }}>Abonnement actif</div>
             <div style={{ fontSize: 13, color: 'var(--muted2)', lineHeight: 1.65 }}>Tout inclus - annonces, reponses, estimations</div>
           </div>
           <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -734,11 +782,11 @@ function TarifsTab({ isPro, upgradePro }) {
         {isPro ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--gold2)' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--gold)', animation: 'pulse 2s infinite' }} />
-            Plan Elite actif
+            Abonnement actif actif
           </div>
         ) : (
           <button onClick={upgradePro} className="btn-gold" style={{ width: '100%', fontSize: 12, padding: '14px', letterSpacing: 2 }}>
-            PASSER ELITE - 5,99 EUR / SEMAINE
+            S'ABONNER - 5,99 EUR / SEMAINE
           </button>
         )}
       </div>
@@ -779,7 +827,7 @@ function ProfilTab({ user, isPro, upgradePro, openSubModal, usage, credits, purc
         </div>
         <div style={{ background: 'var(--ink)', padding: '20px 24px' }}>
           <div style={{ fontSize: 10, color: 'var(--muted2)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Plan</div>
-          <div style={{ fontFamily: 'var(--font-label)', fontSize: 24, letterSpacing: 2, color: isPro ? 'var(--gold2)' : 'var(--muted2)', marginBottom: 2 }}>{isPro ? 'ELITE' : 'GRATUIT'}</div>
+          <div style={{ fontFamily: 'var(--font-label)', fontSize: 24, letterSpacing: 2, color: isPro ? 'var(--gold2)' : 'var(--muted2)', marginBottom: 2 }}>{isPro ? 'Subscriber Only' : 'GRATUIT'}</div>
           <div style={{ fontSize: 11, color: 'var(--muted)' }}>Depuis {new Date(user.createdAt).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</div>
         </div>
       </div>
@@ -800,15 +848,15 @@ function ProfilTab({ user, isPro, upgradePro, openSubModal, usage, credits, purc
         {isPro ? (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <div>
-              <div style={{ fontSize: 14, color: 'var(--cream)', marginBottom: 3 }}>Plan Elite actif - 5,99 EUR / semaine</div>
+              <div style={{ fontSize: 14, color: 'var(--cream)', marginBottom: 3 }}>Abonnement actif actif - 5,99 EUR / semaine</div>
               <div style={{ fontSize: 11, color: 'var(--muted)' }}>Annulable a tout moment - Non remboursable</div>
             </div>
             <button onClick={openSubModal} className="btn-ghost" style={{ fontSize: 11 }}>Gerer</button>
           </div>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-            <div style={{ fontSize: 13, color: 'var(--muted2)' }}>Plan gratuit - Passez Elite pour tout debloquer</div>
-            <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 11, padding: '9px 20px', letterSpacing: 1.5 }}>PASSER ELITE</button>
+            <div style={{ fontSize: 13, color: 'var(--muted2)' }}>Plan gratuit - Passez a un abonnement pour tout debloquer</div>
+            <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 11, padding: '9px 20px', letterSpacing: 1.5 }}>S'ABONNER</button>
           </div>
         )}
       </div>
