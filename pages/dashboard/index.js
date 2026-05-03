@@ -302,12 +302,12 @@ function LockScreen({ upgradePro, feature }) {
   return (
     <div style={{ ...S.card, textAlign: 'center', padding: '48px 24px', borderColor: 'var(--gold-border)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(201,168,76,.04), transparent)', pointerEvents: 'none' }} />
-      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, letterSpacing: -.3, marginBottom: 8 }}>Fonctionnalite Elite</h3>
-      <p style={{ fontSize: 13, color: 'var(--muted2)', marginBottom: 16, lineHeight: 1.7 }}>{feature} est reservee au plan Elite.</p>
+      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 600, letterSpacing: -.3, marginBottom: 8 }}>Subscriber Only</h3>
+      <p style={{ fontSize: 13, color: 'var(--muted2)', marginBottom: 16, lineHeight: 1.7 }}>{feature} est reservee au abonnement.</p>
       <div style={{ background: 'var(--s2)', border: '1px solid var(--border)', borderRadius: 3, padding: '12px 16px', marginBottom: 20, fontSize: 12, color: 'var(--muted2)', lineHeight: 1.65 }}>
         Pour acceder a ce systeme, abonnez-vous a 5,99 EUR/semaine ou achetez un pack.
       </div>
-      <button onClick={upgradePro} className="btn-gold" style={{ fontSize: 12, padding: '13px 32px', letterSpacing: 2 }}>
+      <button onClick={upgradePro} style={{ background:'linear-gradient(135deg,#a8843c,#c9a84c)', border:'none', borderRadius:3, color:'#050505', cursor:'pointer', fontFamily:'var(--font-label)', fontSize:12, padding:'13px 32px', letterSpacing:2, fontWeight:700, width:'100%' }}>
         S'ABONNER - 5,99 EUR / SEMAINE
       </button>
     </div>
