@@ -93,6 +93,17 @@ export default function Dashboard() {
         .action-tile { transition: all .25s; }
         .action-tile:hover { background: var(--s2) !important; transform: translateY(-2px); }
         .copy-btn:hover { border-color: var(--gold-border) !important; color: var(--gold2) !important; }
+        @media (max-width: 640px) {
+          .tab-btn { font-size: 10px !important; padding: 0 8px !important; }
+          .db-grid-2 { grid-template-columns: 1fr !important; }
+          .db-grid-3 { grid-template-columns: 1fr 1fr !important; }
+          .db-grid-form { grid-template-columns: 1fr !important; }
+          .db-actions { grid-template-columns: 1fr !important; }
+          .db-status { flex-direction: column !important; align-items: flex-start !important; }
+          .db-header-nav { gap: 0 !important; }
+          .db-main { padding: 16px 12px 80px !important; }
+          .db-kpi { font-size: 22px !important; }
+        }
       `}</style>
 
       {showSubModal && (
@@ -106,7 +117,7 @@ export default function Dashboard() {
             </button>
             <div style={{ fontFamily: 'var(--font-label)', fontSize: 9, letterSpacing: 3, color: 'var(--gold3)', marginBottom: 10 }}>MON ABONNEMENT</div>
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, marginBottom: 20 }}>Plan Elite</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
+            <div className="db-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
               {[
                 ['Nom', 'Plan Elite'],
                 ['Prix', '5,99 EUR / semaine'],
@@ -167,7 +178,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main style={{ flex: 1, maxWidth: 900, margin: '0 auto', width: '100%', padding: '32px 24px 80px' }}>
+      <main className="db-main" style={{ flex: 1, maxWidth: 900, margin: '0 auto', width: '100%', padding: '32px 24px 80px' }}>
 
         {tab === 'home' && (
           <div className="db-fade">
@@ -195,7 +206,7 @@ export default function Dashboard() {
               )}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
+            <div className="db-actions" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
               {[
                 { title: 'Creer', sub: 'une annonce', tab: 'annonce', pro: true },
                 { title: 'Repondre', sub: 'a un acheteur', tab: 'reponse', pro: true },
@@ -204,7 +215,7 @@ export default function Dashboard() {
                 <div key={a.tab} className="action-tile" onClick={() => setTab(a.tab)}
                   style={{ background: 'var(--ink)', padding: '24px 16px', cursor: 'pointer', position: 'relative', textAlign: 'center' }}>
                   <div style={{ position: 'absolute', top: 10, right: 12, fontFamily: 'var(--font-label)', fontSize: 7, letterSpacing: 1.5, color: a.pro ? 'var(--gold3)' : 'var(--success2)' }}>
-                    {a.pro ? 'ELITE' : 'GRATUIT'}
+                    {a.pro ? '♛ Abonne' : 'Gratuit'}
                   </div>
                   <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600, lineHeight: 1 }}>{a.title}</div>
                   <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontStyle: 'italic', fontWeight: 300, color: 'var(--muted2)', marginTop: 3 }}>{a.sub}</div>
