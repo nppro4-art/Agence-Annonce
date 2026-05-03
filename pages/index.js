@@ -67,7 +67,7 @@ export default function Home() {
         @keyframes testFade{0%{opacity:0;transform:translateY(8px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
         .fade-up{animation:fadeUp .7s cubic-bezier(.16,1,.3,1) forwards}
         .d1{animation-delay:.1s;opacity:0}.d2{animation-delay:.22s;opacity:0}.d3{animation-delay:.34s;opacity:0}.d4{animation-delay:.46s;opacity:0}.d5{animation-delay:.58s;opacity:0}.d6{animation-delay:.7s;opacity:0}
-        .gold-text{color:#c9a84c;animation:goldpulse 3s ease-in-out infinite}
+        .gold-text{color:#c9a84c !important;-webkit-text-fill-color:#c9a84c !important;background:none !important;animation:goldpulse 3s ease-in-out infinite}
         .ac{transition:all .25s;cursor:pointer}.ac:hover{background:var(--s2)!important}
         .cta-btn{transition:all .2s}.cta-btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
         .tp{transition:all .15s}.tp:hover{border-color:rgba(201,168,76,.3)!important}
@@ -127,7 +127,7 @@ export default function Home() {
           </div>
 
           <h1 className="fade-up d2 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:300,fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8 }}>Vends plus vite</h1>
-          <h1 className="fade-up d3 hero-title gold-text" style={{ fontFamily:'var(--font-display)',fontWeight:700,fontStyle:'italic',fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8 }}>avec l&apos;IA qui vend</h1>
+          <h1 className="fade-up d3 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:700,fontStyle:'italic',fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8,color:'#c9a84c' }}>avec l&apos;IA qui vend</h1>
           <h1 className="fade-up d3 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:300,fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:36,color:'var(--muted3)' }}>a ta place.</h1>
 
           <p className="fade-up d4" style={{ fontSize:16,color:'var(--muted2)',lineHeight:1.8,marginBottom:44,maxWidth:520 }}>
