@@ -8,49 +8,24 @@ datasource db {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  email            String    @unique
+  id               String     @id @default(cuid())
+  email            String     @unique
   password         String
   name             String?
-  plan             String    @default("free")
-  planKey          String    @default("free") // free | starter | business | expert
-  stripeCustomerId String?   @unique
-  stripeSubId      String?   @unique
-  subStatus        String    @default("inactive")
+  plan             String     @default("free")
+  planKey          String     @default("free")
+  stripeCustomerId String?    @unique
+  stripeSubId      String?    @unique
+  subStatus        String     @default("inactive")
   refBy            String?
-  referralCode     String?   @unique
+  referralCode     String?    @unique
   referralUsed     String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
   annonces         Annonce[]
   reponses         Reponse[]
   credits          Credit[]
   purchases        Purchase[]
-}
-
-model Credit {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  type      String   // annonces | reponses
-  total     Int      @default(0)
-  used      Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, type])
-}
-
-model Purchase {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  packName    String
-  packType    String   // annonces | reponses
-  quantity    Int
-  amount      Float
-  stripeId    String?
-  createdAt   DateTime @default(now())
 }
 
 model Employee {
@@ -66,23 +41,25 @@ model Employee {
 }
 
 model Click {
-  id         String   @id @default(cuid())
-  employeeId String
-  employee   Employee @relation(fields: [employeeId], references: [id])
-  ip         String?
-  converted  Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id])
+  ip          String?
+  converted   Boolean  @default(false)
+  planKey     String?
+  createdAt   DateTime @default(now())
 }
 
 model Commission {
-  id         String   @id @default(cuid())
-  employeeId String
-  employee   Employee @relation(fields: [employeeId], references: [id])
-  userId     String
-  amount     Float
-  type       String
-  paid       Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id])
+  userId      String
+  amount      Float
+  type        String
+  planKey     String   @default("business")
+  paid        Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }
 
 model Annonce {
@@ -112,10 +89,37 @@ model Reponse {
   createdAt       DateTime @default(now())
 }
 
+model Credit {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  total     Int      @default(0)
+  used      Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([userId, type])
+}
+
+model Purchase {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  packName  String
+  packType  String
+  quantity  Int
+  amount    Float
+  stripeId  String?
+  createdAt DateTime @default(now())
+}
+
 model Settings {
   id                  String  @id @default("main")
   commissionFirst     Float   @default(6)
   commissionRecurring Float   @default(2)
+  commissionStarter   Float   @default(0.50)
+  commissionBusiness  Float   @default(1.50)
+  commissionExpert    Float   @default(2.50)
   stripePrice         Float   @default(5.99)
   adminWebhook        String?
 }
