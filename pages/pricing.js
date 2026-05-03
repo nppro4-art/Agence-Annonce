@@ -78,6 +78,11 @@ export default function Pricing() {
         .plan-card { transition: all .2s; }
         .plan-card:hover { transform: translateY(-3px); }
         .btn-ghost:hover { border-color: var(--gold-border) !important; color: var(--gold2) !important; }
+        @media (max-width: 640px) {
+          .plans-grid { grid-template-columns: 1fr !important; }
+          .packs-grid { grid-template-columns: 1fr !important; }
+          .pricing-container { padding: 32px 16px 60px !important; }
+        }
       `}</style>
 
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(3,3,3,.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--border)', padding: '0 32px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -98,7 +103,7 @@ export default function Pricing() {
         </div>
       </nav>
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '60px 24px 100px' }}>
+      <div className="pricing-container" style={{ maxWidth: 900, margin: '0 auto', padding: '60px 24px 100px' }}>
 
         <div className="fade-up d1" style={{ textAlign: 'center', marginBottom: 56 }}>
           <div className="label" style={{ marginBottom: 14 }}>Tarifs transparents</div>
@@ -111,7 +116,7 @@ export default function Pricing() {
         </div>
 
         {/* Plans */}
-        <div className="fade-up d2" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
+        <div className="fade-up d2" className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 1, background: 'var(--border)', marginBottom: 20 }}>
           {PLANS.map((plan, i) => (
             <div key={plan.key} className="plan-card"
               style={{ background: plan.recommended ? 'var(--s1)' : 'var(--ink)', padding: '28px 24px', position: 'relative', borderTop: plan.recommended ? '2px solid var(--gold)' : '2px solid transparent' }}>
@@ -158,7 +163,7 @@ export default function Pricing() {
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 400, letterSpacing: -.3 }}>Packs a l&apos;unite</h2>
             <p style={{ fontSize: 13, color: 'var(--muted2)', marginTop: 6 }}>Pour tester sans s&apos;abonner. Connexion requise.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 1, background: 'var(--border)' }}>
+          <div className="packs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 1, background: 'var(--border)' }}>
             {PACKS.map(p => (
               <div key={p.name} style={{ background: 'var(--ink)', padding: '20px' }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, marginBottom: 2 }}>{p.name}</div>
