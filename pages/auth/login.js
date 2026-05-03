@@ -26,6 +26,13 @@ export default function Login() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--black)' }}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg) } }
+        @media (max-width: 640px) {
+          .auth-left { display: none !important; }
+          .auth-right { padding: 32px 20px !important; }
+        }
+      `}</style>
 
       {/* Panneau gauche décoratif */}
       <div style={{ flex: 1, background: 'var(--ink)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '48px', position: 'relative', overflow: 'hidden' }} className="hide-mobile">
@@ -46,7 +53,7 @@ export default function Login() {
       </div>
 
       {/* Formulaire */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 32px' }}>
+      <div className="auth-right" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 32px' }}>
         <div style={{ width: '100%', maxWidth: 380 }} className="fade-up d1">
           <Link href="/" style={{ display: 'block', marginBottom: 40, fontFamily: 'var(--font-label)', fontSize: 16, letterSpacing: 3 }} className="hide-desktop">
             AGENCE D&apos;<span style={{ color: 'var(--red)' }}>ANNONCE</span>
