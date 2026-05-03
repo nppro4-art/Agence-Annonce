@@ -78,7 +78,7 @@ export default function Pricing() {
         .plan-card { transition: all .2s; }
         .plan-card:hover { transform: translateY(-3px); }
         .btn-ghost:hover { border-color: var(--gold-border) !important; color: var(--gold2) !important; }
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .plans-grid { grid-template-columns: 1fr !important; }
           .packs-grid { grid-template-columns: 1fr !important; }
           .pricing-container { padding: 32px 16px 60px !important; }
