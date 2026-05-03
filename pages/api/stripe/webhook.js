@@ -6,6 +6,14 @@ import { sendPaymentConfirmationEmail, sendCancellationEmail, sendNewSaleToAdmin
 
 export const config = { api: { bodyParser: false } }
 
+// Commissions hebdomadaires par plan
+const PLAN_WEEKLY_COMMISSION = {
+  starter: 0.50,
+  business: 1.50,
+  expert: 2.50,
+  pro: 1.50, // ancien plan = business
+}
+
 async function sendDiscord(webhook, message) {
   if (!webhook) return
   try {
@@ -27,69 +35,57 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Webhook invalide' })
   }
 
-  const settings = await prisma.settings.findUnique({ where: { id: 'main' } })
+  const settings = await prisma.settings.findUnique({ where: { id: 'main' } }).catch(() => null)
   const adminWebhook = settings?.adminWebhook || process.env.DISCORD_WEBHOOK
   const adminEmail = process.env.ADMIN_EMAIL
 
-  // ── ABONNEMENT ELITE ──────────────────────────────────
+  // PAIEMENT INITIAL (abonnement ou pack)
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
     const userId = session.metadata?.userId
     const ref = session.metadata?.ref
+    const planKey = session.metadata?.planKey || 'business'
 
-    // Vérifier si c'est un pack ou un abonnement
-    const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
-    const priceId = lineItems.data[0]?.price?.id
+    // Detecter si c'est un pack
+    let lineItems = null
+    try {
+      const li = await stripe.checkout.sessions.listLineItems(session.id)
+      lineItems = li.data
+    } catch(e) {}
 
-    // C'est un pack
-    if (priceId && PACK_MAP[priceId]) {
-      const pack = PACK_MAP[priceId]
-      if (userId) {
-        await addCredits(userId, pack.type, pack.qty, pack.name, pack.amount, session.id)
-        const user = await prisma.user.findUnique({ where: { id: userId } })
-        await sendDiscord(adminWebhook, [
-          '📦 **PACK ACHETÉ**',
-          'Client : ' + (user?.email || 'Inconnu'),
-          'Pack : ' + pack.name,
-          'Crédits ajoutés : ' + pack.qty + ' ' + pack.type,
-          'Montant : ' + pack.amount + '€'
-        ].join('\n'))
-      }
-    } else {
-      // C'est un abonnement Elite
-      if (userId) {
-        const user = await prisma.user.update({
-          where: { id: userId },
-          data: { plan: 'pro', subStatus: 'active', stripeSubId: session.subscription }
-        })
-        await sendPaymentConfirmationEmail({ to: user.email, name: user.name })
-        if (adminEmail) await sendNewSaleToAdmin({ adminEmail, clientEmail: user.email, ref, amount: '5,99' })
+    const priceId = lineItems?.[0]?.price?.id
+    const pack = priceId ? PACK_MAP[priceId] : null
 
-        if (ref) {
-          const emp = await prisma.employee.findUnique({ where: { code: ref } })
-          if (emp) {
-            const commAmount = settings?.commissionFirst || 6
-            await prisma.commission.create({
-              data: { employeeId: emp.id, userId, amount: commAmount, type: 'first' }
-            })
-            await sendDiscord(emp.webhook, [
-              '💰 **NOUVELLE VENTE ELITE**',
-              'Client : ' + user.email,
-              'Commission : ' + commAmount + '€'
-            ].join('\n'))
-          }
+    if (pack && userId) {
+      // C'est un pack
+      await addCredits(userId, pack.type, pack.qty, pack.name, pack.amount, session.id)
+      const user = await prisma.user.findUnique({ where: { id: userId } })
+      await sendDiscord(adminWebhook, '📦 PACK ACHETE\nClient : ' + (user?.email || 'Inconnu') + '\nPack : ' + pack.name + '\nMontant : ' + pack.amount + 'EUR')
+    } else if (userId && session.subscription) {
+      // C'est un abonnement
+      const user = await prisma.user.update({
+        where: { id: userId },
+        data: { plan: 'pro', planKey, subStatus: 'active', stripeSubId: session.subscription }
+      })
+      await sendPaymentConfirmationEmail({ to: user.email, name: user.name }).catch(() => {})
+      if (adminEmail) await sendNewSaleToAdmin({ adminEmail, clientEmail: user.email, ref, amount: session.amount_total ? (session.amount_total / 100).toFixed(2) : '?' }).catch(() => {})
+
+      // Commission affilié
+      if (ref) {
+        const emp = await prisma.employee.findUnique({ where: { code: ref } })
+        if (emp) {
+          const commAmount = settings?.commissionFirst || 6
+          await prisma.commission.create({
+            data: { employeeId: emp.id, userId, amount: commAmount, type: 'first', planKey }
+          })
+          await sendDiscord(emp.webhook, '💰 NOUVELLE VENTE\nClient : ' + user.email + '\nPlan : ' + planKey + '\nCommission : ' + commAmount + 'EUR')
         }
-        await sendDiscord(adminWebhook, [
-          '✅ **NOUVEL ABONNÉ ELITE**',
-          'Email : ' + user.email,
-          'Ref : ' + (ref || 'Direct'),
-          'Montant : 5,99€/semaine'
-        ].join('\n'))
       }
+      await sendDiscord(adminWebhook, '✅ NOUVEL ABONNE\nEmail : ' + user.email + '\nPlan : ' + planKey + '\nRef : ' + (ref || 'Direct'))
     }
   }
 
-  // ── RENOUVELLEMENT ────────────────────────────────────
+  // RENOUVELLEMENT HEBDOMADAIRE
   if (event.type === 'invoice.payment_succeeded') {
     const invoice = event.data.object
     if (invoice.billing_reason === 'subscription_cycle') {
@@ -97,28 +93,26 @@ export default async function handler(req, res) {
       if (user?.refBy) {
         const emp = await prisma.employee.findUnique({ where: { code: user.refBy } })
         if (emp) {
-          const commAmount = settings?.commissionRecurring || 2
+          const planKey = user.planKey || 'business'
+          const commAmount = PLAN_WEEKLY_COMMISSION[planKey] || 1.50
           await prisma.commission.create({
-            data: { employeeId: emp.id, userId: user.id, amount: commAmount, type: 'recurring' }
+            data: { employeeId: emp.id, userId: user.id, amount: commAmount, type: 'recurring', planKey }
           })
-          await sendDiscord(emp.webhook, '🔄 Renouvellement · ' + user.email + ' · Commission : ' + commAmount + '€')
+          await sendDiscord(emp.webhook, '🔄 RENOUVELLEMENT\nClient : ' + user.email + '\nPlan : ' + planKey + '\nCommission semaine : ' + commAmount + 'EUR')
         }
       }
-      await sendDiscord(adminWebhook, '🔄 **RENOUVELLEMENT** · ' + (user?.email || 'Inconnu') + ' · 5,99€')
+      await sendDiscord(adminWebhook, '🔄 RENOUVELLEMENT : ' + (user?.email || 'Inconnu') + ' · Plan : ' + (user?.planKey || '?'))
     }
   }
 
-  // ── ANNULATION ────────────────────────────────────────
+  // ANNULATION
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object
     const user = await prisma.user.findFirst({ where: { stripeSubId: sub.id } })
     if (user) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { plan: 'free', subStatus: 'cancelled', stripeSubId: null }
-      })
-      await sendCancellationEmail({ to: user.email, name: user.name })
-      await sendDiscord(adminWebhook, '❌ **ANNULATION** · ' + user.email)
+      await prisma.user.update({ where: { id: user.id }, data: { plan: 'free', planKey: 'free', subStatus: 'cancelled', stripeSubId: null } })
+      await sendCancellationEmail({ to: user.email, name: user.name }).catch(() => {})
+      await sendDiscord(adminWebhook, '❌ ANNULATION : ' + user.email)
     }
   }
 
