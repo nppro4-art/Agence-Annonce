@@ -50,7 +50,8 @@ export default function Home() {
         @keyframes shimmer { 0%{background-position:-200% center}100%{background-position:200% center} }
         .fade-up{animation:fadeUp .7s cubic-bezier(.16,1,.3,1) forwards}
         .d1{animation-delay:.1s;opacity:0}.d2{animation-delay:.22s;opacity:0}.d3{animation-delay:.34s;opacity:0}.d4{animation-delay:.46s;opacity:0}.d5{animation-delay:.58s;opacity:0}.d6{animation-delay:.7s;opacity:0}
-        .gold-text{background:linear-gradient(90deg,var(--gold3) 0%,var(--gold2) 40%,var(--gold) 60%,var(--gold3) 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+        .gold-text{color:#c9a84c;animation:goldpulse 3s ease-in-out infinite}
+        @keyframes goldpulse{0%,100%{color:#c9a84c}50%{color:#e8c878}}
         .ac{transition:all .25s;cursor:pointer}.ac:hover{background:var(--s2)!important}
         .cta-btn{transition:all .2s}.cta-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
         .tp{transition:all .15s}.tp:hover{border-color:rgba(201,168,76,.3)!important}
@@ -111,7 +112,7 @@ export default function Home() {
           <h1 className="fade-up d2 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:300,fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8 }}>
             Vends plus vite
           </h1>
-          <h1 className="fade-up d3 hero-title gold-text" style={{ fontFamily:'var(--font-display)',fontWeight:700,fontStyle:'italic',fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8,display:'block' }}>
+          <h1 className="fade-up d3 hero-title gold-text" style={{ fontFamily:'var(--font-display)',fontWeight:700,fontStyle:'italic',fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8 }}>
             avec l&apos;IA qui vend
           </h1>
           <h1 className="fade-up d3 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:300,fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:36,color:'var(--muted3)' }}>
