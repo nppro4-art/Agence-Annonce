@@ -6,22 +6,39 @@ export default requireAdmin(async function handler(req, res) {
     const employees = await prisma.employee.findMany({ orderBy: { createdAt: 'desc' } })
     return res.status(200).json({ employees })
   }
+
   if (req.method === 'POST') {
     const { name, code, email, webhook } = req.body
     if (!name || !code) return res.status(400).json({ error: 'Nom et code requis' })
-    const emp = await prisma.employee.create({ data: { name, code, email, webhook } })
-    return res.status(201).json({ employee: emp })
+    try {
+      const emp = await prisma.employee.create({ data: { name, code: code.toUpperCase(), email, webhook } })
+      return res.status(201).json({ employee: emp })
+    } catch(e) {
+      if (e.code === 'P2002') return res.status(400).json({ error: 'Ce code existe deja' })
+      return res.status(500).json({ error: e.message })
+    }
   }
+
   if (req.method === 'DELETE') {
     const { id } = req.query
-    await prisma.employee.delete({ where: { id } })
-    return res.status(200).json({ success: true })
+    if (!id) return res.status(400).json({ error: 'ID manquant' })
+    try {
+      // Supprimer les commissions liées d'abord
+      await prisma.commission.deleteMany({ where: { employeeId: id } })
+      await prisma.click.deleteMany({ where: { employeeId: id } })
+      await prisma.employee.delete({ where: { id } })
+      return res.status(200).json({ success: true })
+    } catch(e) {
+      return res.status(500).json({ error: 'Impossible de supprimer: ' + e.message })
+    }
   }
+
   if (req.method === 'PUT') {
     const { id } = req.query
     const { name, webhook, active } = req.body
     const emp = await prisma.employee.update({ where: { id }, data: { name, webhook, active } })
     return res.status(200).json({ employee: emp })
   }
+
   res.status(405).end()
 })
