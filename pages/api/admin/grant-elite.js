@@ -7,12 +7,12 @@ export default requireAdmin(async function handler(req, res) {
   if (!email) return res.status(400).json({ error: 'Email requis' })
 
   const user = await prisma.user.findUnique({ where: { email } })
-  if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé — il doit d\'abord créer un compte.' })
+  if (!user) return res.status(404).json({ error: 'Utilisateur non trouve - il doit creer un compte.' })
 
   await prisma.user.update({
     where: { email },
-    data: { plan: 'pro', subStatus: 'active' }
+    data: { plan: 'pro', planKey: 'premium', subStatus: 'active' }
   })
 
-  res.status(200).json({ success: true, message: email + ' est maintenant Elite.' })
+  res.status(200).json({ success: true, message: email + ' a maintenant un acces Premium illimite.' })
 })
