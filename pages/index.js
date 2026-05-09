@@ -106,6 +106,7 @@ export default function Home() {
         </div>
         <div className="nav-desktop" style={{ display:'flex',gap:32,alignItems:'center' }}>
           <Link href="/pricing" className="nav-link">Tarifs</Link>
+          <Link href="/stats" className="nav-link">Stats</Link>
           <Link href="/auth/login" className="nav-link">Connexion</Link>
           <Link href="/auth/register"><button className="btn-primary" style={{ fontSize:12,padding:'10px 22px',letterSpacing:2 }}>Commencer</button></Link>
         </div>
@@ -271,7 +272,7 @@ export default function Home() {
             Agence <span style={{ color:'var(--red)' }}>d&apos;Annonce</span>
           </div>
           <div style={{ display:'flex',gap:24 }}>
-            {[['Tarifs','/pricing'],['Connexion','/auth/login'],["S'inscrire",'/auth/register']].map(([label,href]) => (
+            {[['Tarifs','/pricing'],['Stats','/stats'],['Connexion','/auth/login'],["S'inscrire",'/auth/register']].map(([label,href]) => (
               <Link key={label} href={href} className="nav-link" style={{ fontSize:12 }}>{label}</Link>
             ))}
           </div>
