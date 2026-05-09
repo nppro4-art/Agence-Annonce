@@ -28,6 +28,8 @@ export default function Pricing() {
   const userPlanKey = user?.planKey || user?.plan || 'free'
   const isSubscribed = user?.plan === 'pro' && user?.subStatus === 'active'
 
+  const PRICE_MAP_FAMILLE = process.env.NEXT_PUBLIC_STRIPE_FAMILLE || ''
+
   const PLANS = [
     {
       key: 'starter', name: 'Starter', price: '3,99',
@@ -169,6 +171,27 @@ export default function Pricing() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Plan Famille - idee 28 */}
+        <div className="fade-up d3" style={{ marginTop: 24, background: 'var(--s1)', border: '1px solid var(--gold-border)', padding: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-label)', fontSize: 10, letterSpacing: 2, color: 'var(--gold3)', marginBottom: 6 }}>NOUVEAU</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 600, marginBottom: 4 }}>Plan Famille</div>
+              <div style={{ fontSize: 13, color: 'var(--muted2)', lineHeight: 1.65 }}>
+                3 membres · Partagez l&apos;abonnement Expert entre toute la famille.<br />
+                Chaque membre a son propre espace et ses propres annonces.
+              </div>
+            </div>
+            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ fontFamily: 'var(--font-label)', fontSize: 36, color: 'var(--gold2)', letterSpacing: -2, lineHeight: 1 }}>13,99</div>
+              <div style={{ fontSize: 11, color: 'var(--muted2)' }}>EUR / semaine pour 3</div>
+              <button onClick={() => handleSubscribe('famille')} style={{ marginTop: 10, background: 'linear-gradient(135deg,var(--gold3),var(--gold2))', border: 'none', borderRadius: 2, color: '#030303', cursor: 'pointer', fontFamily: 'var(--font-label)', fontSize: 11, letterSpacing: 1.5, padding: '10px 20px' }}>
+                CHOISIR LE PLAN FAMILLE
+              </button>
+            </div>
           </div>
         </div>
 
