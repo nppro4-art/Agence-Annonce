@@ -86,6 +86,7 @@ export default function Dashboard() {
     { id:'annonce',label:'Annonce' },
     { id:'reponse',label:'Repondre' },
     { id:'estimation',label:'Estimer' },
+    { id:'outils',label:'Outils' },
     { id:'historique',label:'Historique' },
     { id:'tarifs',label:'Tarifs' },
     { id:'profil',label:'Profil' },
@@ -1260,6 +1261,297 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
               </div>
             </div>
           ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+
+// ─── OUTILS TAB ───────────────────────────────────────────
+// Idees 12, 13, 14, 15, 16, 17, 18
+function OutilsTab({ isSubscribed, subscribe }) {
+  const [activeTool, setActiveTool] = useState(null)
+
+  // Idee 13 - Generateur de titre seul
+  const [titreSpecs, setTitreSpecs] = useState('')
+  const [titres, setTitres] = useState([])
+  const [titreLoading, setTitreLoading] = useState(false)
+
+  // Idee 14 - Detecteur prix abusif
+  const [prixArticle, setPrixArticle] = useState('')
+  const [prixDemande, setPrixDemande] = useState('')
+  const [prixResult, setPrixResult] = useState(null)
+  const [prixLoading, setPrixLoading] = useState(false)
+
+  // Idee 16 - Mode vente flash
+  const [flashSpecs, setFlashSpecs] = useState('')
+  const [flashResult, setFlashResult] = useState(null)
+  const [flashLoading, setFlashLoading] = useState(false)
+
+  // Idee 17 - Checklist
+  const [checklist, setChecklist] = useState({
+    photos: false, prix: false, description: false,
+    disponible: false, contact: false, ct: false,
+  })
+
+  // Idee 18 - Traduction
+  const [annonceText, setAnnonceText] = useState('')
+  const [tradLang, setTradLang] = useState('en')
+  const [tradResult, setTradResult] = useState('')
+  const [tradLoading, setTradLoading] = useState(false)
+
+  const genTitres = async () => {
+    if (!titreSpecs) return
+    setTitreLoading(true)
+    try {
+      const res = await fetch('/api/ai/titres', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ specs: titreSpecs })
+      })
+      const data = await res.json()
+      setTitres(data.titres || [])
+    } catch(e) {}
+    setTitreLoading(false)
+  }
+
+  const checkPrix = async () => {
+    if (!prixArticle || !prixDemande) return
+    setPrixLoading(true)
+    try {
+      const res = await fetch('/api/ai/estimation', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ specs: prixArticle })
+      })
+      const data = await res.json()
+      const prix = parseFloat(prixDemande)
+      const mid = data.mid || 0
+      const diff = mid > 0 ? ((prix - mid) / mid) * 100 : 0
+      setPrixResult({ ...data, prixDemande: prix, diff: Math.round(diff) })
+    } catch(e) {}
+    setPrixLoading(false)
+  }
+
+  const genFlash = async () => {
+    if (!flashSpecs) return
+    setFlashLoading(true)
+    try {
+      const res = await fetch('/api/ai/annonce', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ specs: flashSpecs, urgence: 'rapide', type: 'flash', inputData: {} })
+      })
+      const data = await res.json()
+      setFlashResult(data)
+    } catch(e) {}
+    setFlashLoading(false)
+  }
+
+  const tradLangs = { en: 'Anglais', es: 'Espagnol', de: 'Allemand', it: 'Italien', nl: 'Neerlandais' }
+
+  const genTrad = async () => {
+    if (!annonceText) return
+    setTradLoading(true)
+    try {
+      const res = await fetch('/api/ai/annonce', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ specs: 'Traduis cette annonce en ' + tradLangs[tradLang] + ': ' + annonceText, lang: tradLang, urgence: 'normal', type: 'traduction', inputData: {} })
+      })
+      const data = await res.json()
+      setTradResult(data.raw || '')
+    } catch(e) {}
+    setTradLoading(false)
+  }
+
+  const checklistItems = [
+    { key: 'photos', label: 'J'ai au moins 5 photos claires (lumiere naturelle)' },
+    { key: 'prix', label: 'Mon prix correspond au marche (utiliser l'estimateur)' },
+    { key: 'description', label: 'Ma description repond aux questions habituelles des acheteurs' },
+    { key: 'disponible', label: 'Mes coordonnees et disponibilites sont claires' },
+    { key: 'contact', label: 'J'ai precise si je fais de la livraison / envoi' },
+    { key: 'ct', label: 'Tous les documents importants sont mentionnes (CT, facture...)' },
+  ]
+  const checklistScore = Object.values(checklist).filter(Boolean).length
+  const checklistTotal = checklistItems.length
+
+  const TOOLS = [
+    { id: 'titre', icon: '✍', label: 'Generateur de titre', desc: 'Obtenez 5 titres optimises pour maximiser les clics', badge: 'Gratuit' },
+    { id: 'prix', icon: '💰', label: 'Detecteur prix abusif', desc: 'Verifiez si votre prix est dans le marche ou trop eleve', badge: 'Gratuit' },
+    { id: 'flash', icon: '⚡', label: 'Mode vente flash', desc: 'Annonce ultra-agressive pour vendre en moins de 48h', badge: isSubscribed ? 'Abonne' : 'Subscriber Only' },
+    { id: 'checklist', icon: '✓', label: 'Checklist avant publication', desc: 'Verifiez que votre annonce est prete a etre publiee', badge: 'Gratuit' },
+    { id: 'traduction', icon: '🌍', label: 'Traduction annonce', desc: 'Traduisez votre annonce en anglais, espagnol, allemand...', badge: isSubscribed ? 'Abonne' : 'Subscriber Only' },
+  ]
+
+  return (
+    <div className="db-fade">
+      <div style={{ marginBottom: 20 }}>
+        <div className="label" style={{ marginBottom: 8 }}>Boite a outils</div>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 400, letterSpacing: -.5 }}>Outils supplementaires</h2>
+      </div>
+
+      {/* Liste des outils */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 16 }}>
+        {TOOLS.map(tool => (
+          <div key={tool.id} onClick={() => setActiveTool(activeTool === tool.id ? null : tool.id)}
+            style={{ background: activeTool === tool.id ? 'var(--s2)' : 'var(--ink)', padding: '20px', cursor: 'pointer', transition: 'all .2s', borderTop: activeTool === tool.id ? '2px solid var(--gold)' : '2px solid transparent' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <span style={{ fontSize: 22 }}>{tool.icon}</span>
+              <span style={{ fontFamily: 'var(--font-label)', fontSize: 8, letterSpacing: 1.5, color: tool.badge === 'Gratuit' ? 'var(--success2)' : 'var(--gold3)', background: tool.badge === 'Gratuit' ? 'rgba(45,122,79,.1)' : 'rgba(201,168,76,.1)', border: '1px solid', borderColor: tool.badge === 'Gratuit' ? 'rgba(45,122,79,.2)' : 'rgba(201,168,76,.2)', borderRadius: 2, padding: '2px 6px' }}>
+                {tool.badge}
+              </span>
+            </div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{tool.label}</div>
+            <div style={{ fontSize: 12, color: 'var(--muted2)', lineHeight: 1.5 }}>{tool.desc}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Outil actif */}
+
+      {/* Idee 13 - Generateur titres */}
+      {activeTool === 'titre' && (
+        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
+          <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Generateur de titres optimises</div>
+          <textarea style={{ ...S.inp, minHeight: 70, resize: 'vertical', lineHeight: 1.6, marginBottom: 8 }}
+            placeholder="Decrivez votre article en quelques mots: BMW 320d 2019, 75 000 km, diesel, bon etat..."
+            value={titreSpecs} onChange={e => setTitreSpecs(e.target.value)} />
+          <button onClick={genTitres} disabled={titreLoading || !titreSpecs} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (titreLoading || !titreSpecs) ? .5 : 1 }}>
+            {titreLoading ? 'Generation...' : 'GENERER 5 TITRES'}
+          </button>
+          {titres.length > 0 && (
+            <div style={{ marginTop: 12 }}>
+              {titres.map((t, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ink)', border: '1px solid var(--border)', padding: '10px 14px', marginBottom: 4, gap: 10 }}>
+                  <div style={{ fontSize: 13, color: 'var(--cream)' }}>{t}</div>
+                  <button onClick={() => navigator.clipboard.writeText(t)} style={{ background: 'none', border: '1px solid var(--border2)', borderRadius: 2, color: 'var(--muted2)', cursor: 'pointer', fontSize: 10, padding: '4px 8px', flexShrink: 0 }}>Copier</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Idee 14 - Detecteur prix */}
+      {activeTool === 'prix' && (
+        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
+          <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Detecteur de prix abusif</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 8 }}>
+            <div style={{ background: 'var(--ink)', padding: '14px' }}>
+              <label style={S.lbl}>Votre article</label>
+              <input style={S.inp} placeholder="BMW 320d 2019, 75 000 km..." value={prixArticle} onChange={e => setPrixArticle(e.target.value)} />
+            </div>
+            <div style={{ background: 'var(--ink)', padding: '14px' }}>
+              <label style={S.lbl}>Votre prix demande (EUR)</label>
+              <input style={S.inp} type="number" placeholder="12000" value={prixDemande} onChange={e => setPrixDemande(e.target.value)} />
+            </div>
+          </div>
+          <button onClick={checkPrix} disabled={prixLoading || !prixArticle || !prixDemande} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (prixLoading || !prixArticle || !prixDemande) ? .5 : 1 }}>
+            {prixLoading ? 'Analyse...' : 'ANALYSER MON PRIX'}
+          </button>
+          {prixResult && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ background: prixResult.diff > 30 ? 'rgba(200,57,43,.08)' : prixResult.diff > 15 ? 'rgba(255,165,0,.08)' : 'rgba(45,122,79,.08)', border: '1px solid', borderColor: prixResult.diff > 30 ? 'rgba(200,57,43,.3)' : prixResult.diff > 15 ? 'rgba(255,165,0,.3)' : 'rgba(45,122,79,.3)', padding: '16px', marginBottom: 8 }}>
+                <div style={{ fontFamily: 'var(--font-label)', fontSize: 28, color: prixResult.diff > 30 ? 'var(--red2)' : prixResult.diff > 15 ? 'var(--warning)' : 'var(--success2)', letterSpacing: -1, marginBottom: 8 }}>
+                  {prixResult.diff > 0 ? '+' : ''}{prixResult.diff}% {prixResult.diff > 30 ? '⚠️ TROP CHER' : prixResult.diff > 15 ? '⚡ Un peu eleve' : '✓ Prix correct'}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--muted2)', lineHeight: 1.6 }}>
+                  Prix du marche : <strong style={{ color: 'var(--cream)' }}>{prixResult.low} - {prixResult.high} EUR</strong> (moyenne {prixResult.mid} EUR)<br />
+                  Votre prix : <strong style={{ color: 'var(--cream)' }}>{prixResult.prixDemande} EUR</strong>
+                  {prixResult.diff > 15 && <><br />Conseil : Baisser a <strong style={{ color: 'var(--gold2)' }}>{Math.round(prixResult.mid * 1.05)} EUR</strong> pour vendre plus vite</>}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Idee 16 - Mode flash */}
+      {activeTool === 'flash' && (
+        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
+          {!isSubscribed ? (
+            <LockOverlay subscribe={subscribe} />
+          ) : (
+            <>
+              <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Mode vente flash</div>
+              <div style={{ fontSize: 12, color: 'var(--gold3)', marginBottom: 12, lineHeight: 1.6 }}>
+                ⚡ Prix attractif, urgence maximale, disponibilite immediate. Pour vendre en moins de 48h.
+              </div>
+              <textarea style={{ ...S.inp, minHeight: 80, resize: 'vertical', lineHeight: 1.6, marginBottom: 8 }}
+                placeholder="Decrivez votre article + prix actuel + prix minimum accepte..."
+                value={flashSpecs} onChange={e => setFlashSpecs(e.target.value)} />
+              <button onClick={genFlash} disabled={flashLoading || !flashSpecs} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (flashLoading || !flashSpecs) ? .5 : 1 }}>
+                {flashLoading ? 'Generation...' : '⚡ GENERER ANNONCE FLASH'}
+              </button>
+              {flashResult?.annonce && (
+                <div style={{ marginTop: 12, background: 'var(--ink)', border: '1px solid var(--border)', borderLeft: '3px solid var(--red)', padding: '16px' }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, marginBottom: 8 }}>{flashResult.annonce.titre}</div>
+                  <div style={{ fontSize: 13, color: 'var(--cream)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{flashResult.annonce.description}</div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Idee 17 - Checklist */}
+      {activeTool === 'checklist' && (
+        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1 }}>Checklist avant publication</div>
+            <div style={{ fontFamily: 'var(--font-label)', fontSize: 24, color: checklistScore === checklistTotal ? 'var(--success2)' : 'var(--gold2)', letterSpacing: -1 }}>
+              {checklistScore}/{checklistTotal}
+            </div>
+          </div>
+          <div style={{ background: 'var(--s3)', borderRadius: 1, height: 4, marginBottom: 16, overflow: 'hidden' }}>
+            <div style={{ width: (checklistScore/checklistTotal*100)+'%', height: '100%', background: checklistScore === checklistTotal ? 'var(--success2)' : 'linear-gradient(90deg,var(--gold3),var(--gold2))', transition: 'width .4s' }} />
+          </div>
+          {checklistItems.map(item => (
+            <div key={item.key} onClick={() => setChecklist(c => ({...c, [item.key]: !c[item.key]}))}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid var(--border)', cursor: 'pointer' }}>
+              <div style={{ width: 20, height: 20, borderRadius: 3, border: '1px solid', borderColor: checklist[item.key] ? 'var(--gold)' : 'var(--border2)', background: checklist[item.key] ? 'rgba(201,168,76,.15)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all .15s', fontSize: 12, color: 'var(--gold2)' }}>
+                {checklist[item.key] ? '✓' : ''}
+              </div>
+              <div style={{ fontSize: 13, color: checklist[item.key] ? 'var(--muted2)' : 'var(--cream)', textDecoration: checklist[item.key] ? 'line-through' : 'none', lineHeight: 1.5 }}>{item.label}</div>
+            </div>
+          ))}
+          {checklistScore === checklistTotal && (
+            <div style={{ marginTop: 14, background: 'rgba(45,122,79,.1)', border: '1px solid rgba(45,122,79,.3)', borderRadius: 3, padding: '12px', fontSize: 13, color: 'var(--success2)', textAlign: 'center' }}>
+              ✓ Votre annonce est prete a etre publiee !
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Idee 18 - Traduction */}
+      {activeTool === 'traduction' && (
+        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
+          {!isSubscribed ? (
+            <LockOverlay subscribe={subscribe} />
+          ) : (
+            <>
+              <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Traduction annonce</div>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                {Object.entries(tradLangs).map(([code, nom]) => (
+                  <button key={code} onClick={() => setTradLang(code)}
+                    style={{ background: tradLang === code ? 'rgba(201,168,76,.1)' : 'var(--ink)', border: '1px solid', borderColor: tradLang === code ? 'var(--gold)' : 'var(--border)', borderRadius: 2, color: tradLang === code ? 'var(--gold2)' : 'var(--muted2)', cursor: 'pointer', fontSize: 12, padding: '6px 14px', transition: 'all .15s' }}>
+                    {nom}
+                  </button>
+                ))}
+              </div>
+              <textarea style={{ ...S.inp, minHeight: 100, resize: 'vertical', lineHeight: 1.6, marginBottom: 8 }}
+                placeholder="Collez votre annonce en francais ici..."
+                value={annonceText} onChange={e => setAnnonceText(e.target.value)} />
+              <button onClick={genTrad} disabled={tradLoading || !annonceText} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (tradLoading || !annonceText) ? .5 : 1 }}>
+                {tradLoading ? 'Traduction...' : 'TRADUIRE EN ' + (tradLangs[tradLang]||'').toUpperCase()}
+              </button>
+              {tradResult && (
+                <div style={{ marginTop: 12, background: 'var(--ink)', border: '1px solid var(--border)', borderLeft: '3px solid var(--gold)', padding: '16px' }}>
+                  <div style={S.lbl}>Annonce traduite - {tradLangs[tradLang]}</div>
+                  <div style={{ fontSize: 13, color: 'var(--cream)', lineHeight: 1.75, whiteSpace: 'pre-wrap' }}>{tradResult}</div>
+                  <button onClick={() => navigator.clipboard.writeText(tradResult)} style={{ marginTop: 10, background: 'none', border: '1px solid var(--border2)', borderRadius: 2, color: 'var(--muted2)', cursor: 'pointer', fontSize: 11, padding: '6px 14px' }}>Copier</button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
     </div>
