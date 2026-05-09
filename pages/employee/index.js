@@ -8,14 +8,12 @@ export default function EmployeeDashboard() {
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
   const [initialized, setInitialized] = useState(false)
-  const [totalUsers, setTotalUsers] = useState(0)
+
 
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('emp_code') : null
     if (saved) setInput(saved)
     setInitialized(true)
-    // Total users public
-    fetch('/api/stats/public').then(r => r.json()).then(d => setTotalUsers(d.annonces || 0)).catch(() => {})
   }, [])
 
   const loadStats = async (c) => {
@@ -141,15 +139,15 @@ export default function EmployeeDashboard() {
         {/* SECTION 1 : TRACKING */}
         <div style={S.secTitle}>TRACKING &amp; PERFORMANCE</div>
 
-        {/* Total clients sur le site */}
+        {/* Total clients sur le site - données réelles */}
         <div style={{ ...S.card,marginBottom:1 }}>
           <div style={S.lbl}>Nombre total de clients sur la plateforme</div>
-          <div style={{ fontFamily:'var(--font-label)',fontSize:28,letterSpacing:-1,color:'var(--cream)',marginBottom:8 }}>{(totalUsers + 47).toLocaleString('fr-FR')}</div>
+          <div style={{ fontFamily:'var(--font-label)',fontSize:28,letterSpacing:-1,color:'var(--cream)',marginBottom:8 }}>{(stats.totalSiteUsers||0).toLocaleString('fr-FR')}</div>
           <div style={{ background:'var(--s3)',borderRadius:1,height:4,overflow:'hidden',marginBottom:6 }}>
-            <div style={{ width:Math.min(((totalUsers+47)/100000)*100,100)+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width 1.2s' }} />
+            <div style={{ width:Math.min(((stats.totalSiteUsers||0)/1000)*100,100)+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width 1.2s' }} />
           </div>
           <div style={{ display:'flex',justifyContent:'space-between',fontSize:10,color:'var(--muted2)' }}>
-            <span>{totalUsers+47} clients</span><span>Objectif : 100 000</span>
+            <span>{(stats.totalSiteUsers||0)} clients inscrits</span><span>Objectif : 1 000</span>
           </div>
         </div>
 
@@ -158,10 +156,10 @@ export default function EmployeeDashboard() {
           <div style={S.lbl}>Clients abonnes via votre lien / total plateforme</div>
           <div style={{ fontFamily:'var(--font-label)',fontSize:28,letterSpacing:-1,color:'var(--gold2)',marginBottom:8 }}>{stats.ventes}</div>
           <div style={{ background:'var(--s3)',borderRadius:1,height:4,overflow:'hidden',marginBottom:6 }}>
-            <div style={{ width:Math.min((stats.ventes/Math.max(totalUsers+47,1))*100,100)+'%',height:'100%',background:'linear-gradient(90deg,var(--red),var(--red2))',transition:'width 1.2s' }} />
+            <div style={{ width:Math.min((stats.ventes/Math.max(stats.totalSiteUsers||1,1))*100,100)+'%',height:'100%',background:'linear-gradient(90deg,var(--red),var(--red2))',transition:'width 1.2s' }} />
           </div>
           <div style={{ display:'flex',justifyContent:'space-between',fontSize:10,color:'var(--muted2)' }}>
-            <span>{stats.ventes} via votre lien</span><span>{(totalUsers+47)} au total</span>
+            <span>{stats.ventes} via votre lien</span><span>{stats.totalSiteUsers||0} au total</span>
           </div>
         </div>
 
@@ -184,9 +182,9 @@ export default function EmployeeDashboard() {
 
         <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:16 }}>
           {[
-            ['Cette semaine','var(--gold2)',((stats.clientsActifs||0)*1.5).toFixed(2)+' EUR'],
-            ['Ce mois','var(--cream)',((stats.clientsActifs||0)*6).toFixed(2)+' EUR'],
-            ['Cette annee','var(--muted3)',((stats.commissionsTotal||0)).toFixed(2)+' EUR'],
+            ['Cette semaine','var(--gold2)',(stats.weekEarnings||0).toFixed(2)+' EUR'],
+            ['Ce mois','var(--cream)',(stats.monthEarnings||0).toFixed(2)+' EUR'],
+            ['Cette annee','var(--muted3)',(stats.yearEarnings||0).toFixed(2)+' EUR'],
           ].map(([label,color,val]) => (
             <div key={label} style={{ background:'var(--ink)',padding:'20px' }}>
               <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:8 }}>{label}</div>
