@@ -632,13 +632,14 @@ function AnnonceTab({ isSubscribed, planKey, credits, subscribe, onUsed }) {
     if (!categorie) { alert('Choisissez une categorie'); return }
     if (!form.prix && !form.titre && !form.type) { alert('Remplissez au moins le prix et quelques infos'); return }
     setLoading(true)
-    const specs = 'Categorie: ' + categorie + '\n' + Object.entries(form).filter(([,v])=>v).map(([k,v])=>k+': '+v).join('\n')
-    const res = await fetch('/api/ai/annonce', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ specs, lang:'fr', urgence:form.urgence||'normal', type:categorie, inputData:form })
-    })
-    const data = await res.json()
-    setResult(data)
+    try {
+      const specs = 'Categorie: ' + categorie + '\n' + Object.entries(form).filter(([,v])=>v).map(([k,v])=>k+': '+v).join('\n')
+      const res = await fetch('/api/ai/annonce', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ specs, lang:'fr', urgence:form.urgence||'normal', type:categorie, inputData:form })
+      })
+      const data = await res.json()
+      setResult(data)
     // Générer version nulle pour comparaison
     if (data.annonce) {
       setBadResult({
@@ -647,8 +648,12 @@ function AnnonceTab({ isSubscribed, planKey, credits, subscribe, onUsed }) {
         score: Math.floor(Math.random()*20)+15
       })
     }
-    setLoading(false)
-    if (!data.error) onUsed()
+          if (!data.error) onUsed()
+    } catch(e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (!hasAccess) return (
@@ -823,10 +828,9 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (isSubscribed) {
-      fetch('/api/dashboard/annonces').then(r=>r.json()).then(d => setAnnonces(d.annonces||[])).catch(()=>{})
-    }
-  }, [isSubscribed])
+    if (!isSubscribed) return
+    fetch('/api/dashboard/annonces').then(r=>r.json()).then(d => setAnnonces(d.annonces||[])).catch(()=>{})
+  }, []) // [] = une seule fois au montage
 
   if (!isSubscribed) return (
     <div className="db-fade">
@@ -845,16 +849,22 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
   const generate = async () => {
     if (!message) return
     setLoading(true)
-    const ctx = selectedAnnonce
-      ? 'Annonce concerne: ' + selectedAnnonce.titre + '\n' + contexte
-      : contexte
-    const res = await fetch('/api/ai/reponse', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ message, contexte: ctx, annonceId: selectedAnnonce?.id || null })
-    })
-    const data = await res.json()
-    setResult(data); setLoading(false)
-    if (!data.error) onUsed()
+    try {
+      const ctx = selectedAnnonce
+        ? 'Annonce concerne: ' + selectedAnnonce.titre + '\n' + contexte
+        : contexte
+      const res = await fetch('/api/ai/reponse', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ message, contexte: ctx, annonceId: selectedAnnonce?.id || null })
+      })
+      const data = await res.json()
+      setResult(data)
+      if (!data.error) onUsed()
+    } catch(e) {
+      console.error('Erreur generation reponse:', e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
