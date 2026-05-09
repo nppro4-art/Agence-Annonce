@@ -1364,7 +1364,7 @@ function OutilsTab({ isSubscribed, subscribe }) {
 
   const checklistItems = [
     { key: 'photos', label: 'J ai au moins 5 photos claires (lumiere naturelle)' },
-    { key: 'prix', label: 'Mon prix correspond au marche (utiliser l'estimateur)' },
+    { key: 'prix', label: 'Mon prix correspond au marche (utiliser l estimateur)' },
     { key: 'description', label: 'Ma description repond aux questions habituelles des acheteurs' },
     { key: 'disponible', label: 'Mes coordonnees et disponibilites sont claires' },
     { key: 'contact', label: 'J ai precise si je fais de la livraison / envoi' },
