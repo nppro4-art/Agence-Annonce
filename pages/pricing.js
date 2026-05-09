@@ -192,7 +192,7 @@ export default function Pricing() {
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid var(--border)', padding: '20px 32px', display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {[['Accueil', '/'], ['CGV', '/cgv'], ['Confidentialite', '/confidentialite'], ['Mentions legales', '/mentions-legales'], ['A propos', '/a-propos']].map(([l, h]) => (
+        {[['Accueil', '/'], ['Stats', '/stats'], ['CGV', '/cgv'], ['Confidentialite', '/confidentialite'], ['Mentions legales', '/mentions-legales'], ['A propos', '/a-propos']].map(([l, h]) => (
           <Link key={l} href={h} style={{ fontSize: 12, color: 'var(--muted2)' }}>{l}</Link>
         ))}
       </footer>
