@@ -858,10 +858,14 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
         body: JSON.stringify({ message, contexte: ctx, annonceId: selectedAnnonce?.id || null })
       })
       const data = await res.json()
-      setResult(data)
-      if (!data.error) onUsed()
+      if (data.error) {
+        setResult({ error: data.error, message: data.message || data.error })
+      } else {
+        setResult(data)
+        onUsed()
+      }
     } catch(e) {
-      console.error('Erreur generation reponse:', e)
+      setResult({ error: 'Erreur reseau: ' + e.message })
     } finally {
       setLoading(false)
     }
@@ -921,6 +925,11 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
         {loading ? <><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Generation...</> : 'GENERER LA REPONSE'}
       </button>
 
+      {result?.error && (
+        <div style={{ background:'rgba(200,57,43,.08)',border:'1px solid rgba(200,57,43,.3)',borderRadius:3,padding:'14px 20px',marginTop:16,fontSize:13,color:'var(--red2)' }}>
+          Erreur : {result.message || result.error}
+        </div>
+      )}
       {result?.reponse && (
         <div style={{ marginTop:20 }}>
           <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'20px',marginBottom:1 }}>
