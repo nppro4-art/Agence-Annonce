@@ -4,19 +4,16 @@ export default async function handler(req, res) {
   try {
     const since = new Date('2026-05-01T00:00:00.000Z')
 
-    const [annonces, reponses] = await Promise.all([
-      prisma.annonce.count({ where: { createdAt: { gte: since } } }),
+    const [annonces, reponses, estimations, users] = await Promise.all([
+      prisma.annonce.count({ where: { createdAt: { gte: since }, type: { not: 'estimation' } } }),
       prisma.reponse.count({ where: { createdAt: { gte: since } } }),
+      prisma.annonce.count({ where: { createdAt: { gte: since }, type: 'estimation' } }),
+      prisma.user.count(),
     ])
 
-    // Les estimations sont comptées dans Annonce avec type='estimation'
-    const estimations = await prisma.annonce.count({
-      where: { createdAt: { gte: since }, type: 'estimation' }
-    }).catch(() => Math.floor(annonces * 0.6))
-
-    res.setHeader('Cache-Control', 'no-store') // Toujours en temps réel
-    res.status(200).json({ annonces, reponses, estimations })
+    res.setHeader('Cache-Control', 'no-store')
+    res.status(200).json({ annonces, reponses, estimations, users })
   } catch(e) {
-    res.status(200).json({ annonces: 0, reponses: 0, estimations: 0 })
+    res.status(200).json({ annonces: 0, reponses: 0, estimations: 0, users: 0 })
   }
 }
