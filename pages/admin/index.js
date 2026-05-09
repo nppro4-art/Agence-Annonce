@@ -163,6 +163,26 @@ export default function Admin() {
               ))}
             </div>
 
+            {/* Objectif mensuel */}
+            <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',padding:'20px 24px',marginBottom:1 }}>
+              <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14,flexWrap:'wrap',gap:10 }}>
+                <div>
+                  <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:2,color:'var(--gold3)',marginBottom:4 }}>OBJECTIF 2026</div>
+                  <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600 }}>1 000 clients actifs</div>
+                </div>
+                <div style={{ fontFamily:'var(--font-label)',fontSize:32,color:'var(--gold2)',letterSpacing:-2 }}>
+                  {stats.users}<span style={{ fontSize:13,color:'var(--muted2)',letterSpacing:0 }}> / 1 000</span>
+                </div>
+              </div>
+              <div style={{ background:'var(--s3)',borderRadius:2,height:8,overflow:'hidden' }}>
+                <div style={{ width:Math.min(((stats.users||0)/1000)*100,100)+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width 1.5s' }} />
+              </div>
+              <div style={{ display:'flex',justifyContent:'space-between',marginTop:8,fontSize:11,color:'var(--muted2)' }}>
+                <span>{Math.round(((stats.users||0)/1000)*100)}% atteint</span>
+                <span>{1000-(stats.users||0)} restants</span>
+              </div>
+            </div>
+
             {/* Graphique 7 jours */}
             {stats.days && (
               <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'24px',marginBottom:1 }}>
