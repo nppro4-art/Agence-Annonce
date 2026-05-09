@@ -1,51 +1,50 @@
+import { requireAuth } from '../../../lib/auth'
 import { prisma } from '../../../lib/db'
 import { estimatePrix } from '../../../lib/ai'
-import { estimationAnonLimiter, estimationProLimiter } from '../../../lib/rateLimit'
-import { getUserFromRequest } from '../../../lib/auth'
+
+const DAILY_LIMIT = 3
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
   const { specs } = req.body
-  if (!specs) return res.status(400).json({ error: 'Specs manquantes' })
+  if (!specs) return res.status(400).json({ error: 'Description manquante' })
 
-  const userPayload = getUserFromRequest(req)
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  // Verifier la limite quotidienne via IP pour les non-connectes
+  let userId = null
+  try {
+    const { getUserFromRequest } = await import('../../../lib/auth')
+    const payload = getUserFromRequest(req)
+    if (payload) userId = payload.id
+  } catch(e) {}
 
-  if (userPayload) {
-    // Utilisateur connecté
-    const user = await prisma.user.findUnique({ where: { id: userPayload.id } })
-    if (!user) return res.status(404).end()
-
-    if (user.plan !== 'pro') {
-      // Gratuit : limité à 3 estimations par jour par IP
-      const { limited } = estimationAnonLimiter(ip)
-      if (limited) return res.status(429).json({
+  if (!userId) {
+    // Limite par IP pour les non-connectes
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown'
+    const today = new Date(); today.setHours(0,0,0,0)
+    const count = await prisma.annonce.count({
+      where: { userId: 'anon-'+ip, createdAt: { gte: today } }
+    }).catch(() => 0)
+    if (count >= DAILY_LIMIT) {
+      return res.status(429).json({
         error: 'Limite atteinte',
-        message: 'Vous avez utilisé vos 3 estimations gratuites du jour. Passez Pro pour des estimations illimitées.',
+        message: '3 estimations gratuites par jour. Revenez demain ou creez un compte.',
         upgrade: true
       })
-    } else {
-      // Pro : 50 estimations par mois
-      const { limited } = estimationProLimiter(user.id)
-      if (limited) return res.status(429).json({
-        error: 'Limite mensuelle atteinte',
-        message: 'Limite de 50 estimations par mois atteinte.',
-        upgrade: false
-      })
     }
-  } else {
-    // Non connecté : 3 par jour par IP
-    const { limited } = estimationAnonLimiter(ip)
-    if (limited) return res.status(429).json({
-      error: 'Limite atteinte',
-      message: 'Créez un compte gratuit pour continuer à utiliser les estimations.',
-      upgrade: true
-    })
   }
 
   try {
     const result = await estimatePrix(specs)
-    res.status(200).json(result)
+    if (!result || (!result.low && !result.mid && !result.high)) {
+      return res.status(200).json({
+        low: 0, mid: 0, high: 0,
+        note: 'Impossible d'estimer ce produit avec les informations fournies. Essayez d'etre plus precis.',
+        warning: true
+      })
+    }
+    // Ajouter avertissement standard
+    const note = (result.note || '') + ' Note : Cette estimation est indicative. Les prix peuvent varier selon le marche local, l'etat reel de l'article et la rapidite de vente souhaitee. L'IA peut manquer d'informations sur les modeles tres recents.'
+    res.status(200).json({ ...result, note })
   } catch(e) {
     res.status(500).json({ error: e.message })
   }
