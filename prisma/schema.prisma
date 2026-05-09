@@ -8,24 +8,27 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(cuid())
-  email            String     @unique
+  id               String        @id @default(cuid())
+  email            String        @unique
   password         String
   name             String?
-  plan             String     @default("free")
-  planKey          String     @default("free")
-  stripeCustomerId String?    @unique
-  stripeSubId      String?    @unique
-  subStatus        String     @default("inactive")
+  plan             String        @default("free")
+  planKey          String        @default("free")
+  stripeCustomerId String?       @unique
+  stripeSubId      String?       @unique
+  subStatus        String        @default("inactive")
   refBy            String?
-  referralCode     String?    @unique
+  referralCode     String?       @unique
   referralUsed     String?
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  loyaltyPoints    Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
   annonces         Annonce[]
   reponses         Reponse[]
   credits          Credit[]
   purchases        Purchase[]
+  objetsEnVente    ObjetEnVente[]
+  alertesPrix      AlertePrix[]
 }
 
 model Employee {
@@ -41,25 +44,25 @@ model Employee {
 }
 
 model Click {
-  id          String   @id @default(cuid())
-  employeeId  String
-  employee    Employee @relation(fields: [employeeId], references: [id])
-  ip          String?
-  converted   Boolean  @default(false)
-  planKey     String?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  ip         String?
+  converted  Boolean  @default(false)
+  planKey    String?
+  createdAt  DateTime @default(now())
 }
 
 model Commission {
-  id          String   @id @default(cuid())
-  employeeId  String
-  employee    Employee @relation(fields: [employeeId], references: [id])
-  userId      String
-  amount      Float
-  type        String
-  planKey     String   @default("business")
-  paid        Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  userId     String
+  amount     Float
+  type       String
+  planKey    String   @default("business")
+  paid       Boolean  @default(false)
+  createdAt  DateTime @default(now())
 }
 
 model Annonce {
@@ -111,6 +114,31 @@ model Purchase {
   amount    Float
   stripeId  String?
   createdAt DateTime @default(now())
+}
+
+model ObjetEnVente {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  titre      String
+  prix       Float
+  prixFinal  Float?
+  statut     String   @default("actif")
+  annonceId  String?
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model AlertePrix {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  motCle      String
+  prixMoyen   Float?
+  lastSentAt  DateTime?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
 }
 
 model Settings {
