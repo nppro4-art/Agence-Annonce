@@ -308,7 +308,7 @@ export default function Home() {
             <svg viewBox="0 0 100 100" style={{ width:'100%',height:'100%',opacity:.15,position:'absolute',inset:0 }}>
               <path d="M35,8 L55,5 L72,15 L78,30 L75,45 L80,60 L72,75 L60,85 L45,88 L30,80 L18,68 L15,50 L20,35 L28,20 Z" fill="var(--border2)" stroke="var(--border)" strokeWidth="0.5" />
             </svg>
-            {activeVilles.map((v, i) => (
+            {activeVilles.filter(v => v && v.x !== undefined && v.y !== undefined).map((v, i) => (
               <div key={v.nom} className="ville-dot"
                 style={{ position:'absolute',left:v.x+'%',top:v.y+'%',transform:'translate(-50%,-50%)',animationDelay:(i*0.1)+'s' }}>
                 <div style={{ width:8,height:8,borderRadius:'50%',background:'var(--gold)',boxShadow:'0 0 12px rgba(201,168,76,.6)',animation:'pulse 2s infinite',animationDelay:(i*0.3)+'s' }} />
