@@ -310,6 +310,7 @@ export default function Dashboard() {
 
         {tab === 'annonce' && <AnnonceTab isSubscribed={isSubscribed} planKey={planKey} credits={credits} subscribe={subscribe} onUsed={() => setUsage(u=>({...u,annonces:u.annonces+1}))} />}
         {tab === 'reponse' && <ReponseTab isSubscribed={isSubscribed} subscribe={subscribe} onUsed={() => setUsage(u=>({...u,reponses:u.reponses+1}))} />}
+        {tab === 'outils'     && <OutilsTab isSubscribed={isSubscribed} subscribe={subscribe} />}
         {tab === 'estimation' && <EstimationTab />}
         {tab === 'historique' && <HistoriqueTab />}
         {tab === 'tarifs' && <TarifsTab isSubscribed={isSubscribed} planKey={planKey} subscribe={subscribe} showSubModal={() => setShowSubModal(true)} />}
@@ -1363,11 +1364,11 @@ function OutilsTab({ isSubscribed, subscribe }) {
   }
 
   const checklistItems = [
-    { key: 'photos', label: 'J ai au moins 5 photos claires (lumiere naturelle)' },
-    { key: 'prix', label: 'Mon prix correspond au marche (utiliser l estimateur)' },
+    { key: 'photos', label: 'J'ai au moins 5 photos claires (lumiere naturelle)' },
+    { key: 'prix', label: 'Mon prix correspond au marche (utiliser l'estimateur)' },
     { key: 'description', label: 'Ma description repond aux questions habituelles des acheteurs' },
     { key: 'disponible', label: 'Mes coordonnees et disponibilites sont claires' },
-    { key: 'contact', label: 'J ai precise si je fais de la livraison / envoi' },
+    { key: 'contact', label: 'J'ai precise si je fais de la livraison / envoi' },
     { key: 'ct', label: 'Tous les documents importants sont mentionnes (CT, facture...)' },
   ]
   const checklistScore = Object.values(checklist).filter(Boolean).length
