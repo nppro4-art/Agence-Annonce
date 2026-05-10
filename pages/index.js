@@ -100,14 +100,14 @@ export default function Home() {
     }
     const notifTimer = setTimeout(() => {
       showNotif()
-      const interval = setInterval(showNotif, 12000)
-      return () => clearInterval(interval)
     }, 5000)
+    const notifInterval = setInterval(showNotif, 12000)
 
     return () => {
       window.removeEventListener('mousemove', handleMouse)
       clearInterval(villeTimer)
       clearTimeout(notifTimer)
+      clearInterval(notifInterval)
     }
   }, [router.query])
 
@@ -209,7 +209,7 @@ export default function Home() {
           </div>
 
           <h1 className="fade-up d2 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:300,fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8 }}>Vends plus vite</h1>
-          <h1 className="fade-up d3 hero-title gold-text" style={{ fontFamily:'var(--font-display)',fontWeight:700,fontStyle:'italic',fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8 }}>avec l&apos;IA qui vend</h1>
+          <h1 className="fade-up d3 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:700,fontStyle:'italic',fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:8,color:'#c9a84c' }}>avec l&apos;IA qui vend</h1>
           <h1 className="fade-up d3 hero-title" style={{ fontFamily:'var(--font-display)',fontWeight:300,fontSize:'clamp(44px,7vw,82px)',lineHeight:1.0,letterSpacing:-1,marginBottom:36,color:'var(--muted3)' }}>a ta place.</h1>
 
           <p className="fade-up d4" style={{ fontSize:16,color:'var(--muted2)',lineHeight:1.8,marginBottom:44,maxWidth:520 }}>
@@ -382,7 +382,7 @@ export default function Home() {
         <div style={{ position:'absolute',inset:0,background:'radial-gradient(ellipse at center,rgba(201,168,76,.04) 0%,transparent 65%)',pointerEvents:'none' }} />
         <div className="ornament" style={{ marginBottom:36 }}><span>+</span></div>
         <h2 style={{ fontFamily:'var(--font-display)',fontSize:'clamp(32px,5vw,56px)',fontWeight:400,letterSpacing:-1,lineHeight:1.05,marginBottom:16 }}>
-          Pret a vendre<br/><span style={{ fontWeight:700,fontStyle:'italic' }} className="gold-text">plus vite et mieux ?</span>
+          Pret a vendre<br/><span style={{ fontWeight:700,fontStyle:'italic',color:'#c9a84c' }}>plus vite et mieux ?</span>
         </h2>
         <p style={{ fontSize:15,color:'var(--muted2)',lineHeight:1.8,marginBottom:40,maxWidth:480,margin:'0 auto 40px' }}>
           Rejoignez {counts.users > 0 ? counts.users + ' vendeurs' : 'nos vendeurs'} qui utilisent l&apos;IA pour vendre plus vite.
