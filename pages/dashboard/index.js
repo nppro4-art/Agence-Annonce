@@ -108,11 +108,26 @@ export default function Dashboard() {
         .copy-btn:hover{border-color:var(--gold-border)!important;color:var(--gold2)!important}
         .hover-row:hover{background:var(--s2)!important}
         @media(max-width:768px){
-          .tab-btn{font-size:10px!important;padding:0 7px!important}
+          /* Header */
+          .db-header{padding:0 10px!important}
+          .tab-btn{font-size:9px!important;padding:0 5px!important;flex:1!important;text-align:center!important}
+          /* Credits dans header - cacher sur mobile */
+          .db-credits{display:none!important}
+          /* Main */
+          .db-main{padding:16px 12px 100px!important}
+          /* Grilles */
           .db-grid2{grid-template-columns:1fr!important}
           .db-grid3{grid-template-columns:1fr 1fr!important}
-          .db-header{padding:0 12px!important}
-          .db-main{padding:16px 12px 80px!important}
+          /* Actions accueil */
+          .db-actions{grid-template-columns:1fr!important}
+          /* Formulaire */
+          .db-form-grid{grid-template-columns:1fr!important}
+          /* Modal */
+          .db-modal-inner{padding:24px 16px!important}
+          /* Outils - 1 colonne sur mobile */
+          .db-tools-grid{grid-template-columns:1fr!important}
+          /* Titre dashboard */
+          .db-welcome-title{font-size:24px!important}
         }
       `}</style>
 
@@ -177,6 +192,7 @@ export default function Dashboard() {
 
           {/* Credits + actions */}
           <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0,marginLeft:12 }}>
+            <div className="db-credits" style={{ display:'flex',gap:6 }}>
             {isSubscribed && (
               <>
                 <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 8px',fontSize:10,color:'var(--muted2)',whiteSpace:'nowrap' }}>
@@ -187,6 +203,7 @@ export default function Dashboard() {
                 </div>
               </>
             )}
+            </div>
             {!isSubscribed && credits.annonces.remaining > 0 && (
               <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 8px',fontSize:10,color:'var(--warning)',whiteSpace:'nowrap' }}>
                 ✍ {credits.annonces.remaining} credits
@@ -245,7 +262,7 @@ export default function Dashboard() {
             </div>
 
             {/* 3 Actions */}
-            <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:20 }}>
+            <div className="db-grid3" className='db-actions' style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:20 }}>
               {[
                 { title:'Creer',sub:'une annonce',tab:'annonce',pro:true },
                 { title:'Repondre',sub:'a un acheteur',tab:'reponse',pro:true },
@@ -714,7 +731,7 @@ function AnnonceTab({ isSubscribed, planKey, credits, subscribe, onUsed }) {
           </div>
 
           {/* Champs dynamiques */}
-          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+          <div className='db-form-grid' style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
             {fields.map(f => (
               <div key={f.key} style={{ ...S.cell(f.wide) }}>
                 <label style={S.lbl}>{f.label}</label>
@@ -1390,7 +1407,7 @@ function OutilsTab({ isSubscribed, subscribe }) {
       </div>
 
       {/* Liste des outils */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 16 }}>
+      <div className='db-tools-grid' style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 16 }}>
         {TOOLS.map(tool => (
           <div key={tool.id} onClick={() => setActiveTool(activeTool === tool.id ? null : tool.id)}
             style={{ background: activeTool === tool.id ? 'var(--s2)' : 'var(--ink)', padding: '20px', cursor: 'pointer', transition: 'all .2s', borderTop: activeTool === tool.id ? '2px solid var(--gold)' : '2px solid transparent' }}>
