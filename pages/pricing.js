@@ -94,7 +94,7 @@ export default function Pricing() {
         </div>
       </nav>
 
-      <div className="pc" style={{ maxWidth: 900, margin: '0 auto', padding: '60px 24px 100px' }}>
+      <div className="pc" style={{ maxWidth: 900, margin: '0 auto', padding: 'clamp(32px,5vw,60px) clamp(16px,4vw,24px) 100px' }}>
 
         <div className="fade-up d1" style={{ textAlign: 'center', marginBottom: 52 }}>
           <div className="label" style={{ marginBottom: 14 }}>Tarifs transparents</div>
