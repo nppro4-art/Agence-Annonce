@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-// ─── CONSTANTES PLANS ─────────────────────────────────────
 const PLAN_LIMITS = {
   premium:  { annonces: Infinity, reponses: Infinity },
   expert:   { annonces: 40,  reponses: 250 },
@@ -14,360 +13,6 @@ const PLAN_LIMITS = {
 const PLAN_NAMES = { premium:'Premium', expert:'Expert', business:'Business', starter:'Starter', pro:'Business', free:'Gratuit' }
 const PLAN_PRICES = { premium:'—', expert:'9,99', business:'5,99', starter:'3,99', pro:'5,99', free:'0' }
 
-export default function Dashboard() {
-  const router = useRouter()
-  const [user, setUser] = useState(null)
-  const [tab, setTab] = useState('home')
-  const [loading, setLoading] = useState(true)
-  const [usage, setUsage] = useState({ annonces: 0, reponses: 0 })
-  const [credits, setCredits] = useState({ annonces: { remaining: 0 }, reponses: { remaining: 0 } })
-  const [purchases, setPurchases] = useState([])
-  const [showSubModal, setShowSubModal] = useState(false)
-  const [cancelLoading, setCancelLoading] = useState(false)
-  const [cancelDone, setCancelDone] = useState(false)
-
-  useEffect(() => {
-    fetch('/api/auth/me').then(r => r.json()).then(data => {
-      if (!data.user) { router.push('/auth/login'); return }
-      setUser(data.user)
-      setLoading(false)
-    }).catch(() => router.push('/auth/login'))
-
-    Promise.all([
-      fetch('/api/dashboard/annonces').then(r => r.json()),
-      fetch('/api/dashboard/reponses').then(r => r.json()),
-      fetch('/api/dashboard/credits').then(r => r.json()),
-    ]).then(([a, r, c]) => {
-      setUsage({ annonces: a.annonces?.length || 0, reponses: r.reponses?.length || 0 })
-      if (c.credits) setCredits(c.credits)
-      if (c.purchases) setPurchases(c.purchases)
-    }).catch(() => {})
-  }, [])
-
-  const logout = async () => { await fetch('/api/auth/logout', { method: 'POST' }); router.push('/') }
-
-  const subscribe = async (planKey = 'business') => {
-    const res = await fetch('/api/stripe/create-subscription', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ planKey })
-    })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
-    else alert('Erreur: ' + (data.error || 'Inconnue'))
-  }
-
-  const cancelSubscription = async () => {
-    if (!confirm('Confirmer annulation ? Vous gardez acces jusqu\'a fin de periode payee.')) return
-    setCancelLoading(true)
-    const res = await fetch('/api/stripe/cancel-subscription', { method: 'POST' })
-    const data = await res.json()
-    setCancelLoading(false)
-    if (data.success) { setCancelDone(true); setShowSubModal(false) }
-    else alert('Erreur: ' + (data.error || 'Inconnue'))
-  }
-
-  const planKey = user?.planKey || user?.plan || 'free'
-  const isPro = user?.plan === 'pro' && user?.subStatus === 'active'
-  const isPremium = planKey === 'premium'
-  const isSubscribed = isPro || isPremium
-  const limits = PLAN_LIMITS[planKey] || PLAN_LIMITS.free
-  const annoncesLeft = limits.annonces === Infinity ? '∞' : Math.max(0, limits.annonces - usage.annonces)
-  const reponsesLeft = limits.reponses === Infinity ? '∞' : Math.max(0, limits.reponses - usage.reponses)
-
-  if (loading) return (
-    <div style={{ minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--black)' }}>
-      <div style={{ width:32,height:32,border:'2px solid var(--border2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-    </div>
-  )
-
-  const TABS = [
-    { id:'home',label:'Accueil' },
-    { id:'annonce',label:'Annonce' },
-    { id:'reponse',label:'Repondre' },
-    { id:'estimation',label:'Estimer' },
-    { id:'outils',label:'Outils' },
-    { id:'historique',label:'Historique' },
-    { id:'tarifs',label:'Tarifs' },
-    { id:'profil',label:'Profil' },
-  ]
-
-  return (
-    <div style={{ minHeight:'100vh',background:'var(--black)',display:'flex',flexDirection:'column' }}>
-      <style>{`
-        @keyframes spin{to{transform:rotate(360deg)}}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-        @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-        .db-fade{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) forwards}
-        .tab-btn{transition:all .2s;border-bottom:2px solid transparent;white-space:nowrap}
-        .tab-btn:hover{color:var(--cream)!important}
-        .tab-btn.active{color:var(--gold2)!important;border-bottom-color:var(--gold)!important}
-        .act-tile{transition:all .25s;cursor:pointer}
-        .act-tile:hover{background:var(--s2)!important;transform:translateY(-2px)}
-        .copy-btn:hover{border-color:var(--gold-border)!important;color:var(--gold2)!important}
-        .hover-row:hover{background:var(--s2)!important}
-        @media(max-width:768px){
-          /* Header */
-          .db-header{padding:0 10px!important}
-          .tab-btn{font-size:9px!important;padding:0 5px!important;flex:1!important;text-align:center!important}
-          /* Credits dans header - cacher sur mobile */
-          .db-credits{display:none!important}
-          /* Main */
-          .db-main{padding:16px 12px 100px!important}
-          /* Grilles */
-          .db-grid2{grid-template-columns:1fr!important}
-          .db-grid3{grid-template-columns:1fr 1fr!important}
-          /* Actions accueil */
-          .db-actions{grid-template-columns:1fr!important}
-          /* Formulaire */
-          .db-form-grid{grid-template-columns:1fr!important}
-          /* Modal */
-          .db-modal-inner{padding:24px 16px!important}
-          /* Outils - 1 colonne sur mobile */
-          .db-tools-grid{grid-template-columns:1fr!important}
-          /* Titre dashboard */
-          .db-welcome-title{font-size:24px!important}
-        }
-      `}</style>
-
-      {/* MODAL ABONNEMENT */}
-      {showSubModal && (
-        <div style={{ position:'fixed',inset:0,background:'rgba(0,0,0,.85)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:24 }}
-          onClick={() => setShowSubModal(false)}>
-          <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:4,padding:'32px 28px',width:'100%',maxWidth:460,position:'relative',animation:'slideIn .3s cubic-bezier(.16,1,.3,1)' }}
-            onClick={e => e.stopPropagation()}>
-            <button onClick={() => setShowSubModal(false)} style={{ position:'absolute',top:14,right:16,background:'none',border:'none',color:'var(--muted2)',cursor:'pointer',fontSize:20 }}>×</button>
-            <div style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:3,color:'var(--gold3)',marginBottom:10 }}>MON ABONNEMENT</div>
-            <h3 style={{ fontFamily:'var(--font-display)',fontSize:26,fontWeight:600,marginBottom:20 }}>Plan {PLAN_NAMES[planKey]}</h3>
-            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:20 }}>
-              {[
-                ['Plan', PLAN_NAMES[planKey]],
-                ['Prix', PLAN_PRICES[planKey] + (planKey !== 'free' && planKey !== 'premium' ? ' EUR/sem' : '')],
-                ['Statut', cancelDone ? 'Annulation planifiee' : 'Actif'],
-                ['Renouvellement', '7 jours'],
-                ['Annonces', limits.annonces === Infinity ? '∞' : limits.annonces + '/sem'],
-                ['Reponses', limits.reponses === Infinity ? '∞' : limits.reponses + '/sem'],
-              ].map(([l,v]) => (
-                <div key={l} style={{ background:'var(--ink)',padding:'12px 16px' }}>
-                  <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1,marginBottom:4 }}>{l}</div>
-                  <div style={{ fontSize:13,color:'var(--cream)',fontWeight:500 }}>{v}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{ background:'rgba(200,57,43,.06)',border:'1px solid rgba(200,57,43,.2)',borderRadius:3,padding:'12px 16px',marginBottom:16,fontSize:12,color:'var(--muted2)',lineHeight:1.65 }}>
-              En cas d&apos;annulation, vous conservez l&apos;acces jusqu&apos;a la fin de la periode payee. Aucun remboursement.
-            </div>
-            {cancelDone ? (
-              <div style={{ background:'rgba(45,122,79,.1)',border:'1px solid rgba(45,122,79,.3)',borderRadius:3,padding:'12px',fontSize:13,color:'var(--success2)',textAlign:'center' }}>
-                Annulation confirmee. Acces maintenu jusqu&apos;a fin de periode.
-              </div>
-            ) : (
-              <button onClick={cancelSubscription} disabled={cancelLoading}
-                style={{ width:'100%',background:'none',border:'1px solid rgba(200,57,43,.3)',borderRadius:3,color:'var(--red2)',cursor:'pointer',fontSize:12,padding:'12px',opacity:cancelLoading?.6:1 }}>
-                {cancelLoading ? 'Annulation...' : 'Arreter le prelevement automatique'}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* HEADER PLEINE LARGEUR */}
-      <header style={{ background:'rgba(3,3,3,.96)',borderBottom:'1px solid var(--border)',backdropFilter:'blur(20px)',position:'sticky',top:0,zIndex:100 }}>
-        <div style={{ width:'100%',padding:'0 24px',height:56,display:'flex',alignItems:'center',justifyContent:'space-between' }} className="db-header">
-          <Link href="/" style={{ fontFamily:'var(--font-label)',fontSize:15,letterSpacing:3,color:'var(--white)',flexShrink:0,marginRight:20 }}>
-            A.<span style={{ color:'var(--red)' }}>A</span>
-          </Link>
-
-          {/* TABS PLEINE LARGEUR */}
-          <nav style={{ display:'flex',flex:1,height:'100%',alignItems:'stretch',overflow:'hidden' }}>
-            {TABS.map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={'tab-btn' + (tab === t.id ? ' active' : '')}
-                style={{ background:'none',border:'none',borderBottom:'2px solid transparent',color:tab===t.id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:12,fontWeight:500,padding:'0 16px',flex:1,maxWidth:120 }}>
-                {t.label}
-              </button>
-            ))}
-          </nav>
-
-          {/* Credits + actions */}
-          <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0,marginLeft:12 }}>
-            <div className="db-credits" style={{ display:'flex',gap:6 }}>
-            {isSubscribed && (
-              <>
-                <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 8px',fontSize:10,color:'var(--muted2)',whiteSpace:'nowrap' }}>
-                  ✍ <span style={{ color:'var(--gold2)',fontWeight:700 }}>{annoncesLeft}</span>
-                </div>
-                <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 8px',fontSize:10,color:'var(--muted2)',whiteSpace:'nowrap' }}>
-                  ◎ <span style={{ color:'var(--gold2)',fontWeight:700 }}>{reponsesLeft}</span>
-                </div>
-              </>
-            )}
-            </div>
-            {!isSubscribed && credits.annonces.remaining > 0 && (
-              <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 8px',fontSize:10,color:'var(--warning)',whiteSpace:'nowrap' }}>
-                ✍ {credits.annonces.remaining} credits
-              </div>
-            )}
-            {isSubscribed ? (
-              <span style={{ fontFamily:'var(--font-label)',fontSize:8,letterSpacing:2,color:'var(--gold2)',background:'rgba(201,168,76,.08)',border:'1px solid var(--gold-border)',borderRadius:2,padding:'3px 8px',whiteSpace:'nowrap',cursor:'pointer' }}
-                onClick={() => setShowSubModal(true)}>
-                ♛ {isPremium ? 'PREMIUM' : 'SUBSCRIBER'}
-              </span>
-            ) : (
-              <button onClick={() => subscribe('business')} className="btn-primary" style={{ fontSize:11,padding:'7px 12px',letterSpacing:1,whiteSpace:'nowrap' }}>
-                S&apos;abonner
-              </button>
-            )}
-            <button onClick={logout} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted)',cursor:'pointer',fontSize:11,padding:'6px 10px',whiteSpace:'nowrap' }}>
-              Quitter
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* CONTENU */}
-      <main className="db-main" style={{ flex:1,maxWidth:920,margin:'0 auto',width:'100%',padding:'32px 24px 80px' }}>
-
-        {/* ── ACCUEIL ── */}
-        {tab === 'home' && (
-          <div className="db-fade">
-            <div style={{ marginBottom:28 }}>
-              <div className="label" style={{ marginBottom:8 }}>Espace personnel</div>
-              <h1 style={{ fontFamily:'var(--font-display)',fontSize:'clamp(24px,4vw,38px)',fontWeight:400,letterSpacing:-.5 }}>
-                Bonjour, <span style={{ fontStyle:'italic',fontWeight:600 }}>{user.name || user.email.split('@')[0]}</span>
-              </h1>
-            </div>
-
-            {/* Status bar */}
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,padding:'14px 20px',marginBottom:20,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12 }}>
-              <div style={{ display:'flex',alignItems:'center',gap:10 }}>
-                <div style={{ width:8,height:8,borderRadius:'50%',background:isSubscribed?'var(--gold)':'var(--muted)',animation:isSubscribed?'pulse 2s infinite':'none' }} />
-                <span style={{ fontSize:13,color:'var(--muted3)' }}>
-                  Plan <strong style={{ color:isSubscribed?'var(--gold2)':'var(--muted2)',fontFamily:'var(--font-label)',letterSpacing:1 }}>
-                    {PLAN_NAMES[planKey].toUpperCase()}
-                  </strong>
-                  {isSubscribed && planKey !== 'premium' && <span style={{ marginLeft:8,fontSize:11,color:'var(--muted)' }}>{PLAN_PRICES[planKey]} EUR/sem</span>}
-                </span>
-              </div>
-              {isSubscribed ? (
-                <button onClick={() => setShowSubModal(true)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>
-                  Mon abonnement
-                </button>
-              ) : (
-                <button onClick={() => subscribe('business')} className="btn-gold" style={{ fontSize:11,padding:'8px 18px',letterSpacing:1.5,color:'#030303' }}>
-                  S&apos;ABONNER
-                </button>
-              )}
-            </div>
-
-            {/* 3 Actions */}
-            <div className="db-grid3" className='db-actions' style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:20 }}>
-              {[
-                { title:'Creer',sub:'une annonce',tab:'annonce',pro:true },
-                { title:'Repondre',sub:'a un acheteur',tab:'reponse',pro:true },
-                { title:'Estimer',sub:'le prix',tab:'estimation',pro:false },
-              ].map(a => (
-                <div key={a.tab} className="act-tile" onClick={() => setTab(a.tab)}
-                  style={{ background:'var(--ink)',padding:'24px 16px',textAlign:'center',position:'relative' }}>
-                  <div style={{ position:'absolute',top:8,right:10,fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1.5,color:a.pro?'var(--gold3)':'var(--success2)' }}>
-                    {a.pro ? '♛ Subscriber Only' : 'Gratuit'}
-                  </div>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:20,fontWeight:600,lineHeight:1 }}>{a.title}</div>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:12,fontStyle:'italic',fontWeight:300,color:'var(--muted2)',marginTop:3 }}>{a.sub}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Utilisation */}
-            <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:20 }}>
-              {[
-                { label:'Annonces',val:usage.annonces,limit:limits.annonces,color:'var(--gold)',isPack:!isSubscribed,packRemaining:credits.annonces.remaining },
-                { label:'Reponses',val:usage.reponses,limit:limits.reponses,color:'var(--red)',isPack:!isSubscribed,packRemaining:credits.reponses.remaining },
-              ].map(s => {
-                const lim = s.limit === Infinity ? 999999 : s.limit
-                const pct = lim > 0 ? Math.min((s.val/lim)*100,100) : 0
-                return (
-                  <div key={s.label} style={{ background:'var(--ink)',padding:'20px 24px' }}>
-                    <div style={{ fontSize:11,color:'var(--muted2)',letterSpacing:.5,marginBottom:10,textTransform:'uppercase' }}>{s.label}</div>
-                    <div style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:10 }}>
-                      {s.isPack
-                        ? <span style={{ color:s.packRemaining<=2?'var(--red2)':'var(--cream)' }}>{s.packRemaining}</span>
-                        : <span>{s.val}<span style={{ fontSize:13,color:'var(--muted2)',fontStyle:'italic' }}>/{s.limit===Infinity?'∞':s.limit}</span></span>}
-                    </div>
-                    <div style={{ background:'var(--s3)',borderRadius:1,height:2,overflow:'hidden' }}>
-                      <div style={{ width:pct+'%',height:'100%',background:pct>80?'var(--red)':s.color,transition:'width 1.2s' }} />
-                    </div>
-                    <div style={{ fontSize:10,color:'var(--muted)',marginTop:6 }}>
-                      {s.isPack
-                        ? (s.packRemaining===0?'Aucun credit - achetez un pack':s.packRemaining+' restant(s)')
-                        : 'Cette semaine · '+( s.limit===Infinity ? '∞' : Math.max(0,s.limit-s.val))+' restantes'}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-
-            {!isSubscribed && (
-              <div style={{ border:'1px solid var(--gold-border)',borderRadius:3,padding:'20px 24px',position:'relative',overflow:'hidden' }}>
-                <div style={{ position:'absolute',inset:0,background:'linear-gradient(135deg,rgba(201,168,76,.04),transparent)',pointerEvents:'none' }} />
-                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:16,flexWrap:'wrap' }}>
-                  <div>
-                    <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,marginBottom:4 }}>Passez a un abonnement</div>
-                    <div style={{ fontSize:13,color:'var(--muted2)' }}>Starter 3,99€ · Business 5,99€ · Expert 9,99€</div>
-                  </div>
-                  <button onClick={() => setTab('tarifs')} className="btn-gold" style={{ fontSize:11,padding:'12px 24px',letterSpacing:2,flexShrink:0,color:'#030303' }}>
-                    VOIR LES TARIFS
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {tab === 'annonce' && <AnnonceTab isSubscribed={isSubscribed} planKey={planKey} credits={credits} subscribe={subscribe} onUsed={() => setUsage(u=>({...u,annonces:u.annonces+1}))} />}
-        {tab === 'reponse' && <ReponseTab isSubscribed={isSubscribed} subscribe={subscribe} onUsed={() => setUsage(u=>({...u,reponses:u.reponses+1}))} />}
-        {tab === 'outils'     && <OutilsTab isSubscribed={isSubscribed} subscribe={subscribe} />}
-        {tab === 'estimation' && <EstimationTab />}
-        {tab === 'historique' && <HistoriqueTab />}
-        {tab === 'tarifs' && <TarifsTab isSubscribed={isSubscribed} planKey={planKey} subscribe={subscribe} showSubModal={() => setShowSubModal(true)} />}
-        {tab === 'profil' && <ProfilTab user={user} isSubscribed={isSubscribed} isPremium={isPremium} planKey={planKey} subscribe={subscribe} openSubModal={() => setShowSubModal(true)} usage={usage} credits={credits} purchases={purchases} limits={limits} />}
-      </main>
-    </div>
-  )
-}
-
-// ─── SHARED ───────────────────────────────────────────────
-const S = {
-  inp: { background:'transparent',border:'none',borderBottom:'1px solid var(--border2)',color:'var(--white)',fontSize:14,padding:'6px 0',width:'100%',outline:'none',transition:'border-color .2s' },
-  lbl: { fontSize:10,fontWeight:600,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:'1px',display:'block',marginBottom:7 },
-  cell: (w) => ({ background:'var(--ink)',padding:'16px 20px',gridColumn:w?'1/-1':'auto' }),
-}
-
-function LockOverlay({ subscribe }) {
-  return (
-    <div style={{ position:'sticky',bottom:24,left:0,right:0,zIndex:50,display:'flex',justifyContent:'center',marginTop:16 }}>
-      <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:4,padding:'20px 28px',maxWidth:420,width:'100%',textAlign:'center',boxShadow:'0 8px 40px rgba(0,0,0,.7)' }}>
-        <div style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:2,color:'var(--gold3)',marginBottom:8 }}>SUBSCRIBER ONLY</div>
-        <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,marginBottom:8 }}>Abonnement requis</div>
-        <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:16,lineHeight:1.6 }}>
-          Abonnez-vous a partir de 3,99 EUR/semaine ou achetez un pack d&apos;annonces.
-        </div>
-        <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:14 }}>
-          {[['Starter','3,99'],['Business','5,99'],['Expert','9,99']].map(([plan,price]) => (
-            <button key={plan} onClick={() => subscribe(plan.toLowerCase())}
-              style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:'var(--cream)',cursor:'pointer',fontSize:11,padding:'8px 4px',transition:'all .15s' }}>
-              <div style={{ fontSize:9,color:'var(--muted2)',marginBottom:2 }}>{plan}</div>
-              <div style={{ fontFamily:'var(--font-label)',color:'var(--gold2)',fontSize:13 }}>{price}€</div>
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ─── FORMULAIRE ANNONCE DYNAMIQUE PAR CATÉGORIE ───────────
 const CATEGORIES = {
   Voiture: [
     { key:'marque', label:'Marque', ph:'BMW, Renault, Peugeot...' },
@@ -410,7 +55,6 @@ const CATEGORIES = {
     { key:'raisonVente', label:'Raison de la vente', ph:'Achat vehicule neuf, demenagement...' },
     { key:'urgence', label:'Urgence de vente', type:'urgence' },
   ],
-
   Telephone: [
     { key:'marque', label:'Marque', ph:'Apple, Samsung, Xiaomi...' },
     { key:'modele', label:'Modele', ph:'iPhone 15 Pro, Galaxy S24...' },
@@ -437,7 +81,6 @@ const CATEGORIES = {
     { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - Mondial Relay','Oui - Colissimo','Oui - tous','Non - main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   Informatique: [
     { key:'type', label:'Type', type:'select', opts:['Ordinateur portable','PC fixe','Tablette','Ecran','Imprimante','Clavier/Souris','Composant PC','Disque dur SSD','Autre'] },
     { key:'marque', label:'Marque', ph:'Apple, Dell, HP, Asus, Lenovo...' },
@@ -467,7 +110,6 @@ const CATEGORIES = {
     { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - emballe soin','Non - main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   Mobilier: [
     { key:'type', label:'Type de meuble', ph:'Canape, Table basse, Armoire, Lit, Bureau...' },
     { key:'marque', label:'Marque / Fabricant', ph:'Ikea, Maisons du Monde, Roche Bobois...' },
@@ -494,7 +136,6 @@ const CATEGORIES = {
     { key:'aideChargement', label:'Aide au chargement', type:'select', opts:['Oui je peux aider','Non'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   Electromenager: [
     { key:'type', label:'Type appareil', ph:'Lave-linge, Frigo, Four, Lave-vaisselle...' },
     { key:'marque', label:'Marque', ph:'Bosch, Samsung, Whirlpool, Miele...' },
@@ -522,7 +163,6 @@ const CATEGORIES = {
     { key:'livraison', label:'Livraison possible', type:'select', opts:['Non','Oui - frais acheteur','Oui - inclus'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   Vetements: [
     { key:'type', label:'Type de vetement', ph:'Veste, Manteau, Robe, Pantalon, Sneakers...' },
     { key:'marque', label:'Marque', ph:'Zara, H&M, Nike, Gucci...' },
@@ -544,7 +184,6 @@ const CATEGORIES = {
     { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - Mondial Relay','Oui - Colissimo','Oui - tous','Non - main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   'Jeux video': [
     { key:'type', label:'Type', type:'select', opts:['Jeu video','Console','Manette / Accessoire','Pack complet','Carte cadeau'] },
     { key:'console', label:'Plateforme', type:'select', opts:['PlayStation 5','PlayStation 4','PlayStation 3','Xbox Series X/S','Xbox One','Nintendo Switch','Nintendo Switch Lite','PC','Retro / Autre'] },
@@ -563,7 +202,6 @@ const CATEGORIES = {
     { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - emballe soin','Non - main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   Sport: [
     { key:'type', label:'Type de materiel', ph:'Velo de route, Raquette tennis, Tapis de course...' },
     { key:'marque', label:'Marque', ph:'Decathlon, Specialized, Nike, Technogym...' },
@@ -585,7 +223,6 @@ const CATEGORIES = {
     { key:'livraison', label:'Livraison possible', type:'select', opts:['Non','Oui - emballe soin','Oui - selon transporteur'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   Bijoux: [
     { key:'type', label:'Type', ph:'Bague, Collier, Bracelet, Montre, Boucles oreilles...' },
     { key:'marque', label:'Marque / Createur', ph:'Cartier, Pandora, Daniel Wellington...' },
@@ -606,7 +243,6 @@ const CATEGORIES = {
     { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - lettre recommandee','Non - main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-
   Autre: [
     { key:'type', label:'Type / Description courte', ph:'Aspirateur robot, Livre rare, Instrument musique...' },
     { key:'marque', label:'Marque / Fabricant', ph:'(si applicable)' },
@@ -632,63 +268,348 @@ const CATEGORIES = {
 
 const CATEGORY_LIST = Object.keys(CATEGORIES)
 
-function AnnonceTab({ isSubscribed, planKey, credits, subscribe, onUsed }) {
+const S = {
+  inp: { background:'transparent',border:'none',borderBottom:'1px solid var(--border2)',color:'var(--white)',fontSize:14,padding:'6px 0',width:'100%',outline:'none',transition:'border-color .2s' },
+  lbl: { fontSize:10,fontWeight:600,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:'1px',display:'block',marginBottom:7 },
+}
+
+function LockOverlay({ subscribe }) {
+  return (
+    <div style={{ position:'sticky',bottom:24,left:0,right:0,zIndex:50,display:'flex',justifyContent:'center',marginTop:16 }}>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:4,padding:'20px 28px',maxWidth:420,width:'100%',textAlign:'center',boxShadow:'0 8px 40px rgba(0,0,0,.7)' }}>
+        <div style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:2,color:'var(--gold3)',marginBottom:8 }}>SUBSCRIBER ONLY</div>
+        <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,marginBottom:8 }}>Abonnement requis</div>
+        <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:16,lineHeight:1.6 }}>
+          Abonnez-vous a partir de 3,99 EUR/semaine.
+        </div>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
+          {[['Starter','3,99'],['Business','5,99'],['Expert','9,99']].map(([plan,price]) => (
+            <button key={plan} onClick={() => subscribe(plan.toLowerCase())}
+              style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:'var(--cream)',cursor:'pointer',fontSize:11,padding:'8px 4px' }}>
+              <div style={{ fontSize:9,color:'var(--muted2)',marginBottom:2 }}>{plan}</div>
+              <div style={{ fontFamily:'var(--font-label)',color:'var(--gold2)',fontSize:13 }}>{price}EUR</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function Dashboard() {
+  const router = useRouter()
+  const [user, setUser] = useState(null)
+  const [tab, setTab] = useState('home')
+  const [loading, setLoading] = useState(true)
+  const [usage, setUsage] = useState({ annonces:0, reponses:0 })
+  const [credits, setCredits] = useState({ annonces:{ remaining:0 }, reponses:{ remaining:0 } })
+  const [purchases, setPurchases] = useState([])
+  const [showSubModal, setShowSubModal] = useState(false)
+  const [cancelLoading, setCancelLoading] = useState(false)
+  const [cancelDone, setCancelDone] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/auth/me').then(r=>r.json()).then(data => {
+      if (!data.user) { router.push('/auth/login'); return }
+      setUser(data.user)
+      setLoading(false)
+    }).catch(() => router.push('/auth/login'))
+    Promise.all([
+      fetch('/api/dashboard/annonces').then(r=>r.json()),
+      fetch('/api/dashboard/reponses').then(r=>r.json()),
+      fetch('/api/dashboard/credits').then(r=>r.json()),
+    ]).then(([a,r,c]) => {
+      setUsage({ annonces:a.annonces?.length||0, reponses:r.reponses?.length||0 })
+      if (c.credits) setCredits(c.credits)
+      if (c.purchases) setPurchases(c.purchases)
+    }).catch(()=>{})
+  }, [])
+
+  const logout = async () => { await fetch('/api/auth/logout',{method:'POST'}); router.push('/') }
+
+  const subscribe = async (planKey='business') => {
+    const res = await fetch('/api/stripe/create-subscription',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ planKey })
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
+    else alert('Erreur: '+(data.error||'Inconnue'))
+  }
+
+  const cancelSubscription = async () => {
+    if (!confirm('Confirmer annulation ? Acces maintenu jusqu\'a fin de periode.')) return
+    setCancelLoading(true)
+    const res = await fetch('/api/stripe/cancel-subscription',{method:'POST'})
+    const data = await res.json()
+    setCancelLoading(false)
+    if (data.success) { setCancelDone(true); setShowSubModal(false) }
+    else alert('Erreur: '+(data.error||'Inconnue'))
+  }
+
+  const planKey = user?.planKey || user?.plan || 'free'
+  const isPremium = planKey === 'premium'
+  const isSubscribed = (user?.plan==='pro' && user?.subStatus==='active') || isPremium
+  const limits = PLAN_LIMITS[planKey] || PLAN_LIMITS.free
+  const annoncesLeft = limits.annonces===Infinity ? '∞' : Math.max(0,limits.annonces-usage.annonces)
+  const reponsesLeft = limits.reponses===Infinity ? '∞' : Math.max(0,limits.reponses-usage.reponses)
+
+  const TABS = [
+    {id:'home',label:'Accueil'},
+    {id:'annonce',label:'Annonce'},
+    {id:'reponse',label:'Repondre'},
+    {id:'estimation',label:'Estimer'},
+    {id:'outils',label:'Outils'},
+    {id:'historique',label:'Historique'},
+    {id:'tarifs',label:'Tarifs'},
+    {id:'profil',label:'Profil'},
+  ]
+
+  if (loading) return (
+    <div style={{ minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--black)' }}>
+      <div style={{ width:32,height:32,border:'2px solid var(--border2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  )
+
+  return (
+    <div style={{ minHeight:'100vh',background:'var(--black)',display:'flex',flexDirection:'column' }}>
+      <style>{`
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+        @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+        .db-fade{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) forwards}
+        .tab-btn{transition:all .2s;border-bottom:2px solid transparent;white-space:nowrap}
+        .tab-btn:hover{color:var(--cream)!important}
+        .tab-btn.active{color:var(--gold2)!important;border-bottom-color:var(--gold)!important}
+        .act-tile{transition:all .25s;cursor:pointer}
+        .act-tile:hover{background:var(--s2)!important;transform:translateY(-2px)}
+        .copy-btn:hover{border-color:var(--gold-border)!important;color:var(--gold2)!important}
+        .hover-row:hover{background:var(--s2)!important}
+        @media(max-width:768px){
+          .db-header{padding:0 8px!important}
+          .tab-btn{font-size:9px!important;padding:0 4px!important}
+          .db-credits{display:none!important}
+          .db-main{padding:14px 12px 80px!important}
+          .db-grid2{grid-template-columns:1fr!important}
+          .db-grid3{grid-template-columns:1fr 1fr!important}
+          .db-actions{grid-template-columns:1fr!important}
+          .db-form-grid{grid-template-columns:1fr!important}
+          .db-tools-grid{grid-template-columns:1fr!important}
+          .db-plans-grid{grid-template-columns:1fr!important}
+        }
+      `}</style>
+
+      {showSubModal && (
+        <div style={{ position:'fixed',inset:0,background:'rgba(0,0,0,.85)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20 }}
+          onClick={()=>setShowSubModal(false)}>
+          <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:4,padding:'28px 24px',width:'100%',maxWidth:440,position:'relative',animation:'slideIn .3s ease' }}
+            onClick={e=>e.stopPropagation()}>
+            <button onClick={()=>setShowSubModal(false)} style={{ position:'absolute',top:12,right:14,background:'none',border:'none',color:'var(--muted2)',cursor:'pointer',fontSize:20 }}>x</button>
+            <div style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:3,color:'var(--gold3)',marginBottom:8 }}>MON ABONNEMENT</div>
+            <h3 style={{ fontFamily:'var(--font-display)',fontSize:24,fontWeight:600,marginBottom:18 }}>Plan {PLAN_NAMES[planKey]}</h3>
+            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:18 }}>
+              {[
+                ['Plan',PLAN_NAMES[planKey]],
+                ['Prix',PLAN_PRICES[planKey]+(planKey!=='free'&&planKey!=='premium'?' EUR/sem':'')],
+                ['Statut',cancelDone?'Annulation planifiee':'Actif'],
+                ['Annonces',limits.annonces===Infinity?'∞':limits.annonces+'/sem'],
+                ['Reponses',limits.reponses===Infinity?'∞':limits.reponses+'/sem'],
+                ['Renouvellement','7 jours'],
+              ].map(([l,v])=>(
+                <div key={l} style={{ background:'var(--ink)',padding:'10px 14px' }}>
+                  <div style={{ fontSize:9,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1,marginBottom:3 }}>{l}</div>
+                  <div style={{ fontSize:13,color:'var(--cream)',fontWeight:500 }}>{v}</div>
+                </div>
+              ))}
+            </div>
+            {cancelDone ? (
+              <div style={{ background:'rgba(45,122,79,.1)',border:'1px solid rgba(45,122,79,.3)',borderRadius:3,padding:'12px',fontSize:13,color:'var(--success2)',textAlign:'center' }}>
+                Annulation confirmee. Acces maintenu jusqu\'a fin de periode.
+              </div>
+            ) : (
+              <button onClick={cancelSubscription} disabled={cancelLoading}
+                style={{ width:'100%',background:'none',border:'1px solid rgba(200,57,43,.3)',borderRadius:3,color:'var(--red2)',cursor:'pointer',fontSize:12,padding:'11px',opacity:cancelLoading?0.6:1 }}>
+                {cancelLoading?'Annulation...':'Arreter le prelevement automatique'}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      <header style={{ background:'rgba(3,3,3,.96)',borderBottom:'1px solid var(--border)',backdropFilter:'blur(20px)',position:'sticky',top:0,zIndex:100 }}>
+        <div className="db-header" style={{ width:'100%',padding:'0 20px',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',gap:8 }}>
+          <Link href="/" style={{ fontFamily:'var(--font-label)',fontSize:14,letterSpacing:3,color:'var(--white)',flexShrink:0 }}>
+            A.<span style={{ color:'var(--red)' }}>A</span>
+          </Link>
+          <nav style={{ display:'flex',flex:1,height:'100%',alignItems:'stretch',overflow:'hidden' }}>
+            {TABS.map(t=>(
+              <button key={t.id} onClick={()=>setTab(t.id)}
+                className={'tab-btn'+(tab===t.id?' active':'')}
+                style={{ background:'none',border:'none',borderBottom:'2px solid transparent',color:tab===t.id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:11,fontWeight:500,padding:'0 10px',flex:1,maxWidth:100 }}>
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          <div style={{ display:'flex',alignItems:'center',gap:6,flexShrink:0 }}>
+            <div className="db-credits" style={{ display:'flex',gap:5 }}>
+              {isSubscribed && (
+                <>
+                  <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 7px',fontSize:10,color:'var(--muted2)' }}>
+                    ✍<span style={{ color:'var(--gold2)',fontWeight:700,marginLeft:3 }}>{annoncesLeft}</span>
+                  </div>
+                  <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 7px',fontSize:10,color:'var(--muted2)' }}>
+                    ◎<span style={{ color:'var(--gold2)',fontWeight:700,marginLeft:3 }}>{reponsesLeft}</span>
+                  </div>
+                </>
+              )}
+            </div>
+            {isSubscribed ? (
+              <span style={{ fontFamily:'var(--font-label)',fontSize:8,letterSpacing:1.5,color:'var(--gold2)',background:'rgba(201,168,76,.08)',border:'1px solid var(--gold-border)',borderRadius:2,padding:'3px 7px',cursor:'pointer' }}
+                onClick={()=>setShowSubModal(true)}>
+                {isPremium?'PREMIUM':'SUB'}
+              </span>
+            ) : (
+              <button onClick={()=>subscribe('business')} className="btn-primary" style={{ fontSize:10,padding:'6px 10px',letterSpacing:1 }}>
+                Abonner
+              </button>
+            )}
+            <button onClick={logout} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted)',cursor:'pointer',fontSize:10,padding:'5px 8px' }}>
+              Exit
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="db-main" style={{ flex:1,maxWidth:920,margin:'0 auto',width:'100%',padding:'28px 20px 80px' }}>
+
+        {tab==='home' && (
+          <div className="db-fade">
+            {/* Bannière lancement gratuit */}
+            <LaunchBanner />
+            <div style={{ marginBottom:24 }}>
+              <div className="label" style={{ marginBottom:8 }}>Espace personnel</div>
+              <h1 style={{ fontFamily:'var(--font-display)',fontSize:'clamp(22px,4vw,36px)',fontWeight:400,letterSpacing:-.5 }}>
+                Bonjour, <span style={{ fontStyle:'italic',fontWeight:600 }}>{user.name||user.email.split('@')[0]}</span>
+              </h1>
+            </div>
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,padding:'12px 18px',marginBottom:16,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:10 }}>
+              <div style={{ display:'flex',alignItems:'center',gap:8 }}>
+                <div style={{ width:7,height:7,borderRadius:'50%',background:isSubscribed?'var(--gold)':'var(--muted)',animation:isSubscribed?'pulse 2s infinite':'none' }} />
+                <span style={{ fontSize:13,color:'var(--muted3)' }}>
+                  Plan <strong style={{ color:isSubscribed?'var(--gold2)':'var(--muted2)',fontFamily:'var(--font-label)',letterSpacing:1 }}>{PLAN_NAMES[planKey].toUpperCase()}</strong>
+                  {isSubscribed&&planKey!=='premium'&&<span style={{ marginLeft:6,fontSize:11,color:'var(--muted)' }}>{PLAN_PRICES[planKey]} EUR/sem</span>}
+                </span>
+              </div>
+              {isSubscribed
+                ? <button onClick={()=>setShowSubModal(true)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>Mon abonnement</button>
+                : <button onClick={()=>subscribe('business')} className="btn-gold" style={{ fontSize:11,padding:'8px 16px',letterSpacing:1.5,color:'#030303' }}>S&apos;ABONNER</button>
+              }
+            </div>
+            <div className="db-actions" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:16 }}>
+              {[
+                {title:'Creer',sub:'une annonce',t:'annonce',pro:true},
+                {title:'Repondre',sub:'a un acheteur',t:'reponse',pro:true},
+                {title:'Estimer',sub:'le prix',t:'estimation',pro:false},
+              ].map(a=>(
+                <div key={a.t} className="act-tile" onClick={()=>setTab(a.t)}
+                  style={{ background:'var(--ink)',padding:'22px 14px',textAlign:'center',position:'relative' }}>
+                  <div style={{ position:'absolute',top:7,right:8,fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1,color:a.pro?'var(--gold3)':'var(--success2)' }}>
+                    {a.pro?'Subscriber Only':'Gratuit'}
+                  </div>
+                  <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,lineHeight:1 }}>{a.title}</div>
+                  <div style={{ fontFamily:'var(--font-display)',fontSize:11,fontStyle:'italic',fontWeight:300,color:'var(--muted2)',marginTop:3 }}>{a.sub}</div>
+                </div>
+              ))}
+            </div>
+            <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:16 }}>
+              {[
+                {label:'Annonces',val:usage.annonces,limit:limits.annonces,color:'var(--gold)',packRemaining:credits.annonces.remaining},
+                {label:'Reponses',val:usage.reponses,limit:limits.reponses,color:'var(--red)',packRemaining:credits.reponses.remaining},
+              ].map(s=>{
+                const lim = s.limit===Infinity?999999:s.limit
+                const pct = lim>0?Math.min((s.val/lim)*100,100):0
+                return (
+                  <div key={s.label} style={{ background:'var(--ink)',padding:'18px 20px' }}>
+                    <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:.5,marginBottom:8,textTransform:'uppercase' }}>{s.label}</div>
+                    <div style={{ fontFamily:'var(--font-display)',fontSize:26,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:8 }}>
+                      {isSubscribed
+                        ? <span>{s.val}<span style={{ fontSize:12,color:'var(--muted2)' }}>/{s.limit===Infinity?'∞':s.limit}</span></span>
+                        : <span style={{ color:s.packRemaining<=2?'var(--red2)':'var(--cream)' }}>{s.packRemaining}</span>
+                      }
+                    </div>
+                    <div style={{ background:'var(--s3)',borderRadius:1,height:2,overflow:'hidden' }}>
+                      <div style={{ width:pct+'%',height:'100%',background:pct>80?'var(--red)':s.color,transition:'width 1.2s' }} />
+                    </div>
+                    <div style={{ fontSize:10,color:'var(--muted)',marginTop:5 }}>
+                      {isSubscribed?'Cette semaine · '+(s.limit===Infinity?'∞':Math.max(0,s.limit-s.val))+' restantes'
+                        :(s.packRemaining===0?'Aucun credit':s.packRemaining+' restant(s)')}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            {!isSubscribed&&(
+              <div style={{ border:'1px solid var(--gold-border)',borderRadius:3,padding:'18px 20px' }}>
+                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap' }}>
+                  <div>
+                    <div style={{ fontFamily:'var(--font-display)',fontSize:17,fontWeight:600,marginBottom:3 }}>Passez a un abonnement</div>
+                    <div style={{ fontSize:12,color:'var(--muted2)' }}>Starter 3,99 EUR · Business 5,99 EUR · Expert 9,99 EUR</div>
+                  </div>
+                  <button onClick={()=>setTab('tarifs')} className="btn-gold" style={{ fontSize:11,padding:'10px 20px',letterSpacing:1.5,flexShrink:0,color:'#030303' }}>VOIR LES TARIFS</button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {tab==='annonce' && <AnnonceTab isSubscribed={isSubscribed} planKey={planKey} credits={credits} subscribe={subscribe} onUsed={()=>setUsage(u=>({...u,annonces:u.annonces+1}))} />}
+        {tab==='reponse' && <ReponseTab isSubscribed={isSubscribed} subscribe={subscribe} onUsed={()=>setUsage(u=>({...u,reponses:u.reponses+1}))} />}
+        {tab==='estimation' && <EstimationTab />}
+        {tab==='outils' && <OutilsTab isSubscribed={isSubscribed} subscribe={subscribe} />}
+        {tab==='historique' && <HistoriqueTab />}
+        {tab==='tarifs' && <TarifsTab isSubscribed={isSubscribed} planKey={planKey} subscribe={subscribe} openSubModal={()=>setShowSubModal(true)} />}
+        {tab==='profil' && <ProfilTab user={user} isSubscribed={isSubscribed} isPremium={isPremium} planKey={planKey} subscribe={subscribe} openSubModal={()=>setShowSubModal(true)} usage={usage} credits={credits} purchases={purchases} limits={limits} />}
+      </main>
+    </div>
+  )
+}
+
+function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
   const [categorie, setCategorie] = useState('')
   const [form, setForm] = useState({})
   const [result, setResult] = useState(null)
   const [badResult, setBadResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
-
   const fields = categorie ? CATEGORIES[categorie] : []
-  const filled = Object.values(form).filter(v => v && v !== 'Non').length
-  const total = Math.max(fields.length, 1)
-  const pct = Math.round((filled / total) * 100)
-
-  const hasAccess = isSubscribed || credits.annonces.remaining > 0
+  const filled = Object.values(form).filter(v=>v&&v!=='Non').length
+  const pct = Math.round((filled/Math.max(fields.length,1))*100)
+  const hasAccess = isSubscribed || credits.annonces.remaining>0
 
   const generate = async () => {
     if (!categorie) { alert('Choisissez une categorie'); return }
-    if (!form.prix && !form.titre && !form.type) { alert('Remplissez au moins le prix et quelques infos'); return }
     setLoading(true)
     try {
-      const specs = 'Categorie: ' + categorie + '\n' + Object.entries(form).filter(([,v])=>v).map(([k,v])=>k+': '+v).join('\n')
-      const res = await fetch('/api/ai/annonce', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ specs, lang:'fr', urgence:form.urgence||'normal', type:categorie, inputData:form })
-      })
+      const specs = 'Categorie: '+categorie+'\n'+Object.entries(form).filter(([,v])=>v).map(([k,v])=>k+': '+v).join('\n')
+      const res = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs,lang:'fr',urgence:form.urgence||'normal',type:categorie,inputData:form})})
       const data = await res.json()
       setResult(data)
-    // Générer version nulle pour comparaison
-    if (data.annonce) {
-      setBadResult({
-        titre: form.marque && form.modele ? form.marque+' '+form.modele+' a vendre' : 'Article a vendre',
-        description: 'Je vends cet article. Il est en bon etat. Prix: '+(form.prix||'?')+' EUR. Contactez-moi.',
-        score: Math.floor(Math.random()*20)+15
-      })
-    }
-          if (!data.error) onUsed()
-    } catch(e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
+      if (data.annonce) setBadResult({ titre:form.marque&&form.modele?form.marque+' '+form.modele+' a vendre':'Article a vendre', description:'Je vends cet article. Il est en bon etat. Prix: '+(form.prix||'?')+' EUR.', score:Math.floor(Math.random()*20)+15 })
+      if (!data.error) onUsed()
+    } catch(e) { console.error(e) }
+    finally { setLoading(false) }
   }
 
   if (!hasAccess) return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Outil IA</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Creer une annonce</h2>
-      </div>
-      {/* Apercu grise */}
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Creer une annonce</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
         <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:1 }}>
-          {CATEGORY_LIST.slice(0,6).map(c => (
-            <div key={c} style={{ background:'var(--ink)',padding:'14px',textAlign:'center',fontSize:12,color:'var(--muted2)' }}>{c}</div>
-          ))}
+          {CATEGORY_LIST.slice(0,6).map(c=>(<div key={c} style={{ background:'var(--ink)',padding:'12px',textAlign:'center',fontSize:12,color:'var(--muted2)' }}>{c}</div>))}
         </div>
-        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:20,height:120 }} />
+        <div style={{ background:'var(--ink)',height:100,marginBottom:1 }} />
       </div>
       <LockOverlay subscribe={subscribe} />
     </div>
@@ -696,30 +617,23 @@ function AnnonceTab({ isSubscribed, planKey, credits, subscribe, onUsed }) {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Outil IA</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Creer une annonce</h2>
-      </div>
-
-      {/* Sélection catégorie */}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'16px 20px',marginBottom:1 }}>
-        <div style={S.lbl}>Categorie de l&apos;article *</div>
-        <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(110px,1fr))',gap:6,marginTop:8 }}>
-          {CATEGORY_LIST.map(c => (
-            <button key={c} onClick={() => { setCategorie(c); setForm({}) }}
-              style={{ background:categorie===c?'rgba(201,168,76,.12)':'var(--ink)',border:'1px solid',borderColor:categorie===c?'var(--gold)':'var(--border)',borderRadius:3,color:categorie===c?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'8px 6px',transition:'all .15s',fontWeight:categorie===c?600:400 }}>
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Creer une annonce</h2></div>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+        <div style={S.lbl}>Categorie *</div>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))',gap:5,marginTop:6 }}>
+          {CATEGORY_LIST.map(c=>(
+            <button key={c} onClick={()=>{setCategorie(c);setForm({})}}
+              style={{ background:categorie===c?'rgba(201,168,76,.12)':'var(--ink)',border:'1px solid',borderColor:categorie===c?'var(--gold)':'var(--border)',borderRadius:3,color:categorie===c?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 5px',fontWeight:categorie===c?600:400 }}>
               {c}
             </button>
           ))}
         </div>
       </div>
-
-      {/* Barre progression */}
-      {categorie && (
+      {categorie&&(
         <>
-          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'10px 20px',marginBottom:1,display:'flex',alignItems:'center',gap:14 }}>
+          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'8px 18px',marginBottom:1,display:'flex',alignItems:'center',gap:12 }}>
             <div style={{ flex:1 }}>
-              <div style={{ display:'flex',justifyContent:'space-between',marginBottom:5 }}>
+              <div style={{ display:'flex',justifyContent:'space-between',marginBottom:4 }}>
                 <span style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1 }}>Formulaire</span>
                 <span style={{ fontSize:11,color:'var(--gold2)',fontWeight:600 }}>{pct}%</span>
               </div>
@@ -727,107 +641,83 @@ function AnnonceTab({ isSubscribed, planKey, credits, subscribe, onUsed }) {
                 <div style={{ width:pct+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width .4s' }} />
               </div>
             </div>
-            <div style={{ fontSize:10,color:'var(--muted)',flexShrink:0 }}>Plus vous remplissez = meilleure annonce</div>
+            <div style={{ fontSize:10,color:'var(--muted)',flexShrink:0 }}>Plus = mieux</div>
           </div>
-
-          {/* Champs dynamiques */}
-          <div className='db-form-grid' style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
-            {fields.map(f => (
-              <div key={f.key} style={{ ...S.cell(f.wide) }}>
+          <div className="db-form-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+            {fields.map(f=>(
+              <div key={f.key} style={{ background:'var(--ink)',padding:'14px 18px',gridColumn:f.wide?'1/-1':'auto' }}>
                 <label style={S.lbl}>{f.label}</label>
-                {f.type === 'select' ? (
-                  <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }}
-                    value={form[f.key]||''} onChange={e => setForm({...form,[f.key]:e.target.value})}>
-                    <option value="">Selectionner</option>
-                    {f.opts.map(o => <option key={o}>{o}</option>)}
-                  </select>
-                ) : f.type === 'textarea' || f.wide ? (
-                  <textarea style={{ ...S.inp,resize:'vertical',minHeight:56,lineHeight:1.6 }}
-                    placeholder={f.ph} value={form[f.key]||''} onChange={e => setForm({...form,[f.key]:e.target.value})} />
-                ) : f.type === 'urgence' ? (
-                  <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginTop:4 }}>
-                    {[['normal','Normal'],['rapide','Rapide'],['optimise','Max prix']].map(([v,l]) => (
-                      <div key={v} onClick={() => setForm({...form,urgence:v})}
-                        style={{ background:form.urgence===v?'rgba(201,168,76,.08)':'var(--s2)',borderBottom:form.urgence===v?'2px solid var(--gold)':'2px solid transparent',padding:'8px',textAlign:'center',fontSize:11,color:form.urgence===v?'var(--gold2)':'var(--muted2)',cursor:'pointer',transition:'all .15s' }}>
-                        {l}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <input style={S.inp} type={f.type||'text'} placeholder={f.ph}
-                    value={form[f.key]||''} onChange={e => setForm({...form,[f.key]:e.target.value})} />
-                )}
+                {f.type==='select'
+                  ? <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={form[f.key]||''} onChange={e=>setForm({...form,[f.key]:e.target.value})}>
+                      <option value="">Selectionner</option>
+                      {f.opts.map(o=><option key={o}>{o}</option>)}
+                    </select>
+                  : f.wide
+                    ? <textarea style={{ ...S.inp,resize:'vertical',minHeight:52,lineHeight:1.6 }} placeholder={f.ph} value={form[f.key]||''} onChange={e=>setForm({...form,[f.key]:e.target.value})} />
+                    : f.type==='urgence'
+                      ? <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginTop:4 }}>
+                          {[['normal','Normal'],['rapide','Rapide'],['optimise','Max prix']].map(([v,l])=>(
+                            <div key={v} onClick={()=>setForm({...form,urgence:v})}
+                              style={{ background:form.urgence===v?'rgba(201,168,76,.08)':'var(--s2)',borderBottom:form.urgence===v?'2px solid var(--gold)':'2px solid transparent',padding:'7px',textAlign:'center',fontSize:11,color:form.urgence===v?'var(--gold2)':'var(--muted2)',cursor:'pointer' }}>
+                              {l}
+                            </div>
+                          ))}
+                        </div>
+                      : <input style={S.inp} type={f.type||'text'} placeholder={f.ph} value={form[f.key]||''} onChange={e=>setForm({...form,[f.key]:e.target.value})} />
+                }
               </div>
             ))}
           </div>
-
           <button onClick={generate} disabled={loading} className="btn-primary"
-            style={{ width:'100%',fontSize:13,padding:'16px',opacity:loading?.6:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:1 }}>
-            {loading ? <><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Generation...</> : '⚡ GENERER MON ANNONCE'}
+            style={{ width:'100%',fontSize:13,padding:'15px',opacity:loading?0.6:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:1 }}>
+            {loading?<><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Generation...</>:'GENERER MON ANNONCE'}
           </button>
         </>
       )}
-
-      {/* Résultats */}
-      {result && !result.error && (
-        <div style={{ marginTop:20 }}>
-          {/* Comparaison */}
-          {badResult && (
-            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:16 }}>
-              <div style={{ background:'rgba(200,57,43,.06)',padding:'16px 20px',borderTop:'2px solid var(--red)' }}>
-                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10 }}>
+      {result&&!result.error&&(
+        <div style={{ marginTop:16 }}>
+          {badResult&&(
+            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:14 }}>
+              <div style={{ background:'rgba(200,57,43,.06)',padding:'14px 18px',borderTop:'2px solid var(--red)' }}>
+                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8 }}>
                   <span style={{ fontSize:10,color:'var(--red2)',textTransform:'uppercase',letterSpacing:1 }}>Annonce faible</span>
-                  <span style={{ fontFamily:'var(--font-label)',fontSize:22,color:'var(--red2)' }}>{badResult.score}/100</span>
+                  <span style={{ fontFamily:'var(--font-label)',fontSize:20,color:'var(--red2)' }}>{badResult.score}/100</span>
                 </div>
-                <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:6,color:'var(--muted3)' }}>{badResult.titre}</div>
+                <div style={{ fontSize:13,fontWeight:600,marginBottom:5,color:'var(--muted3)' }}>{badResult.titre}</div>
                 <div style={{ fontSize:12,color:'var(--muted)',lineHeight:1.6 }}>{badResult.description}</div>
               </div>
-              <div style={{ background:'rgba(45,122,79,.06)',padding:'16px 20px',borderTop:'2px solid var(--success2)' }}>
-                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10 }}>
+              <div style={{ background:'rgba(45,122,79,.06)',padding:'14px 18px',borderTop:'2px solid var(--success2)' }}>
+                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8 }}>
                   <span style={{ fontSize:10,color:'var(--success2)',textTransform:'uppercase',letterSpacing:1 }}>Annonce optimisee</span>
-                  <span style={{ fontFamily:'var(--font-label)',fontSize:22,color:'var(--success2)' }}>{result.score?.score||85}/100</span>
+                  <span style={{ fontFamily:'var(--font-label)',fontSize:20,color:'var(--success2)' }}>{result.score?.score||85}/100</span>
                 </div>
-                <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:6 }}>{result.annonce?.titre||'Titre genere'}</div>
-                <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.6 }}>{(result.annonce?.description||'').slice(0,120)}...</div>
+                <div style={{ fontSize:13,fontWeight:600,marginBottom:5 }}>{result.annonce?.titre||'Titre genere'}</div>
+                <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.6 }}>{(result.annonce?.description||'').slice(0,100)}...</div>
               </div>
             </div>
           )}
-
-          {/* Score */}
-          {result.score && (
-            <div style={{ display:'flex',alignItems:'center',gap:16,background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 20px',marginBottom:1 }}>
-              <div style={{ fontFamily:'var(--font-label)',fontSize:38,letterSpacing:-2,color:result.score.score>=70?'var(--gold2)':result.score.score>=50?'var(--warning)':'var(--red2)',lineHeight:1 }}>
-                {result.score.score}
-              </div>
-              <div>
-                <div style={{ fontSize:12,fontWeight:600,color:'var(--cream)',marginBottom:4 }}>Score qualite — {result.score.grade}</div>
-                {result.score.suggestions?.slice(0,2).map((s,i) => <div key={i} style={{ fontSize:11,color:'var(--muted2)' }}>→ {s}</div>)}
-              </div>
-            </div>
-          )}
-
-          {result.annonce?.titre && (
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'16px 20px',marginBottom:1 }}>
+          {result.annonce?.titre&&(
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'14px 18px',marginBottom:1 }}>
               <div style={S.lbl}>Titre</div>
-              <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,lineHeight:1.4 }}>{result.annonce.titre}</div>
+              <div style={{ fontFamily:'var(--font-display)',fontSize:17,fontWeight:600,lineHeight:1.4 }}>{result.annonce.titre}</div>
             </div>
           )}
-          {[['Description',result.annonce?.description],['Points forts',result.annonce?.pointsForts],['Transparence',result.annonce?.defauts],['Prix conseille',result.annonce?.prixConseil]].filter(([,v])=>v).map(([label,val]) => (
-            <div key={label} style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px 20px',marginBottom:1 }}>
+          {[['Description',result.annonce?.description],['Points forts',result.annonce?.pointsForts],['Transparence',result.annonce?.defauts],['Prix conseille',result.annonce?.prixConseil]].filter(([,v])=>v).map(([label,val])=>(
+            <div key={label} style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
               <div style={S.lbl}>{label}</div>
               <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{val}</div>
             </div>
           ))}
-          {result.annonce?.shortVersion && (
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'16px 20px',marginBottom:1 }}>
-              <div style={S.lbl}>Version courte — Facebook / SMS</div>
+          {result.annonce?.shortVersion&&(
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'14px 18px',marginBottom:1 }}>
+              <div style={S.lbl}>Version courte - Facebook / SMS</div>
               <div style={{ fontSize:13,color:'var(--muted3)',lineHeight:1.8,fontStyle:'italic',whiteSpace:'pre-wrap' }}>{result.annonce.shortVersion}</div>
             </div>
           )}
           <button className="copy-btn"
-            onClick={() => { navigator.clipboard.writeText(result.raw||''); setCopied(true); setTimeout(()=>setCopied(false),2000) }}
-            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'12px',marginTop:1 }}>
-            {copied ? 'Copie !' : 'Copier l\'annonce complete'}
+            onClick={()=>{navigator.clipboard.writeText(result.raw||'');setCopied(true);setTimeout(()=>setCopied(false),2000)}}
+            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:1 }}>
+            {copied?'Copie !':'Copier l\'annonce complete'}
           </button>
         </div>
       )}
@@ -835,7 +725,6 @@ function AnnonceTab({ isSubscribed, planKey, credits, subscribe, onUsed }) {
   )
 }
 
-// ─── RÉPONSE TAB ──────────────────────────────────────────
 function ReponseTab({ isSubscribed, subscribe, onUsed }) {
   const [message, setMessage] = useState('')
   const [contexte, setContexte] = useState('')
@@ -846,20 +735,17 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  useEffect(() => {
+  useEffect(()=>{
     if (!isSubscribed) return
-    fetch('/api/dashboard/annonces').then(r=>r.json()).then(d => setAnnonces(d.annonces||[])).catch(()=>{})
-  }, []) // [] = une seule fois au montage
+    fetch('/api/dashboard/annonces').then(r=>r.json()).then(d=>setAnnonces(d.annonces||[])).catch(()=>{})
+  },[])
 
   if (!isSubscribed) return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Outil IA</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Repondre a un acheteur</h2>
-      </div>
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Repondre a un acheteur</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
-        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px 20px',height:120,marginBottom:1 }} />
-        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px 20px',height:80 }} />
+        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px',height:100,marginBottom:1 }} />
+        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px',height:70 }} />
       </div>
       <LockOverlay subscribe={subscribe} />
     </div>
@@ -869,102 +755,74 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
     if (!message) return
     setLoading(true)
     try {
-      const ctx = selectedAnnonce
-        ? 'Annonce concerne: ' + selectedAnnonce.titre + '\n' + contexte
-        : contexte
-      const res = await fetch('/api/ai/reponse', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ message, contexte: ctx, annonceId: selectedAnnonce?.id || null })
-      })
+      const ctx = selectedAnnonce ? 'Annonce: '+selectedAnnonce.titre+'\n'+contexte : contexte
+      const res = await fetch('/api/ai/reponse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,contexte:ctx,annonceId:selectedAnnonce?.id||null})})
       const data = await res.json()
-      if (data.error) {
-        setResult({ error: data.error, message: data.message || data.error })
-      } else {
-        setResult(data)
-        onUsed()
-      }
-    } catch(e) {
-      setResult({ error: 'Erreur reseau: ' + e.message })
-    } finally {
-      setLoading(false)
-    }
+      if (data.error) setResult({error:data.error,message:data.message||data.error})
+      else { setResult(data); onUsed() }
+    } catch(e) { setResult({error:'Erreur reseau: '+e.message}) }
+    finally { setLoading(false) }
   }
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Outil IA</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Repondre a un acheteur</h2>
-      </div>
-
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px 20px',marginBottom:1 }}>
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Repondre a un acheteur</h2></div>
+      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
         <label style={S.lbl}>Message recu *</label>
-        <textarea style={{ ...S.inp,minHeight:100,resize:'vertical',lineHeight:1.7 }}
-          placeholder="Collez le message de l'acheteur ici..." value={message} onChange={e => setMessage(e.target.value)} />
+        <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.7 }} placeholder="Collez ici le message de l'acheteur..." value={message} onChange={e=>setMessage(e.target.value)} />
       </div>
-
-      {/* Contexte + sélection annonce */}
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px 20px',marginBottom:1 }}>
-        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8 }}>
-          <label style={{ ...S.lbl,marginBottom:0 }}>Contexte (optionnel)</label>
-          <button onClick={() => setShowSearch(!showSearch)}
-            style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'4px 10px',letterSpacing:.5 }}>
-            {showSearch ? 'Masquer' : '+ Lier une annonce'}
+      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
+          <label style={{ ...S.lbl,marginBottom:0 }}>Lier une annonce (optionnel)</label>
+          <button onClick={()=>setShowSearch(!showSearch)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'3px 8px' }}>
+            {showSearch?'Masquer':'+ Lier'}
           </button>
         </div>
-
-        {showSearch && annonces.length > 0 && (
-          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,marginBottom:10,maxHeight:180,overflowY:'auto' }}>
-            {annonces.map(a => (
-              <div key={a.id} onClick={() => { setSelectedAnnonce(a); setShowSearch(false); setContexte('Annonce: '+a.titre) }}
-                className="hover-row"
-                style={{ padding:'10px 14px',cursor:'pointer',borderBottom:'1px solid var(--border)',background:selectedAnnonce?.id===a.id?'rgba(201,168,76,.06)':'transparent' }}>
+        {showSearch&&annonces.length>0&&(
+          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,marginBottom:8,maxHeight:160,overflowY:'auto' }}>
+            {annonces.map(a=>(
+              <div key={a.id} onClick={()=>{setSelectedAnnonce(a);setShowSearch(false);setContexte('Annonce: '+a.titre)}} className="hover-row"
+                style={{ padding:'9px 12px',cursor:'pointer',borderBottom:'1px solid var(--border)',background:selectedAnnonce?.id===a.id?'rgba(201,168,76,.06)':'transparent' }}>
                 <div style={{ fontSize:12,fontWeight:600,color:'var(--cream)' }}>{a.titre||'Sans titre'}</div>
                 <div style={{ fontSize:10,color:'var(--muted2)' }}>{a.type} · {new Date(a.createdAt).toLocaleDateString('fr-FR')}</div>
               </div>
             ))}
           </div>
         )}
-
-        {selectedAnnonce && (
-          <div style={{ display:'flex',alignItems:'center',gap:8,background:'rgba(201,168,76,.06)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'6px 12px',marginBottom:8,fontSize:11 }}>
-            <span style={{ color:'var(--gold2)' }}>✦</span>
-            <span style={{ color:'var(--cream)' }}>{selectedAnnonce.titre}</span>
-            <button onClick={() => { setSelectedAnnonce(null); setContexte('') }}
-              style={{ background:'none',border:'none',color:'var(--muted)',cursor:'pointer',marginLeft:'auto',fontSize:14 }}>×</button>
+        {selectedAnnonce&&(
+          <div style={{ display:'flex',alignItems:'center',gap:7,background:'rgba(201,168,76,.06)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'5px 10px',marginBottom:7,fontSize:11 }}>
+            <span style={{ color:'var(--gold2)' }}>v</span>
+            <span style={{ color:'var(--cream)',flex:1 }}>{selectedAnnonce.titre}</span>
+            <button onClick={()=>{setSelectedAnnonce(null);setContexte('')}} style={{ background:'none',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:14 }}>x</button>
           </div>
         )}
-
-        <textarea style={{ ...S.inp,minHeight:60,resize:'vertical',lineHeight:1.7 }}
-          placeholder="Prix demande, etat, infos utiles..." value={contexte} onChange={e => setContexte(e.target.value)} />
+        <textarea style={{ ...S.inp,minHeight:50,resize:'vertical',lineHeight:1.7 }} placeholder="Ou decrivez le contexte..." value={contexte} onChange={e=>setContexte(e.target.value)} />
       </div>
-
       <button onClick={generate} disabled={loading||!message} className="btn-primary"
-        style={{ width:'100%',fontSize:13,padding:'16px',opacity:(loading||!message)?.5:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10 }}>
-        {loading ? <><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Generation...</> : 'GENERER LA REPONSE'}
+        style={{ width:'100%',fontSize:13,padding:'15px',opacity:(loading||!message)?0.5:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10 }}>
+        {loading?<><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Generation...</>:'GENERER LA REPONSE'}
       </button>
-
-      {result?.error && (
-        <div style={{ background:'rgba(200,57,43,.08)',border:'1px solid rgba(200,57,43,.3)',borderRadius:3,padding:'14px 20px',marginTop:16,fontSize:13,color:'var(--red2)' }}>
-          Erreur : {result.message || result.error}
+      {result?.error&&(
+        <div style={{ background:'rgba(200,57,43,.08)',border:'1px solid rgba(200,57,43,.3)',borderRadius:3,padding:'12px 18px',marginTop:14,fontSize:13,color:'var(--red2)' }}>
+          Erreur: {result.message||result.error}
         </div>
       )}
-      {result?.reponse && (
-        <div style={{ marginTop:20 }}>
-          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'20px',marginBottom:1 }}>
+      {result?.reponse&&(
+        <div style={{ marginTop:16 }}>
+          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'18px',marginBottom:1 }}>
             <div style={S.lbl}>Reponse prete a copier</div>
             <div style={{ fontSize:14,color:'var(--cream)',lineHeight:1.85,whiteSpace:'pre-wrap' }}>{result.reponse.reponsePrete}</div>
           </div>
-          {result.reponse.suggestion && (
-            <div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'16px 20px',marginBottom:1 }}>
+          {result.reponse.suggestion&&(
+            <div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'14px 18px',marginBottom:1 }}>
               <div style={S.lbl}>Conseil de negociation</div>
               <div style={{ fontSize:13,color:'var(--muted3)',lineHeight:1.7,fontStyle:'italic' }}>{result.reponse.suggestion}</div>
             </div>
           )}
           <button className="copy-btn"
-            onClick={() => { navigator.clipboard.writeText(result.reponse.reponsePrete); setCopied(true); setTimeout(()=>setCopied(false),2000) }}
-            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'12px',marginTop:1 }}>
-            {copied ? 'Copie !' : 'Copier la reponse'}
+            onClick={()=>{navigator.clipboard.writeText(result.reponse.reponsePrete);setCopied(true);setTimeout(()=>setCopied(false),2000)}}
+            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:1 }}>
+            {copied?'Copie !':'Copier la reponse'}
           </button>
         </div>
       )}
@@ -972,52 +830,42 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
   )
 }
 
-// ─── ESTIMATION TAB ───────────────────────────────────────
 function EstimationTab() {
   const [specs, setSpecs] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
-
   const estimate = async () => {
     if (!specs) return
     setLoading(true)
-    const res = await fetch('/api/ai/estimation', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ specs })
-    })
+    const res = await fetch('/api/ai/estimation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs})})
     const data = await res.json()
-    if (data.error && data.upgrade) { alert(data.message); setLoading(false); return }
+    if (data.error&&data.upgrade) { alert(data.message); setLoading(false); return }
     setResult(data); setLoading(false)
   }
-
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Outil gratuit</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Estimer le prix</h2>
-      </div>
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px 20px',marginBottom:1 }}>
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil gratuit</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Estimer le prix</h2></div>
+      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
         <label style={S.lbl}>Decrivez votre article</label>
-        <textarea style={{ ...S.inp,minHeight:120,resize:'vertical',lineHeight:1.7 }}
-          placeholder="Ex: iPhone 15 Pro 256Go noir, tres bon etat, batterie 94%, avec boite..." value={specs} onChange={e => setSpecs(e.target.value)} />
-        <div style={{ fontSize:10,color:'var(--muted)',marginTop:6 }}>3 estimations gratuites par jour</div>
+        <textarea style={{ ...S.inp,minHeight:110,resize:'vertical',lineHeight:1.7 }} placeholder="Ex: iPhone 15 Pro 256Go noir, tres bon etat, batterie 94%, avec boite..." value={specs} onChange={e=>setSpecs(e.target.value)} />
+        <div style={{ fontSize:10,color:'var(--muted)',marginTop:5 }}>3 estimations gratuites par jour</div>
       </div>
       <button onClick={estimate} disabled={loading||!specs} className="btn-primary"
-        style={{ width:'100%',fontSize:13,padding:'16px',opacity:(loading||!specs)?.5:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10 }}>
-        {loading ? <><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Analyse...</> : 'ESTIMER LE PRIX'}
+        style={{ width:'100%',fontSize:13,padding:'15px',opacity:(loading||!specs)?0.5:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10 }}>
+        {loading?<><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Analyse...</>:'ESTIMER LE PRIX'}
       </button>
-      {result && !result.error && (
-        <div style={{ marginTop:20 }}>
+      {result&&!result.error&&(
+        <div style={{ marginTop:16 }}>
           <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)' }}>
-            {[['Basse',result.low,'var(--red2)'],['Moyenne',result.mid,'var(--gold2)'],['Haute',result.high,'var(--success2)']].map(([label,val,color]) => (
-              <div key={label} style={{ background:'var(--ink)',padding:'24px 20px',textAlign:'center' }}>
-                <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1.5,textTransform:'uppercase',marginBottom:10 }}>{label}</div>
-                <div style={{ fontFamily:'var(--font-display)',fontSize:26,fontWeight:600,color,letterSpacing:-1 }}>{Number(val).toLocaleString('fr-FR')} EUR</div>
+            {[['Basse',result.low,'var(--red2)'],['Moyenne',result.mid,'var(--gold2)'],['Haute',result.high,'var(--success2)']].map(([label,val,color])=>(
+              <div key={label} style={{ background:'var(--ink)',padding:'22px 18px',textAlign:'center' }}>
+                <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1.5,textTransform:'uppercase',marginBottom:8 }}>{label}</div>
+                <div style={{ fontFamily:'var(--font-display)',fontSize:24,fontWeight:600,color,letterSpacing:-1 }}>{Number(val).toLocaleString('fr-FR')} EUR</div>
               </div>
             ))}
           </div>
-          {result.note && (
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 20px',marginTop:1 }}>
+          {result.note&&(
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'12px 18px',marginTop:1 }}>
               <div style={{ fontSize:12,color:'var(--muted2)',fontStyle:'italic',lineHeight:1.65 }}>{result.note}</div>
             </div>
           )}
@@ -1027,7 +875,223 @@ function EstimationTab() {
   )
 }
 
-// ─── HISTORIQUE TAB ───────────────────────────────────────
+function OutilsTab({ isSubscribed, subscribe }) {
+  const [activeTool, setActiveTool] = useState(null)
+  const [titreSpecs, setTitreSpecs] = useState('')
+  const [titres, setTitres] = useState([])
+  const [titreLoading, setTitreLoading] = useState(false)
+  const [prixArticle, setPrixArticle] = useState('')
+  const [prixDemande, setPrixDemande] = useState('')
+  const [prixResult, setPrixResult] = useState(null)
+  const [prixLoading, setPrixLoading] = useState(false)
+  const [flashSpecs, setFlashSpecs] = useState('')
+  const [flashResult, setFlashResult] = useState(null)
+  const [flashLoading, setFlashLoading] = useState(false)
+  const [checklist, setChecklist] = useState({ photos:false, prix:false, description:false, disponible:false, contact:false, ct:false })
+  const [annonceText, setAnnonceText] = useState('')
+  const [tradLang, setTradLang] = useState('en')
+  const [tradResult, setTradResult] = useState('')
+  const [tradLoading, setTradLoading] = useState(false)
+
+  const tradLangs = { en:'Anglais', es:'Espagnol', de:'Allemand', it:'Italien', nl:'Neerlandais' }
+
+  const checklistItems = [
+    { key:'photos', label:'Au moins 5 photos claires en lumiere naturelle' },
+    { key:'prix', label:'Prix correspond au marche (utiliser estimateur)' },
+    { key:'description', label:'Description repond aux questions des acheteurs' },
+    { key:'disponible', label:'Coordonnees et disponibilites sont claires' },
+    { key:'contact', label:'Livraison ou remise en main propre precisee' },
+    { key:'ct', label:'Documents importants mentionnes (CT, facture...)' },
+  ]
+  const checkScore = Object.values(checklist).filter(Boolean).length
+
+  const genTitres = async () => {
+    if (!titreSpecs) return
+    setTitreLoading(true)
+    try { const r = await fetch('/api/ai/titres',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:titreSpecs})}); const d = await r.json(); setTitres(d.titres||[]) } catch(e) {}
+    setTitreLoading(false)
+  }
+
+  const checkPrix = async () => {
+    if (!prixArticle||!prixDemande) return
+    setPrixLoading(true)
+    try {
+      const r = await fetch('/api/ai/estimation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:prixArticle})})
+      const d = await r.json()
+      const prix = parseFloat(prixDemande)
+      const diff = d.mid>0?Math.round(((prix-d.mid)/d.mid)*100):0
+      setPrixResult({...d,prixDemande:prix,diff})
+    } catch(e) {}
+    setPrixLoading(false)
+  }
+
+  const genFlash = async () => {
+    if (!flashSpecs) return
+    setFlashLoading(true)
+    try { const r = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:flashSpecs,urgence:'rapide',type:'flash',inputData:{}})}); const d = await r.json(); setFlashResult(d) } catch(e) {}
+    setFlashLoading(false)
+  }
+
+  const genTrad = async () => {
+    if (!annonceText) return
+    setTradLoading(true)
+    try { const r = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:'Traduis cette annonce en '+tradLangs[tradLang]+': '+annonceText,lang:tradLang,urgence:'normal',type:'traduction',inputData:{}})}); const d = await r.json(); setTradResult(d.raw||'') } catch(e) {}
+    setTradLoading(false)
+  }
+
+  const TOOLS = [
+    {id:'titre',icon:'T',label:'Generateur de titres',desc:'5 titres optimises en un clic pour maximiser les vues',badge:'Gratuit'},
+    {id:'prix',icon:'€',label:'Detecteur prix abusif',desc:'Verifiez si votre prix est aligne avec le marche',badge:'Gratuit'},
+    {id:'flash',icon:'F',label:'Mode vente flash',desc:'Annonce ultra-agressive pour vendre en moins de 48h',badge:isSubscribed?'Abonne':'Sub Only'},
+    {id:'checklist',icon:'V',label:'Checklist publication',desc:'6 points a verifier avant de publier',badge:'Gratuit'},
+    {id:'traduction',icon:'G',label:'Traduction annonce',desc:'Anglais, Espagnol, Allemand, Italien, Neerlandais',badge:isSubscribed?'Abonne':'Sub Only'},
+  ]
+
+  return (
+    <div className="db-fade">
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Boite a outils</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Outils supplementaires</h2></div>
+      <div className="db-tools-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:14 }}>
+        {TOOLS.map(tool=>(
+          <div key={tool.id} onClick={()=>setActiveTool(activeTool===tool.id?null:tool.id)}
+            style={{ background:activeTool===tool.id?'var(--s2)':'var(--ink)',padding:'18px',cursor:'pointer',transition:'all .2s',borderTop:activeTool===tool.id?'2px solid var(--gold)':'2px solid transparent' }}>
+            <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:7 }}>
+              <span style={{ width:28,height:28,background:'var(--s3)',borderRadius:3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,color:'var(--gold2)' }}>{tool.icon}</span>
+              <span style={{ fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1.5,color:tool.badge==='Gratuit'?'var(--success2)':'var(--gold3)',background:tool.badge==='Gratuit'?'rgba(45,122,79,.1)':'rgba(201,168,76,.1)',border:'1px solid',borderColor:tool.badge==='Gratuit'?'rgba(45,122,79,.2)':'rgba(201,168,76,.2)',borderRadius:2,padding:'2px 6px' }}>{tool.badge}</span>
+            </div>
+            <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:3 }}>{tool.label}</div>
+            <div style={{ fontSize:11,color:'var(--muted2)',lineHeight:1.5 }}>{tool.desc}</div>
+          </div>
+        ))}
+      </div>
+
+      {activeTool==='titre'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          <div style={S.lbl}>Generateur de titres optimises</div>
+          <textarea style={{ ...S.inp,minHeight:65,resize:'vertical',lineHeight:1.6,marginBottom:8 }} placeholder="Decrivez votre article: BMW 320d 2019, 75 000 km, diesel, bon etat..." value={titreSpecs} onChange={e=>setTitreSpecs(e.target.value)} />
+          <button onClick={genTitres} disabled={titreLoading||!titreSpecs} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(titreLoading||!titreSpecs)?0.5:1 }}>
+            {titreLoading?'Generation...':'GENERER 5 TITRES'}
+          </button>
+          {titres.length>0&&(
+            <div style={{ marginTop:10 }}>
+              {titres.map((t,i)=>(
+                <div key={i} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',background:'var(--ink)',border:'1px solid var(--border)',padding:'9px 12px',marginBottom:3,gap:10 }}>
+                  <div style={{ fontSize:13,color:'var(--cream)' }}>{t}</div>
+                  <button onClick={()=>navigator.clipboard.writeText(t)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'3px 8px',flexShrink:0 }}>Copier</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTool==='prix'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          <div style={S.lbl}>Detecteur de prix abusif</div>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+            <div style={{ background:'var(--ink)',padding:'12px' }}>
+              <label style={S.lbl}>Votre article</label>
+              <input style={S.inp} placeholder="BMW 320d 2019, 75 000 km..." value={prixArticle} onChange={e=>setPrixArticle(e.target.value)} />
+            </div>
+            <div style={{ background:'var(--ink)',padding:'12px' }}>
+              <label style={S.lbl}>Votre prix (EUR)</label>
+              <input style={S.inp} type="number" placeholder="12000" value={prixDemande} onChange={e=>setPrixDemande(e.target.value)} />
+            </div>
+          </div>
+          <button onClick={checkPrix} disabled={prixLoading||!prixArticle||!prixDemande} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(prixLoading||!prixArticle||!prixDemande)?0.5:1 }}>
+            {prixLoading?'Analyse...':'ANALYSER MON PRIX'}
+          </button>
+          {prixResult&&(
+            <div style={{ marginTop:10,background:prixResult.diff>30?'rgba(200,57,43,.08)':prixResult.diff>15?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:prixResult.diff>30?'rgba(200,57,43,.3)':prixResult.diff>15?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'14px' }}>
+              <div style={{ fontFamily:'var(--font-label)',fontSize:26,color:prixResult.diff>30?'var(--red2)':prixResult.diff>15?'var(--warning)':'var(--success2)',letterSpacing:-1,marginBottom:8 }}>
+                {prixResult.diff>0?'+':''}{prixResult.diff}% {prixResult.diff>30?'TROP CHER':prixResult.diff>15?'Un peu eleve':'Prix correct'}
+              </div>
+              <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7 }}>
+                Marche: {prixResult.low} - {prixResult.high} EUR (moy. {prixResult.mid} EUR)<br/>
+                Votre prix: {prixResult.prixDemande} EUR
+                {prixResult.diff>15&&<><br/>Conseil: baisser a {Math.round(prixResult.mid*1.05)} EUR pour vendre plus vite</>}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTool==='flash'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          {!isSubscribed ? <LockOverlay subscribe={subscribe} /> : (
+            <>
+              <div style={{ fontSize:12,color:'var(--gold3)',marginBottom:10,lineHeight:1.6 }}>Annonce urgente avec prix attractif. Pour vendre en moins de 48h.</div>
+              <textarea style={{ ...S.inp,minHeight:75,resize:'vertical',lineHeight:1.6,marginBottom:8 }} placeholder="Decrivez votre article + prix actuel + prix minimum..." value={flashSpecs} onChange={e=>setFlashSpecs(e.target.value)} />
+              <button onClick={genFlash} disabled={flashLoading||!flashSpecs} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(flashLoading||!flashSpecs)?0.5:1 }}>
+                {flashLoading?'Generation...':'GENERER ANNONCE FLASH'}
+              </button>
+              {flashResult?.annonce&&(
+                <div style={{ marginTop:10,background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'14px' }}>
+                  <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:7 }}>{flashResult.annonce.titre}</div>
+                  <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.7,whiteSpace:'pre-wrap' }}>{flashResult.annonce.description}</div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {activeTool==='checklist'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14 }}>
+            <div style={S.lbl}>Checklist avant publication</div>
+            <div style={{ fontFamily:'var(--font-label)',fontSize:22,color:checkScore===6?'var(--success2)':'var(--gold2)',letterSpacing:-1 }}>{checkScore}/6</div>
+          </div>
+          <div style={{ background:'var(--s3)',borderRadius:1,height:4,marginBottom:14,overflow:'hidden' }}>
+            <div style={{ width:(checkScore/6*100)+'%',height:'100%',background:checkScore===6?'var(--success2)':'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width .4s' }} />
+          </div>
+          {checklistItems.map(item=>(
+            <div key={item.key} onClick={()=>setChecklist(c=>({...c,[item.key]:!c[item.key]}))}
+              style={{ display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderBottom:'1px solid var(--border)',cursor:'pointer' }}>
+              <div style={{ width:18,height:18,borderRadius:3,border:'1px solid',borderColor:checklist[item.key]?'var(--gold)':'var(--border2)',background:checklist[item.key]?'rgba(201,168,76,.15)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:11,color:'var(--gold2)' }}>
+                {checklist[item.key]?'v':''}
+              </div>
+              <div style={{ fontSize:13,color:checklist[item.key]?'var(--muted2)':'var(--cream)',textDecoration:checklist[item.key]?'line-through':'none',lineHeight:1.5 }}>{item.label}</div>
+            </div>
+          ))}
+          {checkScore===6&&(
+            <div style={{ marginTop:12,background:'rgba(45,122,79,.1)',border:'1px solid rgba(45,122,79,.3)',borderRadius:3,padding:'11px',fontSize:13,color:'var(--success2)',textAlign:'center' }}>
+              Votre annonce est prete a etre publiee !
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTool==='traduction'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          {!isSubscribed ? <LockOverlay subscribe={subscribe} /> : (
+            <>
+              <div style={{ display:'flex',gap:7,marginBottom:10,flexWrap:'wrap' }}>
+                {Object.entries(tradLangs).map(([code,nom])=>(
+                  <button key={code} onClick={()=>setTradLang(code)}
+                    style={{ background:tradLang===code?'rgba(201,168,76,.1)':'var(--ink)',border:'1px solid',borderColor:tradLang===code?'var(--gold)':'var(--border)',borderRadius:2,color:tradLang===code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>
+                    {nom}
+                  </button>
+                ))}
+              </div>
+              <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.6,marginBottom:8 }} placeholder="Collez votre annonce en francais ici..." value={annonceText} onChange={e=>setAnnonceText(e.target.value)} />
+              <button onClick={genTrad} disabled={tradLoading||!annonceText} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(tradLoading||!annonceText)?0.5:1 }}>
+                {tradLoading?'Traduction...':'TRADUIRE EN '+(tradLangs[tradLang]||'').toUpperCase()}
+              </button>
+              {tradResult&&(
+                <div style={{ marginTop:10,background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'14px' }}>
+                  <div style={S.lbl}>Annonce traduite - {tradLangs[tradLang]}</div>
+                  <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.75,whiteSpace:'pre-wrap' }}>{tradResult}</div>
+                  <button onClick={()=>navigator.clipboard.writeText(tradResult)} style={{ marginTop:8,background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>Copier</button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function HistoriqueTab() {
   const [annonces, setAnnonces] = useState([])
   const [reponses, setReponses] = useState([])
@@ -1035,69 +1099,63 @@ function HistoriqueTab() {
   const [section, setSection] = useState('annonces')
   const [expanded, setExpanded] = useState(null)
 
-  useEffect(() => {
+  useEffect(()=>{
     Promise.all([
       fetch('/api/dashboard/annonces').then(r=>r.json()),
       fetch('/api/dashboard/reponses').then(r=>r.json()),
-    ]).then(([a,r]) => { setAnnonces(a.annonces||[]); setReponses(r.reponses||[]); setLoading(false) }).catch(() => setLoading(false))
-  }, [])
+    ]).then(([a,r])=>{ setAnnonces(a.annonces||[]); setReponses(r.reponses||[]); setLoading(false) }).catch(()=>setLoading(false))
+  },[])
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Mes creations</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Historique</h2>
-      </div>
-      <div style={{ display:'flex',gap:1,background:'var(--border)',marginBottom:14 }}>
-        {[['annonces','Annonces ('+annonces.length+')'],['reponses','Reponses ('+reponses.length+')']].map(([id,label]) => (
-          <button key={id} onClick={() => setSection(id)}
-            style={{ flex:1,background:section===id?'var(--s1)':'var(--ink)',border:'none',borderBottom:section===id?'2px solid var(--gold)':'2px solid transparent',color:section===id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:12,fontWeight:500,padding:'12px',transition:'all .15s' }}>
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Mes creations</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Historique</h2></div>
+      <div style={{ display:'flex',gap:1,background:'var(--border)',marginBottom:12 }}>
+        {[['annonces','Annonces ('+annonces.length+')'],['reponses','Reponses ('+reponses.length+')']].map(([id,label])=>(
+          <button key={id} onClick={()=>setSection(id)}
+            style={{ flex:1,background:section===id?'var(--s1)':'var(--ink)',border:'none',borderBottom:section===id?'2px solid var(--gold)':'2px solid transparent',color:section===id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:12,fontWeight:500,padding:'11px' }}>
             {label}
           </button>
         ))}
       </div>
-      {loading && <div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
-      {section === 'annonces' && !loading && (
-        annonces.length === 0
-          ? <div style={{ textAlign:'center',padding:40,color:'var(--muted2)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>Aucune annonce generee</div>
-          : annonces.map(a => (
+      {loading&&<div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
+      {section==='annonces'&&!loading&&(
+        annonces.length===0
+          ? <div style={{ textAlign:'center',padding:36,color:'var(--muted2)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>Aucune annonce generee</div>
+          : annonces.map(a=>(
             <div key={a.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
-              <div style={{ padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,cursor:'pointer' }}
-                onClick={() => setExpanded(expanded===a.id?null:a.id)}>
+              <div style={{ padding:'12px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,cursor:'pointer' }}
+                onClick={()=>setExpanded(expanded===a.id?null:a.id)}>
                 <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:3,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{a.titre||'Sans titre'}</div>
+                  <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{a.titre||'Sans titre'}</div>
                   <div style={{ fontSize:11,color:'var(--muted2)' }}>{a.type} · {new Date(a.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
                 </div>
-                <div style={{ display:'flex',alignItems:'center',gap:10,flexShrink:0 }}>
-                  {a.scoreGrade && <span style={{ fontFamily:'var(--font-label)',fontSize:18,color:a.score>=70?'var(--gold2)':'var(--muted2)' }}>{a.score}</span>}
-                  <span style={{ fontSize:12,color:'var(--muted)',transition:'transform .2s',transform:expanded===a.id?'rotate(180deg)':'rotate(0deg)' }}>▾</span>
-                </div>
+                <span style={{ fontSize:12,color:'var(--muted)',flexShrink:0,transform:expanded===a.id?'rotate(180deg)':'rotate(0deg)',transition:'transform .2s' }}>v</span>
               </div>
-              {expanded === a.id && (
-                <div style={{ borderTop:'1px solid var(--border)',padding:'14px 20px',background:'var(--s1)' }}>
-                  {a.description && <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.75,marginBottom:10,whiteSpace:'pre-wrap' }}>{a.description}</div>}
-                  {a.pointsForts && <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic' }}>{a.pointsForts}</div>}
+              {expanded===a.id&&(
+                <div style={{ borderTop:'1px solid var(--border)',padding:'12px 18px',background:'var(--s1)' }}>
+                  {a.description&&<div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.75,marginBottom:8,whiteSpace:'pre-wrap' }}>{a.description}</div>}
+                  {a.pointsForts&&<div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic' }}>{a.pointsForts}</div>}
                 </div>
               )}
             </div>
           ))
       )}
-      {section === 'reponses' && !loading && (
-        reponses.length === 0
-          ? <div style={{ textAlign:'center',padding:40,color:'var(--muted2)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>Aucune reponse generee</div>
-          : reponses.map(r => (
+      {section==='reponses'&&!loading&&(
+        reponses.length===0
+          ? <div style={{ textAlign:'center',padding:36,color:'var(--muted2)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>Aucune reponse generee</div>
+          : reponses.map(r=>(
             <div key={r.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
-              <div style={{ padding:'14px 20px',cursor:'pointer' }} onClick={() => setExpanded(expanded===r.id?null:r.id)}>
-                <div style={{ fontSize:11,color:'var(--muted2)',marginBottom:4 }}>Message: &ldquo;{r.messageAcheteur.slice(0,70)}&rdquo;</div>
+              <div style={{ padding:'12px 18px',cursor:'pointer' }} onClick={()=>setExpanded(expanded===r.id?null:r.id)}>
+                <div style={{ fontSize:11,color:'var(--muted2)',marginBottom:3 }}>Message: {r.messageAcheteur.slice(0,70)}...</div>
                 <div style={{ fontSize:11,color:'var(--muted)',display:'flex',justifyContent:'space-between' }}>
                   <span>{new Date(r.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long'})}</span>
-                  <span style={{ color:'var(--gold3)' }}>{expanded===r.id?'Masquer ▲':'Voir la reponse ▾'}</span>
+                  <span style={{ color:'var(--gold3)' }}>{expanded===r.id?'Masquer':'Voir la reponse'}</span>
                 </div>
               </div>
-              {expanded === r.id && (
-                <div style={{ borderTop:'1px solid var(--border)',padding:'14px 20px',background:'var(--s1)' }}>
+              {expanded===r.id&&(
+                <div style={{ borderTop:'1px solid var(--border)',padding:'12px 18px',background:'var(--s1)' }}>
                   <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{r.reponsePrete}</div>
-                  {r.suggestion && <div style={{ marginTop:10,fontSize:12,color:'var(--muted2)',fontStyle:'italic',borderTop:'1px solid var(--border)',paddingTop:10 }}>{r.suggestion}</div>}
+                  {r.suggestion&&<div style={{ marginTop:8,fontSize:12,color:'var(--muted2)',fontStyle:'italic',borderTop:'1px solid var(--border)',paddingTop:8 }}>{r.suggestion}</div>}
                 </div>
               )}
             </div>
@@ -1107,67 +1165,51 @@ function HistoriqueTab() {
   )
 }
 
-// ─── TARIFS TAB ───────────────────────────────────────────
-function TarifsTab({ isSubscribed, planKey, subscribe, showSubModal }) {
+function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   const PLANS = [
-    { key:'starter', name:'Starter', price:'3,99', annonces:5, reponses:20, features:['5 annonces/semaine','20 reponses/semaine','Estimation de prix','Score qualite'] },
-    { key:'business', name:'Business', price:'5,99', annonces:15, reponses:60, features:['15 annonces/semaine','60 reponses/semaine','Tout le Starter','Parrainage','Conseiller IA'], recommended:true },
-    { key:'expert', name:'Expert', price:'9,99', annonces:40, reponses:250, features:['40 annonces/semaine','250 reponses/semaine','Tout le Business','Priorite support'] },
+    {key:'starter',name:'Starter',price:'3,99',features:['5 annonces/semaine','20 reponses/semaine','Estimation de prix','Score qualite']},
+    {key:'business',name:'Business',price:'5,99',features:['15 annonces/semaine','60 reponses/semaine','Tout Starter inclus','Parrainage'],recommended:true},
+    {key:'expert',name:'Expert',price:'9,99',features:['40 annonces/semaine','250 reponses/semaine','Tout Business inclus','Priorite support']},
   ]
   const PACKS = [
-    { name:'5 annonces',price:'9,99 EUR',unit:'2,00 EUR/ann.',link:process.env.NEXT_PUBLIC_STRIPE_PACK5||'' },
-    { name:'10 annonces',price:'17,99 EUR',unit:'1,80 EUR/ann.',link:process.env.NEXT_PUBLIC_STRIPE_PACK10||'' },
-    { name:'50 reponses',price:'14,99 EUR',unit:'0,30 EUR/rep.',link:process.env.NEXT_PUBLIC_STRIPE_REP50||'' },
-    { name:'500 reponses',price:'39,99 EUR',unit:'0,08 EUR/rep.',link:process.env.NEXT_PUBLIC_STRIPE_REP500||'' },
+    {name:'5 annonces',price:'9,99 EUR',unit:'2,00/ann.'},
+    {name:'10 annonces',price:'17,99 EUR',unit:'1,80/ann.'},
+    {name:'50 reponses',price:'14,99 EUR',unit:'0,30/rep.'},
+    {name:'500 reponses',price:'39,99 EUR',unit:'0,08/rep.'},
   ]
-
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Offres</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Tarifs</h2>
-      </div>
-
-      <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:16 }}>
-        {PLANS.map(plan => {
-          const isCurrentPlan = planKey === plan.key || (planKey === 'pro' && plan.key === 'business')
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Offres</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Tarifs</h2></div>
+      <div className="db-plans-grid" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:14 }}>
+        {PLANS.map(plan=>{
+          const isCurrent = planKey===plan.key||(planKey==='pro'&&plan.key==='business')
           return (
-            <div key={plan.key} style={{ background:plan.recommended?'var(--s1)':'var(--ink)',padding:'24px 20px',position:'relative',borderTop:plan.recommended?'2px solid var(--gold)':'2px solid transparent' }}>
-              {plan.recommended && (
-                <div style={{ position:'absolute',top:0,left:'50%',transform:'translateX(-50%) translateY(-50%)',background:'var(--gold)',color:'#030303',fontFamily:'var(--font-label)',fontSize:8,letterSpacing:2,padding:'3px 10px',whiteSpace:'nowrap' }}>RECOMMANDE</div>
-              )}
-              <div style={{ fontFamily:'var(--font-label)',fontSize:16,letterSpacing:2,marginBottom:4 }}>{plan.name}</div>
-              <div style={{ fontFamily:'var(--font-label)',fontSize:32,color:plan.recommended?'var(--gold2)':'var(--cream)',letterSpacing:-2,lineHeight:1,marginBottom:3 }}>{plan.price}<span style={{ fontSize:12,color:'var(--muted2)',letterSpacing:0 }}> EUR/sem</span></div>
-              <div style={{ marginBottom:16,marginTop:12 }}>
-                {plan.features.map(f => <div key={f} style={{ fontSize:11,color:'var(--muted2)',marginBottom:6,display:'flex',alignItems:'center',gap:6 }}><span style={{ color:plan.recommended?'var(--gold3)':'var(--muted)' }}>+</span>{f}</div>)}
+            <div key={plan.key} style={{ background:plan.recommended?'var(--s1)':'var(--ink)',padding:'22px 18px',position:'relative',borderTop:plan.recommended?'2px solid var(--gold)':'2px solid transparent' }}>
+              {plan.recommended&&<div style={{ position:'absolute',top:0,left:'50%',transform:'translateX(-50%) translateY(-50%)',background:'var(--gold)',color:'#030303',fontFamily:'var(--font-label)',fontSize:7,letterSpacing:2,padding:'3px 8px',whiteSpace:'nowrap' }}>RECOMMANDE</div>}
+              <div style={{ fontFamily:'var(--font-label)',fontSize:14,letterSpacing:2,marginBottom:4 }}>{plan.name}</div>
+              <div style={{ fontFamily:'var(--font-label)',fontSize:28,color:plan.recommended?'var(--gold2)':'var(--cream)',letterSpacing:-2,lineHeight:1,marginBottom:12 }}>{plan.price}<span style={{ fontSize:11,color:'var(--muted2)',letterSpacing:0 }}> EUR/sem</span></div>
+              <div style={{ marginBottom:14 }}>
+                {plan.features.map(f=><div key={f} style={{ fontSize:11,color:'var(--muted2)',marginBottom:5,display:'flex',alignItems:'center',gap:5 }}><span style={{ color:plan.recommended?'var(--gold3)':'var(--muted)' }}>+</span>{f}</div>)}
               </div>
-              {isCurrentPlan && isSubscribed ? (
-                <button onClick={showSubModal} style={{ width:'100%',background:'rgba(201,168,76,.1)',border:'1px solid var(--gold-border)',borderRadius:2,color:'var(--gold2)',cursor:'pointer',fontSize:11,padding:'10px',letterSpacing:1 }}>
-                  Plan actif — Gerer
-                </button>
-              ) : (
-                <button onClick={() => subscribe(plan.key)}
-                  style={{ width:'100%',background:plan.recommended?'linear-gradient(135deg,var(--gold3),var(--gold2))':'none',border:plan.recommended?'none':'1px solid var(--border2)',borderRadius:2,color:plan.recommended?'#030303':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:12,letterSpacing:1.5,padding:'11px',transition:'all .2s' }}>
-                  {isSubscribed ? 'Changer pour ' + plan.name : 'Choisir ' + plan.name}
-                </button>
-              )}
+              {isCurrent&&isSubscribed
+                ? <button onClick={openSubModal} style={{ width:'100%',background:'rgba(201,168,76,.1)',border:'1px solid var(--gold-border)',borderRadius:2,color:'var(--gold2)',cursor:'pointer',fontSize:11,padding:'9px',letterSpacing:1 }}>Plan actif - Gerer</button>
+                : <button onClick={()=>subscribe(plan.key)} style={{ width:'100%',background:plan.recommended?'linear-gradient(135deg,var(--gold3),var(--gold2))':'none',border:plan.recommended?'none':'1px solid var(--border2)',borderRadius:2,color:plan.recommended?'#030303':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:11,letterSpacing:1.5,padding:'10px',transition:'all .2s' }}>
+                    {isSubscribed?'Changer - '+plan.name:'Choisir '+plan.name}
+                  </button>
+              }
             </div>
           )
         })}
       </div>
-
-      <div style={{ padding:'12px 0',textAlign:'center' }}>
-        <span style={{ fontSize:11,color:'var(--muted)',letterSpacing:2,textTransform:'uppercase' }}>ou packs a l&apos;unite</span>
-      </div>
+      <div style={{ textAlign:'center',padding:'10px 0' }}><span style={{ fontSize:11,color:'var(--muted)',letterSpacing:2,textTransform:'uppercase' }}>ou packs a l\'unite</span></div>
       <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)' }}>
-        {PACKS.map(p => (
-          <div key={p.name} style={{ background:'var(--ink)',padding:20 }}>
-            <div style={{ fontFamily:'var(--font-display)',fontSize:16,fontWeight:600,marginBottom:2 }}>{p.name}</div>
-            <div style={{ fontSize:11,color:'var(--muted2)',marginBottom:14 }}>{p.unit} · Paiement unique</div>
-            <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:10 }}>
-              <span style={{ fontFamily:'var(--font-label)',fontSize:20,color:'var(--muted3)',letterSpacing:-1 }}>{p.price}</span>
-              <button onClick={() => p.link?window.open(p.link,'_blank'):alert('Lien non configure')}
-                className="btn-ghost" style={{ fontSize:11,padding:'7px 16px' }}>Acheter</button>
+        {PACKS.map(p=>(
+          <div key={p.name} style={{ background:'var(--ink)',padding:'18px' }}>
+            <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:2 }}>{p.name}</div>
+            <div style={{ fontSize:11,color:'var(--muted2)',marginBottom:12 }}>{p.unit} · Paiement unique</div>
+            <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:8 }}>
+              <span style={{ fontFamily:'var(--font-label)',fontSize:18,color:'var(--muted3)',letterSpacing:-1 }}>{p.price}</span>
+              <button className="btn-ghost" style={{ fontSize:11,padding:'6px 14px' }}>Acheter</button>
             </div>
           </div>
         ))}
@@ -1176,67 +1218,52 @@ function TarifsTab({ isSubscribed, planKey, subscribe, showSubModal }) {
   )
 }
 
-// ─── PROFIL TAB ───────────────────────────────────────────
 function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubModal, usage, credits, purchases, limits }) {
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:20 }}>
-        <div className="label" style={{ marginBottom:8 }}>Mon compte</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:30,fontWeight:400,letterSpacing:-.5 }}>Profil</h2>
-      </div>
-
-      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }} className="db-grid2">
-        <div style={{ background:'var(--ink)',padding:'20px 24px' }}>
-          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:8 }}>Compte</div>
-          <div style={{ fontFamily:'var(--font-display)',fontSize:20,fontWeight:600,marginBottom:2 }}>{user.name||'Sans nom'}</div>
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Mon compte</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Profil</h2></div>
+      <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+        <div style={{ background:'var(--ink)',padding:'18px 20px' }}>
+          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:7 }}>Compte</div>
+          <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,marginBottom:2 }}>{user.name||'Sans nom'}</div>
           <div style={{ fontSize:12,color:'var(--muted2)' }}>{user.email}</div>
         </div>
-        <div style={{ background:'var(--ink)',padding:'20px 24px' }}>
-          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:8 }}>Plan actuel</div>
-          <div style={{ fontFamily:'var(--font-label)',fontSize:22,letterSpacing:2,color:isSubscribed?'var(--gold2)':'var(--muted2)',marginBottom:2 }}>
-            {PLAN_NAMES[planKey].toUpperCase()}
-          </div>
-          <div style={{ fontSize:11,color:'var(--muted)' }}>
-            {isSubscribed && !isPremium ? PLAN_PRICES[planKey]+' EUR/semaine' : isPremium ? 'Acces Premium' : 'Gratuit'}
-          </div>
+        <div style={{ background:'var(--ink)',padding:'18px 20px' }}>
+          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:7 }}>Plan actuel</div>
+          <div style={{ fontFamily:'var(--font-label)',fontSize:20,letterSpacing:2,color:isSubscribed?'var(--gold2)':'var(--muted2)',marginBottom:2 }}>{PLAN_NAMES[planKey].toUpperCase()}</div>
+          <div style={{ fontSize:11,color:'var(--muted)' }}>{isSubscribed&&!isPremium?PLAN_PRICES[planKey]+' EUR/semaine':isPremium?'Acces Premium':'Gratuit'}</div>
         </div>
       </div>
-
-      {/* Limites */}
-      <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:1 }}>
+      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:1 }}>
         {[
-          { val:usage.annonces, label:'Annonces', sub:'cette semaine' },
-          { val:usage.reponses, label:'Reponses', sub:'cette semaine' },
-          { val:limits.annonces===Infinity?'∞':limits.annonces, label:'Limite', sub:'annonces/sem' },
-        ].map(s => (
-          <div key={s.label} style={{ background:'var(--s1)',padding:'18px',textAlign:'center' }}>
-            <div style={{ fontFamily:'var(--font-display)',fontSize:26,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:4 }}>{s.val}</div>
+          {val:usage.annonces,label:'Annonces',sub:'cette semaine'},
+          {val:usage.reponses,label:'Reponses',sub:'cette semaine'},
+          {val:limits.annonces===Infinity?'∞':limits.annonces,label:'Limite',sub:'ann./semaine'},
+        ].map(s=>(
+          <div key={s.label} style={{ background:'var(--s1)',padding:'16px',textAlign:'center' }}>
+            <div style={{ fontFamily:'var(--font-display)',fontSize:24,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:3 }}>{s.val}</div>
             <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1 }}>{s.label}</div>
             <div style={{ fontSize:9,color:'var(--muted)',marginTop:2 }}>{s.sub}</div>
           </div>
         ))}
       </div>
-
-      {/* Abonnement */}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'20px 24px',marginBottom:1 }}>
-        <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:12 }}>Abonnement</div>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
+        <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:10 }}>Abonnement</div>
         {isSubscribed ? (
-          <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap' }}>
+          <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,flexWrap:'wrap' }}>
             <div>
-              <div style={{ fontSize:14,color:'var(--cream)',marginBottom:3 }}>
-                Plan {PLAN_NAMES[planKey]} actif{!isPremium ? ' · '+PLAN_PRICES[planKey]+' EUR/semaine' : ''}
-              </div>
-              {!isPremium && <div style={{ fontSize:11,color:'var(--muted)' }}>Annulable a tout moment · Non remboursable</div>}
+              <div style={{ fontSize:14,color:'var(--cream)',marginBottom:2 }}>Plan {PLAN_NAMES[planKey]} actif{!isPremium?' · '+PLAN_PRICES[planKey]+' EUR/semaine':''}</div>
+              {!isPremium&&<div style={{ fontSize:11,color:'var(--muted)' }}>Annulable a tout moment · Non remboursable</div>}
             </div>
-            {!isPremium && <button onClick={openSubModal} className="btn-ghost" style={{ fontSize:11 }}>Gerer</button>}
+            {!isPremium&&<button onClick={openSubModal} className="btn-ghost" style={{ fontSize:11 }}>Gerer</button>}
           </div>
         ) : (
           <div>
-            <div style={{ fontSize:13,color:'var(--muted2)',marginBottom:12 }}>Plan gratuit · Abonnez-vous pour acceder aux annonces et reponses</div>
-            <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
-              {[['starter','Starter','3,99'],['business','Business','5,99'],['expert','Expert','9,99']].map(([key,name,price]) => (
-                <button key={key} onClick={() => subscribe(key)}
-                  style={{ background:key==='business'?'linear-gradient(135deg,var(--gold3),var(--gold2))':'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:key==='business'?'#030303':'var(--muted2)',cursor:'pointer',padding:'10px 6px',fontSize:11,transition:'all .15s' }}>
+            <div style={{ fontSize:13,color:'var(--muted2)',marginBottom:10 }}>Plan gratuit · Abonnez-vous pour generer des annonces</div>
+            <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:7 }}>
+              {[['starter','Starter','3,99'],['business','Business','5,99'],['expert','Expert','9,99']].map(([key,name,price])=>(
+                <button key={key} onClick={()=>subscribe(key)}
+                  style={{ background:key==='business'?'linear-gradient(135deg,var(--gold3),var(--gold2))':'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:key==='business'?'#030303':'var(--muted2)',cursor:'pointer',padding:'9px 5px',fontSize:11 }}>
                   <div style={{ fontWeight:600,marginBottom:2 }}>{name}</div>
                   <div style={{ fontSize:12 }}>{price} EUR/sem</div>
                 </button>
@@ -1245,36 +1272,27 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
           </div>
         )}
       </div>
-
-      {/* Parrainage */}
-      {isSubscribed && !isPremium && <ReferralSection />}
-
-      {/* Comment ça marche parrainage */}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'20px 24px',marginBottom:1 }}>
-        <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:12 }}>Comment fonctionne le parrainage ?</div>
+      {isSubscribed&&!isPremium&&<ReferralSection />}
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
+        <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:10 }}>Comment fonctionne le parrainage ?</div>
         {[
           '1. Copiez votre lien de parrainage personnel ci-dessus.',
-          '2. Envoyez-le a un ami qui veut vendre ses affaires.',
-          '3. Si votre ami prend au minimum le plan Starter, vous recevez automatiquement 1 semaine gratuite Business.',
-          '4. Votre ami beneficie aussi d\'une reduction a son inscription.',
-          'Note : Si vous avez ete recrute par un affilie, sa commission est preservee sur les futurs clients que vous parrainez.',
-        ].map((s,i) => (
-          <div key={i} style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,marginBottom:6,paddingLeft:i<4?0:0 }}>{s}</div>
-        ))}
+          '2. Envoyez-le a un ami.',
+          '3. Si votre ami prend le plan Starter ou plus, vous recevez 1 semaine Business gratuite.',
+          '4. Votre ami beneficie aussi d\'une reduction.',
+        ].map((s,i)=>(<div key={i} style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,marginBottom:5 }}>{s}</div>))}
       </div>
-
-      {/* Historique achats */}
-      {purchases && purchases.length > 0 && (
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'20px 24px',marginTop:1 }}>
-          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:14 }}>Historique des achats</div>
-          {purchases.map(p => (
-            <div key={p.id} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid var(--border)',gap:10 }}>
+      {purchases&&purchases.length>0&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px' }}>
+          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:12 }}>Historique des achats</div>
+          {purchases.map(p=>(
+            <div key={p.id} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'9px 0',borderBottom:'1px solid var(--border)',gap:8 }}>
               <div>
                 <div style={{ fontSize:13,color:'var(--cream)' }}>{p.packName}</div>
                 <div style={{ fontSize:11,color:'var(--muted2)' }}>{new Date(p.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
               </div>
               <div style={{ textAlign:'right',flexShrink:0 }}>
-                <div style={{ fontFamily:'var(--font-label)',fontSize:16,color:'var(--gold2)' }}>{p.amount} EUR</div>
+                <div style={{ fontFamily:'var(--font-label)',fontSize:15,color:'var(--gold2)' }}>{p.amount} EUR</div>
                 <div style={{ fontSize:10,color:'var(--muted2)' }}>{p.quantity} {p.packType}</div>
               </div>
             </div>
@@ -1286,328 +1304,75 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
 }
 
 
-// ─── OUTILS TAB ───────────────────────────────────────────
-// Idees 12, 13, 14, 15, 16, 17, 18
-function OutilsTab({ isSubscribed, subscribe }) {
-  const [activeTool, setActiveTool] = useState(null)
+function LaunchBanner() {
+  const [countdown, setCountdown] = useState(null)
+  const LAUNCH_END = new Date('2026-06-30T23:59:59.000Z')
 
-  // Idee 13 - Generateur de titre seul
-  const [titreSpecs, setTitreSpecs] = useState('')
-  const [titres, setTitres] = useState([])
-  const [titreLoading, setTitreLoading] = useState(false)
-
-  // Idee 14 - Detecteur prix abusif
-  const [prixArticle, setPrixArticle] = useState('')
-  const [prixDemande, setPrixDemande] = useState('')
-  const [prixResult, setPrixResult] = useState(null)
-  const [prixLoading, setPrixLoading] = useState(false)
-
-  // Idee 16 - Mode vente flash
-  const [flashSpecs, setFlashSpecs] = useState('')
-  const [flashResult, setFlashResult] = useState(null)
-  const [flashLoading, setFlashLoading] = useState(false)
-
-  // Idee 17 - Checklist
-  const [checklist, setChecklist] = useState({
-    photos: false, prix: false, description: false,
-    disponible: false, contact: false, ct: false,
-  })
-
-  // Idee 18 - Traduction
-  const [annonceText, setAnnonceText] = useState('')
-  const [tradLang, setTradLang] = useState('en')
-  const [tradResult, setTradResult] = useState('')
-  const [tradLoading, setTradLoading] = useState(false)
-
-  const genTitres = async () => {
-    if (!titreSpecs) return
-    setTitreLoading(true)
-    try {
-      const res = await fetch('/api/ai/titres', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ specs: titreSpecs })
+  useEffect(() => {
+    const update = () => {
+      const diff = LAUNCH_END - new Date()
+      if (diff <= 0) { setCountdown(null); return }
+      setCountdown({
+        days: Math.floor(diff/(1000*60*60*24)),
+        hours: Math.floor((diff%(1000*60*60*24))/(1000*60*60)),
+        minutes: Math.floor((diff%(1000*60*60))/(1000*60)),
+        seconds: Math.floor((diff%(1000*60))/1000),
       })
-      const data = await res.json()
-      setTitres(data.titres || [])
-    } catch(e) {}
-    setTitreLoading(false)
-  }
+    }
+    update()
+    const t = setInterval(update, 1000)
+    return () => clearInterval(t)
+  }, [])
 
-  const checkPrix = async () => {
-    if (!prixArticle || !prixDemande) return
-    setPrixLoading(true)
-    try {
-      const res = await fetch('/api/ai/estimation', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ specs: prixArticle })
-      })
-      const data = await res.json()
-      const prix = parseFloat(prixDemande)
-      const mid = data.mid || 0
-      const diff = mid > 0 ? ((prix - mid) / mid) * 100 : 0
-      setPrixResult({ ...data, prixDemande: prix, diff: Math.round(diff) })
-    } catch(e) {}
-    setPrixLoading(false)
-  }
-
-  const genFlash = async () => {
-    if (!flashSpecs) return
-    setFlashLoading(true)
-    try {
-      const res = await fetch('/api/ai/annonce', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ specs: flashSpecs, urgence: 'rapide', type: 'flash', inputData: {} })
-      })
-      const data = await res.json()
-      setFlashResult(data)
-    } catch(e) {}
-    setFlashLoading(false)
-  }
-
-  const tradLangs = { en: 'Anglais', es: 'Espagnol', de: 'Allemand', it: 'Italien', nl: 'Neerlandais' }
-
-  const genTrad = async () => {
-    if (!annonceText) return
-    setTradLoading(true)
-    try {
-      const res = await fetch('/api/ai/annonce', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ specs: 'Traduis cette annonce en ' + tradLangs[tradLang] + ': ' + annonceText, lang: tradLang, urgence: 'normal', type: 'traduction', inputData: {} })
-      })
-      const data = await res.json()
-      setTradResult(data.raw || '')
-    } catch(e) {}
-    setTradLoading(false)
-  }
-
-  const checklistItems = [
-    { key: "photos", label: "J ai au moins 5 photos claires (lumiere naturelle)" },
-    { key: "prix", label: "Mon prix correspond au marche (utiliser l estimateur)" },
-    { key: 'description', label: 'Ma description repond aux questions habituelles des acheteurs' },
-    { key: 'disponible', label: 'Mes coordonnees et disponibilites sont claires' },
-    { key: "contact", label: "J ai precise si je fais de la livraison / envoi" },
-    { key: 'ct', label: 'Tous les documents importants sont mentionnes (CT, facture...)' },
-  ]
-  const checklistScore = Object.values(checklist).filter(Boolean).length
-  const checklistTotal = checklistItems.length
-
-  const TOOLS = [
-    { id: 'titre', icon: '✍', label: 'Generateur de titre', desc: 'Obtenez 5 titres optimises pour maximiser les clics', badge: 'Gratuit' },
-    { id: 'prix', icon: '💰', label: 'Detecteur prix abusif', desc: 'Verifiez si votre prix est dans le marche ou trop eleve', badge: 'Gratuit' },
-    { id: 'flash', icon: '⚡', label: 'Mode vente flash', desc: 'Annonce ultra-agressive pour vendre en moins de 48h', badge: isSubscribed ? 'Abonne' : 'Subscriber Only' },
-    { id: 'checklist', icon: '✓', label: 'Checklist avant publication', desc: 'Verifiez que votre annonce est prete a etre publiee', badge: 'Gratuit' },
-    { id: 'traduction', icon: '🌍', label: 'Traduction annonce', desc: 'Traduisez votre annonce en anglais, espagnol, allemand...', badge: isSubscribed ? 'Abonne' : 'Subscriber Only' },
-  ]
+  if (!countdown) return null
 
   return (
-    <div className="db-fade">
-      <div style={{ marginBottom: 20 }}>
-        <div className="label" style={{ marginBottom: 8 }}>Boite a outils</div>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 400, letterSpacing: -.5 }}>Outils supplementaires</h2>
+    <div style={{ background:'linear-gradient(90deg,var(--gold3),var(--gold2))',borderRadius:3,padding:'12px 18px',marginBottom:16,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:10 }}>
+      <div>
+        <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:2,color:'#030303',marginBottom:2 }}>LANCEMENT GRATUIT</div>
+        <div style={{ fontSize:12,color:'rgba(0,0,0,.7)' }}>Acces Business offert jusqu'au 30 juin 2026</div>
       </div>
-
-      {/* Liste des outils */}
-      <div className='db-tools-grid' style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 16 }}>
-        {TOOLS.map(tool => (
-          <div key={tool.id} onClick={() => setActiveTool(activeTool === tool.id ? null : tool.id)}
-            style={{ background: activeTool === tool.id ? 'var(--s2)' : 'var(--ink)', padding: '20px', cursor: 'pointer', transition: 'all .2s', borderTop: activeTool === tool.id ? '2px solid var(--gold)' : '2px solid transparent' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ fontSize: 22 }}>{tool.icon}</span>
-              <span style={{ fontFamily: 'var(--font-label)', fontSize: 8, letterSpacing: 1.5, color: tool.badge === 'Gratuit' ? 'var(--success2)' : 'var(--gold3)', background: tool.badge === 'Gratuit' ? 'rgba(45,122,79,.1)' : 'rgba(201,168,76,.1)', border: '1px solid', borderColor: tool.badge === 'Gratuit' ? 'rgba(45,122,79,.2)' : 'rgba(201,168,76,.2)', borderRadius: 2, padding: '2px 6px' }}>
-                {tool.badge}
-              </span>
-            </div>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{tool.label}</div>
-            <div style={{ fontSize: 12, color: 'var(--muted2)', lineHeight: 1.5 }}>{tool.desc}</div>
+      <div style={{ display:'flex',gap:6 }}>
+        {[[countdown.days,'J'],[countdown.hours,'H'],[countdown.minutes,'M'],[countdown.seconds,'S']].map(([v,u])=>(
+          <div key={u} style={{ background:'rgba(0,0,0,.15)',borderRadius:2,padding:'4px 8px',textAlign:'center',minWidth:36 }}>
+            <div style={{ fontFamily:'var(--font-label)',fontSize:16,color:'#030303',letterSpacing:-1,lineHeight:1 }}>{String(v).padStart(2,'0')}</div>
+            <div style={{ fontSize:8,color:'rgba(0,0,0,.5)',letterSpacing:1 }}>{u}</div>
           </div>
         ))}
       </div>
-
-      {/* Outil actif */}
-
-      {/* Idee 13 - Generateur titres */}
-      {activeTool === 'titre' && (
-        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
-          <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Generateur de titres optimises</div>
-          <textarea style={{ ...S.inp, minHeight: 70, resize: 'vertical', lineHeight: 1.6, marginBottom: 8 }}
-            placeholder="Decrivez votre article en quelques mots: BMW 320d 2019, 75 000 km, diesel, bon etat..."
-            value={titreSpecs} onChange={e => setTitreSpecs(e.target.value)} />
-          <button onClick={genTitres} disabled={titreLoading || !titreSpecs} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (titreLoading || !titreSpecs) ? .5 : 1 }}>
-            {titreLoading ? 'Generation...' : 'GENERER 5 TITRES'}
-          </button>
-          {titres.length > 0 && (
-            <div style={{ marginTop: 12 }}>
-              {titres.map((t, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ink)', border: '1px solid var(--border)', padding: '10px 14px', marginBottom: 4, gap: 10 }}>
-                  <div style={{ fontSize: 13, color: 'var(--cream)' }}>{t}</div>
-                  <button onClick={() => navigator.clipboard.writeText(t)} style={{ background: 'none', border: '1px solid var(--border2)', borderRadius: 2, color: 'var(--muted2)', cursor: 'pointer', fontSize: 10, padding: '4px 8px', flexShrink: 0 }}>Copier</button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Idee 14 - Detecteur prix */}
-      {activeTool === 'prix' && (
-        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
-          <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Detecteur de prix abusif</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--border)', marginBottom: 8 }}>
-            <div style={{ background: 'var(--ink)', padding: '14px' }}>
-              <label style={S.lbl}>Votre article</label>
-              <input style={S.inp} placeholder="BMW 320d 2019, 75 000 km..." value={prixArticle} onChange={e => setPrixArticle(e.target.value)} />
-            </div>
-            <div style={{ background: 'var(--ink)', padding: '14px' }}>
-              <label style={S.lbl}>Votre prix demande (EUR)</label>
-              <input style={S.inp} type="number" placeholder="12000" value={prixDemande} onChange={e => setPrixDemande(e.target.value)} />
-            </div>
-          </div>
-          <button onClick={checkPrix} disabled={prixLoading || !prixArticle || !prixDemande} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (prixLoading || !prixArticle || !prixDemande) ? .5 : 1 }}>
-            {prixLoading ? 'Analyse...' : 'ANALYSER MON PRIX'}
-          </button>
-          {prixResult && (
-            <div style={{ marginTop: 12 }}>
-              <div style={{ background: prixResult.diff > 30 ? 'rgba(200,57,43,.08)' : prixResult.diff > 15 ? 'rgba(255,165,0,.08)' : 'rgba(45,122,79,.08)', border: '1px solid', borderColor: prixResult.diff > 30 ? 'rgba(200,57,43,.3)' : prixResult.diff > 15 ? 'rgba(255,165,0,.3)' : 'rgba(45,122,79,.3)', padding: '16px', marginBottom: 8 }}>
-                <div style={{ fontFamily: 'var(--font-label)', fontSize: 28, color: prixResult.diff > 30 ? 'var(--red2)' : prixResult.diff > 15 ? 'var(--warning)' : 'var(--success2)', letterSpacing: -1, marginBottom: 8 }}>
-                  {prixResult.diff > 0 ? '+' : ''}{prixResult.diff}% {prixResult.diff > 30 ? '⚠️ TROP CHER' : prixResult.diff > 15 ? '⚡ Un peu eleve' : '✓ Prix correct'}
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--muted2)', lineHeight: 1.6 }}>
-                  Prix du marche : <strong style={{ color: 'var(--cream)' }}>{prixResult.low} - {prixResult.high} EUR</strong> (moyenne {prixResult.mid} EUR)<br />
-                  Votre prix : <strong style={{ color: 'var(--cream)' }}>{prixResult.prixDemande} EUR</strong>
-                  {prixResult.diff > 15 && <><br />Conseil : Baisser a <strong style={{ color: 'var(--gold2)' }}>{Math.round(prixResult.mid * 1.05)} EUR</strong> pour vendre plus vite</>}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Idee 16 - Mode flash */}
-      {activeTool === 'flash' && (
-        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
-          {!isSubscribed ? (
-            <LockOverlay subscribe={subscribe} />
-          ) : (
-            <>
-              <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Mode vente flash</div>
-              <div style={{ fontSize: 12, color: 'var(--gold3)', marginBottom: 12, lineHeight: 1.6 }}>
-                ⚡ Prix attractif, urgence maximale, disponibilite immediate. Pour vendre en moins de 48h.
-              </div>
-              <textarea style={{ ...S.inp, minHeight: 80, resize: 'vertical', lineHeight: 1.6, marginBottom: 8 }}
-                placeholder="Decrivez votre article + prix actuel + prix minimum accepte..."
-                value={flashSpecs} onChange={e => setFlashSpecs(e.target.value)} />
-              <button onClick={genFlash} disabled={flashLoading || !flashSpecs} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (flashLoading || !flashSpecs) ? .5 : 1 }}>
-                {flashLoading ? 'Generation...' : '⚡ GENERER ANNONCE FLASH'}
-              </button>
-              {flashResult?.annonce && (
-                <div style={{ marginTop: 12, background: 'var(--ink)', border: '1px solid var(--border)', borderLeft: '3px solid var(--red)', padding: '16px' }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, marginBottom: 8 }}>{flashResult.annonce.titre}</div>
-                  <div style={{ fontSize: 13, color: 'var(--cream)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{flashResult.annonce.description}</div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
-
-      {/* Idee 17 - Checklist */}
-      {activeTool === 'checklist' && (
-        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1 }}>Checklist avant publication</div>
-            <div style={{ fontFamily: 'var(--font-label)', fontSize: 24, color: checklistScore === checklistTotal ? 'var(--success2)' : 'var(--gold2)', letterSpacing: -1 }}>
-              {checklistScore}/{checklistTotal}
-            </div>
-          </div>
-          <div style={{ background: 'var(--s3)', borderRadius: 1, height: 4, marginBottom: 16, overflow: 'hidden' }}>
-            <div style={{ width: (checklistScore/checklistTotal*100)+'%', height: '100%', background: checklistScore === checklistTotal ? 'var(--success2)' : 'linear-gradient(90deg,var(--gold3),var(--gold2))', transition: 'width .4s' }} />
-          </div>
-          {checklistItems.map(item => (
-            <div key={item.key} onClick={() => setChecklist(c => ({...c, [item.key]: !c[item.key]}))}
-              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid var(--border)', cursor: 'pointer' }}>
-              <div style={{ width: 20, height: 20, borderRadius: 3, border: '1px solid', borderColor: checklist[item.key] ? 'var(--gold)' : 'var(--border2)', background: checklist[item.key] ? 'rgba(201,168,76,.15)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all .15s', fontSize: 12, color: 'var(--gold2)' }}>
-                {checklist[item.key] ? '✓' : ''}
-              </div>
-              <div style={{ fontSize: 13, color: checklist[item.key] ? 'var(--muted2)' : 'var(--cream)', textDecoration: checklist[item.key] ? 'line-through' : 'none', lineHeight: 1.5 }}>{item.label}</div>
-            </div>
-          ))}
-          {checklistScore === checklistTotal && (
-            <div style={{ marginTop: 14, background: 'rgba(45,122,79,.1)', border: '1px solid rgba(45,122,79,.3)', borderRadius: 3, padding: '12px', fontSize: 13, color: 'var(--success2)', textAlign: 'center' }}>
-              ✓ Votre annonce est prete a etre publiee !
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Idee 18 - Traduction */}
-      {activeTool === 'traduction' && (
-        <div style={{ background: 'var(--s1)', border: '1px solid var(--border)', padding: '20px', marginBottom: 1 }}>
-          {!isSubscribed ? (
-            <LockOverlay subscribe={subscribe} />
-          ) : (
-            <>
-              <div style={{ fontSize: 11, color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Traduction annonce</div>
-              <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-                {Object.entries(tradLangs).map(([code, nom]) => (
-                  <button key={code} onClick={() => setTradLang(code)}
-                    style={{ background: tradLang === code ? 'rgba(201,168,76,.1)' : 'var(--ink)', border: '1px solid', borderColor: tradLang === code ? 'var(--gold)' : 'var(--border)', borderRadius: 2, color: tradLang === code ? 'var(--gold2)' : 'var(--muted2)', cursor: 'pointer', fontSize: 12, padding: '6px 14px', transition: 'all .15s' }}>
-                    {nom}
-                  </button>
-                ))}
-              </div>
-              <textarea style={{ ...S.inp, minHeight: 100, resize: 'vertical', lineHeight: 1.6, marginBottom: 8 }}
-                placeholder="Collez votre annonce en francais ici..."
-                value={annonceText} onChange={e => setAnnonceText(e.target.value)} />
-              <button onClick={genTrad} disabled={tradLoading || !annonceText} className="btn-primary" style={{ width: '100%', fontSize: 12, padding: '12px', opacity: (tradLoading || !annonceText) ? .5 : 1 }}>
-                {tradLoading ? 'Traduction...' : 'TRADUIRE EN ' + (tradLangs[tradLang]||'').toUpperCase()}
-              </button>
-              {tradResult && (
-                <div style={{ marginTop: 12, background: 'var(--ink)', border: '1px solid var(--border)', borderLeft: '3px solid var(--gold)', padding: '16px' }}>
-                  <div style={S.lbl}>Annonce traduite - {tradLangs[tradLang]}</div>
-                  <div style={{ fontSize: 13, color: 'var(--cream)', lineHeight: 1.75, whiteSpace: 'pre-wrap' }}>{tradResult}</div>
-                  <button onClick={() => navigator.clipboard.writeText(tradResult)} style={{ marginTop: 10, background: 'none', border: '1px solid var(--border2)', borderRadius: 2, color: 'var(--muted2)', cursor: 'pointer', fontSize: 11, padding: '6px 14px' }}>Copier</button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
     </div>
   )
 }
 
-// ─── REFERRAL ─────────────────────────────────────────────
 function ReferralSection() {
   const [code, setCode] = useState(null)
   const [stats, setStats] = useState({ total:0, active:0 })
   const [copied, setCopied] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/referral/generate').then(r=>r.json()).then(data => {
-      if (data.code) { setCode(data.code); if(data.stats) setStats(data.stats) }
-    }).catch(() => {})
-  }, [])
+  useEffect(()=>{
+    fetch('/api/referral/generate').then(r=>r.json()).then(data=>{ if(data.code){ setCode(data.code); if(data.stats) setStats(data.stats) } }).catch(()=>{})
+  },[])
 
   if (!code) return null
-  const link = (typeof window!=='undefined'?window.location.origin:'') + '/?ref=' + code
+  const link = (typeof window!=='undefined'?window.location.origin:'')+'/?ref='+code
 
   return (
-    <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'20px 24px',marginBottom:1 }}>
+    <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
       <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:8 }}>Mon lien de parrainage</div>
-      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:12 }}>
-        <div style={{ background:'var(--ink)',padding:'12px 16px',textAlign:'center' }}>
-          <div style={{ fontFamily:'var(--font-label)',fontSize:24,color:'var(--gold2)',letterSpacing:-1 }}>{stats.total}</div>
+      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:10 }}>
+        <div style={{ background:'var(--ink)',padding:'10px 14px',textAlign:'center' }}>
+          <div style={{ fontFamily:'var(--font-label)',fontSize:22,color:'var(--gold2)',letterSpacing:-1 }}>{stats.total}</div>
           <div style={{ fontSize:10,color:'var(--muted2)',marginTop:2 }}>Amis parraines</div>
         </div>
-        <div style={{ background:'var(--ink)',padding:'12px 16px',textAlign:'center' }}>
-          <div style={{ fontFamily:'var(--font-label)',fontSize:24,color:'var(--success2)',letterSpacing:-1 }}>{stats.active}</div>
-          <div style={{ fontSize:10,color:'var(--muted2)',marginTop:2 }}>Actifs en ce moment</div>
+        <div style={{ background:'var(--ink)',padding:'10px 14px',textAlign:'center' }}>
+          <div style={{ fontFamily:'var(--font-label)',fontSize:22,color:'var(--success2)',letterSpacing:-1 }}>{stats.active}</div>
+          <div style={{ fontSize:10,color:'var(--muted2)',marginTop:2 }}>Actifs</div>
         </div>
       </div>
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'10px 14px',fontFamily:'monospace',fontSize:11,color:'var(--muted2)',wordBreak:'break-all',marginBottom:10 }}>{link}</div>
-      <button onClick={() => { navigator.clipboard.writeText(link); setCopied(true); setTimeout(()=>setCopied(false),2000) }}
+      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'9px 12px',fontFamily:'monospace',fontSize:11,color:'var(--muted2)',wordBreak:'break-all',marginBottom:8 }}>{link}</div>
+      <button onClick={()=>{navigator.clipboard.writeText(link);setCopied(true);setTimeout(()=>setCopied(false),2000)}}
         className="btn-ghost" style={{ width:'100%',fontSize:11,color:copied?'var(--gold2)':'var(--muted2)',borderColor:copied?'var(--gold-border)':'var(--border2)' }}>
-        {copied ? 'Lien copie !' : 'Copier mon lien de parrainage'}
+        {copied?'Lien copie !':'Copier mon lien de parrainage'}
       </button>
     </div>
   )
