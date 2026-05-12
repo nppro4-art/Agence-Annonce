@@ -37,8 +37,9 @@ export default function Home() {
   const [activeVilles, setActiveVilles] = useState([])
   const [testIndex, setTestIndex] = useState(0)
   const [activeCount, setActiveCount] = useState(0)
-  // Idée 10 - notification "en ce moment"
   const [notification, setNotification] = useState(null)
+  const [countdown, setCountdown] = useState(null)
+  const LAUNCH_END = new Date('2026-06-30T23:59:59.000Z')
 
   const ARTICLES_RECENTS = [
     'une BMW 320d 2019', 'un iPhone 14 Pro', 'un canape IKEA', 'une PS5', 'un MacBook Air M2',
@@ -103,11 +104,27 @@ export default function Home() {
     }, 5000)
     const notifInterval = setInterval(showNotif, 12000)
 
+    // Countdown lancement
+    const updateCountdown = () => {
+      const now = new Date()
+      const diff = LAUNCH_END - now
+      if (diff <= 0) { setCountdown(null); return }
+      setCountdown({
+        days: Math.floor(diff / (1000*60*60*24)),
+        hours: Math.floor((diff % (1000*60*60*24)) / (1000*60*60)),
+        minutes: Math.floor((diff % (1000*60*60)) / (1000*60)),
+        seconds: Math.floor((diff % (1000*60)) / 1000),
+      })
+    }
+    updateCountdown()
+    const countdownTimer = setInterval(updateCountdown, 1000)
+
     return () => {
       window.removeEventListener('mousemove', handleMouse)
       clearInterval(villeTimer)
       clearTimeout(notifTimer)
       clearInterval(notifInterval)
+      clearInterval(countdownTimer)
     }
   }, [router.query])
 
@@ -165,6 +182,33 @@ export default function Home() {
             Quelqu&apos;un a genere une annonce pour <strong>{notification.article}</strong> a <strong>{notification.ville}</strong>
           </div>
           <div style={{ fontSize:10,color:'var(--muted)',marginTop:4 }}>il y a {notification.mins} min</div>
+        </div>
+      )}
+
+      {/* BANNIERE LANCEMENT GRATUIT */}
+      {countdown && (
+        <div style={{ background:'linear-gradient(90deg,var(--gold3),var(--gold2))',padding:'10px 20px',textAlign:'center',position:'relative',zIndex:101 }}>
+          <div style={{ display:'flex',alignItems:'center',justifyContent:'center',gap:16,flexWrap:'wrap' }}>
+            <span style={{ fontFamily:'var(--font-label)',fontSize:11,letterSpacing:2,color:'#030303' }}>
+              LANCEMENT — ACCES GRATUIT JUSQU'AU 30 JUIN
+            </span>
+            <div style={{ display:'flex',gap:8,alignItems:'center' }}>
+              {[
+                [countdown.days,'J'],
+                [countdown.hours,'H'],
+                [countdown.minutes,'M'],
+                [countdown.seconds,'S'],
+              ].map(([val,unit]) => (
+                <div key={unit} style={{ background:'rgba(0,0,0,.2)',borderRadius:3,padding:'3px 8px',minWidth:38,textAlign:'center' }}>
+                  <div style={{ fontFamily:'var(--font-label)',fontSize:16,color:'#030303',letterSpacing:-1,lineHeight:1 }}>{String(val).padStart(2,'0')}</div>
+                  <div style={{ fontSize:8,color:'rgba(0,0,0,.6)',letterSpacing:1 }}>{unit}</div>
+                </div>
+              ))}
+            </div>
+            <Link href="/auth/register" style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:2,color:'#030303',background:'rgba(0,0,0,.15)',border:'1px solid rgba(0,0,0,.2)',borderRadius:2,padding:'5px 14px',textDecoration:'none' }}>
+              EN PROFITER →
+            </Link>
+          </div>
         </div>
       )}
 
@@ -284,7 +328,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CARTE FRANCE - idée 11 */}
+      {/* CARTE FRANCE - affichée seulement si des utilisateurs */}
+      {counts.users > 0 && (
       <section className="sec-pad map-section" style={{ background:'var(--s1)',borderTop:'1px solid var(--border)',borderBottom:'1px solid var(--border)',padding:'80px 32px' }}>
         <div style={{ maxWidth:1100,margin:'0 auto',display:'flex',alignItems:'center',gap:60,flexWrap:'wrap' }}>
           <div style={{ flex:1,minWidth:280 }}>
@@ -323,6 +368,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      )}
 
       {/* TEMOIGNAGES - idée 9 */}
       <section className="sec-pad" style={{ padding:'80px 32px',maxWidth:1100,margin:'0 auto' }}>
@@ -483,7 +530,7 @@ export default function Home() {
             Agence <span style={{ color:'var(--red)' }}>d&apos;Annonce</span>
           </div>
           <div style={{ display:'flex',gap:20,flexWrap:'wrap' }}>
-            {[['Tarifs','/pricing'],['Stats','/stats'],['A propos','/a-propos'],['CGV','/cgv'],['Confidentialite','/confidentialite'],['Mentions legales','/mentions-legales']].map(([label,href]) => (
+            {[['Tarifs','/pricing'],['Stats','/stats'],['Avis','/avis'],['A propos','/a-propos'],['CGV','/cgv'],['Confidentialite','/confidentialite'],['Mentions legales','/mentions-legales']].map(([label,href]) => (
               <Link key={label} href={href} className="nav-link" style={{ fontSize:12 }}>{label}</Link>
             ))}
           </div>
