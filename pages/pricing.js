@@ -33,19 +33,42 @@ export default function Pricing() {
   const PLANS = [
     {
       key: 'starter', name: 'Starter', price: '3,99',
-      annonces: 5, reponses: 20,
-      features: ['5 annonces / semaine', '20 reponses / semaine', 'Estimation de prix', 'Score qualite annonce'],
+      features: [
+        '10 annonces / semaine',
+        '30 reponses acheteurs / semaine',
+        'Estimation de prix (3/jour)',
+        'Score qualite annonce',
+        'Generateur de titres',
+        'Detecteur prix abusif',
+        'Checklist publication',
+        'Calendrier de publication optimal',
+      ],
     },
     {
       key: 'business', name: 'Business', price: '5,99',
-      annonces: 15, reponses: 60,
-      features: ['15 annonces / semaine', '60 reponses / semaine', 'Tout le Starter', 'Parrainage', 'Historique complet'],
+      features: [
+        '30 annonces / semaine',
+        '100 reponses / semaine',
+        'Chatbot vendeur (50 msg/jour)',
+        'Analyser et ameliorer une annonce',
+        'Detecteur arnaque acheteur',
+        'Comparateur plateformes',
+        'Mode vente flash',
+        'Traduction annonce (5 langues)',
+        'Suivi des ventes',
+        'Tout le Starter inclus',
+      ],
       recommended: true,
     },
     {
       key: 'expert', name: 'Expert', price: '9,99',
-      annonces: 40, reponses: 250,
-      features: ['40 annonces / semaine', '250 reponses / semaine', 'Tout le Business'],
+      features: [
+        'Annonces et reponses illimitees',
+        'Chatbot vendeur (200 msg/jour)',
+        'Mode lot (plusieurs objets)',
+        'Tout le Business inclus',
+        'Acces prioritaire nouveautes',
+      ],
     },
   ]
 
