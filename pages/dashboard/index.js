@@ -4,14 +4,28 @@ import Link from 'next/link'
 
 const PLAN_LIMITS = {
   premium:  { annonces: Infinity, reponses: Infinity },
-  expert:   { annonces: 40,  reponses: 250 },
-  business: { annonces: 15,  reponses: 60  },
-  starter:  { annonces: 5,   reponses: 20  },
-  pro:      { annonces: 15,  reponses: 60  },
-  free:     { annonces: 0,   reponses: 0   },
+  expert:   { annonces: Infinity, reponses: Infinity },
+  business: { annonces: 30, reponses: 100 },
+  starter:  { annonces: 10, reponses: 30  },
+  pro:      { annonces: 30, reponses: 100 },
+  free:     { annonces: 0,  reponses: 0   },
+}
+
+const PLAN_FEATURES = {
+  premium:  { analyser:true, chatbot:true, ventes:true, flash:true, traduction:true, lot:true, arnaque:true, plateformes:true },
+  expert:   { analyser:true, chatbot:true, ventes:true, flash:true, traduction:true, lot:true, arnaque:true, plateformes:true },
+  business: { analyser:true, chatbot:true, ventes:true, flash:true, traduction:true, lot:false, arnaque:true, plateformes:true },
+  starter:  { analyser:false, chatbot:false, ventes:false, flash:false, traduction:false, lot:false, arnaque:false, plateformes:false },
+  pro:      { analyser:true, chatbot:true, ventes:true, flash:true, traduction:true, lot:false, arnaque:true, plateformes:true },
+  free:     { analyser:false, chatbot:false, ventes:false, flash:false, traduction:false, lot:false, arnaque:false, plateformes:false },
+}
+
+function canAccessFeature(planKey, feature) {
+  return !!(PLAN_FEATURES[planKey] || PLAN_FEATURES.free)[feature]
 }
 const PLAN_NAMES = { premium:'Premium', expert:'Expert', business:'Business', starter:'Starter', pro:'Business', free:'Gratuit' }
 const PLAN_PRICES = { premium:'—', expert:'9,99', business:'5,99', starter:'3,99', pro:'5,99', free:'0' }
+const PLAN_CHATBOT = { premium:500, expert:200, business:50, starter:0, pro:50, free:0 }
 
 const CATEGORIES = {
   Voiture: [
@@ -359,6 +373,9 @@ export default function Dashboard() {
     {id:'annonce',label:'Annonce'},
     {id:'reponse',label:'Repondre'},
     {id:'estimation',label:'Estimer'},
+    {id:'analyser',label:'Analyser'},
+    {id:'ventes',label:'Mes ventes'},
+    {id:'chatbots',label:'Chatbots'},
     {id:'outils',label:'Outils'},
     {id:'historique',label:'Historique'},
     {id:'tarifs',label:'Tarifs'},
@@ -564,10 +581,13 @@ export default function Dashboard() {
           </div>
         )}
 
+        {tab==='analyser' && <AnalyserTab isSubscribed={isSubscribed} subscribe={subscribe} hasAccess={canAccessFeature(planKey,'analyser')} />}
+        {tab==='ventes' && <VentesTab isSubscribed={isSubscribed} subscribe={subscribe} hasAccess={canAccessFeature(planKey,'ventes')} />}
+        {tab==='chatbots' && <ChatBotsTab />}
         {tab==='annonce' && <AnnonceTab isSubscribed={isSubscribed} planKey={planKey} credits={credits} subscribe={subscribe} onUsed={()=>setUsage(u=>({...u,annonces:u.annonces+1}))} />}
         {tab==='reponse' && <ReponseTab isSubscribed={isSubscribed} subscribe={subscribe} onUsed={()=>setUsage(u=>({...u,reponses:u.reponses+1}))} />}
         {tab==='estimation' && <EstimationTab />}
-        {tab==='outils' && <OutilsTab isSubscribed={isSubscribed} subscribe={subscribe} />}
+        {tab==='outils' && <OutilsTab isSubscribed={isSubscribed} subscribe={subscribe} planKey={planKey} />}
         {tab==='historique' && <HistoriqueTab />}
         {tab==='tarifs' && <TarifsTab isSubscribed={isSubscribed} planKey={planKey} subscribe={subscribe} openSubModal={()=>setShowSubModal(true)} />}
         {tab==='profil' && <ProfilTab user={user} isSubscribed={isSubscribed} isPremium={isPremium} planKey={planKey} subscribe={subscribe} openSubModal={()=>setShowSubModal(true)} usage={usage} credits={credits} purchases={purchases} limits={limits} />}
@@ -875,7 +895,7 @@ function EstimationTab() {
   )
 }
 
-function OutilsTab({ isSubscribed, subscribe }) {
+function OutilsTab({ isSubscribed, subscribe, planKey }) {
   const [activeTool, setActiveTool] = useState(null)
   const [titreSpecs, setTitreSpecs] = useState('')
   const [titres, setTitres] = useState([])
@@ -892,6 +912,27 @@ function OutilsTab({ isSubscribed, subscribe }) {
   const [tradLang, setTradLang] = useState('en')
   const [tradResult, setTradResult] = useState('')
   const [tradLoading, setTradLoading] = useState(false)
+  // Arnaque
+  const [arnaqueMsg, setArnaqueMsg] = useState('')
+  const [arnaqueResult, setArnaqueResult] = useState(null)
+  const [arnaqueLoading, setArnaqueLoading] = useState(false)
+  // Calendrier
+  const [calCat, setCalCat] = useState('')
+  const [calArticle, setCalArticle] = useState('')
+  const [calResult, setCalResult] = useState(null)
+  const [calLoading, setCalLoading] = useState(false)
+  // Plateformes
+  const [platArticle, setPlatArticle] = useState('')
+  const [platPrix, setPlatPrix] = useState('')
+  const [platResult, setPlatResult] = useState(null)
+  const [platLoading, setPlatLoading] = useState(false)
+  // Lot
+  const [lotObjets, setLotObjets] = useState([{nom:'',prix:'',etat:''},{nom:'',prix:'',etat:''}])
+  const [lotPrix, setLotPrix] = useState('')
+  const [lotContexte, setLotContexte] = useState('')
+  const [lotResult, setLotResult] = useState(null)
+  const [lotLoading, setLotLoading] = useState(false)
+  const [lotCopied, setLotCopied] = useState(false)
 
   const tradLangs = { en:'Anglais', es:'Espagnol', de:'Allemand', it:'Italien', nl:'Neerlandais' }
 
@@ -932,6 +973,39 @@ function OutilsTab({ isSubscribed, subscribe }) {
     setFlashLoading(false)
   }
 
+  const checkArnaque = async () => {
+    if (!arnaqueMsg) return
+    setArnaqueLoading(true)
+    try { const r = await fetch('/api/ai/arnaque',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:arnaqueMsg})}); const d = await r.json(); setArnaqueResult(d) } catch(e) {}
+    setArnaqueLoading(false)
+  }
+
+  const getCalendrier = async () => {
+    if (!calCat) return
+    setCalLoading(true)
+    try { const r = await fetch('/api/ai/calendrier',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({categorie:calCat,article:calArticle})}); const d = await r.json(); setCalResult(d) } catch(e) {}
+    setCalLoading(false)
+  }
+
+  const getPlateformes = async () => {
+    if (!platArticle) return
+    setPlatLoading(true)
+    try { const r = await fetch('/api/ai/plateformes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({article:platArticle,prix:platPrix})}); const d = await r.json(); setPlatResult(d) } catch(e) {}
+    setPlatLoading(false)
+  }
+
+  const addLotItem = () => setLotObjets(prev => [...prev, {nom:'',prix:'',etat:''}])
+  const removeLotItem = (i) => setLotObjets(prev => prev.filter((_,idx)=>idx!==i))
+  const updateLotItem = (i, key, val) => setLotObjets(prev => prev.map((o,idx)=>idx===i?{...o,[key]:val}:o))
+
+  const genLot = async () => {
+    const objetsValides = lotObjets.filter(o=>o.nom)
+    if (objetsValides.length < 2) return
+    setLotLoading(true)
+    try { const r = await fetch('/api/ai/lot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({objets:objetsValides,prixTotal:lotPrix,contexte:lotContexte})}); const d = await r.json(); setLotResult(d) } catch(e) {}
+    setLotLoading(false)
+  }
+
   const genTrad = async () => {
     if (!annonceText) return
     setTradLoading(true)
@@ -939,12 +1013,23 @@ function OutilsTab({ isSubscribed, subscribe }) {
     setTradLoading(false)
   }
 
+  const feats = (PLAN_FEATURES[planKey] || PLAN_FEATURES.free)
+  const getBadge = (feat, minPlan) => {
+    if (!isSubscribed) return minPlan || 'Starter+'
+    if (feats[feat]) return 'Actif'
+    return minPlan || 'Plan superieur'
+  }
+
   const TOOLS = [
-    {id:'titre',icon:'T',label:'Generateur de titres',desc:'5 titres optimises en un clic pour maximiser les vues',badge:'Gratuit'},
-    {id:'prix',icon:'€',label:'Detecteur prix abusif',desc:'Verifiez si votre prix est aligne avec le marche',badge:'Gratuit'},
-    {id:'flash',icon:'F',label:'Mode vente flash',desc:'Annonce ultra-agressive pour vendre en moins de 48h',badge:isSubscribed?'Abonne':'Sub Only'},
-    {id:'checklist',icon:'V',label:'Checklist publication',desc:'6 points a verifier avant de publier',badge:'Gratuit'},
-    {id:'traduction',icon:'G',label:'Traduction annonce',desc:'Anglais, Espagnol, Allemand, Italien, Neerlandais',badge:isSubscribed?'Abonne':'Sub Only'},
+    {id:'titre',icon:'T',label:'Generateur de titres',desc:'5 titres optimises en un clic pour maximiser les vues',badge:'Starter+',active:true},
+    {id:'prix',icon:'€',label:'Detecteur prix abusif',desc:'Verifiez si votre prix est aligne avec le marche',badge:'Starter+',active:true},
+    {id:'calendrier',icon:'K',label:'Calendrier optimal',desc:'Quel jour et heure publier pour maximiser les vues',badge:'Starter+',active:true},
+    {id:'checklist',icon:'V',label:'Checklist publication',desc:'6 points a verifier avant de publier',badge:'Starter+',active:true},
+    {id:'arnaque',icon:'!',label:'Detecteur arnaque',desc:'Analysez un message suspect avant de repondre',badge:'Business+',active:feats.arnaque},
+    {id:'plateformes',icon:'M',label:'Comparateur plateformes',desc:'LeBonCoin vs Vinted vs Facebook vs eBay',badge:'Business+',active:feats.plateformes},
+    {id:'flash',icon:'F',label:'Mode vente flash',desc:'Annonce ultra-agressive pour vendre en moins de 48h',badge:'Business+',active:feats.flash},
+    {id:'traduction',icon:'G',label:'Traduction annonce',desc:'Anglais, Espagnol, Allemand, Italien, Neerlandais',badge:'Business+',active:feats.traduction},
+    {id:'lot',icon:'P',label:'Mode lot',desc:'Vendez plusieurs objets ensemble en une seule annonce',badge:'Expert',active:feats.lot},
   ]
 
   return (
@@ -952,11 +1037,17 @@ function OutilsTab({ isSubscribed, subscribe }) {
       <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Boite a outils</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Outils supplementaires</h2></div>
       <div className="db-tools-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:14 }}>
         {TOOLS.map(tool=>(
-          <div key={tool.id} onClick={()=>setActiveTool(activeTool===tool.id?null:tool.id)}
-            style={{ background:activeTool===tool.id?'var(--s2)':'var(--ink)',padding:'18px',cursor:'pointer',transition:'all .2s',borderTop:activeTool===tool.id?'2px solid var(--gold)':'2px solid transparent' }}>
+          <div key={tool.id}
+            onClick={()=>tool.active||!isSubscribed?setActiveTool(activeTool===tool.id?null:tool.id):null}
+            style={{ background:activeTool===tool.id?'var(--s2)':'var(--ink)',padding:'18px',cursor:tool.active||!isSubscribed?'pointer':'not-allowed',transition:'all .2s',borderTop:activeTool===tool.id?'2px solid var(--gold)':'2px solid transparent',opacity:isSubscribed&&!tool.active?0.5:1 }}>
             <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:7 }}>
-              <span style={{ width:28,height:28,background:'var(--s3)',borderRadius:3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,color:'var(--gold2)' }}>{tool.icon}</span>
-              <span style={{ fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1.5,color:tool.badge==='Gratuit'?'var(--success2)':'var(--gold3)',background:tool.badge==='Gratuit'?'rgba(45,122,79,.1)':'rgba(201,168,76,.1)',border:'1px solid',borderColor:tool.badge==='Gratuit'?'rgba(45,122,79,.2)':'rgba(201,168,76,.2)',borderRadius:2,padding:'2px 6px' }}>{tool.badge}</span>
+              <span style={{ width:28,height:28,background:'var(--s3)',borderRadius:3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,color:tool.active?'var(--gold2)':'var(--muted)' }}>{tool.icon}</span>
+              <span style={{ fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1.5,
+                color:tool.badge==='Starter+'?'var(--success2)':tool.badge==='Actif'?'var(--success2)':'var(--gold3)',
+                background:tool.badge==='Starter+'||tool.badge==='Actif'?'rgba(45,122,79,.1)':'rgba(201,168,76,.1)',
+                border:'1px solid',
+                borderColor:tool.badge==='Starter+'||tool.badge==='Actif'?'rgba(45,122,79,.2)':'rgba(201,168,76,.2)',
+                borderRadius:2,padding:'2px 6px' }}>{tool.badge}</span>
             </div>
             <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:3 }}>{tool.label}</div>
             <div style={{ fontSize:11,color:'var(--muted2)',lineHeight:1.5 }}>{tool.desc}</div>
@@ -1057,6 +1148,175 @@ function OutilsTab({ isSubscribed, subscribe }) {
             <div style={{ marginTop:12,background:'rgba(45,122,79,.1)',border:'1px solid rgba(45,122,79,.3)',borderRadius:3,padding:'11px',fontSize:13,color:'var(--success2)',textAlign:'center' }}>
               Votre annonce est prete a etre publiee !
             </div>
+          )}
+        </div>
+      )}
+
+      {activeTool==='arnaque'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          <div style={S.lbl}>Detecteur d'arnaque acheteur</div>
+          <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:10,lineHeight:1.6 }}>Collez un message suspect. L'IA analyse les signaux d'arnaque connus sur LeBonCoin et Vinted.</div>
+          <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.6,marginBottom:8 }}
+            placeholder="Collez ici le message de l'acheteur suspect..."
+            value={arnaqueMsg} onChange={e=>setArnaqueMsg(e.target.value)} />
+          <button onClick={checkArnaque} disabled={arnaqueLoading||!arnaqueMsg} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(arnaqueLoading||!arnaqueMsg)?0.5:1 }}>
+            {arnaqueLoading?'Analyse...':'ANALYSER CE MESSAGE'}
+          </button>
+          {arnaqueResult&&(
+            <div style={{ marginTop:10,background:arnaqueResult.isArnaque?'rgba(200,57,43,.08)':arnaqueResult.isSuspect?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:arnaqueResult.isArnaque?'rgba(200,57,43,.3)':arnaqueResult.isSuspect?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'16px' }}>
+              <div style={{ fontFamily:'var(--font-label)',fontSize:20,color:arnaqueResult.isArnaque?'var(--red2)':arnaqueResult.isSuspect?'var(--warning)':'var(--success2)',letterSpacing:.5,marginBottom:8 }}>
+                {arnaqueResult.isArnaque?'ARNAQUE PROBABLE':arnaqueResult.isSuspect?'MESSAGE SUSPECT':'SEMBLE LEGITIME'}
+              </div>
+              <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:8 }}>{arnaqueResult.explication}</div>
+              {arnaqueResult.conseils&&<div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic',borderTop:'1px solid var(--border)',paddingTop:8,marginTop:8 }}>{arnaqueResult.conseils}</div>}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTool==='calendrier'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          <div style={S.lbl}>Calendrier de publication optimal</div>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+            <div style={{ background:'var(--ink)',padding:'12px' }}>
+              <label style={S.lbl}>Categorie *</label>
+              <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={calCat} onChange={e=>setCalCat(e.target.value)}>
+                <option value="">Choisir...</option>
+                {['Voiture','Telephone','Informatique','Mobilier','Electromenager','Vetements','Jeux video','Sport','Bijoux','Autre'].map(c=><option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div style={{ background:'var(--ink)',padding:'12px' }}>
+              <label style={S.lbl}>Article (optionnel)</label>
+              <input style={S.inp} placeholder="iPhone 14, BMW 320d..." value={calArticle} onChange={e=>setCalArticle(e.target.value)} />
+            </div>
+          </div>
+          <button onClick={getCalendrier} disabled={calLoading||!calCat} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(calLoading||!calCat)?0.5:1 }}>
+            {calLoading?'Analyse...':'TROUVER LE MEILLEUR MOMENT'}
+          </button>
+          {calResult&&!calResult.error&&(
+            <div style={{ marginTop:10 }}>
+              <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+                <div style={{ background:'var(--ink)',padding:'14px',textAlign:'center' }}>
+                  <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1,marginBottom:6 }}>Meilleur jour</div>
+                  <div style={{ fontFamily:'var(--font-display)',fontSize:20,fontWeight:600,color:'var(--gold2)' }}>{calResult.meilleurJour}</div>
+                </div>
+                <div style={{ background:'var(--ink)',padding:'14px',textAlign:'center' }}>
+                  <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1,marginBottom:6 }}>Meilleure heure</div>
+                  <div style={{ fontFamily:'var(--font-display)',fontSize:20,fontWeight:600,color:'var(--gold2)' }}>{calResult.meilleureHeure}</div>
+                </div>
+              </div>
+              {calResult.raison&&<div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 14px',fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:6 }}>{calResult.raison}</div>}
+              {calResult.conseilSaison&&<div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold3)',padding:'12px 14px',fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic' }}>{calResult.conseilSaison}</div>}
+              {calResult.scoreMoment&&<div style={{ marginTop:8,fontSize:12,color:'var(--muted2)',textAlign:'center' }}>Publier maintenant : <strong style={{ color:'var(--gold2)' }}>{calResult.scoreMoment}</strong></div>}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTool==='plateformes'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          <div style={S.lbl}>Comparateur de plateformes</div>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+            <div style={{ background:'var(--ink)',padding:'12px' }}>
+              <label style={S.lbl}>Votre article *</label>
+              <input style={S.inp} placeholder="iPhone 14 Pro 256Go noir..." value={platArticle} onChange={e=>setPlatArticle(e.target.value)} />
+            </div>
+            <div style={{ background:'var(--ink)',padding:'12px' }}>
+              <label style={S.lbl}>Prix envisage (EUR)</label>
+              <input style={S.inp} type="number" placeholder="450" value={platPrix} onChange={e=>setPlatPrix(e.target.value)} />
+            </div>
+          </div>
+          <button onClick={getPlateformes} disabled={platLoading||!platArticle} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(platLoading||!platArticle)?0.5:1 }}>
+            {platLoading?'Comparaison...':'COMPARER LES PLATEFORMES'}
+          </button>
+          {platResult&&!platResult.error&&(
+            <div style={{ marginTop:10 }}>
+              {platResult.recommandation&&(
+                <div style={{ background:'rgba(201,168,76,.08)',border:'1px solid var(--gold-border)',padding:'12px 14px',marginBottom:8,fontSize:13,color:'var(--cream)',lineHeight:1.7 }}>
+                  <strong style={{ color:'var(--gold2)' }}>Recommandation :</strong> {platResult.recommandation}
+                </div>
+              )}
+              {[
+                ['LeBonCoin',platResult.leboncoin],
+                ['Vinted',platResult.vinted],
+                ['Facebook Marketplace',platResult.facebook],
+                ['eBay',platResult.ebay],
+              ].filter(([,v])=>v).map(([nom,texte])=>(
+                <div key={nom} style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 14px',marginBottom:4 }}>
+                  <div style={{ fontFamily:'var(--font-label)',fontSize:12,color:'var(--gold3)',letterSpacing:1,marginBottom:6 }}>{nom}</div>
+                  <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,whiteSpace:'pre-line' }}>{texte}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTool==='lot'&&(
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+          {!isSubscribed ? <LockOverlay subscribe={subscribe} /> : (
+            <>
+              <div style={S.lbl}>Mode lot - plusieurs objets</div>
+              <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:12,lineHeight:1.6 }}>Minimum 2 objets. Le nom est obligatoire, le prix et l'etat sont optionnels.</div>
+              {lotObjets.map((o,i)=>(
+                <div key={i} style={{ display:'grid',gridTemplateColumns:'1fr 80px 100px 32px',gap:1,background:'var(--border)',marginBottom:4 }}>
+                  <div style={{ background:'var(--ink)',padding:'10px 12px' }}>
+                    <input style={{ ...S.inp,fontSize:13 }} placeholder={'Objet '+(i+1)+' *'} value={o.nom} onChange={e=>updateLotItem(i,'nom',e.target.value)} />
+                  </div>
+                  <div style={{ background:'var(--ink)',padding:'10px 12px' }}>
+                    <input style={{ ...S.inp,fontSize:13 }} type="number" placeholder="Prix" value={o.prix} onChange={e=>updateLotItem(i,'prix',e.target.value)} />
+                  </div>
+                  <div style={{ background:'var(--ink)',padding:'10px 12px' }}>
+                    <select style={{ ...S.inp,fontSize:11,appearance:'none' }} value={o.etat} onChange={e=>updateLotItem(i,'etat',e.target.value)}>
+                      <option value="">Etat</option>
+                      <option>Neuf</option><option>Comme neuf</option><option>Bon etat</option><option>Correct</option>
+                    </select>
+                  </div>
+                  <button onClick={()=>removeLotItem(i)} disabled={lotObjets.length<=2}
+                    style={{ background:'var(--ink)',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:14,opacity:lotObjets.length<=2?0.3:1 }}>x</button>
+                </div>
+              ))}
+              <button onClick={addLotItem} style={{ background:'none',border:'1px dashed var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'8px',width:'100%',marginBottom:10 }}>
+                + Ajouter un objet
+              </button>
+              <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+                <div style={{ background:'var(--ink)',padding:'10px 12px' }}>
+                  <label style={{ ...S.lbl,fontSize:9 }}>Prix lot propose (EUR)</label>
+                  <input style={S.inp} type="number" placeholder="Laisser vide = IA suggere" value={lotPrix} onChange={e=>setLotPrix(e.target.value)} />
+                </div>
+                <div style={{ background:'var(--ink)',padding:'10px 12px' }}>
+                  <label style={{ ...S.lbl,fontSize:9 }}>Contexte</label>
+                  <select style={{ ...S.inp,appearance:'none',fontSize:13 }} value={lotContexte} onChange={e=>setLotContexte(e.target.value)}>
+                    <option value="">Choisir...</option>
+                    <option>Demenagement</option><option>Vide grenier</option><option>Lot coherent</option><option>Collection</option>
+                  </select>
+                </div>
+              </div>
+              <button onClick={genLot} disabled={lotLoading||lotObjets.filter(o=>o.nom).length<2} className="btn-primary"
+                style={{ width:'100%',fontSize:12,padding:'11px',opacity:(lotLoading||lotObjets.filter(o=>o.nom).length<2)?0.5:1 }}>
+                {lotLoading?'Generation...':'GENERER ANNONCE LOT'}
+              </button>
+              {lotResult&&!lotResult.error&&(
+                <div style={{ marginTop:10 }}>
+                  {lotResult.titre&&<div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'12px 14px',marginBottom:4 }}>
+                    <div style={S.lbl}>Titre</div>
+                    <div style={{ fontFamily:'var(--font-display)',fontSize:16,fontWeight:600 }}>{lotResult.titre}</div>
+                  </div>}
+                  {[['Description',lotResult.description],['Liste complete',lotResult.liste],['Economie acheteur',lotResult.economie],['Prix lot suggere',lotResult.prixLot]].filter(([,v])=>v).map(([l,v])=>(
+                    <div key={l} style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 14px',marginBottom:4 }}>
+                      <div style={S.lbl}>{l}</div>
+                      <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,whiteSpace:'pre-wrap' }}>{v}</div>
+                    </div>
+                  ))}
+                  <button onClick={()=>{navigator.clipboard.writeText([lotResult.titre,lotResult.description,lotResult.liste,lotResult.prixLot].filter(Boolean).join('
+
+'));setLotCopied(true);setTimeout(()=>setLotCopied(false),2000)}}
+                    style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:lotCopied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:4 }}>
+                    {lotCopied?'Copie !':'Copier l'annonce lot'}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
@@ -1167,9 +1427,9 @@ function HistoriqueTab() {
 
 function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   const PLANS = [
-    {key:'starter',name:'Starter',price:'3,99',features:['5 annonces/semaine','20 reponses/semaine','Estimation de prix','Score qualite']},
-    {key:'business',name:'Business',price:'5,99',features:['15 annonces/semaine','60 reponses/semaine','Tout Starter inclus','Parrainage'],recommended:true},
-    {key:'expert',name:'Expert',price:'9,99',features:['40 annonces/semaine','250 reponses/semaine','Tout Business inclus','Priorite support']},
+    {key:'starter',name:'Starter',price:'3,99',features:['10 annonces/semaine','30 reponses/semaine','Estimation prix (3/jour)','Generateur titres','Detecteur prix abusif','Checklist publication','Calendrier optimal']},
+    {key:'business',name:'Business',price:'5,99',features:['30 annonces/semaine','100 reponses/semaine','Chatbot vendeur (50 msg/j)','Analyser une annonce','Detecteur arnaque','Comparateur plateformes','Mode flash + Traduction','Suivi des ventes','Tout Starter inclus'],recommended:true},
+    {key:'expert',name:'Expert',price:'9,99',features:['Annonces illimitees','Reponses illimitees','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Acces prioritaire nouveautes']},
   ]
   const PACKS = [
     {name:'5 annonces',price:'9,99 EUR',unit:'2,00/ann.'},
@@ -1303,6 +1563,393 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
   )
 }
 
+
+
+// ─── ANALYSER TAB (Idée D) ────────────────────────────────
+function AnalyserTab({ isSubscribed, subscribe, hasAccess }) {
+  const [annonce, setAnnonce] = useState('')
+  const [result, setResult] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  if (!isSubscribed || !hasAccess) return (
+    <div className="db-fade">
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Analyser et ameliorer</h2></div>
+      {isSubscribed && !hasAccess && <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'14px 18px',marginBottom:12,fontSize:13,color:'var(--muted2)' }}>Cette fonctionnalite necessite le plan Business ou superieur.</div>}
+      <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
+        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:20,height:120,marginBottom:1 }} />
+      </div>
+      <LockOverlay subscribe={subscribe} />
+    </div>
+  )
+
+  const analyse = async () => {
+    if (!annonce || annonce.length < 20) return
+    setLoading(true)
+    try {
+      const res = await fetch('/api/ai/analyser', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ annonce })
+      })
+      const data = await res.json()
+      setResult(data)
+    } catch(e) {}
+    setLoading(false)
+  }
+
+  return (
+    <div className="db-fade">
+      <div style={{ marginBottom:16 }}>
+        <div className="label" style={{ marginBottom:6 }}>Outil IA</div>
+        <h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Analyser et ameliorer</h2>
+        <p style={{ fontSize:13,color:'var(--muted2)',marginTop:6,lineHeight:1.6 }}>Collez votre annonce existante. L'IA la note, identifie les problemes et la reecrit en mieux.</p>
+      </div>
+
+      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+        <label style={S.lbl}>Votre annonce actuelle *</label>
+        <textarea style={{ ...S.inp,minHeight:160,resize:'vertical',lineHeight:1.7 }}
+          placeholder="Collez ici votre annonce LeBonCoin, Vinted ou Facebook Marketplace..."
+          value={annonce} onChange={e=>setAnnonce(e.target.value)} />
+        <div style={{ fontSize:10,color:'var(--muted)',marginTop:5 }}>{annonce.length} caracteres</div>
+      </div>
+
+      <button onClick={analyse} disabled={loading||annonce.length<20} className="btn-primary"
+        style={{ width:'100%',fontSize:13,padding:'15px',opacity:(loading||annonce.length<20)?0.5:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10 }}>
+        {loading?<><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Analyse...</>:'ANALYSER MON ANNONCE'}
+      </button>
+
+      {result && (
+        <div style={{ marginTop:16 }}>
+          {/* Comparaison scores */}
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+            <div style={{ background:'rgba(200,57,43,.06)',padding:'20px',textAlign:'center',borderTop:'2px solid var(--red)' }}>
+              <div style={{ fontSize:10,color:'var(--red2)',textTransform:'uppercase',letterSpacing:1,marginBottom:8 }}>Annonce originale</div>
+              <div style={{ fontFamily:'var(--font-label)',fontSize:42,color:'var(--red2)',letterSpacing:-2,lineHeight:1 }}>{result.scoreOriginal}</div>
+              <div style={{ fontSize:11,color:'var(--muted2)',marginTop:4 }}>sur 100</div>
+            </div>
+            <div style={{ background:'rgba(45,122,79,.06)',padding:'20px',textAlign:'center',borderTop:'2px solid var(--success2)' }}>
+              <div style={{ fontSize:10,color:'var(--success2)',textTransform:'uppercase',letterSpacing:1,marginBottom:8 }}>Apres optimisation</div>
+              <div style={{ fontFamily:'var(--font-label)',fontSize:42,color:'var(--success2)',letterSpacing:-2,lineHeight:1 }}>{result.scoreAmeliore}</div>
+              <div style={{ fontSize:11,color:'var(--muted2)',marginTop:4 }}>sur 100 (+{result.scoreAmeliore-result.scoreOriginal} pts)</div>
+            </div>
+          </div>
+
+          {result.problemes && (
+            <div style={{ background:'rgba(200,57,43,.06)',border:'1px solid rgba(200,57,43,.2)',padding:'14px 18px',marginBottom:1 }}>
+              <div style={S.lbl}>Problemes detectes</div>
+              <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{result.problemes}</div>
+            </div>
+          )}
+
+          {result.annonceAmelioree && (
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'16px 18px',marginBottom:1 }}>
+              <div style={S.lbl}>Annonce optimisee</div>
+              <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{result.annonceAmelioree}</div>
+            </div>
+          )}
+
+          {result.conseils && (
+            <div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold3)',padding:'14px 18px',marginBottom:1 }}>
+              <div style={S.lbl}>Conseils specifiques</div>
+              <div style={{ fontSize:13,color:'var(--muted3)',lineHeight:1.8,fontStyle:'italic',whiteSpace:'pre-wrap' }}>{result.conseils}</div>
+            </div>
+          )}
+
+          <button className="copy-btn"
+            onClick={()=>{navigator.clipboard.writeText(result.annonceAmelioree||'');setCopied(true);setTimeout(()=>setCopied(false),2000)}}
+            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:1 }}>
+            {copied?'Copie !':'Copier l'annonce optimisee'}
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── VENTES TAB (Idée E) ──────────────────────────────────
+function VentesTab({ isSubscribed, subscribe }) {
+  const [objets, setObjets] = useState([])
+  const [stats, setStats] = useState({ vendu:0, totalGagne:0, enCours:0 })
+  const [loading, setLoading] = useState(true)
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm] = useState({ titre:'', prix:'', notes:'' })
+  const [saving, setSaving] = useState(false)
+  const [editId, setEditId] = useState(null)
+  const [prixFinal, setPrixFinal] = useState('')
+
+  const load = () => {
+    fetch('/api/dashboard/ventes').then(r=>r.json()).then(d=>{
+      setObjets(d.objets||[])
+      setStats(d.stats||{ vendu:0,totalGagne:0,enCours:0 })
+      setLoading(false)
+    }).catch(()=>setLoading(false))
+  }
+
+  useEffect(()=>{ if(isSubscribed) load() else setLoading(false) },[isSubscribed])
+
+  if (!isSubscribed) return (
+    <div className="db-fade">
+      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Suivi</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes ventes</h2></div>
+      <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
+        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:20,height:100,marginBottom:1 }} />
+      </div>
+      <LockOverlay subscribe={subscribe} />
+    </div>
+  )
+
+  const addObjet = async () => {
+    if (!form.titre||!form.prix) return
+    setSaving(true)
+    await fetch('/api/dashboard/ventes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)})
+    setForm({titre:'',prix:'',notes:''})
+    setShowForm(false)
+    setSaving(false)
+    load()
+  }
+
+  const markVendu = async (id) => {
+    if (!prixFinal) return
+    await fetch('/api/dashboard/ventes',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,statut:'vendu',prixFinal})})
+    setEditId(null)
+    setPrixFinal('')
+    load()
+  }
+
+  const deleteObjet = async (id) => {
+    if (!confirm('Supprimer cet objet ?')) return
+    await fetch('/api/dashboard/ventes?id='+id,{method:'DELETE'})
+    load()
+  }
+
+  const STATUT_COLORS = { actif:'var(--gold2)', vendu:'var(--success2)', archive:'var(--muted)' }
+
+  return (
+    <div className="db-fade">
+      <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16,flexWrap:'wrap',gap:10 }}>
+        <div>
+          <div className="label" style={{ marginBottom:6 }}>Suivi</div>
+          <h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes ventes</h2>
+        </div>
+        <button onClick={()=>setShowForm(!showForm)} className="btn-gold" style={{ fontSize:11,padding:'10px 18px',letterSpacing:1.5,color:'#030303' }}>
+          + AJOUTER UN OBJET
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:16 }}>
+        {[
+          {label:'En cours',val:stats.enCours,color:'var(--gold2)'},
+          {label:'Vendus',val:stats.vendu,color:'var(--success2)'},
+          {label:'Total gagne',val:stats.totalGagne.toLocaleString('fr-FR')+' EUR',color:'var(--gold2)'},
+        ].map(s=>(
+          <div key={s.label} style={{ background:'var(--ink)',padding:'18px',textAlign:'center' }}>
+            <div style={{ fontFamily:'var(--font-label)',fontSize:26,color:s.color,letterSpacing:-1,lineHeight:1,marginBottom:4 }}>{s.val}</div>
+            <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Formulaire ajout */}
+      {showForm && (
+        <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',padding:'18px',marginBottom:14 }}>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+            <div style={{ background:'var(--ink)',padding:'12px 16px' }}>
+              <label style={S.lbl}>Nom de l'objet *</label>
+              <input style={S.inp} placeholder="iPhone 14 Pro, BMW 320d..." value={form.titre} onChange={e=>setForm({...form,titre:e.target.value})} />
+            </div>
+            <div style={{ background:'var(--ink)',padding:'12px 16px' }}>
+              <label style={S.lbl}>Prix demande (EUR) *</label>
+              <input style={S.inp} type="number" placeholder="450" value={form.prix} onChange={e=>setForm({...form,prix:e.target.value})} />
+            </div>
+          </div>
+          <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 16px',marginBottom:1 }}>
+            <label style={S.lbl}>Notes (optionnel)</label>
+            <input style={S.inp} placeholder="Mis en vente le 15 mai, 3 contacts..." value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} />
+          </div>
+          <div style={{ display:'flex',gap:8,marginTop:1 }}>
+            <button onClick={addObjet} disabled={saving||!form.titre||!form.prix} className="btn-primary" style={{ flex:2,fontSize:12,padding:'12px',opacity:(saving||!form.titre||!form.prix)?0.5:1 }}>
+              {saving?'Ajout...':'AJOUTER'}
+            </button>
+            <button onClick={()=>setShowForm(false)} className="btn-ghost" style={{ flex:1,fontSize:12 }}>Annuler</button>
+          </div>
+        </div>
+      )}
+
+      {loading && <div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
+
+      {!loading && objets.length === 0 && (
+        <div style={{ textAlign:'center',padding:40,fontFamily:'var(--font-display)',fontStyle:'italic',color:'var(--muted2)' }}>
+          Aucun objet suivi. Ajoutez vos articles en cours de vente.
+        </div>
+      )}
+
+      {objets.map(o => (
+        <div key={o.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
+          <div style={{ padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap' }}>
+            <div style={{ flex:1,minWidth:0 }}>
+              <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:3 }}>{o.titre}</div>
+              <div style={{ display:'flex',alignItems:'center',gap:10,flexWrap:'wrap' }}>
+                <span style={{ fontFamily:'var(--font-label)',fontSize:14,color:STATUT_COLORS[o.statut]||'var(--muted2)',letterSpacing:.5 }}>
+                  {o.statut==='vendu'?'Vendu - '+o.prixFinal+' EUR':o.statut==='actif'?'En cours - '+o.prix+' EUR':'Archive'}
+                </span>
+                <span style={{ fontSize:10,color:'var(--muted)' }}>{new Date(o.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</span>
+              </div>
+              {o.notes && <div style={{ fontSize:11,color:'var(--muted2)',marginTop:3,fontStyle:'italic' }}>{o.notes}</div>}
+            </div>
+            <div style={{ display:'flex',gap:6,flexShrink:0 }}>
+              {o.statut === 'actif' && (
+                editId === o.id ? (
+                  <div style={{ display:'flex',gap:6,alignItems:'center' }}>
+                    <input style={{ ...S.inp,width:90,fontSize:13 }} type="number" placeholder="Prix final" value={prixFinal} onChange={e=>setPrixFinal(e.target.value)} />
+                    <button onClick={()=>markVendu(o.id)} className="btn-gold" style={{ fontSize:10,padding:'6px 12px',color:'#030303' }}>OK</button>
+                    <button onClick={()=>setEditId(null)} className="btn-ghost" style={{ fontSize:10,padding:'6px 10px' }}>x</button>
+                  </div>
+                ) : (
+                  <button onClick={()=>setEditId(o.id)} className="btn-ghost" style={{ fontSize:10,padding:'6px 12px',color:'var(--success2)',borderColor:'rgba(45,122,79,.3)' }}>
+                    Marquer vendu
+                  </button>
+                )
+              )}
+              <button onClick={()=>deleteObjet(o.id)} style={{ background:'none',border:'1px solid rgba(200,57,43,.2)',borderRadius:2,color:'var(--red2)',cursor:'pointer',fontSize:10,padding:'5px 10px' }}>
+                Sup.
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── CHATBOTS TAB (Idée Q) ────────────────────────────────
+function ChatBotsTab() {
+  const [bots, setBots] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [copied, setCopied] = useState(null)
+
+  useEffect(()=>{
+    fetch('/api/chat/list').then(r=>r.json()).then(d=>{
+      setBots(d.bots||[])
+      setLoading(false)
+    }).catch(()=>setLoading(false))
+  },[])
+
+  const copyLink = (code) => {
+    const text = 'Des questions sur cet article ? Mon assistant repond instantanement : annonza.business/chat/' + code
+    navigator.clipboard.writeText(text)
+    setCopied(code)
+    setTimeout(()=>setCopied(null), 2000)
+  }
+
+  const copyUrl = (code) => {
+    navigator.clipboard.writeText('https://annonza.business/chat/'+code)
+    setCopied(code+'url')
+    setTimeout(()=>setCopied(null), 2000)
+  }
+
+  return (
+    <div className="db-fade">
+      <div style={{ marginBottom:16 }}>
+        <div className="label" style={{ marginBottom:6 }}>Chatbots vendeur</div>
+        <h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes assistants</h2>
+        <p style={{ fontSize:13,color:'var(--muted2)',marginTop:6,lineHeight:1.65 }}>
+          Chaque annonce generee cree automatiquement un assistant IA. Copiez le texte et collez-le dans vos annonces LeBonCoin.
+        </p>
+      </div>
+
+      {/* Explication */}
+      <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderLeft:'3px solid var(--gold)',padding:'14px 18px',marginBottom:16 }}>
+        <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:8,fontWeight:600 }}>Comment ca marche ?</div>
+        <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7 }}>
+          1. Generez une annonce dans l'onglet Annonce<br/>
+          2. Un assistant est cree automatiquement<br/>
+          3. Copiez le texte ci-dessous et ajoutez-le a la fin de votre annonce LeBonCoin<br/>
+          4. Les acheteurs tapent l'adresse dans leur navigateur et posent leurs questions directement<br/>
+          5. L'IA repond 24h/24 avec toutes les infos de votre annonce
+        </div>
+      </div>
+
+      {loading && <div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
+
+      {!loading && bots.length === 0 && (
+        <div style={{ textAlign:'center',padding:40,fontFamily:'var(--font-display)',fontStyle:'italic',color:'var(--muted2)' }}>
+          Aucun assistant cree. Generez une annonce pour en creer un automatiquement.
+        </div>
+      )}
+
+      {bots.map(bot => (
+        <div key={bot.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
+          <div style={{ padding:'14px 18px' }}>
+            <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10,flexWrap:'wrap',gap:8 }}>
+              <div>
+                <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:2 }}>{bot.titre}</div>
+                <div style={{ display:'flex',gap:10,alignItems:'center' }}>
+                  <span style={{ fontFamily:'monospace',fontSize:10,color:'var(--muted2)',background:'var(--s3)',padding:'2px 8px' }}>{bot.code}</span>
+                  <span style={{ fontSize:10,color:'var(--muted)' }}>{bot.nbQuestions} questions posees</span>
+                  <span style={{ fontSize:10,color:bot.actif?'var(--success2)':'var(--muted)' }}>{bot.actif?'Actif':'Inactif'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Texte a copier pour LeBonCoin */}
+            <div style={{ background:'var(--s2)',border:'1px solid var(--border)',padding:'10px 14px',fontSize:12,color:'var(--cream)',lineHeight:1.6,marginBottom:10,borderRadius:3 }}>
+              Des questions sur cet article ? Mon assistant repond instantanement : annonza.business/chat/{bot.code}
+            </div>
+
+            <div style={{ display:'flex',gap:8,flexWrap:'wrap' }}>
+              <button onClick={()=>copyLink(bot.code)}
+                style={{ background:copied===bot.code?'rgba(201,168,76,.1)':'var(--s1)',border:'1px solid',borderColor:copied===bot.code?'var(--gold-border)':'var(--border2)',borderRadius:2,color:copied===bot.code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',flex:1,transition:'all .15s' }}>
+                {copied===bot.code?'Copie ! (texte LeBonCoin)':'Copier pour LeBonCoin'}
+              </button>
+              <button onClick={()=>copyUrl(bot.code)}
+                style={{ background:'var(--s1)',border:'1px solid var(--border2)',borderRadius:2,color:copied===bot.code+'url'?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',transition:'all .15s' }}>
+                {copied===bot.code+'url'?'Copie !':'Copier le lien seul'}
+              </button>
+              <a href={'/chat/'+bot.code} target="_blank" rel="noreferrer"
+                style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',textDecoration:'none',display:'inline-flex',alignItems:'center' }}>
+                Tester
+              </a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+
+function ScoreVendeur({ usage }) {
+  const { points, niveau, prochainNiveau, pointsManquants, emoji } = (() => {
+    let p = Math.min(usage.annonces * 10, 200) + Math.min(usage.reponses * 5, 150)
+    let n = 'Debutant', pn = 'Vendeur', pm = Math.max(0, 50-p), em = '🌱'
+    if (p >= 500) { n = 'Expert'; pn = null; em = '👑'; pm = 0 }
+    else if (p >= 200) { n = 'Pro'; pn = 'Expert'; em = '⭐'; pm = 500-p }
+    else if (p >= 50) { n = 'Vendeur'; pn = 'Pro'; em = '🔥'; pm = 200-p }
+    return { points:p, niveau:n, prochainNiveau:pn, pointsManquants:pm, emoji:em }
+  })()
+
+  const maxPoints = niveau === 'Expert' ? 500 : prochainNiveau === 'Expert' ? 500 : prochainNiveau === 'Pro' ? 200 : 50
+  const minPoints = niveau === 'Expert' ? 200 : niveau === 'Pro' ? 50 : niveau === 'Vendeur' ? 50 : 0
+  const pct = Math.min(100, ((points - minPoints) / (maxPoints - minPoints)) * 100)
+
+  return (
+    <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:16,display:'flex',alignItems:'center',gap:14,flexWrap:'wrap' }}>
+      <div style={{ fontSize:28 }}>{emoji}</div>
+      <div style={{ flex:1,minWidth:160 }}>
+        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
+          <div>
+            <span style={{ fontFamily:'var(--font-label)',fontSize:14,letterSpacing:1,color:'var(--gold2)' }}>{niveau}</span>
+            {prochainNiveau && <span style={{ fontSize:10,color:'var(--muted)',marginLeft:8 }}>→ {prochainNiveau} dans {pointsManquants} pts</span>}
+          </div>
+          <span style={{ fontFamily:'var(--font-label)',fontSize:12,color:'var(--muted2)',letterSpacing:.5 }}>{points} pts</span>
+        </div>
+        <div style={{ background:'var(--s3)',borderRadius:1,height:3,overflow:'hidden' }}>
+          <div style={{ width:Math.max(3,pct)+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width .8s' }} />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function LaunchBanner() {
   const [countdown, setCountdown] = useState(null)
