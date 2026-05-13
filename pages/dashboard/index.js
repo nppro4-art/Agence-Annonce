@@ -1308,11 +1308,9 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
                       <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,whiteSpace:'pre-wrap' }}>{v}</div>
                     </div>
                   ))}
-                  <button onClick={()=>{navigator.clipboard.writeText([lotResult.titre,lotResult.description,lotResult.liste,lotResult.prixLot].filter(Boolean).join('
-
-'));setLotCopied(true);setTimeout(()=>setLotCopied(false),2000)}}
+                  <button onClick={()=>{navigator.clipboard.writeText([lotResult.titre,lotResult.description,lotResult.liste,lotResult.prixLot].filter(Boolean).join('\n\n'));setLotCopied(true);setTimeout(()=>setLotCopied(false),2000)}}
                     style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:lotCopied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:4 }}>
-                    {lotCopied?'Copie !':'Copier l'annonce lot'}
+                    {lotCopied?'Copie !':"Copier l'annonce lot"}
                   </button>
                 </div>
               )}
