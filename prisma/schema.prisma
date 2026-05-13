@@ -8,27 +8,28 @@ datasource db {
 }
 
 model User {
-  id               String        @id @default(cuid())
-  email            String        @unique
+  id               String         @id @default(cuid())
+  email            String         @unique
   password         String
   name             String?
-  plan             String        @default("free")
-  planKey          String        @default("free")
-  stripeCustomerId String?       @unique
-  stripeSubId      String?       @unique
-  subStatus        String        @default("inactive")
+  plan             String         @default("free")
+  planKey          String         @default("free")
+  stripeCustomerId String?        @unique
+  stripeSubId      String?        @unique
+  subStatus        String         @default("inactive")
   refBy            String?
-  referralCode     String?       @unique
+  referralCode     String?        @unique
   referralUsed     String?
-  loyaltyPoints    Int           @default(0)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  loyaltyPoints    Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
   annonces         Annonce[]
   reponses         Reponse[]
   credits          Credit[]
   purchases        Purchase[]
   objetsEnVente    ObjetEnVente[]
   alertesPrix      AlertePrix[]
+  chatBots         ChatBot[]
 }
 
 model Employee {
@@ -66,9 +67,9 @@ model Commission {
 }
 
 model Annonce {
-  id           String   @id @default(cuid())
+  id           String      @id @default(cuid())
   userId       String
-  user         User     @relation(fields: [userId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
   type         String
   inputData    Json
   titre        String?
@@ -79,7 +80,9 @@ model Annonce {
   shortVersion String?
   score        Int?
   scoreGrade   String?
-  createdAt    DateTime @default(now())
+  chatBotCode  String?     @unique
+  createdAt    DateTime    @default(now())
+  chatBot      ChatBot?
 }
 
 model Reponse {
@@ -90,6 +93,30 @@ model Reponse {
   reponsePrete    String
   suggestion      String?
   createdAt       DateTime @default(now())
+}
+
+model ChatBot {
+  id          String        @id @default(cuid())
+  code        String        @unique
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  annonceId   String        @unique
+  annonce     Annonce       @relation(fields: [annonceId], references: [id])
+  titre       String
+  inputData   Json
+  actif       Boolean       @default(true)
+  nbQuestions Int           @default(0)
+  createdAt   DateTime      @default(now())
+  messages    ChatMessage[]
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  chatBotId String
+  chatBot   ChatBot  @relation(fields: [chatBotId], references: [id])
+  role      String   // 'user' ou 'assistant'
+  content   String
+  createdAt DateTime @default(now())
 }
 
 model Credit {
@@ -117,28 +144,41 @@ model Purchase {
 }
 
 model ObjetEnVente {
-  id         String   @id @default(cuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  titre      String
-  prix       Float
-  prixFinal  Float?
-  statut     String   @default("actif")
-  annonceId  String?
-  notes      String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  titre     String
+  prix      Float
+  prixFinal Float?
+  statut    String   @default("actif")
+  annonceId String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AlertePrix {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  motCle     String
+  prixMoyen  Float?
+  lastSentAt DateTime?
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+}
+
+model Avis {
   id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  motCle      String
-  prixMoyen   Float?
-  lastSentAt  DateTime?
-  active      Boolean  @default(true)
+  nom         String   @default("Anonyme")
+  ville       String   @default("")
+  article     String   @default("")
+  note        Int
+  commentaire String
+  email       String   @default("")
+  statut      String   @default("pending")
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Settings {
