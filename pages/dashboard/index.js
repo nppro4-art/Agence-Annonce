@@ -1656,7 +1656,7 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess }) {
           <button className="copy-btn"
             onClick={()=>{navigator.clipboard.writeText(result.annonceAmelioree||'');setCopied(true);setTimeout(()=>setCopied(false),2000)}}
             style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:1 }}>
-            {copied?'Copie !':'Copier l'annonce optimisee'}
+            {copied?'Copie !':"Copier l'annonce optimisee"}
           </button>
         </div>
       )}
