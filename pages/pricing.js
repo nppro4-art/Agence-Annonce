@@ -61,7 +61,7 @@ export default function Pricing() {
       recommended: true,
     },
     {
-      key: 'expert', name: 'Expert', price: '9,99',
+      key: 'expert', name: 'Expert', price: '12,99',
       features: [
         'Annonces et reponses illimitees',
         'Chatbot vendeur (200 msg/jour)',
