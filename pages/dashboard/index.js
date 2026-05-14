@@ -316,6 +316,7 @@ export default function Dashboard() {
   const [tab, setTab] = useState('home')
   const [loading, setLoading] = useState(true)
   const [usage, setUsage] = useState({ annonces:0, reponses:0 })
+  const [annonces, setAnnonces] = useState([])
   const [credits, setCredits] = useState({ annonces:{ remaining:0 }, reponses:{ remaining:0 } })
   const [purchases, setPurchases] = useState([])
   const [showSubModal, setShowSubModal] = useState(false)
@@ -336,6 +337,11 @@ export default function Dashboard() {
       setUsage({ annonces:a.annonces?.length||0, reponses:r.reponses?.length||0 })
       if (c.credits) setCredits(c.credits)
       if (c.purchases) setPurchases(c.purchases)
+    }).catch(()=>{})
+
+    // Charger les annonces pour les sélecteurs
+    fetch('/api/dashboard/annonces').then(r=>r.json()).then(d => {
+      setAnnonces(d.annonces||[])
     }).catch(()=>{})
   }, [])
 
@@ -581,12 +587,12 @@ export default function Dashboard() {
           </div>
         )}
 
-        {tab==='analyser' && <AnalyserTab isSubscribed={isSubscribed} subscribe={subscribe} hasAccess={canAccessFeature(planKey,'analyser')} />}
-        {tab==='ventes' && <VentesTab isSubscribed={isSubscribed} subscribe={subscribe} hasAccess={canAccessFeature(planKey,'ventes')} />}
+        {tab==='analyser' && <AnalyserTab isSubscribed={isSubscribed} subscribe={subscribe} hasAccess={canAccessFeature(planKey,'analyser')} annonces={annonces} />}
+        {tab==='ventes' && <VentesTab isSubscribed={isSubscribed} subscribe={subscribe} hasAccess={canAccessFeature(planKey,'ventes')} annonces={annonces} />}
         {tab==='chatbots' && <ChatBotsTab />}
         {tab==='annonce' && <AnnonceTab isSubscribed={isSubscribed} planKey={planKey} credits={credits} subscribe={subscribe} onUsed={()=>setUsage(u=>({...u,annonces:u.annonces+1}))} />}
         {tab==='reponse' && <ReponseTab isSubscribed={isSubscribed} subscribe={subscribe} onUsed={()=>setUsage(u=>({...u,reponses:u.reponses+1}))} />}
-        {tab==='estimation' && <EstimationTab />}
+        {tab==='estimation' && <EstimationTab annonces={annonces} />}
         {tab==='outils' && <OutilsTab isSubscribed={isSubscribed} subscribe={subscribe} planKey={planKey} />}
         {tab==='historique' && <HistoriqueTab />}
         {tab==='tarifs' && <TarifsTab isSubscribed={isSubscribed} planKey={planKey} subscribe={subscribe} openSubModal={()=>setShowSubModal(true)} />}
@@ -850,10 +856,13 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
   )
 }
 
-function EstimationTab() {
+function EstimationTab({ annonces = [] }) {
   const [specs, setSpecs] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
+  const [selectedAnnonce, setSelectedAnnonce] = useState(null)
+
   const estimate = async () => {
     if (!specs) return
     setLoading(true)
@@ -866,7 +875,32 @@ function EstimationTab() {
     <div className="db-fade">
       <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil gratuit</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Estimer le prix</h2></div>
       <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
-        <label style={S.lbl}>Decrivez votre article</label>
+        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
+          <label style={{ ...S.lbl,marginBottom:0 }}>Decrivez votre article</label>
+          {annonces.length>0 && (
+            <button onClick={()=>setShowSearch(!showSearch)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'3px 8px' }}>
+              {showSearch?'Masquer':'+ Lier une annonce'}
+            </button>
+          )}
+        </div>
+        {showSearch && annonces.length>0 && (
+          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,marginBottom:8,maxHeight:150,overflowY:'auto' }}>
+            {annonces.filter(a=>a.type!=='estimation').map(a=>(
+              <div key={a.id} onClick={()=>{ setSelectedAnnonce(a); setSpecs(Object.entries(a.inputData||{}).filter(([,v])=>v).map(([k,v])=>k+': '+v).join(', ')); setShowSearch(false) }}
+                className="hover-row" style={{ padding:'9px 12px',cursor:'pointer',borderBottom:'1px solid var(--border)',background:selectedAnnonce?.id===a.id?'rgba(201,168,76,.06)':'transparent' }}>
+                <div style={{ fontSize:12,fontWeight:600,color:'var(--cream)' }}>{a.titre||'Sans titre'}</div>
+                <div style={{ fontSize:10,color:'var(--muted2)' }}>{a.type} · {new Date(a.createdAt).toLocaleDateString('fr-FR')}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {selectedAnnonce && (
+          <div style={{ display:'flex',alignItems:'center',gap:7,background:'rgba(201,168,76,.06)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'5px 10px',marginBottom:7,fontSize:11 }}>
+            <span style={{ color:'var(--gold2)' }}>✦</span>
+            <span style={{ color:'var(--cream)',flex:1 }}>{selectedAnnonce.titre}</span>
+            <button onClick={()=>{setSelectedAnnonce(null);setSpecs('')}} style={{ background:'none',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:14 }}>x</button>
+          </div>
+        )}
         <textarea style={{ ...S.inp,minHeight:110,resize:'vertical',lineHeight:1.7 }} placeholder="Ex: iPhone 15 Pro 256Go noir, tres bon etat, batterie 94%, avec boite..." value={specs} onChange={e=>setSpecs(e.target.value)} />
         <div style={{ fontSize:10,color:'var(--muted)',marginTop:5 }}>3 estimations gratuites par jour</div>
       </div>
@@ -1021,15 +1055,15 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
   }
 
   const TOOLS = [
-    {id:'titre',icon:'T',label:'Generateur de titres',desc:'5 titres optimises en un clic pour maximiser les vues',badge:'Starter+',active:true},
-    {id:'prix',icon:'€',label:'Detecteur prix abusif',desc:'Verifiez si votre prix est aligne avec le marche',badge:'Starter+',active:true},
-    {id:'calendrier',icon:'K',label:'Calendrier optimal',desc:'Quel jour et heure publier pour maximiser les vues',badge:'Starter+',active:true},
-    {id:'checklist',icon:'V',label:'Checklist publication',desc:'6 points a verifier avant de publier',badge:'Starter+',active:true},
-    {id:'arnaque',icon:'!',label:'Detecteur arnaque',desc:'Analysez un message suspect avant de repondre',badge:'Business+',active:feats.arnaque},
-    {id:'plateformes',icon:'M',label:'Comparateur plateformes',desc:'LeBonCoin vs Vinted vs Facebook vs eBay',badge:'Business+',active:feats.plateformes},
-    {id:'flash',icon:'F',label:'Mode vente flash',desc:'Annonce ultra-agressive pour vendre en moins de 48h',badge:'Business+',active:feats.flash},
-    {id:'traduction',icon:'G',label:'Traduction annonce',desc:'Anglais, Espagnol, Allemand, Italien, Neerlandais',badge:'Business+',active:feats.traduction},
-    {id:'lot',icon:'P',label:'Mode lot',desc:'Vendez plusieurs objets ensemble en une seule annonce',badge:'Expert',active:feats.lot},
+    {id:'titre',icon:'✍',label:'Generateur de titres',desc:'5 titres optimises en un clic pour maximiser les vues',badge:'Starter+',active:true},
+    {id:'prix',icon:'📊',label:'Detecteur prix abusif',desc:'Verifiez si votre prix est aligne avec le marche',badge:'Starter+',active:true},
+    {id:'calendrier',icon:'📅',label:'Calendrier optimal',desc:'Quel jour et heure publier pour maximiser les vues',badge:'Starter+',active:true},
+    {id:'checklist',icon:'✅',label:'Checklist publication',desc:'6 points a verifier avant de publier',badge:'Starter+',active:true},
+    {id:'arnaque',icon:'🚨',label:'Detecteur arnaque',desc:'Analysez un message suspect avant de repondre',badge:'Business+',active:feats.arnaque},
+    {id:'plateformes',icon:'🔀',label:'Comparateur plateformes',desc:'LeBonCoin vs Vinted vs Facebook vs eBay',badge:'Business+',active:feats.plateformes},
+    {id:'flash',icon:'⚡',label:'Mode vente flash',desc:'Annonce ultra-agressive pour vendre en moins de 48h',badge:'Business+',active:feats.flash},
+    {id:'traduction',icon:'🌍',label:'Traduction annonce',desc:'Anglais, Espagnol, Allemand, Italien, Neerlandais',badge:'Business+',active:feats.traduction},
+    {id:'lot',icon:'📦',label:'Mode lot',desc:'Vendez plusieurs objets ensemble en une seule annonce',badge:'Expert',active:feats.lot},
   ]
 
   return (
@@ -1041,7 +1075,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
             onClick={()=>tool.active||!isSubscribed?setActiveTool(activeTool===tool.id?null:tool.id):null}
             style={{ background:activeTool===tool.id?'var(--s2)':'var(--ink)',padding:'18px',cursor:tool.active||!isSubscribed?'pointer':'not-allowed',transition:'all .2s',borderTop:activeTool===tool.id?'2px solid var(--gold)':'2px solid transparent',opacity:isSubscribed&&!tool.active?0.5:1 }}>
             <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:7 }}>
-              <span style={{ width:28,height:28,background:'var(--s3)',borderRadius:3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,color:tool.active?'var(--gold2)':'var(--muted)' }}>{tool.icon}</span>
+              <span style={{ fontSize:22 }}>{tool.icon}</span>
               <span style={{ fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1.5,
                 color:tool.badge==='Starter+'?'var(--success2)':tool.badge==='Actif'?'var(--success2)':'var(--gold3)',
                 background:tool.badge==='Starter+'||tool.badge==='Actif'?'rgba(45,122,79,.1)':'rgba(201,168,76,.1)',
@@ -1477,6 +1511,20 @@ function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
 }
 
 function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubModal, usage, credits, purchases, limits }) {
+  const [twoFAEnabled, setTwoFAEnabled] = useState(user?.twoFAEnabled || false)
+  const [toggling2FA, setToggling2FA] = useState(false)
+  const [msg2FA, setMsg2FA] = useState('')
+
+  const toggle2FA = async () => {
+    setToggling2FA(true)
+    try {
+      const res = await fetch('/api/auth/toggle-2fa', { method:'POST' })
+      const data = await res.json()
+      if (data.success) { setTwoFAEnabled(data.enabled); setMsg2FA(data.enabled?'Double authentification activee':'Double authentification desactivee') }
+    } catch(e) {}
+    setToggling2FA(false)
+    setTimeout(()=>setMsg2FA(''), 3000)
+  }
   return (
     <div className="db-fade">
       <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Mon compte</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Profil</h2></div>
@@ -1530,6 +1578,26 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
           </div>
         )}
       </div>
+      {/* Double authentification */}
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
+        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12 }}>
+          <div>
+            <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:4 }}>Double authentification</div>
+            <div style={{ fontSize:13,color:'var(--cream)',marginBottom:2 }}>
+              {twoFAEnabled?'Activee — un code vous est envoye par email a chaque connexion':'Desactivee — connexion directe avec mot de passe'}
+            </div>
+            <div style={{ fontSize:11,color:'var(--muted)' }}>Recommande pour proteger votre compte</div>
+          </div>
+          <div style={{ display:'flex',alignItems:'center',gap:10 }}>
+            {msg2FA && <span style={{ fontSize:11,color:twoFAEnabled?'var(--success2)':'var(--muted2)' }}>{msg2FA}</span>}
+            <button onClick={toggle2FA} disabled={toggling2FA}
+              style={{ background:twoFAEnabled?'rgba(45,122,79,.1)':'var(--s2)',border:'1px solid',borderColor:twoFAEnabled?'rgba(45,122,79,.3)':'var(--border2)',borderRadius:2,color:twoFAEnabled?'var(--success2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'8px 16px',transition:'all .2s',opacity:toggling2FA?0.5:1 }}>
+              {toggling2FA?'...':twoFAEnabled?'Desactiver':'Activer'}
+            </button>
+          </div>
+        </div>
+      </div>
+
       {isSubscribed&&!isPremium&&<ReferralSection />}
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
         <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:10 }}>Comment fonctionne le parrainage ?</div>
@@ -1564,11 +1632,13 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
 
 
 // ─── ANALYSER TAB (Idée D) ────────────────────────────────
-function AnalyserTab({ isSubscribed, subscribe, hasAccess }) {
+function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
   const [annonce, setAnnonce] = useState('')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
+  const [selectedAnnonce, setSelectedAnnonce] = useState(null)
 
   if (!isSubscribed || !hasAccess) return (
     <div className="db-fade">
@@ -1604,7 +1674,34 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess }) {
       </div>
 
       <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
-        <label style={S.lbl}>Votre annonce actuelle *</label>
+        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
+          <label style={{ ...S.lbl,marginBottom:0 }}>Votre annonce actuelle *</label>
+          {annonces.length>0 && (
+            <button onClick={()=>setShowSearch(!showSearch)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'3px 8px' }}>
+              {showSearch?'Masquer':'+ Importer une annonce'}
+            </button>
+          )}
+        </div>
+        {showSearch && (
+          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,marginBottom:8,maxHeight:150,overflowY:'auto' }}>
+            {annonces.filter(a=>a.type!=='estimation').map(a=>(
+              <div key={a.id} onClick={()=>{ setSelectedAnnonce(a); const txt = [a.titre, a.description, a.pointsForts, a.defauts].filter(Boolean).join('
+
+'); setAnnonce(txt); setShowSearch(false) }}
+                className="hover-row" style={{ padding:'9px 12px',cursor:'pointer',borderBottom:'1px solid var(--border)',background:selectedAnnonce?.id===a.id?'rgba(201,168,76,.06)':'transparent' }}>
+                <div style={{ fontSize:12,fontWeight:600,color:'var(--cream)' }}>{a.titre||'Sans titre'}</div>
+                <div style={{ fontSize:10,color:'var(--muted2)' }}>{a.type} · {new Date(a.createdAt).toLocaleDateString('fr-FR')}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {selectedAnnonce && (
+          <div style={{ display:'flex',alignItems:'center',gap:7,background:'rgba(201,168,76,.06)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'5px 10px',marginBottom:7,fontSize:11 }}>
+            <span style={{ color:'var(--gold2)' }}>✦</span>
+            <span style={{ color:'var(--cream)',flex:1 }}>{selectedAnnonce.titre}</span>
+            <button onClick={()=>{setSelectedAnnonce(null);setAnnonce('')}} style={{ background:'none',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:14 }}>x</button>
+          </div>
+        )}
         <textarea style={{ ...S.inp,minHeight:160,resize:'vertical',lineHeight:1.7 }}
           placeholder="Collez ici votre annonce LeBonCoin, Vinted ou Facebook Marketplace..."
           value={annonce} onChange={e=>setAnnonce(e.target.value)} />
@@ -1760,6 +1857,17 @@ function VentesTab({ isSubscribed, subscribe }) {
               <input style={S.inp} type="number" placeholder="450" value={form.prix} onChange={e=>setForm({...form,prix:e.target.value})} />
             </div>
           </div>
+          {annonces.length>0 && (
+            <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 16px',marginBottom:1 }}>
+              <label style={S.lbl}>Lier a une annonce (optionnel)</label>
+              <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={form.annonceId||''} onChange={e=>setForm({...form,annonceId:e.target.value})}>
+                <option value="">Aucune</option>
+                {annonces.filter(a=>a.type!=='estimation').map(a=>(
+                  <option key={a.id} value={a.id}>{a.titre||'Sans titre'}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 16px',marginBottom:1 }}>
             <label style={S.lbl}>Notes (optionnel)</label>
             <input style={S.inp} placeholder="Mis en vente le 15 mai, 3 contacts..." value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} />
@@ -1787,9 +1895,20 @@ function VentesTab({ isSubscribed, subscribe }) {
             <div style={{ flex:1,minWidth:0 }}>
               <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:3 }}>{o.titre}</div>
               <div style={{ display:'flex',alignItems:'center',gap:10,flexWrap:'wrap' }}>
-                <span style={{ fontFamily:'var(--font-label)',fontSize:14,color:STATUT_COLORS[o.statut]||'var(--muted2)',letterSpacing:.5 }}>
-                  {o.statut==='vendu'?'Vendu - '+o.prixFinal+' EUR':o.statut==='actif'?'En cours - '+o.prix+' EUR':'Archive'}
-                </span>
+                <div style={{ display:'flex',alignItems:'center',gap:8,flexWrap:'wrap' }}>
+                  <span style={{ fontFamily:'var(--font-label)',fontSize:12,letterSpacing:.5,
+                    color:o.statut==='vendu'?'var(--success2)':o.statut==='actif'?'var(--gold2)':'var(--muted)',
+                    background:o.statut==='vendu'?'rgba(45,122,79,.1)':o.statut==='actif'?'rgba(201,168,76,.1)':'var(--s2)',
+                    border:'1px solid',borderColor:o.statut==='vendu'?'rgba(45,122,79,.3)':o.statut==='actif'?'var(--gold-border)':'var(--border)',
+                    borderRadius:2,padding:'2px 8px' }}>
+                    {o.statut==='vendu'?'Vendu':o.statut==='actif'?'En cours':'Archive'}
+                  </span>
+                  <span style={{ fontSize:12,color:'var(--cream)',fontWeight:600 }}>
+                    {o.statut==='vendu'
+                      ? o.prixFinal+' EUR'+(o.prixFinal!==o.prix?o.prixFinal>o.prix?' (+'+Math.round(o.prixFinal-o.prix)+' EUR)':' (-'+Math.round(o.prix-o.prixFinal)+' EUR)':'')
+                      : o.prix+' EUR demandes'}
+                  </span>
+                </div>
                 <span style={{ fontSize:10,color:'var(--muted)' }}>{new Date(o.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</span>
               </div>
               {o.notes && <div style={{ fontSize:11,color:'var(--muted2)',marginTop:3,fontStyle:'italic' }}>{o.notes}</div>}
@@ -1824,13 +1943,41 @@ function ChatBotsTab() {
   const [bots, setBots] = useState([])
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(null)
+  const [annonces, setAnnonces] = useState([])
+  const [showCreate, setShowCreate] = useState(false)
+  const [selectedAnnonceId, setSelectedAnnonceId] = useState('')
+  const [creating, setCreating] = useState(false)
+  const [createMsg, setCreateMsg] = useState('')
 
   useEffect(()=>{
     fetch('/api/chat/list').then(r=>r.json()).then(d=>{
       setBots(d.bots||[])
       setLoading(false)
     }).catch(()=>setLoading(false))
+    fetch('/api/dashboard/annonces').then(r=>r.json()).then(d=>{
+      setAnnonces((d.annonces||[]).filter(a=>a.type!=='estimation'))
+    }).catch(()=>{})
   },[])
+
+  const createBot = async () => {
+    if (!selectedAnnonceId) return
+    setCreating(true)
+    try {
+      const res = await fetch('/api/chat/create', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ annonceId: selectedAnnonceId })
+      })
+      const data = await res.json()
+      if (data.chatBot) {
+        setBots(prev => [data.chatBot, ...prev.filter(b=>b.id!==data.chatBot.id)])
+        setShowCreate(false)
+        setSelectedAnnonceId('')
+        setCreateMsg('Assistant cree avec succes !')
+        setTimeout(()=>setCreateMsg(''), 3000)
+      }
+    } catch(e) {}
+    setCreating(false)
+  }
 
   const copyLink = (code) => {
     const text = 'Des questions sur cet article ? Mon assistant repond instantanement : annonza.business/chat/' + code
@@ -1854,6 +2001,53 @@ function ChatBotsTab() {
           Chaque annonce generee cree automatiquement un assistant IA. Copiez le texte et collez-le dans vos annonces LeBonCoin.
         </p>
       </div>
+
+      {/* Bouton créer + formulaire */}
+      <div style={{ display:'flex',justifyContent:'flex-end',marginBottom:12 }}>
+        <button onClick={()=>setShowCreate(!showCreate)} className="btn-gold" style={{ fontSize:11,padding:'10px 18px',letterSpacing:1.5,color:'#030303' }}>
+          + CREER UN ASSISTANT
+        </button>
+      </div>
+
+      {createMsg && (
+        <div style={{ background:'rgba(45,122,79,.1)',border:'1px solid rgba(45,122,79,.3)',borderRadius:3,padding:'10px 14px',marginBottom:12,fontSize:13,color:'var(--success2)' }}>
+          {createMsg}
+        </div>
+      )}
+
+      {showCreate && (
+        <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',padding:'18px',marginBottom:16,borderTop:'2px solid var(--gold)' }}>
+          <div style={{ fontFamily:'var(--font-display)',fontSize:16,fontWeight:600,marginBottom:14 }}>Creer un assistant pour une annonce</div>
+          {annonces.length === 0 ? (
+            <div style={{ fontSize:13,color:'var(--muted2)',lineHeight:1.65 }}>
+              Vous n'avez pas encore d'annonce. Generez une annonce dans l'onglet Annonce pour creer un assistant.
+            </div>
+          ) : (
+            <>
+              <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 16px',marginBottom:8 }}>
+                <label style={S.lbl}>Choisir une annonce *</label>
+                <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={selectedAnnonceId} onChange={e=>setSelectedAnnonceId(e.target.value)}>
+                  <option value="">Selectionner une annonce...</option>
+                  {annonces.map(a=>(
+                    <option key={a.id} value={a.id}>{a.titre||'Sans titre'} · {new Date(a.createdAt).toLocaleDateString('fr-FR')}</option>
+                  ))}
+                </select>
+              </div>
+              {selectedAnnonceId && (
+                <div style={{ background:'rgba(201,168,76,.06)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'10px 14px',marginBottom:10,fontSize:12,color:'var(--muted2)',lineHeight:1.65 }}>
+                  Un assistant IA sera cree pour cette annonce. Il pourra repondre aux questions des acheteurs 24h/24 avec toutes les infos de votre annonce.
+                </div>
+              )}
+              <div style={{ display:'flex',gap:8 }}>
+                <button onClick={createBot} disabled={creating||!selectedAnnonceId} className="btn-primary" style={{ flex:2,fontSize:12,padding:'12px',opacity:(creating||!selectedAnnonceId)?0.5:1 }}>
+                  {creating?'Creation...':'CREER L'ASSISTANT'}
+                </button>
+                <button onClick={()=>{setShowCreate(false);setSelectedAnnonceId('')}} className="btn-ghost" style={{ flex:1,fontSize:12 }}>Annuler</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Explication */}
       <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderLeft:'3px solid var(--gold)',padding:'14px 18px',marginBottom:16 }}>
