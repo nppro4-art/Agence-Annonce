@@ -24,7 +24,7 @@ function canAccessFeature(planKey, feature) {
   return !!(PLAN_FEATURES[planKey] || PLAN_FEATURES.free)[feature]
 }
 const PLAN_NAMES = { premium:'Premium', expert:'Expert', business:'Business', starter:'Starter', pro:'Business', free:'Gratuit' }
-const PLAN_PRICES = { premium:'—', expert:'9,99', business:'5,99', starter:'3,99', pro:'5,99', free:'0' }
+const PLAN_PRICES = { premium:'—', expert:'12,99', business:'5,99', starter:'3,99', pro:'5,99', free:'0' }
 const PLAN_CHATBOT = { premium:500, expert:200, business:50, starter:0, pro:50, free:0 }
 
 const CATEGORIES = {
@@ -297,7 +297,7 @@ function LockOverlay({ subscribe }) {
           Abonnez-vous a partir de 3,99 EUR/semaine.
         </div>
         <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
-          {[['Starter','3,99'],['Business','5,99'],['Expert','9,99']].map(([plan,price]) => (
+          {[['Starter','3,99'],['Business','5,99'],['Expert','12,99']].map(([plan,price]) => (
             <button key={plan} onClick={() => subscribe(plan.toLowerCase())}
               style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:'var(--cream)',cursor:'pointer',fontSize:11,padding:'8px 4px' }}>
               <div style={{ fontSize:9,color:'var(--muted2)',marginBottom:2 }}>{plan}</div>
@@ -572,7 +572,7 @@ export default function Dashboard() {
                 <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap' }}>
                   <div>
                     <div style={{ fontFamily:'var(--font-display)',fontSize:17,fontWeight:600,marginBottom:3 }}>Passez a un abonnement</div>
-                    <div style={{ fontSize:12,color:'var(--muted2)' }}>Starter 3,99 EUR · Business 5,99 EUR · Expert 9,99 EUR</div>
+                    <div style={{ fontSize:12,color:'var(--muted2)' }}>Starter 3,99 EUR · Business 5,99 EUR · Expert 12,99 EUR</div>
                   </div>
                   <button onClick={()=>setTab('tarifs')} className="btn-gold" style={{ fontSize:11,padding:'10px 20px',letterSpacing:1.5,flexShrink:0,color:'#030303' }}>VOIR LES TARIFS</button>
                 </div>
@@ -1427,7 +1427,7 @@ function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   const PLANS = [
     {key:'starter',name:'Starter',price:'3,99',features:['10 annonces/semaine','30 reponses/semaine','Estimation prix (3/jour)','Generateur titres','Detecteur prix abusif','Checklist publication','Calendrier optimal']},
     {key:'business',name:'Business',price:'5,99',features:['30 annonces/semaine','100 reponses/semaine','Chatbot vendeur (50 msg/j)','Analyser une annonce','Detecteur arnaque','Comparateur plateformes','Mode flash + Traduction','Suivi des ventes','Tout Starter inclus'],recommended:true},
-    {key:'expert',name:'Expert',price:'9,99',features:['Annonces illimitees','Reponses illimitees','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Acces prioritaire nouveautes']},
+    {key:'expert',name:'Expert',price:'12,99',features:['Annonces illimitees','Reponses illimitees','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Acces prioritaire nouveautes']},
   ]
   const PACKS = [
     {name:'5 annonces',price:'9,99 EUR',unit:'2,00/ann.'},
@@ -1519,7 +1519,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
           <div>
             <div style={{ fontSize:13,color:'var(--muted2)',marginBottom:10 }}>Plan gratuit · Abonnez-vous pour generer des annonces</div>
             <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:7 }}>
-              {[['starter','Starter','3,99'],['business','Business','5,99'],['expert','Expert','9,99']].map(([key,name,price])=>(
+              {[['starter','Starter','3,99'],['business','Business','5,99'],['expert','Expert','12,99']].map(([key,name,price])=>(
                 <button key={key} onClick={()=>subscribe(key)}
                   style={{ background:key==='business'?'linear-gradient(135deg,var(--gold3),var(--gold2))':'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:key==='business'?'#030303':'var(--muted2)',cursor:'pointer',padding:'9px 5px',fontSize:11 }}>
                   <div style={{ fontWeight:600,marginBottom:2 }}>{name}</div>
