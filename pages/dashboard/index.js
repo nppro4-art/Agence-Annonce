@@ -400,7 +400,7 @@ export default function Dashboard() {
   )
 
   return (
-    <div style={{ minHeight:'100vh',background:'#030303',display:'flex',flexDirection:'column',fontFamily:'DM Sans, var(--font-ui)' }}>
+    <div style={{ minHeight:'100vh',background:'#030303',display:'flex',flexDirection:'column',fontFamily:'DM Sans, sans-serif' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
 
@@ -555,7 +555,7 @@ export default function Dashboard() {
         <div className="db-header" style={{ width:'100%',padding:'0 24px',height:56,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12 }}>
 
           {/* Logo */}
-          <Link href="/" style={{ fontFamily:'Cormorant Garamond, var(--font-display)',fontSize:18,letterSpacing:4,color:'var(--white)',flexShrink:0,fontWeight:300,textDecoration:'none' }}>
+          <Link href="/" style={{ fontFamily:'Cormorant Garamond, serif',fontSize:18,letterSpacing:4,color:'var(--white)',flexShrink:0,fontWeight:300,textDecoration:'none' }}>
             <span style={{ color:'var(--gold2)' }}>A</span>nnonza
           </Link>
 
@@ -564,7 +564,7 @@ export default function Dashboard() {
             {TABS.map(t=>(
               <button key={t.id} onClick={()=>setTab(t.id)}
                 className={'tab-btn'+(tab===t.id?' active':'')}
-                style={{ background:'none',border:'none',color:tab===t.id?'var(--gold2)':'var(--muted)',cursor:'pointer',fontFamily:'DM Sans, var(--font-ui)',fontSize:11,fontWeight:400,letterSpacing:.5,padding:'0 12px',flex:1,maxWidth:88,transition:'color .2s' }}>
+                style={{ background:'none',border:'none',color:tab===t.id?'var(--gold2)':'var(--muted)',cursor:'pointer',fontFamily:'DM Sans, sans-serif',fontSize:11,fontWeight:400,letterSpacing:.5,padding:'0 12px',flex:1,maxWidth:88,transition:'color .2s' }}>
                 <span className="tab-label">{t.label}</span>
               </button>
             ))}
@@ -614,7 +614,7 @@ export default function Dashboard() {
             {/* Hero salutation */}
             <div style={{ marginBottom:32,paddingBottom:28,borderBottom:'1px solid rgba(201,168,76,.1)' }}>
               <div style={{ fontSize:10,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:10,fontFamily:'DM Sans' }}>Tableau de bord</div>
-              <h1 style={{ fontFamily:'Cormorant Garamond, var(--font-display)',fontSize:'clamp(28px,5vw,44px)',fontWeight:300,letterSpacing:-.5,lineHeight:1.1,marginBottom:6 }}>
+              <h1 style={{ fontFamily:'Cormorant Garamond, serif',fontSize:'clamp(28px,5vw,44px)',fontWeight:300,letterSpacing:-.5,lineHeight:1.1,marginBottom:6 }}>
                 Bonjour,{' '}
                 <span style={{ fontStyle:'italic',fontWeight:600,background:'linear-gradient(135deg,var(--gold3),var(--gold2),var(--cream))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent' }}>
                   {user.name||user.email.split('@')[0]}
@@ -649,7 +649,7 @@ export default function Dashboard() {
                   <div key={a.t} className="act-tile" onClick={()=>setTab(a.t)}
                     style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px 16px',textAlign:'center',animationDelay:(i*.08)+'s' }}>
                     <div style={{ fontSize:22,marginBottom:10 }}>{a.icon}</div>
-                    <div style={{ fontFamily:'Cormorant Garamond, var(--font-display)',fontSize:19,fontWeight:500,lineHeight:1,color:'var(--cream)',marginBottom:3 }}>{a.title}</div>
+                    <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:19,fontWeight:500,lineHeight:1,color:'var(--cream)',marginBottom:3 }}>{a.title}</div>
                     <div style={{ fontSize:11,color:'var(--muted2)',fontStyle:'italic' }}>{a.sub}</div>
                   </div>
                 ))}
@@ -783,17 +783,17 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
       </div>
       {categorie&&(
         <>
-          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'8px 18px',marginBottom:1,display:'flex',alignItems:'center',gap:12 }}>
+          <div style={{ background:'rgba(201,168,76,.04)',border:'1px solid rgba(201,168,76,.1)',borderRadius:3,padding:'10px 18px',marginBottom:8,display:'flex',alignItems:'center',gap:14 }}>
             <div style={{ flex:1 }}>
-              <div style={{ display:'flex',justifyContent:'space-between',marginBottom:4 }}>
-                <span style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1 }}>Formulaire</span>
-                <span style={{ fontSize:11,color:'var(--gold2)',fontWeight:600 }}>{pct}%</span>
+              <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6 }}>
+                <span style={{ fontSize:9,color:'var(--muted)',textTransform:'uppercase',letterSpacing:1.5,fontFamily:'DM Sans' }}>Complétion du formulaire</span>
+                <span style={{ fontFamily:'DM Mono, monospace',fontSize:13,color:pct>70?'var(--gold2)':'var(--muted2)',fontWeight:500 }}>{pct}%</span>
               </div>
-              <div style={{ background:'var(--s3)',borderRadius:1,height:2 }}>
-                <div style={{ width:pct+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width .4s' }} />
+              <div style={{ background:'rgba(255,255,255,.06)',borderRadius:4,height:4,overflow:'hidden' }}>
+                <div className="progress-fill" style={{ width:pct+'%',height:'100%',background:`linear-gradient(90deg,${pct<40?'var(--red)':pct<70?'#e8a843':'var(--gold3)'},${pct<40?'var(--red2)':pct<70?'var(--gold)':'var(--gold2)'}`,borderRadius:4 }} />
               </div>
             </div>
-            <div style={{ fontSize:10,color:'var(--muted)',flexShrink:0 }}>Plus = mieux</div>
+            <div style={{ fontSize:10,color:'var(--muted)',flexShrink:0,fontStyle:'italic' }}>Plus = meilleure annonce</div>
           </div>
           <div className="db-form-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
             {fields.map(f=>(
@@ -867,7 +867,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
           )}
           <button className="copy-btn"
             onClick={()=>{navigator.clipboard.writeText(result.raw||'');setCopied(true);setTimeout(()=>setCopied(false),2000)}}
-            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:1 }}>
+            style={{ width:'100%',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.08)',borderRadius:4,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:500,letterSpacing:1.5,padding:'13px',marginTop:8,transition:'all .2s' }}>
             {copied?'Copie !':'Copier l\'annonce complete'}
           </button>
         </div>
@@ -972,7 +972,7 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
           )}
           <button className="copy-btn"
             onClick={()=>{navigator.clipboard.writeText(result.reponse.reponsePrete);setCopied(true);setTimeout(()=>setCopied(false),2000)}}
-            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:1 }}>
+            style={{ width:'100%',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.08)',borderRadius:4,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:500,letterSpacing:1.5,padding:'13px',marginTop:8,transition:'all .2s' }}>
             {copied?'Copie !':'Copier la reponse'}
           </button>
         </div>
@@ -1218,7 +1218,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
         <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           <div style={S.lbl}>Generateur de titres optimises</div>
           <textarea style={{ ...S.inp,minHeight:65,resize:'vertical',lineHeight:1.6,marginBottom:8 }} placeholder="Decrivez votre article: BMW 320d 2019, 75 000 km, diesel, bon etat..." value={titreSpecs} onChange={e=>setTitreSpecs(e.target.value)} />
-          <button onClick={genTitres} disabled={titreLoading||!titreSpecs} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(titreLoading||!titreSpecs)?0.5:1 }}>
+          <button onClick={genTitres} disabled={titreLoading||!titreSpecs} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:4,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:700,letterSpacing:2,padding:'13px',opacity:(titreLoading||!titreSpecs)?0.5:1,transition:'opacity .2s' }}>
             {titreLoading?'Generation...':'GENERER 5 TITRES'}
           </button>
           {titres.length>0&&(
@@ -1247,7 +1247,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
               <input style={S.inp} type="number" placeholder="12000" value={prixDemande} onChange={e=>setPrixDemande(e.target.value)} />
             </div>
           </div>
-          <button onClick={checkPrix} disabled={prixLoading||!prixArticle||!prixDemande} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(prixLoading||!prixArticle||!prixDemande)?0.5:1 }}>
+          <button onClick={checkPrix} disabled={prixLoading||!prixArticle||!prixDemande} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:4,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:700,letterSpacing:2,padding:'13px',opacity:(prixLoading||!prixArticle||!prixDemande)?0.5:1,transition:'opacity .2s' }}>
             {prixLoading?'Analyse...':'ANALYSER MON PRIX'}
           </button>
           {prixResult&&(
@@ -1271,7 +1271,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
             <>
               <div style={{ fontSize:12,color:'var(--gold3)',marginBottom:10,lineHeight:1.6 }}>Annonce urgente avec prix attractif. Pour vendre en moins de 48h.</div>
               <textarea style={{ ...S.inp,minHeight:75,resize:'vertical',lineHeight:1.6,marginBottom:8 }} placeholder="Decrivez votre article + prix actuel + prix minimum..." value={flashSpecs} onChange={e=>setFlashSpecs(e.target.value)} />
-              <button onClick={genFlash} disabled={flashLoading||!flashSpecs} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(flashLoading||!flashSpecs)?0.5:1 }}>
+              <button onClick={genFlash} disabled={flashLoading||!flashSpecs} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:4,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:700,letterSpacing:2,padding:'13px',opacity:(flashLoading||!flashSpecs)?0.5:1,transition:'opacity .2s' }}>
                 {flashLoading?'Generation...':'GENERER ANNONCE FLASH'}
               </button>
               {flashResult?.annonce&&(
@@ -1349,7 +1349,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
               <input style={S.inp} placeholder="iPhone 14, BMW 320d..." value={calArticle} onChange={e=>setCalArticle(e.target.value)} />
             </div>
           </div>
-          <button onClick={getCalendrier} disabled={calLoading||!calCat} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(calLoading||!calCat)?0.5:1 }}>
+          <button onClick={getCalendrier} disabled={calLoading||!calCat} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:4,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:700,letterSpacing:2,padding:'13px',opacity:(calLoading||!calCat)?0.5:1,transition:'opacity .2s' }}>
             {calLoading?'Analyse...':'TROUVER LE MEILLEUR MOMENT'}
           </button>
           {calResult&&!calResult.error&&(
@@ -1385,7 +1385,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
               <input style={S.inp} type="number" placeholder="450" value={platPrix} onChange={e=>setPlatPrix(e.target.value)} />
             </div>
           </div>
-          <button onClick={getPlateformes} disabled={platLoading||!platArticle} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(platLoading||!platArticle)?0.5:1 }}>
+          <button onClick={getPlateformes} disabled={platLoading||!platArticle} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:4,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:700,letterSpacing:2,padding:'13px',opacity:(platLoading||!platArticle)?0.5:1,transition:'opacity .2s' }}>
             {platLoading?'Comparaison...':'COMPARER LES PLATEFORMES'}
           </button>
           {platResult&&!platResult.error&&(
@@ -1491,7 +1491,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
                 ))}
               </div>
               <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.6,marginBottom:8 }} placeholder="Collez votre annonce en francais ici..." value={annonceText} onChange={e=>setAnnonceText(e.target.value)} />
-              <button onClick={genTrad} disabled={tradLoading||!annonceText} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(tradLoading||!annonceText)?0.5:1 }}>
+              <button onClick={genTrad} disabled={tradLoading||!annonceText} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:4,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:700,letterSpacing:2,padding:'13px',opacity:(tradLoading||!annonceText)?0.5:1,transition:'opacity .2s' }}>
                 {tradLoading?'Traduction...':'TRADUIRE EN '+(tradLangs[tradLang]||'').toUpperCase()}
               </button>
               {tradResult&&(
@@ -1939,7 +1939,7 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
 
           <button className="copy-btn"
             onClick={()=>{navigator.clipboard.writeText(result.annonceAmelioree||'');setCopied(true);setTimeout(()=>setCopied(false),2000)}}
-            style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:1 }}>
+            style={{ width:'100%',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.08)',borderRadius:4,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:500,letterSpacing:1.5,padding:'13px',marginTop:8,transition:'all .2s' }}>
             {copied?'Copie !':"Copier l'annonce optimisee"}
           </button>
         </div>
