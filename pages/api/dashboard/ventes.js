@@ -1,5 +1,6 @@
 import { requireAuth } from '../../../lib/auth'
 import { prisma } from '../../../lib/db'
+import { randomUUID } from 'crypto'
 
 export default requireAuth(async function handler(req, res) {
   if (req.method === 'GET') {
@@ -7,7 +8,6 @@ export default requireAuth(async function handler(req, res) {
       where: { userId: req.user.id },
       orderBy: { createdAt: 'desc' }
     })
-    // Stats
     const vendu = objets.filter(o => o.statut === 'vendu')
     const totalGagne = vendu.reduce((a, o) => a + (o.prixFinal || o.prix), 0)
     const enCours = objets.filter(o => o.statut === 'actif').length
@@ -17,9 +17,8 @@ export default requireAuth(async function handler(req, res) {
   if (req.method === 'POST') {
     const { titre, prix, annonceId, notes } = req.body
     if (!titre || !prix) return res.status(400).json({ error: 'Titre et prix requis' })
-    const { cuid } = require('@paralleldrive/cuid2')
     const objet = await prisma.objetEnVente.create({
-      data: { id: cuid(), userId: req.user.id, titre, prix: parseFloat(prix), annonceId, notes }
+      data: { id: randomUUID(), userId: req.user.id, titre, prix: parseFloat(prix), annonceId, notes }
     })
     return res.status(201).json({ objet })
   }
