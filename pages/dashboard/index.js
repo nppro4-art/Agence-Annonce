@@ -1685,9 +1685,7 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
         {showSearch && (
           <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,marginBottom:8,maxHeight:150,overflowY:'auto' }}>
             {annonces.filter(a=>a.type!=='estimation').map(a=>(
-              <div key={a.id} onClick={()=>{ setSelectedAnnonce(a); const txt = [a.titre, a.description, a.pointsForts, a.defauts].filter(Boolean).join('
-
-'); setAnnonce(txt); setShowSearch(false) }}
+              <div key={a.id} onClick={()=>{ setSelectedAnnonce(a); const txt = [a.titre, a.description, a.pointsForts, a.defauts].filter(Boolean).join('\n\n'); setAnnonce(txt); setShowSearch(false) }}
                 className="hover-row" style={{ padding:'9px 12px',cursor:'pointer',borderBottom:'1px solid var(--border)',background:selectedAnnonce?.id===a.id?'rgba(201,168,76,.06)':'transparent' }}>
                 <div style={{ fontSize:12,fontWeight:600,color:'var(--cream)' }}>{a.titre||'Sans titre'}</div>
                 <div style={{ fontSize:10,color:'var(--muted2)' }}>{a.type} · {new Date(a.createdAt).toLocaleDateString('fr-FR')}</div>
