@@ -283,25 +283,28 @@ const CATEGORIES = {
 const CATEGORY_LIST = Object.keys(CATEGORIES)
 
 const S = {
-  inp: { background:'transparent',border:'none',borderBottom:'1px solid var(--border2)',color:'var(--white)',fontSize:14,padding:'6px 0',width:'100%',outline:'none',transition:'border-color .2s' },
-  lbl: { fontSize:10,fontWeight:600,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:'1px',display:'block',marginBottom:7 },
+  inp: { background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.08)',borderRadius:3,color:'var(--white)',fontSize:13,padding:'10px 14px',width:'100%',outline:'none',transition:'all .2s',fontFamily:'DM Sans, sans-serif' },
+  lbl: { fontSize:9,fontWeight:500,color:'var(--muted)',textTransform:'uppercase',letterSpacing:'1.5px',display:'block',marginBottom:8,fontFamily:'DM Sans, sans-serif' },
+  card: { background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px 22px',marginBottom:12 },
+  section: { marginBottom:28 },
 }
 
 function LockOverlay({ subscribe }) {
   return (
-    <div style={{ position:'sticky',bottom:24,left:0,right:0,zIndex:50,display:'flex',justifyContent:'center',marginTop:16 }}>
-      <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:4,padding:'20px 28px',maxWidth:420,width:'100%',textAlign:'center',boxShadow:'0 8px 40px rgba(0,0,0,.7)' }}>
-        <div style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:2,color:'var(--gold3)',marginBottom:8 }}>SUBSCRIBER ONLY</div>
-        <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,marginBottom:8 }}>Abonnement requis</div>
-        <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:16,lineHeight:1.6 }}>
-          Abonnez-vous a partir de 3,99 EUR/semaine.
+    <div style={{ position:'sticky',bottom:24,left:0,right:0,zIndex:50,display:'flex',justifyContent:'center',marginTop:20 }}>
+      <div style={{ background:'rgba(3,3,3,.95)',backdropFilter:'blur(20px)',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'28px 32px',maxWidth:440,width:'100%',textAlign:'center',boxShadow:'0 24px 60px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,76,.05)' }}>
+        <div style={{ width:40,height:40,borderRadius:'50%',background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',fontSize:18 }}>🔒</div>
+        <div style={{ fontFamily:'DM Sans',fontSize:9,letterSpacing:3,color:'var(--gold3)',marginBottom:8,textTransform:'uppercase' }}>Abonnement requis</div>
+        <div style={{ fontFamily:'Cormorant Garamond',fontSize:22,fontWeight:500,marginBottom:8 }}>Fonctionnalité premium</div>
+        <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:20,lineHeight:1.7 }}>
+          Débloquez cette fonctionnalité à partir de 3,99 EUR/semaine.
         </div>
         <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
-          {[['Starter','3,99'],['Business','5,99'],['Expert','12,99']].map(([plan,price]) => (
+          {[['Starter','3,99'],['Business','5,99'],['Expert','12,99']].map(([plan,price],i) => (
             <button key={plan} onClick={() => subscribe(plan.toLowerCase())}
-              style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:'var(--cream)',cursor:'pointer',fontSize:11,padding:'8px 4px' }}>
-              <div style={{ fontSize:9,color:'var(--muted2)',marginBottom:2 }}>{plan}</div>
-              <div style={{ fontFamily:'var(--font-label)',color:'var(--gold2)',fontSize:13 }}>{price}EUR</div>
+              style={{ background:i===1?'linear-gradient(135deg,var(--gold3),var(--gold2))':'rgba(255,255,255,.04)',border:'1px solid',borderColor:i===1?'transparent':'rgba(255,255,255,.08)',borderRadius:4,color:i===1?'#030303':'var(--cream)',cursor:'pointer',fontSize:11,padding:'10px 6px',transition:'all .2s' }}>
+              <div style={{ fontSize:9,color:i===1?'rgba(0,0,0,.6)':'var(--muted2)',marginBottom:3,letterSpacing:1 }}>{plan.toUpperCase()}</div>
+              <div style={{ fontFamily:'DM Mono, monospace',fontSize:14,fontWeight:600 }}>{price}€</div>
             </button>
           ))}
         </div>
@@ -389,50 +392,137 @@ export default function Dashboard() {
   ]
 
   if (loading) return (
-    <div style={{ minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--black)' }}>
-      <div style={{ width:32,height:32,border:'2px solid var(--border2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
+    <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'var(--black)',gap:16 }}>
+      <div style={{ fontFamily:'Cormorant Garamond',fontSize:28,fontWeight:300,letterSpacing:4,color:'var(--gold2)' }}>Annonza</div>
+      <div style={{ width:24,height:24,border:'1.5px solid rgba(201,168,76,.2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
 
   return (
-    <div style={{ minHeight:'100vh',background:'var(--black)',display:'flex',flexDirection:'column' }}>
+    <div style={{ minHeight:'100vh',background:'#030303',display:'flex',flexDirection:'column',fontFamily:'DM Sans, var(--font-ui)' }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+
         @keyframes spin{to{transform:rotate(360deg)}}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-        @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-        .db-fade{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) forwards}
-        .tab-btn{transition:all .2s;border-bottom:2px solid transparent;white-space:nowrap}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideRight{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        @keyframes scaleIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+        @keyframes borderGlow{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}50%{box-shadow:0 0 20px 2px rgba(201,168,76,.15)}}
+
+        .db-fade{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards}
+        .db-slide{animation:slideRight .4s cubic-bezier(.16,1,.3,1) forwards}
+
+        /* Header tabs */
+        .tab-btn{
+          transition:all .25s cubic-bezier(.16,1,.3,1);
+          white-space:nowrap;
+          position:relative;
+        }
+        .tab-btn::after{
+          content:'';position:absolute;bottom:0;left:50%;right:50%;height:1px;
+          background:var(--gold);transition:all .25s cubic-bezier(.16,1,.3,1);
+        }
         .tab-btn:hover{color:var(--cream)!important}
-        .tab-btn.active{color:var(--gold2)!important;border-bottom-color:var(--gold)!important}
-        .act-tile{transition:all .25s;cursor:pointer}
-        .act-tile:hover{background:var(--s2)!important;transform:translateY(-2px)}
+        .tab-btn:hover::after{left:20%;right:20%}
+        .tab-btn.active{color:var(--gold2)!important}
+        .tab-btn.active::after{left:0;right:0}
+
+        /* Cards & tiles */
+        .act-tile{
+          transition:all .3s cubic-bezier(.16,1,.3,1);
+          cursor:pointer;
+          position:relative;
+          overflow:hidden;
+        }
+        .act-tile::before{
+          content:'';position:absolute;inset:0;
+          background:linear-gradient(135deg,rgba(201,168,76,.06) 0%,transparent 60%);
+          opacity:0;transition:opacity .3s;
+        }
+        .act-tile:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .act-tile:hover::before{opacity:1}
+
+        /* Input focus */
+        .db-input:focus{border-bottom-color:var(--gold)!important;outline:none}
+
+        /* Rows */
+        .hover-row{transition:background .15s}
+        .hover-row:hover{background:rgba(201,168,76,.04)!important}
+
+        /* Copy button */
+        .copy-btn{transition:all .2s}
         .copy-btn:hover{border-color:var(--gold-border)!important;color:var(--gold2)!important}
-        .hover-row:hover{background:var(--s2)!important}
-        @media(max-width:768px){
+
+        /* Gold shimmer on stat numbers */
+        .stat-num{
+          background:linear-gradient(90deg,var(--gold3) 0%,var(--gold2) 40%,var(--cream) 60%,var(--gold2) 100%);
+          background-size:200% auto;
+          -webkit-background-clip:text;
+          -webkit-text-fill-color:transparent;
+          background-clip:text;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar{width:4px;height:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--gold3)}
+
+        /* Modal */
+        .modal-enter{animation:scaleIn .25s cubic-bezier(.16,1,.3,1)}
+
+        /* Section divider */
+        .section-divider{
+          height:1px;
+          background:linear-gradient(90deg,transparent,var(--border),transparent);
+          margin:24px 0;
+        }
+
+        /* Tool card */
+        .tool-card{transition:all .25s cubic-bezier(.16,1,.3,1);cursor:pointer}
+        .tool-card:hover{background:var(--s2)!important;transform:translateY(-2px)}
+        .tool-card.locked{opacity:.45;cursor:not-allowed}
+        .tool-card.locked:hover{transform:none;background:var(--ink)!important}
+
+        /* Progress bar animated */
+        .progress-fill{transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+
+        /* Glow effect sur le plan actif */
+        .plan-active{animation:borderGlow 3s ease-in-out infinite}
+
+        @media(max-width:900px){
           .db-header{padding:0 8px!important}
-          .tab-btn{font-size:9px!important;padding:0 4px!important}
+          .tab-label{display:none!important}
+          .tab-icon{display:block!important}
           .db-credits{display:none!important}
-          .db-main{padding:14px 12px 80px!important}
+          .db-main{padding:16px 12px 90px!important}
           .db-grid2{grid-template-columns:1fr!important}
           .db-grid3{grid-template-columns:1fr 1fr!important}
-          .db-actions{grid-template-columns:1fr!important}
+          .db-actions{grid-template-columns:1fr 1fr!important}
           .db-form-grid{grid-template-columns:1fr!important}
-          .db-tools-grid{grid-template-columns:1fr!important}
+          .db-tools-grid{grid-template-columns:1fr 1fr!important}
           .db-plans-grid{grid-template-columns:1fr!important}
+        }
+        @media(max-width:500px){
+          .db-actions{grid-template-columns:1fr!important}
+          .db-grid3{grid-template-columns:1fr!important}
+          .db-tools-grid{grid-template-columns:1fr!important}
         }
       `}</style>
 
       {showSubModal && (
-        <div style={{ position:'fixed',inset:0,background:'rgba(0,0,0,.85)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20 }}
+        <div style={{ position:'fixed',inset:0,background:'rgba(0,0,0,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
           onClick={()=>setShowSubModal(false)}>
-          <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:4,padding:'28px 24px',width:'100%',maxWidth:440,position:'relative',animation:'slideIn .3s ease' }}
+          <div className="modal-enter" style={{ background:'#0a0a0a',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.8)' }}
             onClick={e=>e.stopPropagation()}>
-            <button onClick={()=>setShowSubModal(false)} style={{ position:'absolute',top:12,right:14,background:'none',border:'none',color:'var(--muted2)',cursor:'pointer',fontSize:20 }}>x</button>
-            <div style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:3,color:'var(--gold3)',marginBottom:8 }}>MON ABONNEMENT</div>
-            <h3 style={{ fontFamily:'var(--font-display)',fontSize:24,fontWeight:600,marginBottom:18 }}>Plan {PLAN_NAMES[planKey]}</h3>
-            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:18 }}>
+            <button onClick={()=>setShowSubModal(false)} style={{ position:'absolute',top:16,right:18,background:'rgba(255,255,255,.06)',border:'none',borderRadius:'50%',color:'var(--muted2)',cursor:'pointer',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16 }}>×</button>
+            <div style={{ fontFamily:'DM Sans',fontSize:9,letterSpacing:3,color:'var(--gold3)',marginBottom:10,textTransform:'uppercase' }}>Mon abonnement</div>
+            <h3 style={{ fontFamily:'Cormorant Garamond',fontSize:28,fontWeight:400,marginBottom:20 }}>Plan {PLAN_NAMES[planKey]}</h3>
+            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:18 }}>
               {[
                 ['Plan',PLAN_NAMES[planKey]],
                 ['Prix',PLAN_PRICES[planKey]+(planKey!=='free'&&planKey!=='premium'?' EUR/sem':'')],
@@ -461,127 +551,163 @@ export default function Dashboard() {
         </div>
       )}
 
-      <header style={{ background:'rgba(3,3,3,.96)',borderBottom:'1px solid var(--border)',backdropFilter:'blur(20px)',position:'sticky',top:0,zIndex:100 }}>
-        <div className="db-header" style={{ width:'100%',padding:'0 20px',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',gap:8 }}>
-          <Link href="/" style={{ fontFamily:'var(--font-label)',fontSize:14,letterSpacing:3,color:'var(--white)',flexShrink:0 }}>
-            A.<span style={{ color:'var(--red)' }}>A</span>
+      <header style={{ background:'rgba(3,3,3,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
+        <div className="db-header" style={{ width:'100%',padding:'0 24px',height:56,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12 }}>
+
+          {/* Logo */}
+          <Link href="/" style={{ fontFamily:'Cormorant Garamond, var(--font-display)',fontSize:18,letterSpacing:4,color:'var(--white)',flexShrink:0,fontWeight:300,textDecoration:'none' }}>
+            <span style={{ color:'var(--gold2)' }}>A</span>nnonza
           </Link>
-          <nav style={{ display:'flex',flex:1,height:'100%',alignItems:'stretch',overflow:'hidden' }}>
+
+          {/* Tabs */}
+          <nav style={{ display:'flex',flex:1,height:'100%',alignItems:'stretch',overflow:'hidden',maxWidth:800 }}>
             {TABS.map(t=>(
               <button key={t.id} onClick={()=>setTab(t.id)}
                 className={'tab-btn'+(tab===t.id?' active':'')}
-                style={{ background:'none',border:'none',borderBottom:'2px solid transparent',color:tab===t.id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:11,fontWeight:500,padding:'0 10px',flex:1,maxWidth:100 }}>
-                {t.label}
+                style={{ background:'none',border:'none',color:tab===t.id?'var(--gold2)':'var(--muted)',cursor:'pointer',fontFamily:'DM Sans, var(--font-ui)',fontSize:11,fontWeight:400,letterSpacing:.5,padding:'0 12px',flex:1,maxWidth:88,transition:'color .2s' }}>
+                <span className="tab-label">{t.label}</span>
               </button>
             ))}
           </nav>
-          <div style={{ display:'flex',alignItems:'center',gap:6,flexShrink:0 }}>
-            <div className="db-credits" style={{ display:'flex',gap:5 }}>
+
+          {/* Droite */}
+          <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0 }}>
+            <div className="db-credits" style={{ display:'flex',gap:6,alignItems:'center' }}>
               {isSubscribed && (
                 <>
-                  <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 7px',fontSize:10,color:'var(--muted2)' }}>
-                    ✍<span style={{ color:'var(--gold2)',fontWeight:700,marginLeft:3 }}>{annoncesLeft}</span>
+                  <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.06)',border:'1px solid rgba(201,168,76,.15)',borderRadius:2,padding:'3px 9px' }}>
+                    <span style={{ fontSize:9,color:'var(--muted)' }}>ANN</span>
+                    <span style={{ fontFamily:'DM Mono, monospace',fontSize:12,color:'var(--gold2)',fontWeight:500 }}>{annoncesLeft}</span>
                   </div>
-                  <div style={{ background:'var(--s2)',border:'1px solid var(--border)',borderRadius:2,padding:'3px 7px',fontSize:10,color:'var(--muted2)' }}>
-                    ◎<span style={{ color:'var(--gold2)',fontWeight:700,marginLeft:3 }}>{reponsesLeft}</span>
+                  <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.06)',border:'1px solid rgba(201,168,76,.15)',borderRadius:2,padding:'3px 9px' }}>
+                    <span style={{ fontSize:9,color:'var(--muted)' }}>REP</span>
+                    <span style={{ fontFamily:'DM Mono, monospace',fontSize:12,color:'var(--gold2)',fontWeight:500 }}>{reponsesLeft}</span>
                   </div>
                 </>
               )}
             </div>
             {isSubscribed ? (
-              <span style={{ fontFamily:'var(--font-label)',fontSize:8,letterSpacing:1.5,color:'var(--gold2)',background:'rgba(201,168,76,.08)',border:'1px solid var(--gold-border)',borderRadius:2,padding:'3px 7px',cursor:'pointer' }}
-                onClick={()=>setShowSubModal(true)}>
-                {isPremium?'PREMIUM':'SUB'}
-              </span>
+              <div onClick={()=>setShowSubModal(true)} style={{ display:'flex',alignItems:'center',gap:6,background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',borderRadius:2,padding:'5px 10px',cursor:'pointer',transition:'all .2s' }}>
+                <div style={{ width:5,height:5,borderRadius:'50%',background:'var(--gold2)',animation:'pulse 2s infinite' }} />
+                <span style={{ fontFamily:'DM Sans',fontSize:10,letterSpacing:1.5,color:'var(--gold2)',fontWeight:500 }}>{isPremium?'PREMIUM':PLAN_NAMES[planKey].toUpperCase()}</span>
+              </div>
             ) : (
-              <button onClick={()=>subscribe('business')} className="btn-primary" style={{ fontSize:10,padding:'6px 10px',letterSpacing:1 }}>
-                Abonner
+              <button onClick={()=>subscribe('business')} style={{ background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:2,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:600,letterSpacing:1.5,padding:'7px 14px' }}>
+                S&apos;ABONNER
               </button>
             )}
-            <button onClick={logout} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted)',cursor:'pointer',fontSize:10,padding:'5px 8px' }}>
-              Exit
+            <button onClick={logout} style={{ background:'none',border:'1px solid rgba(255,255,255,.06)',borderRadius:2,color:'var(--muted)',cursor:'pointer',fontSize:10,padding:'6px 10px',transition:'all .2s' }}
+              onMouseEnter={e=>e.target.style.borderColor='var(--border2)'}
+              onMouseLeave={e=>e.target.style.borderColor='rgba(255,255,255,.06)'}>
+              ↪
             </button>
           </div>
         </div>
       </header>
 
-      <main className="db-main" style={{ flex:1,maxWidth:920,margin:'0 auto',width:'100%',padding:'28px 20px 80px' }}>
+      <main className="db-main" style={{ flex:1,maxWidth:940,margin:'0 auto',width:'100%',padding:'36px 24px 100px' }}>
 
         {tab==='home' && (
           <div className="db-fade">
-            {/* Bannière lancement gratuit */}
             <LaunchBanner />
-            <div style={{ marginBottom:24 }}>
-              <div className="label" style={{ marginBottom:8 }}>Espace personnel</div>
-              <h1 style={{ fontFamily:'var(--font-display)',fontSize:'clamp(22px,4vw,36px)',fontWeight:400,letterSpacing:-.5 }}>
-                Bonjour, <span style={{ fontStyle:'italic',fontWeight:600 }}>{user.name||user.email.split('@')[0]}</span>
-              </h1>
-            </div>
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:3,padding:'12px 18px',marginBottom:16,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:10 }}>
-              <div style={{ display:'flex',alignItems:'center',gap:8 }}>
-                <div style={{ width:7,height:7,borderRadius:'50%',background:isSubscribed?'var(--gold)':'var(--muted)',animation:isSubscribed?'pulse 2s infinite':'none' }} />
-                <span style={{ fontSize:13,color:'var(--muted3)' }}>
-                  Plan <strong style={{ color:isSubscribed?'var(--gold2)':'var(--muted2)',fontFamily:'var(--font-label)',letterSpacing:1 }}>{PLAN_NAMES[planKey].toUpperCase()}</strong>
-                  {isSubscribed&&planKey!=='premium'&&<span style={{ marginLeft:6,fontSize:11,color:'var(--muted)' }}>{PLAN_PRICES[planKey]} EUR/sem</span>}
+
+            {/* Hero salutation */}
+            <div style={{ marginBottom:32,paddingBottom:28,borderBottom:'1px solid rgba(201,168,76,.1)' }}>
+              <div style={{ fontSize:10,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:10,fontFamily:'DM Sans' }}>Tableau de bord</div>
+              <h1 style={{ fontFamily:'Cormorant Garamond, var(--font-display)',fontSize:'clamp(28px,5vw,44px)',fontWeight:300,letterSpacing:-.5,lineHeight:1.1,marginBottom:6 }}>
+                Bonjour,{' '}
+                <span style={{ fontStyle:'italic',fontWeight:600,background:'linear-gradient(135deg,var(--gold3),var(--gold2),var(--cream))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent' }}>
+                  {user.name||user.email.split('@')[0]}
                 </span>
+              </h1>
+              <div style={{ display:'flex',alignItems:'center',gap:8 }}>
+                <div style={{ width:6,height:6,borderRadius:'50%',background:isSubscribed?'var(--gold)':'var(--muted3)',animation:isSubscribed?'pulse 2s infinite':'none' }} />
+                <span style={{ fontSize:12,color:'var(--muted2)',letterSpacing:.5 }}>
+                  Plan{' '}
+                  <span style={{ color:isSubscribed?'var(--gold2)':'var(--muted2)',fontFamily:'DM Mono, monospace',fontSize:11 }}>{PLAN_NAMES[planKey]}</span>
+                  {isSubscribed&&planKey!=='premium'&&<span style={{ color:'var(--muted)',marginLeft:6 }}>· {PLAN_PRICES[planKey]} EUR/sem</span>}
+                </span>
+                {isSubscribed
+                  ? <button onClick={()=>setShowSubModal(true)} style={{ marginLeft:4,background:'none',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:10,padding:0,textDecoration:'underline',textUnderlineOffset:2 }}>gérer</button>
+                  : <button onClick={()=>subscribe('business')} style={{ marginLeft:4,background:'none',border:'none',color:'var(--gold3)',cursor:'pointer',fontSize:10,padding:0,textDecoration:'underline',textUnderlineOffset:2 }}>s'abonner</button>
+                }
               </div>
-              {isSubscribed
-                ? <button onClick={()=>setShowSubModal(true)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>Mon abonnement</button>
-                : <button onClick={()=>subscribe('business')} className="btn-gold" style={{ fontSize:11,padding:'8px 16px',letterSpacing:1.5,color:'#030303' }}>S&apos;ABONNER</button>
-              }
             </div>
-            <div className="db-actions" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:16 }}>
-              {[
-                {title:'Creer',sub:'une annonce',t:'annonce',pro:true},
-                {title:'Repondre',sub:'a un acheteur',t:'reponse',pro:true},
-                {title:'Estimer',sub:'le prix',t:'estimation',pro:false},
-              ].map(a=>(
-                <div key={a.t} className="act-tile" onClick={()=>setTab(a.t)}
-                  style={{ background:'var(--ink)',padding:'22px 14px',textAlign:'center',position:'relative' }}>
-                  <div style={{ position:'absolute',top:7,right:8,fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1,color:a.pro?'var(--gold3)':'var(--success2)' }}>
-                    {a.pro?'Subscriber Only':'Gratuit'}
+
+            {/* Score vendeur */}
+            <ScoreVendeur usage={usage} />
+
+            {/* Actions principales */}
+            <div style={{ marginBottom:8 }}>
+              <div style={{ fontSize:10,letterSpacing:2,color:'var(--muted)',textTransform:'uppercase',marginBottom:14,fontFamily:'DM Sans' }}>Actions rapides</div>
+              <div className="db-actions" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:28 }}>
+                {[
+                  {title:'Créer',sub:'une annonce',t:'annonce',icon:'✍',color:'var(--gold)'},
+                  {title:'Répondre',sub:'à un acheteur',t:'reponse',icon:'◎',color:'var(--cream)'},
+                  {title:'Estimer',sub:'le prix',t:'estimation',icon:'⚖',color:'var(--gold3)'},
+                ].map((a,i)=>(
+                  <div key={a.t} className="act-tile" onClick={()=>setTab(a.t)}
+                    style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px 16px',textAlign:'center',animationDelay:(i*.08)+'s' }}>
+                    <div style={{ fontSize:22,marginBottom:10 }}>{a.icon}</div>
+                    <div style={{ fontFamily:'Cormorant Garamond, var(--font-display)',fontSize:19,fontWeight:500,lineHeight:1,color:'var(--cream)',marginBottom:3 }}>{a.title}</div>
+                    <div style={{ fontSize:11,color:'var(--muted2)',fontStyle:'italic' }}>{a.sub}</div>
                   </div>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,lineHeight:1 }}>{a.title}</div>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:11,fontStyle:'italic',fontWeight:300,color:'var(--muted2)',marginTop:3 }}>{a.sub}</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stats utilisation */}
+            <div style={{ marginBottom:8 }}>
+              <div style={{ fontSize:10,letterSpacing:2,color:'var(--muted)',textTransform:'uppercase',marginBottom:14,fontFamily:'DM Sans' }}>Utilisation cette semaine</div>
+              <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:28 }}>
+                {[
+                  {label:'Annonces',val:usage.annonces,limit:limits.annonces,color:'var(--gold)',icon:'✍',packRemaining:credits.annonces.remaining},
+                  {label:'Réponses',val:usage.reponses,limit:limits.reponses,color:'var(--red)',icon:'◎',packRemaining:credits.reponses.remaining},
+                ].map(s=>{
+                  const lim = s.limit===Infinity?999999:s.limit
+                  const pct = lim>0?Math.min((s.val/lim)*100,100):0
+                  const remaining = s.limit===Infinity?'∞':Math.max(0,s.limit-s.val)
+                  return (
+                    <div key={s.label} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px 22px',position:'relative',overflow:'hidden' }}>
+                      <div style={{ position:'absolute',top:0,right:0,width:80,height:80,background:`radial-gradient(circle at 100% 0%,${s.color}10,transparent 70%)`,pointerEvents:'none' }} />
+                      <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14 }}>
+                        <span style={{ fontSize:10,letterSpacing:1.5,color:'var(--muted)',textTransform:'uppercase',fontFamily:'DM Sans' }}>{s.label}</span>
+                        <span style={{ fontSize:16 }}>{s.icon}</span>
+                      </div>
+                      <div style={{ display:'flex',alignItems:'baseline',gap:4,marginBottom:12 }}>
+                        <span style={{ fontFamily:'DM Mono, monospace',fontSize:32,fontWeight:500,color:'var(--cream)',letterSpacing:-1,lineHeight:1 }}>
+                          {isSubscribed?s.val:s.packRemaining}
+                        </span>
+                        {isSubscribed && (
+                          <span style={{ fontFamily:'DM Mono',fontSize:13,color:'var(--muted2)' }}>
+                            /{s.limit===Infinity?'∞':s.limit}
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ background:'rgba(255,255,255,.06)',borderRadius:1,height:2,overflow:'hidden',marginBottom:8 }}>
+                        <div className="progress-fill" style={{ width:pct+'%',height:'100%',background:`linear-gradient(90deg,${s.color}80,${s.color})`,borderRadius:1 }} />
+                      </div>
+                      <div style={{ fontSize:10,color:'var(--muted)',fontFamily:'DM Sans' }}>
+                        {isSubscribed
+                          ? (s.limit===Infinity?'Illimité':remaining+' restante'+(remaining!==1?'s':''))
+                          : (s.packRemaining===0?'Aucun crédit':s.packRemaining+' crédit(s)')}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* CTA abonnement si non abonné */}
+            {!isSubscribed && (
+              <div style={{ background:'linear-gradient(135deg,rgba(201,168,76,.06) 0%,rgba(201,168,76,.02) 100%)',border:'1px solid rgba(201,168,76,.2)',borderRadius:4,padding:'24px 28px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:16,flexWrap:'wrap' }}>
+                <div>
+                  <div style={{ fontFamily:'Cormorant Garamond',fontSize:20,fontWeight:500,marginBottom:4 }}>Débloquez toutes les fonctionnalités</div>
+                  <div style={{ fontSize:12,color:'var(--muted2)' }}>Starter 3,99 € · Business 5,99 € · Expert 12,99 €/semaine</div>
                 </div>
-              ))}
-            </div>
-            <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:16 }}>
-              {[
-                {label:'Annonces',val:usage.annonces,limit:limits.annonces,color:'var(--gold)',packRemaining:credits.annonces.remaining},
-                {label:'Reponses',val:usage.reponses,limit:limits.reponses,color:'var(--red)',packRemaining:credits.reponses.remaining},
-              ].map(s=>{
-                const lim = s.limit===Infinity?999999:s.limit
-                const pct = lim>0?Math.min((s.val/lim)*100,100):0
-                return (
-                  <div key={s.label} style={{ background:'var(--ink)',padding:'18px 20px' }}>
-                    <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:.5,marginBottom:8,textTransform:'uppercase' }}>{s.label}</div>
-                    <div style={{ fontFamily:'var(--font-display)',fontSize:26,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:8 }}>
-                      {isSubscribed
-                        ? <span>{s.val}<span style={{ fontSize:12,color:'var(--muted2)' }}>/{s.limit===Infinity?'∞':s.limit}</span></span>
-                        : <span style={{ color:s.packRemaining<=2?'var(--red2)':'var(--cream)' }}>{s.packRemaining}</span>
-                      }
-                    </div>
-                    <div style={{ background:'var(--s3)',borderRadius:1,height:2,overflow:'hidden' }}>
-                      <div style={{ width:pct+'%',height:'100%',background:pct>80?'var(--red)':s.color,transition:'width 1.2s' }} />
-                    </div>
-                    <div style={{ fontSize:10,color:'var(--muted)',marginTop:5 }}>
-                      {isSubscribed?'Cette semaine · '+(s.limit===Infinity?'∞':Math.max(0,s.limit-s.val))+' restantes'
-                        :(s.packRemaining===0?'Aucun credit':s.packRemaining+' restant(s)')}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            {!isSubscribed&&(
-              <div style={{ border:'1px solid var(--gold-border)',borderRadius:3,padding:'18px 20px' }}>
-                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap' }}>
-                  <div>
-                    <div style={{ fontFamily:'var(--font-display)',fontSize:17,fontWeight:600,marginBottom:3 }}>Passez a un abonnement</div>
-                    <div style={{ fontSize:12,color:'var(--muted2)' }}>Starter 3,99 EUR · Business 5,99 EUR · Expert 12,99 EUR</div>
-                  </div>
-                  <button onClick={()=>setTab('tarifs')} className="btn-gold" style={{ fontSize:11,padding:'10px 20px',letterSpacing:1.5,flexShrink:0,color:'#030303' }}>VOIR LES TARIFS</button>
-                </div>
+                <button onClick={()=>setTab('tarifs')} style={{ background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:2,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:11,fontWeight:600,letterSpacing:2,padding:'12px 24px',flexShrink:0,whiteSpace:'nowrap' }}>
+                  VOIR LES TARIFS
+                </button>
               </div>
             )}
           </div>
@@ -630,12 +756,12 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
 
   if (!hasAccess) return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Creer une annonce</h2></div>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Créer une annonce</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
-        <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:1 }}>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:8 }}>
           {CATEGORY_LIST.slice(0,6).map(c=>(<div key={c} style={{ background:'var(--ink)',padding:'12px',textAlign:'center',fontSize:12,color:'var(--muted2)' }}>{c}</div>))}
         </div>
-        <div style={{ background:'var(--ink)',height:100,marginBottom:1 }} />
+        <div style={{ background:'var(--ink)',height:100,marginBottom:8 }} />
       </div>
       <LockOverlay subscribe={subscribe} />
     </div>
@@ -643,8 +769,8 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Creer une annonce</h2></div>
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Créer une annonce</h2></div>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:8 }}>
         <div style={S.lbl}>Categorie *</div>
         <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))',gap:5,marginTop:6 }}>
           {CATEGORY_LIST.map(c=>(
@@ -669,9 +795,9 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
             </div>
             <div style={{ fontSize:10,color:'var(--muted)',flexShrink:0 }}>Plus = mieux</div>
           </div>
-          <div className="db-form-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+          <div className="db-form-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
             {fields.map(f=>(
-              <div key={f.key} style={{ background:'var(--ink)',padding:'14px 18px',gridColumn:f.wide?'1/-1':'auto' }}>
+              <div key={f.key} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'16px 20px',gridColumn:f.wide?'1/-1':'auto' }}>
                 <label style={S.lbl}>{f.label}</label>
                 {f.type==='select'
                   ? <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={form[f.key]||''} onChange={e=>setForm({...form,[f.key]:e.target.value})}>
@@ -681,7 +807,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
                   : f.wide
                     ? <textarea style={{ ...S.inp,resize:'vertical',minHeight:52,lineHeight:1.6 }} placeholder={f.ph} value={form[f.key]||''} onChange={e=>setForm({...form,[f.key]:e.target.value})} />
                     : f.type==='urgence'
-                      ? <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginTop:4 }}>
+                      ? <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginTop:4 }}>
                           {[['normal','Normal'],['rapide','Rapide'],['optimise','Max prix']].map(([v,l])=>(
                             <div key={v} onClick={()=>setForm({...form,urgence:v})}
                               style={{ background:form.urgence===v?'rgba(201,168,76,.08)':'var(--s2)',borderBottom:form.urgence===v?'2px solid var(--gold)':'2px solid transparent',padding:'7px',textAlign:'center',fontSize:11,color:form.urgence===v?'var(--gold2)':'var(--muted2)',cursor:'pointer' }}>
@@ -694,8 +820,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
               </div>
             ))}
           </div>
-          <button onClick={generate} disabled={loading} className="btn-primary"
-            style={{ width:'100%',fontSize:13,padding:'15px',opacity:loading?0.6:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:1 }}>
+          <button onClick={generate} disabled={loading} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:4,color:'#030303',cursor:'pointer',fontFamily:'DM Sans',fontSize:11,fontWeight:700,letterSpacing:2,padding:'15px',opacity:loading?0.6:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:1,transition:'opacity .2s' }}>
             {loading?<><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Generation...</>:'GENERER MON ANNONCE'}
           </button>
         </>
@@ -703,11 +828,11 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
       {result&&!result.error&&(
         <div style={{ marginTop:16 }}>
           {badResult&&(
-            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:14 }}>
+            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14 }}>
               <div style={{ background:'rgba(200,57,43,.06)',padding:'14px 18px',borderTop:'2px solid var(--red)' }}>
                 <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8 }}>
                   <span style={{ fontSize:10,color:'var(--red2)',textTransform:'uppercase',letterSpacing:1 }}>Annonce faible</span>
-                  <span style={{ fontFamily:'var(--font-label)',fontSize:20,color:'var(--red2)' }}>{badResult.score}/100</span>
+                  <span style={{ fontFamily:'DM Mono, monospace',fontSize:20,color:'var(--red2)' }}>{badResult.score}/100</span>
                 </div>
                 <div style={{ fontSize:13,fontWeight:600,marginBottom:5,color:'var(--muted3)' }}>{badResult.titre}</div>
                 <div style={{ fontSize:12,color:'var(--muted)',lineHeight:1.6 }}>{badResult.description}</div>
@@ -715,7 +840,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
               <div style={{ background:'rgba(45,122,79,.06)',padding:'14px 18px',borderTop:'2px solid var(--success2)' }}>
                 <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8 }}>
                   <span style={{ fontSize:10,color:'var(--success2)',textTransform:'uppercase',letterSpacing:1 }}>Annonce optimisee</span>
-                  <span style={{ fontFamily:'var(--font-label)',fontSize:20,color:'var(--success2)' }}>{result.score?.score||85}/100</span>
+                  <span style={{ fontFamily:'DM Mono, monospace',fontSize:20,color:'var(--success2)' }}>{result.score?.score||85}/100</span>
                 </div>
                 <div style={{ fontSize:13,fontWeight:600,marginBottom:5 }}>{result.annonce?.titre||'Titre genere'}</div>
                 <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.6 }}>{(result.annonce?.description||'').slice(0,100)}...</div>
@@ -723,19 +848,19 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
             </div>
           )}
           {result.annonce?.titre&&(
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'14px 18px',marginBottom:1 }}>
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'2px solid var(--gold)',borderRadius:4,padding:'18px 22px',marginBottom:8 }}>
               <div style={S.lbl}>Titre</div>
-              <div style={{ fontFamily:'var(--font-display)',fontSize:17,fontWeight:600,lineHeight:1.4 }}>{result.annonce.titre}</div>
+              <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:17,fontWeight:600,lineHeight:1.4 }}>{result.annonce.titre}</div>
             </div>
           )}
           {[['Description',result.annonce?.description],['Points forts',result.annonce?.pointsForts],['Transparence',result.annonce?.defauts],['Prix conseille',result.annonce?.prixConseil]].filter(([,v])=>v).map(([label,val])=>(
-            <div key={label} style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+            <div key={label} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
               <div style={S.lbl}>{label}</div>
               <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{val}</div>
             </div>
           ))}
           {result.annonce?.shortVersion&&(
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'14px 18px',marginBottom:1 }}>
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'2px solid var(--red)',borderRadius:4,padding:'18px 22px',marginBottom:8 }}>
               <div style={S.lbl}>Version courte - Facebook / SMS</div>
               <div style={{ fontSize:13,color:'var(--muted3)',lineHeight:1.8,fontStyle:'italic',whiteSpace:'pre-wrap' }}>{result.annonce.shortVersion}</div>
             </div>
@@ -768,10 +893,10 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
 
   if (!isSubscribed) return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Repondre a un acheteur</h2></div>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Répondre à un acheteur</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
-        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px',height:100,marginBottom:1 }} />
-        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'16px',height:70 }} />
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'16px',height:100,marginBottom:8 }} />
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'16px',height:70 }} />
       </div>
       <LockOverlay subscribe={subscribe} />
     </div>
@@ -792,12 +917,12 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Repondre a un acheteur</h2></div>
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Répondre à un acheteur</h2></div>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <label style={S.lbl}>Message recu *</label>
         <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.7 }} placeholder="Collez ici le message de l'acheteur..." value={message} onChange={e=>setMessage(e.target.value)} />
       </div>
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
           <label style={{ ...S.lbl,marginBottom:0 }}>Lier une annonce (optionnel)</label>
           <button onClick={()=>setShowSearch(!showSearch)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'3px 8px' }}>
@@ -835,12 +960,12 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
       )}
       {result?.reponse&&(
         <div style={{ marginTop:16 }}>
-          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'18px',marginBottom:1 }}>
+          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'18px',marginBottom:8 }}>
             <div style={S.lbl}>Reponse prete a copier</div>
             <div style={{ fontSize:14,color:'var(--cream)',lineHeight:1.85,whiteSpace:'pre-wrap' }}>{result.reponse.reponsePrete}</div>
           </div>
           {result.reponse.suggestion&&(
-            <div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'14px 18px',marginBottom:1 }}>
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,borderLeft:'2px solid var(--red)',borderRadius:4,padding:'18px 22px',marginBottom:8 }}>
               <div style={S.lbl}>Conseil de negociation</div>
               <div style={{ fontSize:13,color:'var(--muted3)',lineHeight:1.7,fontStyle:'italic' }}>{result.reponse.suggestion}</div>
             </div>
@@ -873,8 +998,8 @@ function EstimationTab({ annonces = [] }) {
   }
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil gratuit</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Estimer le prix</h2></div>
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Estimation</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Estimer le prix</h2></div>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
           <label style={{ ...S.lbl,marginBottom:0 }}>Decrivez votre article</label>
           {annonces.length>0 && (
@@ -910,11 +1035,11 @@ function EstimationTab({ annonces = [] }) {
       </button>
       {result&&!result.error&&(
         <div style={{ marginTop:16 }}>
-          <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)' }}>
+          <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12 }}>
             {[['Basse',result.low,'var(--red2)'],['Moyenne',result.mid,'var(--gold2)'],['Haute',result.high,'var(--success2)']].map(([label,val,color])=>(
               <div key={label} style={{ background:'var(--ink)',padding:'22px 18px',textAlign:'center' }}>
                 <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1.5,textTransform:'uppercase',marginBottom:8 }}>{label}</div>
-                <div style={{ fontFamily:'var(--font-display)',fontSize:24,fontWeight:600,color,letterSpacing:-1 }}>{Number(val).toLocaleString('fr-FR')} EUR</div>
+                <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:24,fontWeight:600,color,letterSpacing:-1 }}>{Number(val).toLocaleString('fr-FR')} EUR</div>
               </div>
             ))}
           </div>
@@ -1068,29 +1193,29 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Boite a outils</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Outils supplementaires</h2></div>
-      <div className="db-tools-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:14 }}>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Outils</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Boîte à outils</h2></div>
+      <div className="db-tools-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14 }}>
         {TOOLS.map(tool=>(
           <div key={tool.id}
             onClick={()=>tool.active||!isSubscribed?setActiveTool(activeTool===tool.id?null:tool.id):null}
             style={{ background:activeTool===tool.id?'var(--s2)':'var(--ink)',padding:'18px',cursor:tool.active||!isSubscribed?'pointer':'not-allowed',transition:'all .2s',borderTop:activeTool===tool.id?'2px solid var(--gold)':'2px solid transparent',opacity:isSubscribed&&!tool.active?0.5:1 }}>
             <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:7 }}>
               <span style={{ fontSize:22 }}>{tool.icon}</span>
-              <span style={{ fontFamily:'var(--font-label)',fontSize:7,letterSpacing:1.5,
+              <span style={{ fontFamily:'DM Mono, monospace',fontSize:7,letterSpacing:1.5,
                 color:tool.badge==='Starter+'?'var(--success2)':tool.badge==='Actif'?'var(--success2)':'var(--gold3)',
                 background:tool.badge==='Starter+'||tool.badge==='Actif'?'rgba(45,122,79,.1)':'rgba(201,168,76,.1)',
                 border:'1px solid',
                 borderColor:tool.badge==='Starter+'||tool.badge==='Actif'?'rgba(45,122,79,.2)':'rgba(201,168,76,.2)',
                 borderRadius:2,padding:'2px 6px' }}>{tool.badge}</span>
             </div>
-            <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:3 }}>{tool.label}</div>
+            <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:14,fontWeight:600,marginBottom:3 }}>{tool.label}</div>
             <div style={{ fontSize:11,color:'var(--muted2)',lineHeight:1.5 }}>{tool.desc}</div>
           </div>
         ))}
       </div>
 
       {activeTool==='titre'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           <div style={S.lbl}>Generateur de titres optimises</div>
           <textarea style={{ ...S.inp,minHeight:65,resize:'vertical',lineHeight:1.6,marginBottom:8 }} placeholder="Decrivez votre article: BMW 320d 2019, 75 000 km, diesel, bon etat..." value={titreSpecs} onChange={e=>setTitreSpecs(e.target.value)} />
           <button onClick={genTitres} disabled={titreLoading||!titreSpecs} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(titreLoading||!titreSpecs)?0.5:1 }}>
@@ -1099,7 +1224,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
           {titres.length>0&&(
             <div style={{ marginTop:10 }}>
               {titres.map((t,i)=>(
-                <div key={i} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',background:'var(--ink)',border:'1px solid var(--border)',padding:'9px 12px',marginBottom:3,gap:10 }}>
+                <div key={i} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'9px 12px',marginBottom:3,gap:10 }}>
                   <div style={{ fontSize:13,color:'var(--cream)' }}>{t}</div>
                   <button onClick={()=>navigator.clipboard.writeText(t)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'3px 8px',flexShrink:0 }}>Copier</button>
                 </div>
@@ -1110,9 +1235,9 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='prix'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           <div style={S.lbl}>Detecteur de prix abusif</div>
-          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
             <div style={{ background:'var(--ink)',padding:'12px' }}>
               <label style={S.lbl}>Votre article</label>
               <input style={S.inp} placeholder="BMW 320d 2019, 75 000 km..." value={prixArticle} onChange={e=>setPrixArticle(e.target.value)} />
@@ -1127,7 +1252,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
           </button>
           {prixResult&&(
             <div style={{ marginTop:10,background:prixResult.diff>30?'rgba(200,57,43,.08)':prixResult.diff>15?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:prixResult.diff>30?'rgba(200,57,43,.3)':prixResult.diff>15?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'14px' }}>
-              <div style={{ fontFamily:'var(--font-label)',fontSize:26,color:prixResult.diff>30?'var(--red2)':prixResult.diff>15?'var(--warning)':'var(--success2)',letterSpacing:-1,marginBottom:8 }}>
+              <div style={{ fontFamily:'DM Mono, monospace',fontSize:26,color:prixResult.diff>30?'var(--red2)':prixResult.diff>15?'var(--warning)':'var(--success2)',letterSpacing:-1,marginBottom:8 }}>
                 {prixResult.diff>0?'+':''}{prixResult.diff}% {prixResult.diff>30?'TROP CHER':prixResult.diff>15?'Un peu eleve':'Prix correct'}
               </div>
               <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7 }}>
@@ -1141,7 +1266,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='flash'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           {!isSubscribed ? <LockOverlay subscribe={subscribe} /> : (
             <>
               <div style={{ fontSize:12,color:'var(--gold3)',marginBottom:10,lineHeight:1.6 }}>Annonce urgente avec prix attractif. Pour vendre en moins de 48h.</div>
@@ -1150,8 +1275,8 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
                 {flashLoading?'Generation...':'GENERER ANNONCE FLASH'}
               </button>
               {flashResult?.annonce&&(
-                <div style={{ marginTop:10,background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--red)',padding:'14px' }}>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:7 }}>{flashResult.annonce.titre}</div>
+                <div style={{ marginTop:10,background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,borderLeft:'3px solid var(--red)',padding:'14px' }}>
+                  <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:15,fontWeight:600,marginBottom:7 }}>{flashResult.annonce.titre}</div>
                   <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.7,whiteSpace:'pre-wrap' }}>{flashResult.annonce.description}</div>
                 </div>
               )}
@@ -1161,10 +1286,10 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='checklist'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14 }}>
             <div style={S.lbl}>Checklist avant publication</div>
-            <div style={{ fontFamily:'var(--font-label)',fontSize:22,color:checkScore===6?'var(--success2)':'var(--gold2)',letterSpacing:-1 }}>{checkScore}/6</div>
+            <div style={{ fontFamily:'DM Mono, monospace',fontSize:22,color:checkScore===6?'var(--success2)':'var(--gold2)',letterSpacing:-1 }}>{checkScore}/6</div>
           </div>
           <div style={{ background:'var(--s3)',borderRadius:1,height:4,marginBottom:14,overflow:'hidden' }}>
             <div style={{ width:(checkScore/6*100)+'%',height:'100%',background:checkScore===6?'var(--success2)':'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width .4s' }} />
@@ -1187,7 +1312,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='arnaque'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           <div style={S.lbl}>Detecteur d'arnaque acheteur</div>
           <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:10,lineHeight:1.6 }}>Collez un message suspect. L'IA analyse les signaux d'arnaque connus sur LeBonCoin et Vinted.</div>
           <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.6,marginBottom:8 }}
@@ -1198,7 +1323,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
           </button>
           {arnaqueResult&&(
             <div style={{ marginTop:10,background:arnaqueResult.isArnaque?'rgba(200,57,43,.08)':arnaqueResult.isSuspect?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:arnaqueResult.isArnaque?'rgba(200,57,43,.3)':arnaqueResult.isSuspect?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'16px' }}>
-              <div style={{ fontFamily:'var(--font-label)',fontSize:20,color:arnaqueResult.isArnaque?'var(--red2)':arnaqueResult.isSuspect?'var(--warning)':'var(--success2)',letterSpacing:.5,marginBottom:8 }}>
+              <div style={{ fontFamily:'DM Mono, monospace',fontSize:20,color:arnaqueResult.isArnaque?'var(--red2)':arnaqueResult.isSuspect?'var(--warning)':'var(--success2)',letterSpacing:.5,marginBottom:8 }}>
                 {arnaqueResult.isArnaque?'ARNAQUE PROBABLE':arnaqueResult.isSuspect?'MESSAGE SUSPECT':'SEMBLE LEGITIME'}
               </div>
               <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:8 }}>{arnaqueResult.explication}</div>
@@ -1209,9 +1334,9 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='calendrier'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           <div style={S.lbl}>Calendrier de publication optimal</div>
-          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
             <div style={{ background:'var(--ink)',padding:'12px' }}>
               <label style={S.lbl}>Categorie *</label>
               <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={calCat} onChange={e=>setCalCat(e.target.value)}>
@@ -1229,18 +1354,18 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
           </button>
           {calResult&&!calResult.error&&(
             <div style={{ marginTop:10 }}>
-              <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+              <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
                 <div style={{ background:'var(--ink)',padding:'14px',textAlign:'center' }}>
                   <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1,marginBottom:6 }}>Meilleur jour</div>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:20,fontWeight:600,color:'var(--gold2)' }}>{calResult.meilleurJour}</div>
+                  <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:20,fontWeight:600,color:'var(--gold2)' }}>{calResult.meilleurJour}</div>
                 </div>
                 <div style={{ background:'var(--ink)',padding:'14px',textAlign:'center' }}>
                   <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1,marginBottom:6 }}>Meilleure heure</div>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:20,fontWeight:600,color:'var(--gold2)' }}>{calResult.meilleureHeure}</div>
+                  <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:20,fontWeight:600,color:'var(--gold2)' }}>{calResult.meilleureHeure}</div>
                 </div>
               </div>
-              {calResult.raison&&<div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 14px',fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:6 }}>{calResult.raison}</div>}
-              {calResult.conseilSaison&&<div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold3)',padding:'12px 14px',fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic' }}>{calResult.conseilSaison}</div>}
+              {calResult.raison&&<div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'12px 14px',fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:6 }}>{calResult.raison}</div>}
+              {calResult.conseilSaison&&<div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,borderLeft:'3px solid var(--gold3)',padding:'12px 14px',fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic' }}>{calResult.conseilSaison}</div>}
               {calResult.scoreMoment&&<div style={{ marginTop:8,fontSize:12,color:'var(--muted2)',textAlign:'center' }}>Publier maintenant : <strong style={{ color:'var(--gold2)' }}>{calResult.scoreMoment}</strong></div>}
             </div>
           )}
@@ -1248,9 +1373,9 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='plateformes'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           <div style={S.lbl}>Comparateur de plateformes</div>
-          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
             <div style={{ background:'var(--ink)',padding:'12px' }}>
               <label style={S.lbl}>Votre article *</label>
               <input style={S.inp} placeholder="iPhone 14 Pro 256Go noir..." value={platArticle} onChange={e=>setPlatArticle(e.target.value)} />
@@ -1276,8 +1401,8 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
                 ['Facebook Marketplace',platResult.facebook],
                 ['eBay',platResult.ebay],
               ].filter(([,v])=>v).map(([nom,texte])=>(
-                <div key={nom} style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 14px',marginBottom:4 }}>
-                  <div style={{ fontFamily:'var(--font-label)',fontSize:12,color:'var(--gold3)',letterSpacing:1,marginBottom:6 }}>{nom}</div>
+                <div key={nom} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'12px 14px',marginBottom:4 }}>
+                  <div style={{ fontFamily:'DM Mono, monospace',fontSize:12,color:'var(--gold3)',letterSpacing:1,marginBottom:6 }}>{nom}</div>
                   <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,whiteSpace:'pre-line' }}>{texte}</div>
                 </div>
               ))}
@@ -1287,13 +1412,13 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='lot'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           {!isSubscribed ? <LockOverlay subscribe={subscribe} /> : (
             <>
               <div style={S.lbl}>Mode lot - plusieurs objets</div>
               <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:12,lineHeight:1.6 }}>Minimum 2 objets. Le nom est obligatoire, le prix et l'etat sont optionnels.</div>
               {lotObjets.map((o,i)=>(
-                <div key={i} style={{ display:'grid',gridTemplateColumns:'1fr 80px 100px 32px',gap:1,background:'var(--border)',marginBottom:4 }}>
+                <div key={i} style={{ display:'grid',gridTemplateColumns:'1fr 80px 100px 32px',gap:12,marginBottom:4 }}>
                   <div style={{ background:'var(--ink)',padding:'10px 12px' }}>
                     <input style={{ ...S.inp,fontSize:13 }} placeholder={'Objet '+(i+1)+' *'} value={o.nom} onChange={e=>updateLotItem(i,'nom',e.target.value)} />
                   </div>
@@ -1313,7 +1438,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
               <button onClick={addLotItem} style={{ background:'none',border:'1px dashed var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'8px',width:'100%',marginBottom:10 }}>
                 + Ajouter un objet
               </button>
-              <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:8 }}>
+              <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
                 <div style={{ background:'var(--ink)',padding:'10px 12px' }}>
                   <label style={{ ...S.lbl,fontSize:9 }}>Prix lot propose (EUR)</label>
                   <input style={S.inp} type="number" placeholder="Laisser vide = IA suggere" value={lotPrix} onChange={e=>setLotPrix(e.target.value)} />
@@ -1332,12 +1457,12 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
               </button>
               {lotResult&&!lotResult.error&&(
                 <div style={{ marginTop:10 }}>
-                  {lotResult.titre&&<div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'12px 14px',marginBottom:4 }}>
+                  {lotResult.titre&&<div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,borderLeft:'3px solid var(--gold)',padding:'12px 14px',marginBottom:4 }}>
                     <div style={S.lbl}>Titre</div>
-                    <div style={{ fontFamily:'var(--font-display)',fontSize:16,fontWeight:600 }}>{lotResult.titre}</div>
+                    <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:16,fontWeight:600 }}>{lotResult.titre}</div>
                   </div>}
                   {[['Description',lotResult.description],['Liste complete',lotResult.liste],['Economie acheteur',lotResult.economie],['Prix lot suggere',lotResult.prixLot]].filter(([,v])=>v).map(([l,v])=>(
-                    <div key={l} style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 14px',marginBottom:4 }}>
+                    <div key={l} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'12px 14px',marginBottom:4 }}>
                       <div style={S.lbl}>{l}</div>
                       <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,whiteSpace:'pre-wrap' }}>{v}</div>
                     </div>
@@ -1354,7 +1479,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
       )}
 
       {activeTool==='traduction'&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:1 }}>
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px',marginBottom:8 }}>
           {!isSubscribed ? <LockOverlay subscribe={subscribe} /> : (
             <>
               <div style={{ display:'flex',gap:7,marginBottom:10,flexWrap:'wrap' }}>
@@ -1370,7 +1495,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
                 {tradLoading?'Traduction...':'TRADUIRE EN '+(tradLangs[tradLang]||'').toUpperCase()}
               </button>
               {tradResult&&(
-                <div style={{ marginTop:10,background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'14px' }}>
+                <div style={{ marginTop:10,background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,borderLeft:'3px solid var(--gold)',padding:'14px' }}>
                   <div style={S.lbl}>Annonce traduite - {tradLangs[tradLang]}</div>
                   <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.75,whiteSpace:'pre-wrap' }}>{tradResult}</div>
                   <button onClick={()=>navigator.clipboard.writeText(tradResult)} style={{ marginTop:8,background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>Copier</button>
@@ -1400,11 +1525,11 @@ function HistoriqueTab() {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Mes creations</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Historique</h2></div>
-      <div style={{ display:'flex',gap:1,background:'var(--border)',marginBottom:12 }}>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Historique</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mes créations</h2></div>
+      <div style={{ display:'flex',gap:12,marginBottom:12 }}>
         {[['annonces','Annonces ('+annonces.length+')'],['reponses','Reponses ('+reponses.length+')']].map(([id,label])=>(
           <button key={id} onClick={()=>setSection(id)}
-            style={{ flex:1,background:section===id?'var(--s1)':'var(--ink)',border:'none',borderBottom:section===id?'2px solid var(--gold)':'2px solid transparent',color:section===id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:12,fontWeight:500,padding:'11px' }}>
+            style={{ flex:1,background:section===id?'var(--s1)':'var(--ink)',border:'none',borderBottom:section===id?'2px solid var(--gold)':'2px solid transparent',color:section===id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'DM Sans, sans-serif',fontSize:12,fontWeight:500,padding:'11px' }}>
             {label}
           </button>
         ))}
@@ -1412,16 +1537,19 @@ function HistoriqueTab() {
       {loading&&<div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
       {section==='annonces'&&!loading&&(
         annonces.length===0
-          ? <div style={{ textAlign:'center',padding:36,color:'var(--muted2)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>Aucune annonce generee</div>
+          ? <div style={{ textAlign:'center',padding:36,color:'var(--muted2)',fontFamily:'Cormorant Garamond, serif',fontStyle:'italic' }}>Aucune annonce generee</div>
           : annonces.map(a=>(
-            <div key={a.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
-              <div style={{ padding:'12px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,cursor:'pointer' }}
+            <div key={a.id} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,marginBottom:8 }}>
+              <div style={{ padding:'14px 20px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,cursor:'pointer' }}
                 onClick={()=>setExpanded(expanded===a.id?null:a.id)}>
                 <div style={{ flex:1,minWidth:0 }}>
-                  <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{a.titre||'Sans titre'}</div>
-                  <div style={{ fontSize:11,color:'var(--muted2)' }}>{a.type} · {new Date(a.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
+                  <div style={{ fontFamily:'Cormorant Garamond',fontSize:15,fontWeight:500,marginBottom:3,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{a.titre||'Sans titre'}</div>
+                  <div style={{ display:'flex',gap:8,alignItems:'center' }}>
+                    <span style={{ fontSize:9,color:'var(--muted)',background:'rgba(255,255,255,.05)',padding:'2px 7px',borderRadius:10,textTransform:'uppercase',letterSpacing:1 }}>{a.type}</span>
+                    <span style={{ fontSize:10,color:'var(--muted2)' }}>{new Date(a.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</span>
+                  </div>
                 </div>
-                <span style={{ fontSize:12,color:'var(--muted)',flexShrink:0,transform:expanded===a.id?'rotate(180deg)':'rotate(0deg)',transition:'transform .2s' }}>v</span>
+                <span style={{ fontSize:10,color:'var(--muted)',flexShrink:0,transform:expanded===a.id?'rotate(180deg)':'rotate(0deg)',transition:'transform .2s',display:'inline-block' }}>▾</span>
               </div>
               {expanded===a.id&&(
                 <div style={{ borderTop:'1px solid var(--border)',padding:'12px 18px',background:'var(--s1)' }}>
@@ -1434,9 +1562,9 @@ function HistoriqueTab() {
       )}
       {section==='reponses'&&!loading&&(
         reponses.length===0
-          ? <div style={{ textAlign:'center',padding:36,color:'var(--muted2)',fontFamily:'var(--font-display)',fontStyle:'italic' }}>Aucune reponse generee</div>
+          ? <div style={{ textAlign:'center',padding:36,color:'var(--muted2)',fontFamily:'Cormorant Garamond, serif',fontStyle:'italic' }}>Aucune reponse generee</div>
           : reponses.map(r=>(
-            <div key={r.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
+            <div key={r.id} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,marginBottom:8 }}>
               <div style={{ padding:'12px 18px',cursor:'pointer' }} onClick={()=>setExpanded(expanded===r.id?null:r.id)}>
                 <div style={{ fontSize:11,color:'var(--muted2)',marginBottom:3 }}>Message: {r.messageAcheteur.slice(0,70)}...</div>
                 <div style={{ fontSize:11,color:'var(--muted)',display:'flex',justifyContent:'space-between' }}>
@@ -1471,22 +1599,31 @@ function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   ]
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Offres</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Tarifs</h2></div>
-      <div className="db-plans-grid" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:14 }}>
-        {PLANS.map(plan=>{
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Nos offres</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Tarifs</h2></div>
+      <div className="db-plans-grid" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:24 }}>
+        {PLANS.map((plan,i)=>{
           const isCurrent = planKey===plan.key||(planKey==='pro'&&plan.key==='business')
           return (
-            <div key={plan.key} style={{ background:plan.recommended?'var(--s1)':'var(--ink)',padding:'22px 18px',position:'relative',borderTop:plan.recommended?'2px solid var(--gold)':'2px solid transparent' }}>
-              {plan.recommended&&<div style={{ position:'absolute',top:0,left:'50%',transform:'translateX(-50%) translateY(-50%)',background:'var(--gold)',color:'#030303',fontFamily:'var(--font-label)',fontSize:7,letterSpacing:2,padding:'3px 8px',whiteSpace:'nowrap' }}>RECOMMANDE</div>}
-              <div style={{ fontFamily:'var(--font-label)',fontSize:14,letterSpacing:2,marginBottom:4 }}>{plan.name}</div>
-              <div style={{ fontFamily:'var(--font-label)',fontSize:28,color:plan.recommended?'var(--gold2)':'var(--cream)',letterSpacing:-2,lineHeight:1,marginBottom:12 }}>{plan.price}<span style={{ fontSize:11,color:'var(--muted2)',letterSpacing:0 }}> EUR/sem</span></div>
-              <div style={{ marginBottom:14 }}>
-                {plan.features.map(f=><div key={f} style={{ fontSize:11,color:'var(--muted2)',marginBottom:5,display:'flex',alignItems:'center',gap:5 }}><span style={{ color:plan.recommended?'var(--gold3)':'var(--muted)' }}>+</span>{f}</div>)}
+            <div key={plan.key} className={isCurrent?'plan-active':''} style={{ background:plan.recommended?'linear-gradient(160deg,rgba(201,168,76,.07),rgba(201,168,76,.02))':'var(--s1)',border:'1px solid',borderColor:isCurrent?'rgba(201,168,76,.4)':plan.recommended?'rgba(201,168,76,.2)':'var(--border)',borderRadius:6,padding:'24px 20px',position:'relative',animationDelay:(i*.08)+'s' }}>
+              {plan.recommended&&<div style={{ position:'absolute',top:-1,left:'50%',transform:'translateX(-50%)',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',color:'#030303',fontFamily:'DM Sans',fontSize:7,letterSpacing:2.5,fontWeight:700,padding:'3px 14px',borderRadius:'0 0 6px 6px',whiteSpace:'nowrap' }}>RECOMMANDÉ</div>}
+              <div style={{ fontFamily:'DM Sans',fontSize:11,letterSpacing:2.5,color:plan.recommended?'var(--gold3)':'var(--muted)',marginBottom:8,textTransform:'uppercase' }}>{plan.name}</div>
+              <div style={{ display:'flex',alignItems:'baseline',gap:4,marginBottom:16 }}>
+                <span style={{ fontFamily:'DM Mono, monospace',fontSize:30,fontWeight:500,color:plan.recommended?'var(--gold2)':'var(--cream)',letterSpacing:-1 }}>{plan.price}</span>
+                <span style={{ fontSize:11,color:'var(--muted2)' }}>€/sem</span>
+              </div>
+              <div style={{ height:'1px',background:'rgba(255,255,255,.06)',marginBottom:16 }} />
+              <div style={{ marginBottom:20,minHeight:140 }}>
+                {plan.features.map(f=>(
+                  <div key={f} style={{ fontSize:11,color:'var(--muted2)',marginBottom:7,display:'flex',alignItems:'flex-start',gap:7,lineHeight:1.4 }}>
+                    <span style={{ color:plan.recommended?'var(--gold3)':'rgba(255,255,255,.2)',marginTop:1,fontSize:9 }}>✦</span>
+                    <span>{f}</span>
+                  </div>
+                ))}
               </div>
               {isCurrent&&isSubscribed
-                ? <button onClick={openSubModal} style={{ width:'100%',background:'rgba(201,168,76,.1)',border:'1px solid var(--gold-border)',borderRadius:2,color:'var(--gold2)',cursor:'pointer',fontSize:11,padding:'9px',letterSpacing:1 }}>Plan actif - Gerer</button>
-                : <button onClick={()=>subscribe(plan.key)} style={{ width:'100%',background:plan.recommended?'linear-gradient(135deg,var(--gold3),var(--gold2))':'none',border:plan.recommended?'none':'1px solid var(--border2)',borderRadius:2,color:plan.recommended?'#030303':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:11,letterSpacing:1.5,padding:'10px',transition:'all .2s' }}>
-                    {isSubscribed?'Changer - '+plan.name:'Choisir '+plan.name}
+                ? <button onClick={openSubModal} style={{ width:'100%',background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',borderRadius:4,color:'var(--gold2)',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:500,letterSpacing:1.5,padding:'11px',textTransform:'uppercase' }}>Plan actif · Gérer</button>
+                : <button onClick={()=>subscribe(plan.key)} style={{ width:'100%',background:plan.recommended?'linear-gradient(135deg,var(--gold3),var(--gold2))':'transparent',border:'1px solid',borderColor:plan.recommended?'transparent':'rgba(255,255,255,.1)',borderRadius:4,color:plan.recommended?'#030303':'var(--muted2)',cursor:'pointer',fontFamily:'DM Sans',fontSize:10,fontWeight:plan.recommended?700:400,letterSpacing:1.5,padding:'11px',textTransform:'uppercase',transition:'all .2s' }}>
+                    {isSubscribed?'Changer':'Choisir '+plan.name}
                   </button>
               }
             </div>
@@ -1494,13 +1631,13 @@ function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
         })}
       </div>
       <div style={{ textAlign:'center',padding:'10px 0' }}><span style={{ fontSize:11,color:'var(--muted)',letterSpacing:2,textTransform:'uppercase' }}>ou packs a l\'unite</span></div>
-      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)' }}>
+      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12 }}>
         {PACKS.map(p=>(
-          <div key={p.name} style={{ background:'var(--ink)',padding:'18px' }}>
-            <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:2 }}>{p.name}</div>
+          <div key={p.name} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px' }}>
+            <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:15,fontWeight:600,marginBottom:2 }}>{p.name}</div>
             <div style={{ fontSize:11,color:'var(--muted2)',marginBottom:12 }}>{p.unit} · Paiement unique</div>
             <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:8 }}>
-              <span style={{ fontFamily:'var(--font-label)',fontSize:18,color:'var(--muted3)',letterSpacing:-1 }}>{p.price}</span>
+              <span style={{ fontFamily:'DM Mono, monospace',fontSize:18,color:'var(--muted3)',letterSpacing:-1 }}>{p.price}</span>
               <button className="btn-ghost" style={{ fontSize:11,padding:'6px 14px' }}>Acheter</button>
             </div>
           </div>
@@ -1514,46 +1651,98 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
   const [twoFAEnabled, setTwoFAEnabled] = useState(user?.twoFAEnabled || false)
   const [toggling2FA, setToggling2FA] = useState(false)
   const [msg2FA, setMsg2FA] = useState('')
+  const [section, setSection] = useState('compte') // compte | parametres | achats
+  // Email
+  const [newEmail, setNewEmail] = useState('')
+  const [emailPassword, setEmailPassword] = useState('')
+  const [emailLoading, setEmailLoading] = useState(false)
+  const [emailMsg, setEmailMsg] = useState(null)
+  // Password
+  const [currentPwd, setCurrentPwd] = useState('')
+  const [newPwd, setNewPwd] = useState('')
+  const [confirmPwd, setConfirmPwd] = useState('')
+  const [pwdLoading, setPwdLoading] = useState(false)
+  const [pwdMsg, setPwdMsg] = useState(null)
 
   const toggle2FA = async () => {
     setToggling2FA(true)
     try {
       const res = await fetch('/api/auth/toggle-2fa', { method:'POST' })
       const data = await res.json()
-      if (data.success) { setTwoFAEnabled(data.enabled); setMsg2FA(data.enabled?'Double authentification activee':'Double authentification desactivee') }
+      if (data.success) { setTwoFAEnabled(data.enabled); setMsg2FA(data.enabled?'Activée':'Désactivée') }
     } catch(e) {}
     setToggling2FA(false)
     setTimeout(()=>setMsg2FA(''), 3000)
   }
+
+  const updateEmail = async () => {
+    if (!newEmail || !emailPassword) return
+    setEmailLoading(true); setEmailMsg(null)
+    try {
+      const res = await fetch('/api/auth/update-email', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ newEmail, password: emailPassword })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setEmailMsg({ type:'success', text:'Email de confirmation envoyé à ' + newEmail + '. Cliquez sur le lien pour confirmer.' })
+        setNewEmail(''); setEmailPassword('')
+      } else {
+        setEmailMsg({ type:'error', text: data.error || 'Erreur' })
+      }
+    } catch(e) { setEmailMsg({ type:'error', text:'Erreur réseau' }) }
+    setEmailLoading(false)
+  }
+
+  const updatePassword = async () => {
+    if (!currentPwd || !newPwd || !confirmPwd) return
+    if (newPwd !== confirmPwd) { setPwdMsg({ type:'error', text:'Les mots de passe ne correspondent pas' }); return }
+    if (newPwd.length < 8) { setPwdMsg({ type:'error', text:'Minimum 8 caractères' }); return }
+    setPwdLoading(true); setPwdMsg(null)
+    try {
+      const res = await fetch('/api/auth/update-password', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ currentPassword: currentPwd, newPassword: newPwd })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setPwdMsg({ type:'success', text:'Mot de passe modifié avec succès.' })
+        setCurrentPwd(''); setNewPwd(''); setConfirmPwd('')
+      } else {
+        setPwdMsg({ type:'error', text: data.error || 'Erreur' })
+      }
+    } catch(e) { setPwdMsg({ type:'error', text:'Erreur réseau' }) }
+    setPwdLoading(false)
+  }
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Mon compte</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Profil</h2></div>
-      <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Compte</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mon profil</h2></div>
+      <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
         <div style={{ background:'var(--ink)',padding:'18px 20px' }}>
           <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:7 }}>Compte</div>
-          <div style={{ fontFamily:'var(--font-display)',fontSize:18,fontWeight:600,marginBottom:2 }}>{user.name||'Sans nom'}</div>
+          <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:18,fontWeight:600,marginBottom:2 }}>{user.name||'Sans nom'}</div>
           <div style={{ fontSize:12,color:'var(--muted2)' }}>{user.email}</div>
         </div>
         <div style={{ background:'var(--ink)',padding:'18px 20px' }}>
           <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:7 }}>Plan actuel</div>
-          <div style={{ fontFamily:'var(--font-label)',fontSize:20,letterSpacing:2,color:isSubscribed?'var(--gold2)':'var(--muted2)',marginBottom:2 }}>{PLAN_NAMES[planKey].toUpperCase()}</div>
+          <div style={{ fontFamily:'DM Mono, monospace',fontSize:20,letterSpacing:2,color:isSubscribed?'var(--gold2)':'var(--muted2)',marginBottom:2 }}>{PLAN_NAMES[planKey].toUpperCase()}</div>
           <div style={{ fontSize:11,color:'var(--muted)' }}>{isSubscribed&&!isPremium?PLAN_PRICES[planKey]+' EUR/semaine':isPremium?'Acces Premium':'Gratuit'}</div>
         </div>
       </div>
-      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:1 }}>
+      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:8 }}>
         {[
           {val:usage.annonces,label:'Annonces',sub:'cette semaine'},
           {val:usage.reponses,label:'Reponses',sub:'cette semaine'},
           {val:limits.annonces===Infinity?'∞':limits.annonces,label:'Limite',sub:'ann./semaine'},
         ].map(s=>(
           <div key={s.label} style={{ background:'var(--s1)',padding:'16px',textAlign:'center' }}>
-            <div style={{ fontFamily:'var(--font-display)',fontSize:24,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:3 }}>{s.val}</div>
+            <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:24,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:3 }}>{s.val}</div>
             <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1 }}>{s.label}</div>
             <div style={{ fontSize:9,color:'var(--muted)',marginTop:2 }}>{s.sub}</div>
           </div>
         ))}
       </div>
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
         <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:10 }}>Abonnement</div>
         {isSubscribed ? (
           <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,flexWrap:'wrap' }}>
@@ -1579,7 +1768,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
         )}
       </div>
       {/* Double authentification */}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12 }}>
           <div>
             <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:4 }}>Double authentification</div>
@@ -1599,7 +1788,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
       </div>
 
       {isSubscribed&&!isPremium&&<ReferralSection />}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
         <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:10 }}>Comment fonctionne le parrainage ?</div>
         {[
           '1. Copiez votre lien de parrainage personnel ci-dessus.',
@@ -1618,7 +1807,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
                 <div style={{ fontSize:11,color:'var(--muted2)' }}>{new Date(p.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
               </div>
               <div style={{ textAlign:'right',flexShrink:0 }}>
-                <div style={{ fontFamily:'var(--font-label)',fontSize:15,color:'var(--gold2)' }}>{p.amount} EUR</div>
+                <div style={{ fontFamily:'DM Mono, monospace',fontSize:15,color:'var(--gold2)' }}>{p.amount} EUR</div>
                 <div style={{ fontSize:10,color:'var(--muted2)' }}>{p.quantity} {p.packType}</div>
               </div>
             </div>
@@ -1642,10 +1831,10 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
 
   if (!isSubscribed || !hasAccess) return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Outil IA</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Analyser et ameliorer</h2></div>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Analyse</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Analyser et améliorer</h2></div>
       {isSubscribed && !hasAccess && <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'14px 18px',marginBottom:12,fontSize:13,color:'var(--muted2)' }}>Cette fonctionnalite necessite le plan Business ou superieur.</div>}
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
-        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:20,height:120,marginBottom:1 }} />
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:20,height:120,marginBottom:8 }} />
       </div>
       <LockOverlay subscribe={subscribe} />
     </div>
@@ -1669,11 +1858,11 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
     <div className="db-fade">
       <div style={{ marginBottom:16 }}>
         <div className="label" style={{ marginBottom:6 }}>Outil IA</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Analyser et ameliorer</h2>
+        <h2 style={{ fontFamily:'Cormorant Garamond, serif',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Analyser et ameliorer</h2>
         <p style={{ fontSize:13,color:'var(--muted2)',marginTop:6,lineHeight:1.6 }}>Collez votre annonce existante. L'IA la note, identifie les problemes et la reecrit en mieux.</p>
       </div>
 
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:1 }}>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
           <label style={{ ...S.lbl,marginBottom:0 }}>Votre annonce actuelle *</label>
           {annonces.length>0 && (
@@ -1714,35 +1903,35 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
       {result && (
         <div style={{ marginTop:16 }}>
           {/* Comparaison scores */}
-          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
             <div style={{ background:'rgba(200,57,43,.06)',padding:'20px',textAlign:'center',borderTop:'2px solid var(--red)' }}>
               <div style={{ fontSize:10,color:'var(--red2)',textTransform:'uppercase',letterSpacing:1,marginBottom:8 }}>Annonce originale</div>
-              <div style={{ fontFamily:'var(--font-label)',fontSize:42,color:'var(--red2)',letterSpacing:-2,lineHeight:1 }}>{result.scoreOriginal}</div>
+              <div style={{ fontFamily:'DM Mono, monospace',fontSize:42,color:'var(--red2)',letterSpacing:-2,lineHeight:1 }}>{result.scoreOriginal}</div>
               <div style={{ fontSize:11,color:'var(--muted2)',marginTop:4 }}>sur 100</div>
             </div>
             <div style={{ background:'rgba(45,122,79,.06)',padding:'20px',textAlign:'center',borderTop:'2px solid var(--success2)' }}>
               <div style={{ fontSize:10,color:'var(--success2)',textTransform:'uppercase',letterSpacing:1,marginBottom:8 }}>Apres optimisation</div>
-              <div style={{ fontFamily:'var(--font-label)',fontSize:42,color:'var(--success2)',letterSpacing:-2,lineHeight:1 }}>{result.scoreAmeliore}</div>
+              <div style={{ fontFamily:'DM Mono, monospace',fontSize:42,color:'var(--success2)',letterSpacing:-2,lineHeight:1 }}>{result.scoreAmeliore}</div>
               <div style={{ fontSize:11,color:'var(--muted2)',marginTop:4 }}>sur 100 (+{result.scoreAmeliore-result.scoreOriginal} pts)</div>
             </div>
           </div>
 
           {result.problemes && (
-            <div style={{ background:'rgba(200,57,43,.06)',border:'1px solid rgba(200,57,43,.2)',padding:'14px 18px',marginBottom:1 }}>
+            <div style={{ background:'rgba(200,57,43,.06)',border:'1px solid rgba(200,57,43,.2)',padding:'14px 18px',marginBottom:8 }}>
               <div style={S.lbl}>Problemes detectes</div>
               <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{result.problemes}</div>
             </div>
           )}
 
           {result.annonceAmelioree && (
-            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'16px 18px',marginBottom:1 }}>
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold)',padding:'16px 18px',marginBottom:8 }}>
               <div style={S.lbl}>Annonce optimisee</div>
               <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{result.annonceAmelioree}</div>
             </div>
           )}
 
           {result.conseils && (
-            <div style={{ background:'var(--ink)',border:'1px solid var(--border)',borderLeft:'3px solid var(--gold3)',padding:'14px 18px',marginBottom:1 }}>
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,borderLeft:'2px solid var(--gold3)',borderRadius:4,padding:'18px 22px',marginBottom:8 }}>
               <div style={S.lbl}>Conseils specifiques</div>
               <div style={{ fontSize:13,color:'var(--muted3)',lineHeight:1.8,fontStyle:'italic',whiteSpace:'pre-wrap' }}>{result.conseils}</div>
             </div>
@@ -1782,9 +1971,9 @@ function VentesTab({ isSubscribed, subscribe }) {
 
   if (!isSubscribed) return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}><div className="label" style={{ marginBottom:6 }}>Suivi</div><h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes ventes</h2></div>
+      <div style={{ marginBottom:24 }}><div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Suivi</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mes ventes</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
-        <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:20,height:100,marginBottom:1 }} />
+        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:20,height:100,marginBottom:8 }} />
       </div>
       <LockOverlay subscribe={subscribe} />
     </div>
@@ -1821,7 +2010,7 @@ function VentesTab({ isSubscribed, subscribe }) {
       <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16,flexWrap:'wrap',gap:10 }}>
         <div>
           <div className="label" style={{ marginBottom:6 }}>Suivi</div>
-          <h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes ventes</h2>
+          <h2 style={{ fontFamily:'Cormorant Garamond, serif',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes ventes</h2>
         </div>
         <button onClick={()=>setShowForm(!showForm)} className="btn-gold" style={{ fontSize:11,padding:'10px 18px',letterSpacing:1.5,color:'#030303' }}>
           + AJOUTER UN OBJET
@@ -1829,14 +2018,14 @@ function VentesTab({ isSubscribed, subscribe }) {
       </div>
 
       {/* Stats */}
-      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:1,background:'var(--border)',marginBottom:16 }}>
+      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:16 }}>
         {[
           {label:'En cours',val:stats.enCours,color:'var(--gold2)'},
           {label:'Vendus',val:stats.vendu,color:'var(--success2)'},
           {label:'Total gagne',val:stats.totalGagne.toLocaleString('fr-FR')+' EUR',color:'var(--gold2)'},
         ].map(s=>(
-          <div key={s.label} style={{ background:'var(--ink)',padding:'18px',textAlign:'center' }}>
-            <div style={{ fontFamily:'var(--font-label)',fontSize:26,color:s.color,letterSpacing:-1,lineHeight:1,marginBottom:4 }}>{s.val}</div>
+          <div key={s.label} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px',textAlign:'center' }}>
+            <div style={{ fontFamily:'DM Mono, monospace',fontSize:26,color:s.color,letterSpacing:-1,lineHeight:1,marginBottom:4 }}>{s.val}</div>
             <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1 }}>{s.label}</div>
           </div>
         ))}
@@ -1845,7 +2034,7 @@ function VentesTab({ isSubscribed, subscribe }) {
       {/* Formulaire ajout */}
       {showForm && (
         <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',padding:'18px',marginBottom:14 }}>
-          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:1 }}>
+          <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
             <div style={{ background:'var(--ink)',padding:'12px 16px' }}>
               <label style={S.lbl}>Nom de l'objet *</label>
               <input style={S.inp} placeholder="iPhone 14 Pro, BMW 320d..." value={form.titre} onChange={e=>setForm({...form,titre:e.target.value})} />
@@ -1856,7 +2045,7 @@ function VentesTab({ isSubscribed, subscribe }) {
             </div>
           </div>
           {annonces.length>0 && (
-            <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 16px',marginBottom:1 }}>
+            <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'12px 16px',marginBottom:8 }}>
               <label style={S.lbl}>Lier a une annonce (optionnel)</label>
               <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={form.annonceId||''} onChange={e=>setForm({...form,annonceId:e.target.value})}>
                 <option value="">Aucune</option>
@@ -1866,7 +2055,7 @@ function VentesTab({ isSubscribed, subscribe }) {
               </select>
             </div>
           )}
-          <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 16px',marginBottom:1 }}>
+          <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'12px 16px',marginBottom:8 }}>
             <label style={S.lbl}>Notes (optionnel)</label>
             <input style={S.inp} placeholder="Mis en vente le 15 mai, 3 contacts..." value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} />
           </div>
@@ -1882,19 +2071,19 @@ function VentesTab({ isSubscribed, subscribe }) {
       {loading && <div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
 
       {!loading && objets.length === 0 && (
-        <div style={{ textAlign:'center',padding:40,fontFamily:'var(--font-display)',fontStyle:'italic',color:'var(--muted2)' }}>
+        <div style={{ textAlign:'center',padding:40,fontFamily:'Cormorant Garamond, serif',fontStyle:'italic',color:'var(--muted2)' }}>
           Aucun objet suivi. Ajoutez vos articles en cours de vente.
         </div>
       )}
 
       {objets.map(o => (
-        <div key={o.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
+        <div key={o.id} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,marginBottom:8 }}>
           <div style={{ padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap' }}>
             <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ fontFamily:'var(--font-display)',fontSize:15,fontWeight:600,marginBottom:3 }}>{o.titre}</div>
+              <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:15,fontWeight:600,marginBottom:3 }}>{o.titre}</div>
               <div style={{ display:'flex',alignItems:'center',gap:10,flexWrap:'wrap' }}>
                 <div style={{ display:'flex',alignItems:'center',gap:8,flexWrap:'wrap' }}>
-                  <span style={{ fontFamily:'var(--font-label)',fontSize:12,letterSpacing:.5,
+                  <span style={{ fontFamily:'DM Mono, monospace',fontSize:12,letterSpacing:.5,
                     color:o.statut==='vendu'?'var(--success2)':o.statut==='actif'?'var(--gold2)':'var(--muted)',
                     background:o.statut==='vendu'?'rgba(45,122,79,.1)':o.statut==='actif'?'rgba(201,168,76,.1)':'var(--s2)',
                     border:'1px solid',borderColor:o.statut==='vendu'?'rgba(45,122,79,.3)':o.statut==='actif'?'var(--gold-border)':'var(--border)',
@@ -1992,9 +2181,9 @@ function ChatBotsTab() {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:16 }}>
-        <div className="label" style={{ marginBottom:6 }}>Chatbots vendeur</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes assistants</h2>
+      <div style={{ marginBottom:24 }}>
+        <div style={{ fontSize:9,letterSpacing:3,color:'var(--muted)',textTransform:'uppercase',marginBottom:8,fontFamily:'DM Sans' }}>Assistants IA</div>
+        <h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mes chatbots</h2>
         <p style={{ fontSize:13,color:'var(--muted2)',marginTop:6,lineHeight:1.65 }}>
           Chaque annonce generee cree automatiquement un assistant IA. Copiez le texte et collez-le dans vos annonces LeBonCoin.
         </p>
@@ -2015,14 +2204,14 @@ function ChatBotsTab() {
 
       {showCreate && (
         <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',padding:'18px',marginBottom:16,borderTop:'2px solid var(--gold)' }}>
-          <div style={{ fontFamily:'var(--font-display)',fontSize:16,fontWeight:600,marginBottom:14 }}>Creer un assistant pour une annonce</div>
+          <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:16,fontWeight:600,marginBottom:14 }}>Creer un assistant pour une annonce</div>
           {annonces.length === 0 ? (
             <div style={{ fontSize:13,color:'var(--muted2)',lineHeight:1.65 }}>
               Vous n'avez pas encore d'annonce. Generez une annonce dans l'onglet Annonce pour creer un assistant.
             </div>
           ) : (
             <>
-              <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'12px 16px',marginBottom:8 }}>
+              <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'12px 16px',marginBottom:8 }}>
                 <label style={S.lbl}>Choisir une annonce *</label>
                 <select style={{ ...S.inp,appearance:'none',cursor:'pointer' }} value={selectedAnnonceId} onChange={e=>setSelectedAnnonceId(e.target.value)}>
                   <option value="">Selectionner une annonce...</option>
@@ -2048,7 +2237,7 @@ function ChatBotsTab() {
       )}
 
       {/* Explication */}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderLeft:'3px solid var(--gold)',padding:'14px 18px',marginBottom:16 }}>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderLeft:'2px solid var(--gold)',borderRadius:4,padding:'18px 22px',marginBottom:86 }}>
         <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:8,fontWeight:600 }}>Comment ca marche ?</div>
         <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7 }}>
           1. Generez une annonce dans l'onglet Annonce<br/>
@@ -2062,17 +2251,17 @@ function ChatBotsTab() {
       {loading && <div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
 
       {!loading && bots.length === 0 && (
-        <div style={{ textAlign:'center',padding:40,fontFamily:'var(--font-display)',fontStyle:'italic',color:'var(--muted2)' }}>
+        <div style={{ textAlign:'center',padding:40,fontFamily:'Cormorant Garamond, serif',fontStyle:'italic',color:'var(--muted2)' }}>
           Aucun assistant cree. Generez une annonce pour en creer un automatiquement.
         </div>
       )}
 
       {bots.map(bot => (
-        <div key={bot.id} style={{ background:'var(--ink)',border:'1px solid var(--border)',marginBottom:1 }}>
+        <div key={bot.id} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,marginBottom:8 }}>
           <div style={{ padding:'14px 18px' }}>
             <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10,flexWrap:'wrap',gap:8 }}>
               <div>
-                <div style={{ fontFamily:'var(--font-display)',fontSize:14,fontWeight:600,marginBottom:2 }}>{bot.titre}</div>
+                <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:14,fontWeight:600,marginBottom:2 }}>{bot.titre}</div>
                 <div style={{ display:'flex',gap:10,alignItems:'center' }}>
                   <span style={{ fontFamily:'monospace',fontSize:10,color:'var(--muted2)',background:'var(--s3)',padding:'2px 8px' }}>{bot.code}</span>
                   <span style={{ fontSize:10,color:'var(--muted)' }}>{bot.nbQuestions} questions posees</span>
@@ -2111,30 +2300,29 @@ function ChatBotsTab() {
 function ScoreVendeur({ usage }) {
   const { points, niveau, prochainNiveau, pointsManquants, emoji } = (() => {
     let p = Math.min(usage.annonces * 10, 200) + Math.min(usage.reponses * 5, 150)
-    let n = 'Debutant', pn = 'Vendeur', pm = Math.max(0, 50-p), em = '🌱'
+    let n = 'Débutant', pn = 'Vendeur', pm = Math.max(0, 50-p), em = '🌱'
     if (p >= 500) { n = 'Expert'; pn = null; em = '👑'; pm = 0 }
     else if (p >= 200) { n = 'Pro'; pn = 'Expert'; em = '⭐'; pm = 500-p }
     else if (p >= 50) { n = 'Vendeur'; pn = 'Pro'; em = '🔥'; pm = 200-p }
     return { points:p, niveau:n, prochainNiveau:pn, pointsManquants:pm, emoji:em }
   })()
-
-  const maxPoints = niveau === 'Expert' ? 500 : prochainNiveau === 'Expert' ? 500 : prochainNiveau === 'Pro' ? 200 : 50
-  const minPoints = niveau === 'Expert' ? 200 : niveau === 'Pro' ? 50 : niveau === 'Vendeur' ? 50 : 0
-  const pct = Math.min(100, ((points - minPoints) / (maxPoints - minPoints)) * 100)
+  const maxPoints = prochainNiveau==='Expert'?500:prochainNiveau==='Pro'?200:50
+  const minPoints = niveau==='Expert'?200:niveau==='Pro'?50:niveau==='Vendeur'?50:0
+  const pct = Math.min(100, Math.max(0, ((points-minPoints)/(maxPoints-minPoints))*100))
 
   return (
-    <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:16,display:'flex',alignItems:'center',gap:14,flexWrap:'wrap' }}>
-      <div style={{ fontSize:28 }}>{emoji}</div>
-      <div style={{ flex:1,minWidth:160 }}>
-        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
-          <div>
-            <span style={{ fontFamily:'var(--font-label)',fontSize:14,letterSpacing:1,color:'var(--gold2)' }}>{niveau}</span>
-            {prochainNiveau && <span style={{ fontSize:10,color:'var(--muted)',marginLeft:8 }}>→ {prochainNiveau} dans {pointsManquants} pts</span>}
+    <div style={{ background:'linear-gradient(135deg,rgba(201,168,76,.05),rgba(201,168,76,.02))',border:'1px solid rgba(201,168,76,.15)',borderRadius:4,padding:'16px 22px',marginBottom:24,display:'flex',alignItems:'center',gap:16,flexWrap:'wrap' }}>
+      <div style={{ fontSize:24 }}>{emoji}</div>
+      <div style={{ flex:1,minWidth:140 }}>
+        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8 }}>
+          <div style={{ display:'flex',alignItems:'center',gap:10 }}>
+            <span style={{ fontFamily:'DM Sans',fontSize:13,fontWeight:500,color:'var(--gold2)',letterSpacing:.5 }}>{niveau}</span>
+            {prochainNiveau && <span style={{ fontSize:10,color:'var(--muted)',background:'rgba(255,255,255,.04)',padding:'2px 7px',borderRadius:10 }}>→ {prochainNiveau} · {pointsManquants} pts</span>}
           </div>
-          <span style={{ fontFamily:'var(--font-label)',fontSize:12,color:'var(--muted2)',letterSpacing:.5 }}>{points} pts</span>
+          <span style={{ fontFamily:'DM Mono, monospace',fontSize:11,color:'var(--muted2)' }}>{points} pts</span>
         </div>
-        <div style={{ background:'var(--s3)',borderRadius:1,height:3,overflow:'hidden' }}>
-          <div style={{ width:Math.max(3,pct)+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',transition:'width .8s' }} />
+        <div style={{ background:'rgba(255,255,255,.06)',borderRadius:4,height:3,overflow:'hidden' }}>
+          <div className="progress-fill" style={{ width:Math.max(2,pct)+'%',height:'100%',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',borderRadius:4 }} />
         </div>
       </div>
     </div>
@@ -2164,16 +2352,19 @@ function LaunchBanner() {
   if (!countdown) return null
 
   return (
-    <div style={{ background:'linear-gradient(90deg,var(--gold3),var(--gold2))',borderRadius:3,padding:'12px 18px',marginBottom:16,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:10 }}>
+    <div style={{ background:'rgba(201,168,76,.06)',border:'1px solid rgba(201,168,76,.2)',borderRadius:4,padding:'14px 20px',marginBottom:24,display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12 }}>
       <div>
-        <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:2,color:'#030303',marginBottom:2 }}>LANCEMENT GRATUIT</div>
-        <div style={{ fontSize:12,color:'rgba(0,0,0,.7)' }}>Acces Business offert jusqu'au 30 juin 2026</div>
+        <div style={{ display:'flex',alignItems:'center',gap:6,marginBottom:3 }}>
+          <div style={{ width:5,height:5,borderRadius:'50%',background:'var(--gold2)',animation:'pulse 1.5s infinite' }} />
+          <span style={{ fontFamily:'DM Sans',fontSize:10,letterSpacing:2,color:'var(--gold2)',fontWeight:500 }}>LANCEMENT — ACCÈS GRATUIT</span>
+        </div>
+        <div style={{ fontSize:12,color:'var(--muted2)' }}>Plan Business offert jusqu'au 30 juin 2026</div>
       </div>
-      <div style={{ display:'flex',gap:6 }}>
+      <div style={{ display:'flex',gap:8 }}>
         {[[countdown.days,'J'],[countdown.hours,'H'],[countdown.minutes,'M'],[countdown.seconds,'S']].map(([v,u])=>(
-          <div key={u} style={{ background:'rgba(0,0,0,.15)',borderRadius:2,padding:'4px 8px',textAlign:'center',minWidth:36 }}>
-            <div style={{ fontFamily:'var(--font-label)',fontSize:16,color:'#030303',letterSpacing:-1,lineHeight:1 }}>{String(v).padStart(2,'0')}</div>
-            <div style={{ fontSize:8,color:'rgba(0,0,0,.5)',letterSpacing:1 }}>{u}</div>
+          <div key={u} style={{ textAlign:'center',minWidth:40 }}>
+            <div style={{ fontFamily:'DM Mono, monospace',fontSize:20,color:'var(--gold2)',letterSpacing:-1,lineHeight:1 }}>{String(v).padStart(2,'0')}</div>
+            <div style={{ fontSize:8,color:'var(--muted)',letterSpacing:2,marginTop:2 }}>{u}</div>
           </div>
         ))}
       </div>
@@ -2194,19 +2385,19 @@ function ReferralSection() {
   const link = (typeof window!=='undefined'?window.location.origin:'')+'/?ref='+code
 
   return (
-    <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:1 }}>
+    <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
       <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:8 }}>Mon lien de parrainage</div>
-      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--border)',marginBottom:10 }}>
+      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:10 }}>
         <div style={{ background:'var(--ink)',padding:'10px 14px',textAlign:'center' }}>
-          <div style={{ fontFamily:'var(--font-label)',fontSize:22,color:'var(--gold2)',letterSpacing:-1 }}>{stats.total}</div>
+          <div style={{ fontFamily:'DM Mono, monospace',fontSize:22,color:'var(--gold2)',letterSpacing:-1 }}>{stats.total}</div>
           <div style={{ fontSize:10,color:'var(--muted2)',marginTop:2 }}>Amis parraines</div>
         </div>
         <div style={{ background:'var(--ink)',padding:'10px 14px',textAlign:'center' }}>
-          <div style={{ fontFamily:'var(--font-label)',fontSize:22,color:'var(--success2)',letterSpacing:-1 }}>{stats.active}</div>
+          <div style={{ fontFamily:'DM Mono, monospace',fontSize:22,color:'var(--success2)',letterSpacing:-1 }}>{stats.active}</div>
           <div style={{ fontSize:10,color:'var(--muted2)',marginTop:2 }}>Actifs</div>
         </div>
       </div>
-      <div style={{ background:'var(--ink)',border:'1px solid var(--border)',padding:'9px 12px',fontFamily:'monospace',fontSize:11,color:'var(--muted2)',wordBreak:'break-all',marginBottom:8 }}>{link}</div>
+      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'9px 12px',fontFamily:'monospace',fontSize:11,color:'var(--muted2)',wordBreak:'break-all',marginBottom:8 }}>{link}</div>
       <button onClick={()=>{navigator.clipboard.writeText(link);setCopied(true);setTimeout(()=>setCopied(false),2000)}}
         className="btn-ghost" style={{ width:'100%',fontSize:11,color:copied?'var(--gold2)':'var(--muted2)',borderColor:copied?'var(--gold-border)':'var(--border2)' }}>
         {copied?'Lien copie !':'Copier mon lien de parrainage'}
