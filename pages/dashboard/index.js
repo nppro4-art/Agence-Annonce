@@ -1683,7 +1683,7 @@ function VentesTab({ isSubscribed, subscribe }) {
     }).catch(()=>setLoading(false))
   }
 
-  useEffect(()=>{ if(isSubscribed) load() else setLoading(false) },[isSubscribed])
+  useEffect(()=>{ if(isSubscribed) { load() } else { setLoading(false) } },[isSubscribed])
 
   if (!isSubscribed) return (
     <div className="db-fade">
