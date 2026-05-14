@@ -2038,7 +2038,7 @@ function ChatBotsTab() {
               )}
               <div style={{ display:'flex',gap:8 }}>
                 <button onClick={createBot} disabled={creating||!selectedAnnonceId} className="btn-primary" style={{ flex:2,fontSize:12,padding:'12px',opacity:(creating||!selectedAnnonceId)?0.5:1 }}>
-                  {creating?'Creation...':'CREER L'ASSISTANT'}
+                  {creating ? 'Creation...' : "CREER L'ASSISTANT"}
                 </button>
                 <button onClick={()=>{setShowCreate(false);setSelectedAnnonceId('')}} className="btn-ghost" style={{ flex:1,fontSize:12 }}>Annuler</button>
               </div>
