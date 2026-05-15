@@ -1020,7 +1020,7 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
       <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Répondre à un acheteur</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <label style={S.lbl}>Message recu *</label>
-        <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.7 }} placeholder="Collez ici le message de l"acheteur..." value={message} onChange={e=>setMessage(e.target.value)} />
+        <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.7 }} placeholder="Collez ici le message de l acheteur..." value={message} onChange={e=>setMessage(e.target.value)} />
       </div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
