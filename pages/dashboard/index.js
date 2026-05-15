@@ -1020,7 +1020,7 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
       <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Répondre à un acheteur</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <label style={S.lbl}>Message recu *</label>
-        <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.7 }} placeholder="Collez ici le message de l acheteur..." value={message} onChange={e=>setMessage(e.target.value)} />
+        <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.7 }} placeholder="Collez ici le message de l"acheteur..." value={message} onChange={e=>setMessage(e.target.value)} />
       </div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
@@ -1687,7 +1687,7 @@ function HistoriqueTab() {
 
 function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   const PLANS = [
-    {key:'starter',name:'Starter',price:'3,99',sub:'L essentiel',color:'#9a9590',features:['10 annonces / semaine','30 réponses acheteurs','Estimation de prix','Générateur de titres','Détecteur prix abusif','Checklist + Calendrier']},
+    {key:'starter',name:'Starter',price:'3,99',sub:'L'essentiel',color:'#9a9590',features:['10 annonces / semaine','30 réponses acheteurs','Estimation de prix','Générateur de titres','Détecteur prix abusif','Checklist + Calendrier']},
     {key:'business',name:'Business',price:'5,99',sub:'Le plus populaire',color:'#c9a84c',features:['30 annonces / semaine','100 réponses acheteurs','Chatbot vendeur (50 msg/j)','Analyser et améliorer','Détecteur arnaque','Comparateur plateformes','Mode flash + Traduction','Suivi des ventes'],recommended:true},
     {key:'expert',name:'Expert',price:'12,99',sub:'Pour les pros',color:'#d4b568',features:['Annonces illimitées','Réponses illimitées','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Accès prioritaire nouveautés']},
   ]
@@ -2432,7 +2432,7 @@ function ChatBotsTab() {
               )}
               <div style={{ display:'flex',gap:8 }}>
                 <button onClick={createBot} disabled={creating||!selectedAnnonceId} className="btn-primary" style={{ flex:2,fontSize:12,padding:'12px',opacity:(creating||!selectedAnnonceId)?0.5:1 }}>
-                  {creating ? 'Creation...' : 'CREER L ASSISTANT'}
+                  {creating ? 'Creation...' : 'CREER L'ASSISTANT"}
                 </button>
                 <button onClick={()=>{setShowCreate(false);setSelectedAnnonceId('')}} className="btn-ghost" style={{ flex:1,fontSize:12 }}>Annuler</button>
               </div>
@@ -2587,7 +2587,7 @@ function ReferralSection() {
   },[])
 
   if (!code) return null
-  const link = (typeof window!=='undefined'?window.location.origin:)+'/?ref='+code
+  const link = (typeof window!=='undefined'?window.location.origin:"')+'/?ref='+code
 
   return (
     <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
