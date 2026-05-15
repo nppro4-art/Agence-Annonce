@@ -31,7 +31,7 @@ const CATEGORIES = {
   Voiture: [
     { key:'marque', label:'Marque', ph:'BMW, Renault, Peugeot...' },
     { key:'modele', label:'Modele', ph:'Serie 3, Clio, 308...' },
-    { key:'version', label:"Version / Finition', ph:'M Sport, GT Line...' },
+    { key:'version', label:'Version / Finition', ph:'M Sport, GT Line...' },
     { key:'annee', label:'Annee', ph:'2019', type:'number' },
     { key:'kilometrage', label:'Kilometrage (km)', ph:'75000', type:'number' },
     { key:'carburant', label:'Carburant', type:'select', opts:['Essence','Diesel','Hybride','Hybride rechargeable','Electrique','GPL'] },
@@ -61,7 +61,7 @@ const CATEGORIES = {
     { key:'travauxAFaire', label:'Travaux a prevoir', ph:'Pneus arriere bientot, vidange dans 5000 km...', wide:true },
     { key:'prix', label:'Prix demande (EUR)', ph:'8500', type:'number' },
     { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui - prix a debattre','Legerement','Non - prix ferme'] },
-    { key:'prixMin', label:"Prix minimum accepte (confidentiel)', ph:'7800', type:'number' },
+    { key:'prixMin', label:'Prix minimum accepte (confidentiel)', ph:'7800', type:'number' },
     { key:'ville', label:'Ville', ph:'Lyon, Paris...' },
     { key:'dispo', label:'Disponibilite', type:'select', opts:['Immediate','Sous 1 semaine','Semaine uniquement','Week-end uniquement','Sur RDV'] },
     { key:'livraison', label:'Livraison possible', type:'select', opts:['Non','Oui - frais acheteur','Oui - inclus','A discuter'] },
@@ -80,7 +80,7 @@ const CATEGORIES = {
     { key:'cycles', label:'Nb cycles batterie', ph:'120 cycles' },
     { key:'debloque', label:'Debloque tous operateurs', type:'select', opts:['Oui - tous operateurs','Non - Orange','Non - SFR','Non - Bouygues','Non - Free'] },
     { key:'imei', label:'IMEI disponible', type:'select', opts:['Oui - sur demande','Non'] },
-    { key:'faceId', label:"Face ID / Touch ID', type:'select', opts:['Fonctionne parfaitement','Probleme mineur','Ne fonctionne plus','Non applicable'] },
+    { key:'faceId', label:'Face ID / Touch ID', type:'select', opts:['Fonctionne parfaitement','Probleme mineur','Ne fonctionne plus','Non applicable'] },
     { key:'etatEcran', label:'Etat ecran', type:'select', opts:['Parfait','Micro-rayures','Rayures legeres','Fissure ou cassure'] },
     { key:'etatDos', label:'Etat du dos', type:'select', opts:['Parfait','Micro-rayures','Rayures visibles','Fissure'] },
     { key:'cameras', label:'Etat cameras', type:'select', opts:['Toutes parfaites','Legere buee','Probleme sur une','Plusieurs defectueuses'] },
@@ -96,7 +96,7 @@ const CATEGORIES = {
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
   Informatique: [
-    { key:'type', label:'Type', type:'select', opts:['Ordinateur portable','PC fixe','Tablette','Ecran','Imprimante',"Clavier/Souris','Composant PC','Disque dur SSD','Autre'] },
+    { key:'type', label:'Type', type:'select', opts:['Ordinateur portable','PC fixe','Tablette','Ecran','Imprimante','Clavier/Souris','Composant PC','Disque dur SSD','Autre'] },
     { key:'marque', label:'Marque', ph:'Apple, Dell, HP, Asus, Lenovo...' },
     { key:'modele', label:'Modele', ph:'MacBook Pro 14 M3, XPS 15 9520...' },
     { key:'anneeAchat', label:'Annee achat', ph:'2022', type:'number' },
@@ -108,7 +108,7 @@ const CATEGORIES = {
     { key:'ecranRes', label:'Resolution ecran', ph:'2560x1600 Retina, 4K UHD...' },
     { key:'ecranHz', label:'Taux rafraichissement', ph:'60 Hz, 120 Hz, 165 Hz...' },
     { key:'autonomie', label:'Autonomie reelle', ph:'8-10h bureautique...' },
-    { key:'batterie', label:"Sante batterie / cycles', ph:"94%, 120 cycles...' },
+    { key:'batterie', label:'Sante batterie / cycles', ph:'94%, 120 cycles...' },
     { key:'os', label:'Systeme exploitation', type:'select', opts:['macOS Sonoma','macOS Ventura','Windows 11','Windows 10','Linux','Chrome OS','Aucun'] },
     { key:'etat', label:'Etat general', type:'select', opts:['Comme neuf','Tres bon etat','Bon etat','Etat correct','Pour pieces'] },
     { key:'etatEcran', label:'Etat ecran', type:'select', opts:['Parfait','Micro-rayures','Pixels morts','Fissure'] },
@@ -134,7 +134,7 @@ const CATEGORIES = {
     { key:'longueur', label:'Longueur (cm)', ph:'180', type:'number' },
     { key:'largeur', label:'Largeur / Profondeur (cm)', ph:'90', type:'number' },
     { key:'hauteur', label:'Hauteur (cm)', ph:'75', type:'number' },
-    { key:'places', label:"Nb places (si canape)', type:'select', opts:['1 place','2 places','3 places','4 places',"Angle / L','Convertible'] },
+    { key:'places', label:'Nb places (si canape)', type:'select', opts:['1 place','2 places','3 places','4 places','Angle / L','Convertible'] },
     { key:'convertible', label:'Convertible en lit', type:'select', opts:['Non','Oui - clic-clac','Oui - avec coffre','Oui - meridienne'] },
     { key:'rangements', label:'Rangements integres', type:'select', opts:['Aucun','Tiroirs','Portes','Etageres','Coffre'] },
     { key:'anneeAchat', label:'Annee achat approximative', ph:'2021' },
@@ -142,7 +142,7 @@ const CATEGORIES = {
     { key:'defauts', label:'Defauts et imperfections', ph:'Petite rayure plateau, trace accoudoir...', wide:true },
     { key:'demontable', label:'Demontable', type:'select', opts:['Oui - facile','Partiellement','Non - un seul bloc'] },
     { key:'instructions', label:'Instructions de montage', type:'select', opts:['Oui disponibles','Non'] },
-    { key:'poids', label:"Poids estime (kg)', ph:'35', type:'number' },
+    { key:'poids', label:'Poids estime (kg)', ph:'35', type:'number' },
     { key:'prix', label:'Prix demande (EUR)', ph:'150', type:'number' },
     { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'450', type:'number' },
     { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
@@ -158,7 +158,7 @@ const CATEGORIES = {
     { key:'capacite', label:'Capacite', ph:'7 kg, 200L, 60 cm...' },
     { key:'classeEnergie', label:'Classe energetique', type:'select', opts:['A+++','A++','A+','A','B','C','D','E','F','G'] },
     { key:'conso', label:'Consommation annuelle (kWh)', ph:'150 kWh' },
-    { key:'dimensions', label:"Dimensions (L x H x P cm)', ph:'60 x 85 x 55' },
+    { key:'dimensions', label:'Dimensions (L x H x P cm)', ph:'60 x 85 x 55' },
     { key:'couleur', label:'Couleur', type:'select', opts:['Blanc','Inox','Noir','Gris anthracite','Autre'] },
     { key:'etat', label:'Etat', type:'select', opts:['Excellent - comme neuf','Tres bon etat','Bon etat','Quelques traces cosmetiques','Necessite reparation'] },
     { key:'fonctionnement', label:'Fonctionnement', type:'select', opts:['Parfait - aucun probleme','Quelques defauts mineurs','Fonctionne mais reparation conseillee'] },
@@ -180,7 +180,7 @@ const CATEGORIES = {
   Vetements: [
     { key:'type', label:'Type de vetement', ph:'Veste, Manteau, Robe, Pantalon, Sneakers...' },
     { key:'marque', label:'Marque', ph:'Zara, H&M, Nike, Gucci...' },
-    { key:'collection', label:"Collection / Saison', ph:'Hiver 2023, Ete 2022...' },
+    { key:'collection', label:'Collection / Saison', ph:'Hiver 2023, Ete 2022...' },
     { key:'taille', label:'Taille', ph:'M, 42, 10 ans, EU 42...' },
     { key:'couleur', label:'Couleur', ph:'Noir, Bleu marine, Ecru...' },
     { key:'matiere', label:'Composition / Matiere', ph:'100% coton, 80% laine 20% cachemire...' },
@@ -201,15 +201,15 @@ const CATEGORIES = {
   'Jeux video': [
     { key:'type', label:'Type', type:'select', opts:['Jeu video','Console','Manette / Accessoire','Pack complet','Carte cadeau'] },
     { key:'console', label:'Plateforme', type:'select', opts:['PlayStation 5','PlayStation 4','PlayStation 3','Xbox Series X/S','Xbox One','Nintendo Switch','Nintendo Switch Lite','PC','Retro / Autre'] },
-    { key:'titre', label:"Titre / Nom', ph:'FIFA 24, Zelda Tears of the Kingdom...' },
+    { key:'titre', label:'Titre / Nom', ph:'FIFA 24, Zelda Tears of the Kingdom...' },
     { key:'region', label:'Region', type:'select', opts:['FR / Europe PAL','USA NTSC','Japon','Multi-region'] },
     { key:'version', label:'Version', type:'select', opts:['Version physique - boite','Version numerique - code','Edition speciale / Collector','Premiere impression'] },
     { key:'etat', label:'Etat', type:'select', opts:['Neuf sous blister','Comme neuf','Tres bon etat','Bon etat','Etat correct'] },
     { key:'boite', label:'Boite et notice', type:'select', opts:['Complet - boite + notice + jeu','Jeu seul','Boite seule','Boite abimee mais complete'] },
     { key:'dlc', label:'DLC inclus', ph:'Season pass, DLC 1 et 2, skin exclusif...', wide:true },
     { key:'nbJeux', label:'Nb de jeux (si lot)', ph:'5 jeux inclus...' },
-    { key:'manettes', label:"Manettes incluses (si console)', ph:'2 manettes, 1 charge-play...' },
-    { key:'defauts', label:"Defauts / Problemes', ph:'Aucun, rayure sur boite, disque parfait...', wide:true },
+    { key:'manettes', label:'Manettes incluses (si console)', ph:'2 manettes, 1 charge-play...' },
+    { key:'defauts', label:'Defauts / Problemes', ph:'Aucun, rayure sur boite, disque parfait...', wide:true },
     { key:'prix', label:'Prix demande (EUR)', ph:'25', type:'number' },
     { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Non'] },
     { key:'ville', label:'Ville', ph:'Lyon...' },
@@ -225,7 +225,7 @@ const CATEGORIES = {
     { key:'etat', label:'Etat', type:'select', opts:['Comme neuf','Tres bon etat','Bon etat - usure normale','Etat correct','Necessite entretien'] },
     { key:'frequence', label:'Frequence utilisation', type:'select', opts:['Jamais ou presque','Quelques fois par an','1 fois par mois','1 fois par semaine','Plusieurs fois par semaine'] },
     { key:'niveau', label:'Niveau pratique vise', type:'select', opts:['Debutant','Intermediaire','Avance','Competiteur'] },
-    { key:'poids', label:"Poids (kg)', ph:'8.5', type:'number' },
+    { key:'poids', label:'Poids (kg)', ph:'8.5', type:'number' },
     { key:'specs', label:'Specifications techniques', ph:'Shimano 105 11v, fourche carbone, freins disque...', wide:true },
     { key:'entretien', label:'Entretien et reparations', ph:'Revision complete 2023, chaine neuve...', wide:true },
     { key:'defauts', label:'Defauts et usures', ph:'Rayures cadre, grips uses, pneu avant a surveiller...', wide:true },
@@ -241,15 +241,15 @@ const CATEGORIES = {
     { key:'type', label:'Type', ph:'Bague, Collier, Bracelet, Montre, Boucles oreilles...' },
     { key:'marque', label:'Marque / Createur', ph:'Cartier, Pandora, Daniel Wellington...' },
     { key:'matiere', label:'Matiere principale', type:'select', opts:['Or 18 carats','Or 14 carats','Or rose','Or blanc','Argent 925','Argent plaque','Acier inoxydable','Platine','Plaque or','Bijou fantaisie'] },
-    { key:'pierres', label:"Pierres / Ornements', ph:'Diamant 0.5ct, Saphir, Perle naturelle...' },
-    { key:'poids', label:"Poids (grammes)', ph:'5.2', type:'number' },
+    { key:'pierres', label:'Pierres / Ornements', ph:'Diamant 0.5ct, Saphir, Perle naturelle...' },
+    { key:'poids', label:'Poids (grammes)', ph:'5.2', type:'number' },
     { key:'taille', label:'Taille / Tour de doigt', ph:'54, 18cm longueur, 40cm chaine...' },
     { key:'etat', label:'Etat', type:'select', opts:['Neuf sous ecrin','Comme neuf - jamais porte','Tres bon etat','Bon etat','Quelques traces usure'] },
     { key:'defauts', label:'Defauts', ph:'Aucun, petite egratignure fermoir...', wide:true },
     { key:'certificat', label:'Certificat authenticite', type:'select', opts:['Oui - inclus','Non'] },
     { key:'facture', label:'Facture achat', type:'select', opts:['Disponible','Non disponible'] },
-    { key:'ecrin', label:"Ecrin / Boite origine', type:'select', opts:['Oui','Non'] },
-    { key:'gravure', label:"Gravure / Personnalisation', ph:'Aucune, initiales AB...', wide:true },
+    { key:'ecrin', label:'Ecrin / Boite origine', type:'select', opts:['Oui','Non'] },
+    { key:'gravure', label:'Gravure / Personnalisation', ph:'Aucune, initiales AB...', wide:true },
     { key:'prix', label:'Prix demande (EUR)', ph:'120', type:'number' },
     { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'450', type:'number' },
     { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
@@ -299,7 +299,7 @@ function LockOverlay({ subscribe }) {
         <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:20,lineHeight:1.7 }}>
           Débloquez cette fonctionnalité à partir de 3,99 EUR/semaine.
         </div>
-        <div style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:8 }}>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
           {[['Starter','3,99'],['Business','5,99'],['Expert','12,99']].map(([plan,price],i) => (
             <button key={plan} onClick={() => subscribe(plan.toLowerCase())}
               style={{ background:i===1?'linear-gradient(135deg,var(--gold3),var(--gold2))':'rgba(255,255,255,.04)',border:'1px solid',borderColor:i===1?'transparent':'rgba(255,255,255,.08)',borderRadius:4,color:i===1?'#030303':'var(--cream)',cursor:'pointer',fontSize:11,padding:'10px 6px',transition:'all .2s' }}>
@@ -363,7 +363,7 @@ export default function Dashboard() {
   const cancelSubscription = async () => {
     if (!confirm('Confirmer annulation ? Acces maintenu jusqu\'a fin de periode.')) return
     setCancelLoading(true)
-    const res = await fetch("/api/stripe/cancel-subscription',{method:'POST'})
+    const res = await fetch('/api/stripe/cancel-subscription',{method:'POST'})
     const data = await res.json()
     setCancelLoading(false)
     if (data.success) { setCancelDone(true); setShowSubModal(false) }
@@ -378,7 +378,7 @@ export default function Dashboard() {
   const reponsesLeft = limits.reponses===Infinity ? '∞' : Math.max(0,limits.reponses-usage.reponses)
 
   const TABS = [
-    {id:'home',     label:'Accueil',      icon:"⌂'},
+    {id:'home',     label:'Accueil',      icon:'⌂'},
     {id:'annonce',  label:'Annonce',      icon:'✍'},
     {id:'reponse',  label:'Répondre',     icon:'◎'},
     {id:'estimation',label:'Estimer',     icon:'⚖'},
@@ -393,7 +393,7 @@ export default function Dashboard() {
 
   if (loading) return (
     <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'var(--black)',gap:16 }}>
-      <div style={{ fontFamily:'Cormorant Garamond',fontSize:28,fontWeight:300,letterSpacing:4,color:"var(--gold2)' }}>Annonza</div>
+      <div style={{ fontFamily:'Cormorant Garamond',fontSize:28,fontWeight:300,letterSpacing:4,color:'var(--gold2)' }}>Annonza</div>
       <div style={{ width:24,height:24,border:'1.5px solid rgba(201,168,76,.2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
@@ -614,7 +614,7 @@ export default function Dashboard() {
         <main className="db-main">
 
       {showSubModal && (
-        <div style={{ position:'fixed',inset:0,background:"rgba(0,0,0,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
+        <div style={{ position:'fixed',inset:0,background:'rgba(0,0,0,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
           onClick={()=>setShowSubModal(false)}>
           <div className="modal-enter" style={{ background:'#0a0a0a',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.8)' }}
             onClick={e=>e.stopPropagation()}>
@@ -624,10 +624,10 @@ export default function Dashboard() {
             <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:18 }}>
               {[
                 ['Plan',PLAN_NAMES[planKey]],
-                ['Prix',PLAN_PRICES[planKey]+(planKey!=='free'&&planKey!=='premium'?" EUR/sem':'')],
+                ['Prix',PLAN_PRICES[planKey]+(planKey!=='free'&&planKey!=='premium'?' EUR/sem':'')],
                 ['Statut',cancelDone?'Annulation planifiee':'Actif'],
-                ['Annonces',limits.annonces===Infinity?"∞':limits.annonces+'/sem'],
-                ['Reponses',limits.reponses===Infinity?"∞':limits.reponses+'/sem'],
+                ['Annonces',limits.annonces===Infinity?'∞':limits.annonces+'/sem'],
+                ['Reponses',limits.reponses===Infinity?'∞':limits.reponses+'/sem'],
                 ['Renouvellement','7 jours'],
               ].map(([l,v])=>(
                 <div key={l} style={{ background:'var(--ink)',padding:'10px 14px' }}>
@@ -691,7 +691,7 @@ export default function Dashboard() {
                 <span style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:2,color:'var(--gold2)' }}>{isPremium?'PREMIUM':PLAN_NAMES[planKey].toUpperCase()}</span>
               </div>
             ) : (
-              <button onClick={()=>subscribe('business')} style={{ background:"linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:2,color:'#030303',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:11,letterSpacing:2,padding:'7px 14px' }}>
+              <button onClick={()=>subscribe('business')} style={{ background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:2,color:'#030303',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:11,letterSpacing:2,padding:'7px 14px' }}>
                 S&apos;ABONNER
               </button>
             )}
@@ -715,7 +715,7 @@ export default function Dashboard() {
               <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:10 }}>Tableau de bord</div>
               <h1 style={{ fontFamily:'Cormorant Garamond, serif',fontSize:'clamp(28px,5vw,44px)',fontWeight:300,letterSpacing:-.5,lineHeight:1.1,marginBottom:6 }}>
                 Bonjour,{' '}
-                <span style={{ fontStyle:'italic',fontWeight:600,background:"linear-gradient(135deg,var(--gold3),var(--gold2),var(--cream))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent' }}>
+                <span style={{ fontStyle:'italic',fontWeight:600,background:'linear-gradient(135deg,var(--gold3),var(--gold2),var(--cream))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent' }}>
                   {user.name||user.email.split('@')[0]}
                 </span>
               </h1>
@@ -724,7 +724,7 @@ export default function Dashboard() {
                 <span style={{ fontSize:12,color:'var(--muted2)',letterSpacing:.5 }}>
                   Plan{' '}
                   <span style={{ color:isSubscribed?'var(--gold2)':'var(--muted2)',fontFamily:'DM Mono, monospace',fontSize:11 }}>{PLAN_NAMES[planKey]}</span>
-                  {isSubscribed&&planKey!=='premium'&&<span style={{ color:"var(--muted)',marginLeft:6 }}>· {PLAN_PRICES[planKey]} EUR/sem</span>}
+                  {isSubscribed&&planKey!=='premium'&&<span style={{ color:'var(--muted)',marginLeft:6 }}>· {PLAN_PRICES[planKey]} EUR/sem</span>}
                 </span>
                 {isSubscribed
                   ? <button onClick={()=>setShowSubModal(true)} style={{ marginLeft:4,background:'none',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:10,padding:0,textDecoration:'underline',textUnderlineOffset:2 }}>gérer</button>
@@ -739,11 +739,11 @@ export default function Dashboard() {
             {/* Actions principales */}
             <div style={{ marginBottom:8 }}>
               <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:14 }}>Actions rapides</div>
-              <div className="db-actions" style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:12,marginBottom:28 }}>
+              <div className="db-actions" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:28 }}>
                 {[
                   {title:'Créer',sub:'une annonce',t:'annonce',icon:'✍',color:'var(--gold)'},
                   {title:'Répondre',sub:'à un acheteur',t:'reponse',icon:'◎',color:'var(--cream)'},
-                  {title:'Estimer',sub:'le prix',t:'estimation',icon:"⚖',color:'var(--gold3)'},
+                  {title:'Estimer',sub:'le prix',t:'estimation',icon:'⚖',color:'var(--gold3)'},
                 ].map((a,i)=>(
                   <div key={a.t} className="act-tile" onClick={()=>setTab(a.t)}
                     style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px 16px',textAlign:'center',animationDelay:(i*.08)+'s' }}>
@@ -760,8 +760,8 @@ export default function Dashboard() {
               <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:14 }}>Utilisation cette semaine</div>
               <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:28 }}>
                 {[
-                  {label:'Annonces',val:usage.annonces,limit:limits.annonces,color:"var(--gold)',icon:'✍',packRemaining:credits.annonces.remaining},
-                  {label:'Réponses',val:usage.reponses,limit:limits.reponses,color:"var(--red)',icon:'◎',packRemaining:credits.reponses.remaining},
+                  {label:'Annonces',val:usage.annonces,limit:limits.annonces,color:'var(--gold)',icon:'✍',packRemaining:credits.annonces.remaining},
+                  {label:'Réponses',val:usage.reponses,limit:limits.reponses,color:'var(--red)',icon:'◎',packRemaining:credits.reponses.remaining},
                 ].map(s=>{
                   const lim = s.limit===Infinity?999999:s.limit
                   const pct = lim>0?Math.min((s.val/lim)*100,100):0
@@ -788,7 +788,7 @@ export default function Dashboard() {
                       </div>
                       <div style={{ fontSize:10,color:'var(--muted)',fontFamily:'var(--font-ui)' }}>
                         {isSubscribed
-                          ? (s.limit===Infinity?'Illimité':remaining+' restante'+(remaining!==1?'s':"'))
+                          ? (s.limit===Infinity?'Illimité':remaining+' restante'+(remaining!==1?'s':""))
                           : (s.packRemaining===0?'Aucun crédit':s.packRemaining+' crédit(s)')}
                       </div>
                     </div>
@@ -804,7 +804,7 @@ export default function Dashboard() {
                   <div style={{ fontFamily:'Cormorant Garamond',fontSize:20,fontWeight:500,marginBottom:4 }}>Débloquez toutes les fonctionnalités</div>
                   <div style={{ fontSize:12,color:'var(--muted2)' }}>Starter 3,99 € · Business 5,99 € · Expert 12,99 €/semaine</div>
                 </div>
-                <button onClick={()=>setTab('tarifs')} style={{ background:"linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:2,color:'#030303',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:12,letterSpacing:2,padding:'12px 24px',flexShrink:0,whiteSpace:'nowrap' }}>
+                <button onClick={()=>setTab('tarifs')} style={{ background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:2,color:'#030303',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:12,letterSpacing:2,padding:'12px 24px',flexShrink:0,whiteSpace:'nowrap' }}>
                   VOIR LES TARIFS
                 </button>
               </div>
@@ -844,8 +844,8 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
     if (!categorie) { alert('Choisissez une categorie'); return }
     setLoading(true)
     try {
-      const specs = 'Categorie: '+categorie+"\n'+Object.entries(form).filter(([,v])=>v).map(([k,v])=>k+": '+v).join('\n')
-      const res = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':"application/json'},body:JSON.stringify({specs,lang:'fr',urgence:form.urgence||'normal',type:categorie,inputData:form})})
+      const specs = 'Categorie: '+categorie+'\n'+Object.entries(form).filter(([,v])=>v).map(([k,v])=>k+': '+v).join('\n')
+      const res = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs,lang:'fr',urgence:form.urgence||'normal',type:categorie,inputData:form})})
       const data = await res.json()
       setResult(data)
       if (data.annonce) setBadResult({ titre:form.marque&&form.modele?form.marque+' '+form.modele+' a vendre':'Article a vendre', description:'Je vends cet article. Il est en bon etat. Prix: '+(form.prix||'?')+' EUR.', score:Math.floor(Math.random()*20)+15 })
@@ -858,7 +858,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
     <div className="db-fade">
       <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Créer une annonce</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
-        <div style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:12,marginBottom:8 }}>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:8 }}>
           {CATEGORY_LIST.slice(0,6).map(c=>(<div key={c} style={{ background:'var(--ink)',padding:'12px',textAlign:'center',fontSize:12,color:'var(--muted2)' }}>{c}</div>))}
         </div>
         <div style={{ background:'var(--ink)',height:100,marginBottom:8 }} />
@@ -872,10 +872,10 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
       <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Créer une annonce</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:8 }}>
         <div style={S.lbl}>Categorie *</div>
-        <div style={{ display:'grid',gridTemplateColumns:"repeat(auto-fill,minmax(100px,1fr))',gap:5,marginTop:6 }}>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))',gap:5,marginTop:6 }}>
           {CATEGORY_LIST.map(c=>(
             <button key={c} onClick={()=>{setCategorie(c);setForm({})}}
-              style={{ background:categorie===c?'rgba(201,168,76,.12)':'var(--ink)',border:'1px solid',borderColor:categorie===c?"var(--gold)':'var(--border)',borderRadius:3,color:categorie===c?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 5px',fontWeight:categorie===c?600:400 }}>
+              style={{ background:categorie===c?'rgba(201,168,76,.12)':'var(--ink)',border:'1px solid',borderColor:categorie===c?'var(--gold)':'var(--border)',borderRadius:3,color:categorie===c?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 5px',fontWeight:categorie===c?600:400 }}>
               {c}
             </button>
           ))}
@@ -907,7 +907,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
                   : f.wide
                     ? <textarea style={{ ...S.inp,resize:'vertical',minHeight:52,lineHeight:1.6 }} placeholder={f.ph} value={form[f.key]||"'} onChange={e=>setForm({...form,[f.key]:e.target.value})} />
                     : f.type==='urgence'
-                      ? <div style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:12,marginTop:4 }}>
+                      ? <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginTop:4 }}>
                           {[['normal','Normal'],['rapide','Rapide'],['optimise','Max prix']].map(([v,l])=>(
                             <div key={v} onClick={()=>setForm({...form,urgence:v})}
                               style={{ background:form.urgence===v?'rgba(201,168,76,.08)':'var(--s2)',borderBottom:form.urgence===v?'2px solid var(--gold)':'2px solid transparent',padding:'7px',textAlign:'center',fontSize:11,color:form.urgence===v?'var(--gold2)':'var(--muted2)',cursor:'pointer' }}>
@@ -968,7 +968,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
           <button className="copy-btn"
             onClick={()=>{navigator.clipboard.writeText(result.raw||'');setCopied(true);setTimeout(()=>setCopied(false),2000)}}
             style={{ width:'100%',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.08)',borderRadius:4,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:11,letterSpacing:1,padding:'12px',marginTop:8,transition:'all .2s' }}>
-            {copied?'Copie !":'Copier l'annonce complete"}
+            {copied?'Copie !':"Copier l'annonce complete"}
           </button>
         </div>
       )}
@@ -1091,7 +1091,7 @@ function EstimationTab({ annonces = [] }) {
   const estimate = async () => {
     if (!specs) return
     setLoading(true)
-    const res = await fetch("/api/ai/estimation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs})})
+    const res = await fetch('/api/ai/estimation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs})})
     const data = await res.json()
     if (data.error&&data.upgrade) { alert(data.message); setLoading(false); return }
     setResult(data); setLoading(false)
@@ -1135,7 +1135,7 @@ function EstimationTab({ annonces = [] }) {
       </button>
       {result&&!result.error&&(
         <div style={{ marginTop:16 }}>
-          <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:12 }}>
+          <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12 }}>
             {[['Basse',result.low,'var(--red2)'],['Moyenne',result.mid,'var(--gold2)'],['Haute',result.high,'var(--success2)']].map(([label,val,color])=>(
               <div key={label} style={{ background:'var(--ink)',padding:'22px 18px',textAlign:'center' }}>
                 <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1.5,textTransform:'uppercase',marginBottom:8 }}>{label}</div>
@@ -1208,7 +1208,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
   const genTitres = async () => {
     if (!titreSpecs) return
     setTitreLoading(true)
-    try { const r = await fetch("/api/ai/titres',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:titreSpecs})}); const d = await r.json(); setTitres(d.titres||[]) } catch(e) {}
+    try { const r = await fetch('/api/ai/titres',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:titreSpecs})}); const d = await r.json(); setTitres(d.titres||[]) } catch(e) {}
     setTitreLoading(false)
   }
 
@@ -1216,7 +1216,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
     if (!prixArticle||!prixDemande) return
     setPrixLoading(true)
     try {
-      const r = await fetch("/api/ai/estimation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:prixArticle})})
+      const r = await fetch('/api/ai/estimation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:prixArticle})})
       const d = await r.json()
       const prix = parseFloat(prixDemande)
       const diff = d.mid>0?Math.round(((prix-d.mid)/d.mid)*100):0
@@ -1228,7 +1228,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
   const genFlash = async () => {
     if (!flashSpecs) return
     setFlashLoading(true)
-    try { const r = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':"application/json'},body:JSON.stringify({specs:flashSpecs,urgence:'rapide',type:'flash',inputData:{}})}); const d = await r.json(); setFlashResult(d) } catch(e) {}
+    try { const r = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:flashSpecs,urgence:'rapide',type:'flash',inputData:{}})}); const d = await r.json(); setFlashResult(d) } catch(e) {}
     setFlashLoading(false)
   }
 
@@ -1249,7 +1249,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
   const getPlateformes = async () => {
     if (!platArticle) return
     setPlatLoading(true)
-    try { const r = await fetch("/api/ai/plateformes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({article:platArticle,prix:platPrix})}); const d = await r.json(); setPlatResult(d) } catch(e) {}
+    try { const r = await fetch('/api/ai/plateformes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({article:platArticle,prix:platPrix})}); const d = await r.json(); setPlatResult(d) } catch(e) {}
     setPlatLoading(false)
   }
 
@@ -1268,7 +1268,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
   const genTrad = async () => {
     if (!annonceText) return
     setTradLoading(true)
-    try { const r = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':"application/json'},body:JSON.stringify({specs:'Traduis cette annonce en '+tradLangs[tradLang]+': '+annonceText,lang:tradLang,urgence:'normal',type:'traduction',inputData:{}})}); const d = await r.json(); setTradResult(d.raw||'') } catch(e) {}
+    try { const r = await fetch('/api/ai/annonce',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({specs:'Traduis cette annonce en '+tradLangs[tradLang]+': '+annonceText,lang:tradLang,urgence:'normal',type:'traduction',inputData:{}})}); const d = await r.json(); setTradResult(d.raw||'') } catch(e) {}
     setTradLoading(false)
   }
 
@@ -1285,9 +1285,9 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
     {id:'calendrier',icon:'📅',label:'Calendrier optimal',desc:'Quel jour et heure publier pour maximiser les vues',badge:'Starter+',active:true},
     {id:'checklist',icon:'✅',label:'Checklist publication',desc:'6 points a verifier avant de publier',badge:'Starter+',active:true},
     {id:'arnaque',icon:'🚨',label:'Detecteur arnaque',desc:'Analysez un message suspect avant de repondre',badge:'Business+',active:feats.arnaque},
-    {id:'plateformes',icon:"🔀',label:'Comparateur plateformes',desc:'LeBonCoin vs Vinted vs Facebook vs eBay',badge:'Business+',active:feats.plateformes},
+    {id:'plateformes',icon:'🔀',label:'Comparateur plateformes',desc:'LeBonCoin vs Vinted vs Facebook vs eBay',badge:'Business+',active:feats.plateformes},
     {id:'flash',icon:'⚡',label:'Mode vente flash',desc:'Annonce ultra-agressive pour vendre en moins de 48h',badge:'Business+',active:feats.flash},
-    {id:'traduction',icon:"🌍',label:'Traduction annonce',desc:'Anglais, Espagnol, Allemand, Italien, Neerlandais',badge:"Business+',active:feats.traduction},
+    {id:'traduction',icon:'🌍',label:'Traduction annonce',desc:'Anglais, Espagnol, Allemand, Italien, Neerlandais',badge:'Business+',active:feats.traduction},
     {id:'lot',icon:'📦',label:'Mode lot',desc:'Vendez plusieurs objets ensemble en une seule annonce',badge:'Expert',active:feats.lot},
   ]
 
@@ -1324,7 +1324,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
           {titres.length>0&&(
             <div style={{ marginTop:10 }}>
               {titres.map((t,i)=>(
-                <div key={i} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',background:"var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'9px 12px',marginBottom:3,gap:10 }}>
+                <div key={i} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'9px 12px',marginBottom:3,gap:10 }}>
                   <div style={{ fontSize:13,color:'var(--cream)' }}>{t}</div>
                   <button onClick={()=>navigator.clipboard.writeText(t)} style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:10,padding:'3px 8px',flexShrink:0 }}>Copier</button>
                 </div>
@@ -1351,7 +1351,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
             {prixLoading?'Analyse...':'ANALYSER MON PRIX'}
           </button>
           {prixResult&&(
-            <div style={{ marginTop:10,background:prixResult.diff>30?'rgba(200,57,43,.08)':prixResult.diff>15?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:prixResult.diff>30?"rgba(200,57,43,.3)':prixResult.diff>15?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'14px' }}>
+            <div style={{ marginTop:10,background:prixResult.diff>30?'rgba(200,57,43,.08)':prixResult.diff>15?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:prixResult.diff>30?'rgba(200,57,43,.3)':prixResult.diff>15?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'14px' }}>
               <div style={{ fontFamily:'DM Mono, monospace',fontSize:26,color:prixResult.diff>30?'var(--red2)':prixResult.diff>15?'var(--warning)':'var(--success2)',letterSpacing:-1,marginBottom:8 }}>
                 {prixResult.diff>0?'+':''}{prixResult.diff}% {prixResult.diff>30?'TROP CHER':prixResult.diff>15?'Un peu eleve':'Prix correct'}
               </div>
@@ -1397,7 +1397,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
           {checklistItems.map(item=>(
             <div key={item.key} onClick={()=>setChecklist(c=>({...c,[item.key]:!c[item.key]}))}
               style={{ display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderBottom:'1px solid var(--border)',cursor:'pointer' }}>
-              <div style={{ width:18,height:18,borderRadius:3,border:'1px solid',borderColor:checklist[item.key]?"var(--gold)':'var(--border2)',background:checklist[item.key]?'rgba(201,168,76,.15)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:11,color:'var(--gold2)' }}>
+              <div style={{ width:18,height:18,borderRadius:3,border:'1px solid',borderColor:checklist[item.key]?'var(--gold)':'var(--border2)',background:checklist[item.key]?'rgba(201,168,76,.15)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:11,color:'var(--gold2)' }}>
                 {checklist[item.key]?'v':''}
               </div>
               <div style={{ fontSize:13,color:checklist[item.key]?'var(--muted2)':'var(--cream)',textDecoration:checklist[item.key]?'line-through':'none',lineHeight:1.5 }}>{item.label}</div>
@@ -1416,18 +1416,18 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
           <div style={S.lbl}>Detecteur d'arnaque acheteur</div>
           <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:10,lineHeight:1.6 }}>Collez un message suspect. L'IA analyse les signaux d'arnaque connus sur LeBonCoin et Vinted.</div>
           <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.6,marginBottom:8 }}
-            placeholder='Collez ici le message de l'acheteur suspect..."
+            placeholder="Collez ici le message de l'acheteur suspect..."
             value={arnaqueMsg} onChange={e=>setArnaqueMsg(e.target.value)} />
           <button onClick={checkArnaque} disabled={arnaqueLoading||!arnaqueMsg} className="btn-primary" style={{ width:'100%',fontSize:12,padding:'11px',opacity:(arnaqueLoading||!arnaqueMsg)?0.5:1 }}>
             {arnaqueLoading?'Analyse...':'ANALYSER CE MESSAGE'}
           </button>
           {arnaqueResult&&(
-            <div style={{ marginTop:10,background:arnaqueResult.isArnaque?'rgba(200,57,43,.08)':arnaqueResult.isSuspect?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:arnaqueResult.isArnaque?"rgba(200,57,43,.3)':arnaqueResult.isSuspect?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'16px' }}>
+            <div style={{ marginTop:10,background:arnaqueResult.isArnaque?'rgba(200,57,43,.08)':arnaqueResult.isSuspect?'rgba(255,165,0,.08)':'rgba(45,122,79,.08)',border:'1px solid',borderColor:arnaqueResult.isArnaque?'rgba(200,57,43,.3)':arnaqueResult.isSuspect?'rgba(255,165,0,.3)':'rgba(45,122,79,.3)',padding:'16px' }}>
               <div style={{ fontFamily:'DM Mono, monospace',fontSize:20,color:arnaqueResult.isArnaque?'var(--red2)':arnaqueResult.isSuspect?'var(--warning)':'var(--success2)',letterSpacing:.5,marginBottom:8 }}>
                 {arnaqueResult.isArnaque?'ARNAQUE PROBABLE':arnaqueResult.isSuspect?'MESSAGE SUSPECT':'SEMBLE LEGITIME'}
               </div>
               <div style={{ fontSize:12,color:'var(--cream)',lineHeight:1.7,marginBottom:8 }}>{arnaqueResult.explication}</div>
-              {arnaqueResult.conseils&&<div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic',borderTop:"1px solid var(--border)',paddingTop:8,marginTop:8 }}>{arnaqueResult.conseils}</div>}
+              {arnaqueResult.conseils&&<div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,fontStyle:'italic',borderTop:'1px solid var(--border)',paddingTop:8,marginTop:8 }}>{arnaqueResult.conseils}</div>}
             </div>
           )}
         </div>
@@ -1569,7 +1569,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
                   ))}
                   <button onClick={()=>{navigator.clipboard.writeText([lotResult.titre,lotResult.description,lotResult.liste,lotResult.prixLot].filter(Boolean).join('\n\n'));setLotCopied(true);setTimeout(()=>setLotCopied(false),2000)}}
                     style={{ width:'100%',background:'var(--s1)',border:'1px solid var(--border)',borderRadius:2,color:lotCopied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,fontWeight:500,padding:'11px',marginTop:4 }}>
-                    {lotCopied?'Copie !':'Copier l'annonce lot"}
+                    {lotCopied?'Copie !':"Copier l'annonce lot"}
                   </button>
                 </div>
               )}
@@ -1585,7 +1585,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
               <div style={{ display:'flex',gap:7,marginBottom:10,flexWrap:'wrap' }}>
                 {Object.entries(tradLangs).map(([code,nom])=>(
                   <button key={code} onClick={()=>setTradLang(code)}
-                    style={{ background:tradLang===code?'rgba(201,168,76,.1)':'var(--ink)',border:'1px solid',borderColor:tradLang===code?"var(--gold)':'var(--border)',borderRadius:2,color:tradLang===code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>
+                    style={{ background:tradLang===code?'rgba(201,168,76,.1)':'var(--ink)',border:'1px solid',borderColor:tradLang===code?'var(--gold)':'var(--border)',borderRadius:2,color:tradLang===code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'5px 12px' }}>
                     {nom}
                   </button>
                 ))}
@@ -1627,7 +1627,7 @@ function HistoriqueTab() {
     <div className="db-fade">
       <div style={{ marginBottom:24 }}><span className="sec-label">Historique</span><h2 className="sec-title">Mes créations</h2></div>
       <div style={{ display:'flex',gap:12,marginBottom:12 }}>
-        {[['annonces',"Annonces ('+annonces.length+')'],['reponses',"Reponses ('+reponses.length+')']].map(([id,label])=>(
+        {[['annonces','Annonces ('+annonces.length+')'],['reponses','Reponses ('+reponses.length+')']].map(([id,label])=>(
           <button key={id} onClick={()=>setSection(id)}
             style={{ flex:1,background:section===id?'var(--s1)':'var(--ink)',border:'none',borderBottom:section===id?'2px solid var(--gold)':'2px solid transparent',color:section===id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'DM Sans, sans-serif',fontSize:12,fontWeight:500,padding:'11px' }}>
             {label}
@@ -1675,7 +1675,7 @@ function HistoriqueTab() {
               {expanded===r.id&&(
                 <div style={{ borderTop:'1px solid var(--border)',padding:'12px 18px',background:'var(--s1)' }}>
                   <div style={{ fontSize:13,color:'var(--cream)',lineHeight:1.8,whiteSpace:'pre-wrap' }}>{r.reponsePrete}</div>
-                  {r.suggestion&&<div style={{ marginTop:8,fontSize:12,color:'var(--muted2)',fontStyle:'italic',borderTop:"1px solid var(--border)',paddingTop:8 }}>{r.suggestion}</div>}
+                  {r.suggestion&&<div style={{ marginTop:8,fontSize:12,color:'var(--muted2)',fontStyle:'italic',borderTop:'1px solid var(--border)',paddingTop:8 }}>{r.suggestion}</div>}
                 </div>
               )}
             </div>
@@ -1687,24 +1687,24 @@ function HistoriqueTab() {
 
 function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   const PLANS = [
-    {key:'starter',name:'Starter',price:'3,99',sub:'L'essentiel",color:'#9a9590',features:['10 annonces / semaine','30 réponses acheteurs','Estimation de prix','Générateur de titres','Détecteur prix abusif','Checklist + Calendrier']},
-    {key:'business',name:'Business',price:'5,99',sub:'Le plus populaire',color:"#c9a84c',features:["30 annonces / semaine','100 réponses acheteurs',"Chatbot vendeur (50 msg/j)','Analyser et améliorer','Détecteur arnaque','Comparateur plateformes',"Mode flash + Traduction','Suivi des ventes'],recommended:true},
-    {key:'expert',name:'Expert',price:'12,99',sub:'Pour les pros',color:"#d4b568',features:['Annonces illimitées','Réponses illimitées','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Accès prioritaire nouveautés']},
+    {key:'starter',name:'Starter',price:'3,99',sub:'L'essentiel',color:'#9a9590',features:['10 annonces / semaine','30 réponses acheteurs','Estimation de prix','Générateur de titres','Détecteur prix abusif','Checklist + Calendrier']},
+    {key:'business',name:'Business',price:'5,99',sub:'Le plus populaire',color:'#c9a84c',features:['30 annonces / semaine','100 réponses acheteurs','Chatbot vendeur (50 msg/j)','Analyser et améliorer','Détecteur arnaque','Comparateur plateformes','Mode flash + Traduction','Suivi des ventes'],recommended:true},
+    {key:'expert',name:'Expert',price:'12,99',sub:'Pour les pros',color:'#d4b568',features:['Annonces illimitées','Réponses illimitées','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Accès prioritaire nouveautés']},
   ]
   const PACKS = [
-    {name:'5 annonces',price:"9,99 €',unit:'2,00 € / annonce'},
-    {name:'10 annonces',price:"17,99 €',unit:'1,80 € / annonce'},
-    {name:'50 réponses',price:"14,99 €',unit:'0,30 € / réponse'},
-    {name:'500 réponses',price:"39,99 €',unit:'0,08 € / réponse'},
+    {name:'5 annonces',price:'9,99 €',unit:'2,00 € / annonce'},
+    {name:'10 annonces',price:'17,99 €',unit:'1,80 € / annonce'},
+    {name:'50 réponses',price:'14,99 €',unit:'0,30 € / réponse'},
+    {name:'500 réponses',price:'39,99 €',unit:'0,08 € / réponse'},
   ]
   return (
     <div className="db-fade">
       <div style={{ marginBottom:24 }}><span className="sec-label">Nos offres</span><h2 className="sec-title">Tarifs</h2></div>
-      <div className="db-plans-grid" style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:12,marginBottom:24 }}>
+      <div className="db-plans-grid" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:24 }}>
         {PLANS.map((plan,i)=>{
           const isCurrent = planKey===plan.key||(planKey==='pro'&&plan.key==='business')
           return (
-            <div key={plan.key} className={isCurrent?'plan-active':''} style={{ background:plan.recommended?'linear-gradient(160deg,rgba(201,168,76,.07),rgba(201,168,76,.02))':'var(--s1)',border:'1px solid',borderColor:isCurrent?"rgba(201,168,76,.4)':plan.recommended?'rgba(201,168,76,.2)':'var(--border)',borderRadius:6,padding:'24px 20px',position:'relative',animationDelay:(i*.08)+'s' }}>
+            <div key={plan.key} className={isCurrent?'plan-active':''} style={{ background:plan.recommended?'linear-gradient(160deg,rgba(201,168,76,.07),rgba(201,168,76,.02))':'var(--s1)',border:'1px solid',borderColor:isCurrent?'rgba(201,168,76,.4)':plan.recommended?'rgba(201,168,76,.2)':'var(--border)',borderRadius:6,padding:'24px 20px',position:'relative',animationDelay:(i*.08)+'s' }}>
               {plan.recommended&&<div style={{ position:'absolute',top:-1,left:'50%',transform:'translateX(-50%)',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',color:'#030303',fontFamily:'var(--font-label)',fontSize:8,letterSpacing:2.5,padding:'3px 14px',borderRadius:'0 0 6px 6px',whiteSpace:'nowrap' }}>POPULAIRE</div>}
               <div style={{ fontFamily:'var(--font-label)',fontSize:11,letterSpacing:2.5,color:plan.recommended?'var(--gold3)':'var(--muted)',marginBottom:8,textTransform:'uppercase' }}>{plan.name}</div>
               <div style={{ display:'flex',alignItems:'baseline',gap:4,marginBottom:16 }}>
@@ -1830,7 +1830,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
       <div style={{ display:'flex',gap:6,marginBottom:24,flexWrap:'wrap' }}>
         {SECTIONS.map(s=>(
           <button key={s.id} onClick={()=>setSection(s.id)}
-            style={{ display:'flex',alignItems:'center',gap:6,background:section===s.id?'rgba(201,168,76,.1)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:section===s.id?"rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:20,color:section===s.id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:12,fontWeight:section===s.id?500:400,padding:'8px 16px',transition:'all .2s',whiteSpace:'nowrap' }}>
+            style={{ display:'flex',alignItems:'center',gap:6,background:section===s.id?'rgba(201,168,76,.1)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:section===s.id?'rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:20,color:section===s.id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:12,fontWeight:section===s.id?500:400,padding:'8px 16px',transition:'all .2s',whiteSpace:'nowrap' }}>
             <span>{s.icon}</span>{s.label}
           </button>
         ))}
@@ -1849,7 +1849,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
                 <div style={{ fontSize:12,color:'var(--muted2)',fontFamily:'DM Mono,monospace' }}>{user.email}</div>
               </div>
             </div>
-            <div style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:8 }}>
+            <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
               {[{val:usage.annonces,label:'Annonces',sub:'cette semaine'},{val:usage.reponses,label:'Réponses',sub:'cette semaine'},{val:limits.annonces===Infinity?'∞':limits.annonces,label:'Limite',sub:'ann./semaine'}].map(s=>(
                 <div key={s.label} style={{ background:'rgba(255,255,255,.03)',borderRadius:8,padding:'14px',textAlign:'center' }}>
                   <div style={{ fontFamily:'DM Mono,monospace',fontSize:22,fontWeight:500,color:'var(--cream)',letterSpacing:-1,lineHeight:1,marginBottom:4 }}>{s.val}</div>
@@ -1876,7 +1876,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
             ) : (
               <div>
                 <div style={{ fontSize:13,color:'var(--muted2)',marginBottom:14,lineHeight:1.6 }}>Aucun abonnement actif.</div>
-                <div style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:8 }}>
+                <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
                   {[['starter','Starter','3,99'],['business','Business','5,99'],['expert','Expert','12,99']].map(([key,name,price],i)=>(
                     <button key={key} onClick={()=>subscribe(key)}
                       className={i===1?'btn-gold-db':'btn-ghost-db'}
@@ -1908,7 +1908,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
             </div>
             {emailMsg&&<div style={{ background:emailMsg.type==='success'?'rgba(45,122,79,.08)':'rgba(200,57,43,.08)',border:'1px solid',borderColor:emailMsg.type==='success'?'rgba(45,122,79,.25)':'rgba(200,57,43,.25)',borderRadius:6,padding:'10px 14px',fontSize:12,color:emailMsg.type==='success'?'var(--success2)':'var(--red2)',marginBottom:10 }}>{emailMsg.text}</div>}
             <button onClick={updateEmail} disabled={emailLoading||!newEmail||!emailPassword} className="btn-gold-db" style={{ fontSize:11,letterSpacing:1.5,opacity:(emailLoading||!newEmail||!emailPassword)?0.5:1 }}>
-              {emailLoading?'Envoi...' : 'Changer l'email"}
+              {emailLoading?'Envoi...' : "Changer l'email"}
             </button>
             <div style={{ fontSize:11,color:'var(--muted)',marginTop:8,lineHeight:1.6 }}>Un lien de confirmation sera envoyé à la nouvelle adresse.</div>
           </div>
@@ -1921,7 +1921,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
               ))}
             </div>
             {newPwd&&confirmPwd&&newPwd!==confirmPwd&&<div style={{ fontSize:11,color:'var(--red2)',marginBottom:8 }}>Les mots de passe ne correspondent pas</div>}
-            {pwdMsg&&<div style={{ background:pwdMsg.type==='success'?"rgba(45,122,79,.08)':'rgba(200,57,43,.08)',border:'1px solid',borderColor:pwdMsg.type==='success'?'rgba(45,122,79,.25)':'rgba(200,57,43,.25)',borderRadius:6,padding:'10px 14px',fontSize:12,color:pwdMsg.type==='success'?"var(--success2)':'var(--red2)',marginBottom:10 }}>{pwdMsg.text}</div>}
+            {pwdMsg&&<div style={{ background:pwdMsg.type==='success'?'rgba(45,122,79,.08)':'rgba(200,57,43,.08)',border:'1px solid',borderColor:pwdMsg.type==='success'?'rgba(45,122,79,.25)':'rgba(200,57,43,.25)',borderRadius:6,padding:'10px 14px',fontSize:12,color:pwdMsg.type==='success'?'var(--success2)':'var(--red2)',marginBottom:10 }}>{pwdMsg.text}</div>}
             <button onClick={updatePassword} disabled={pwdLoading||!currentPwd||!newPwd||!confirmPwd||newPwd!==confirmPwd} className="btn-gold-db" style={{ fontSize:11,letterSpacing:1.5,opacity:(pwdLoading||!currentPwd||!newPwd||!confirmPwd||newPwd!==confirmPwd)?0.5:1 }}>
               {pwdLoading?'Modification...':'Modifier le mot de passe'}
             </button>
@@ -1954,7 +1954,7 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
               <div key={p.key} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom:'1px solid rgba(255,255,255,.04)' }}>
                 <div><div style={{ fontSize:13,color:'var(--cream)',marginBottom:2 }}>{p.label}</div><div style={{ fontSize:11,color:'var(--muted2)' }}>{p.desc}</div></div>
                 <button onClick={()=>setPrefs(prev=>({...prev,[p.key]:!prev[p.key]}))} style={{ width:44,height:24,borderRadius:12,background:prefs[p.key]?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(255,255,255,.07)',border:'none',cursor:'pointer',transition:'all .2s',position:'relative',flexShrink:0 }}>
-                  <div style={{ width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,transition:'left .2s',left:prefs[p.key]?23:3,boxShadow:"0 1px 4px rgba(0,0,0,.3)' }} />
+                  <div style={{ width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,transition:'left .2s',left:prefs[p.key]?23:3,boxShadow:'0 1px 4px rgba(0,0,0,.3)' }} />
                 </button>
               </div>
             ))}
@@ -1964,15 +1964,15 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
             <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0' }}>
               <div><div style={{ fontSize:13,color:'var(--cream)',marginBottom:2 }}>Score vendeur</div><div style={{ fontSize:11,color:'var(--muted2)' }}>Barre de progression sur l&apos;accueil</div></div>
               <button onClick={()=>setPrefs(p=>({...p,afficherScore:!p.afficherScore}))} style={{ width:44,height:24,borderRadius:12,background:prefs.afficherScore?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(255,255,255,.07)',border:'none',cursor:'pointer',transition:'all .2s',position:'relative',flexShrink:0 }}>
-                <div style={{ width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,transition:'left .2s',left:prefs.afficherScore?23:3,boxShadow:"0 1px 4px rgba(0,0,0,.3)' }} />
+                <div style={{ width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,transition:'left .2s',left:prefs.afficherScore?23:3,boxShadow:'0 1px 4px rgba(0,0,0,.3)' }} />
               </button>
             </div>
           </div>
           <div className="card">
             <span className="sec-label">Langue</span>
-            <div style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:8,marginTop:6 }}>
-              {[['fr',"🇫🇷 Français'],['en','🇬🇧 English'],['es',"🇪🇸 Español']].map(([code,label])=>(
-                <button key={code} onClick={()=>setPrefs(p=>({...p,langue:code}))} style={{ background:prefs.langue===code?'rgba(201,168,76,.1)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:prefs.langue===code?"rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:8,color:prefs.langue===code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,padding:'10px 6px',transition:'all .2s' }}>
+            <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginTop:6 }}>
+              {[['fr','🇫🇷 Français'],['en','🇬🇧 English'],['es','🇪🇸 Español']].map(([code,label])=>(
+                <button key={code} onClick={()=>setPrefs(p=>({...p,langue:code}))} style={{ background:prefs.langue===code?'rgba(201,168,76,.1)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:prefs.langue===code?'rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:8,color:prefs.langue===code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,padding:'10px 6px',transition:'all .2s' }}>
                   {label}
                 </button>
               ))}
@@ -2135,7 +2135,7 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
           <button className="copy-btn"
             onClick={()=>{navigator.clipboard.writeText(result.annonceAmelioree||'');setCopied(true);setTimeout(()=>setCopied(false),2000)}}
             style={{ width:'100%',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.08)',borderRadius:4,color:copied?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:11,letterSpacing:1,padding:'12px',marginTop:8,transition:'all .2s' }}>
-            {copied?'Copie !':'Copier l'annonce optimisee"}
+            {copied?'Copie !':"Copier l'annonce optimisee"}
           </button>
         </div>
       )}
@@ -2177,7 +2177,7 @@ function VentesTab({ isSubscribed, subscribe }) {
   const addObjet = async () => {
     if (!form.titre||!form.prix) return
     setSaving(true)
-    await fetch("/api/dashboard/ventes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)})
+    await fetch('/api/dashboard/ventes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)})
     setForm({titre:'',prix:'',notes:''})
     setShowForm(false)
     setSaving(false)
@@ -2186,7 +2186,7 @@ function VentesTab({ isSubscribed, subscribe }) {
 
   const markVendu = async (id) => {
     if (!prixFinal) return
-    await fetch("/api/dashboard/ventes',{method:'PUT',headers:{'Content-Type':"application/json'},body:JSON.stringify({id,statut:'vendu',prixFinal})})
+    await fetch('/api/dashboard/ventes',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,statut:'vendu',prixFinal})})
     setEditId(null)
     setPrixFinal('')
     load()
@@ -2213,10 +2213,10 @@ function VentesTab({ isSubscribed, subscribe }) {
       </div>
 
       {/* Stats */}
-      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:"repeat(3,1fr)',gap:12,marginBottom:16 }}>
+      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:16 }}>
         {[
-          {label:'En cours',val:stats.enCours,color:"var(--gold2)'},
-          {label:'Vendus',val:stats.vendu,color:"var(--success2)'},
+          {label:'En cours',val:stats.enCours,color:'var(--gold2)'},
+          {label:'Vendus',val:stats.vendu,color:'var(--success2)'},
           {label:'Total gagne',val:stats.totalGagne.toLocaleString('fr-FR')+' EUR',color:'var(--gold2)'},
         ].map(s=>(
           <div key={s.label} style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px',textAlign:'center' }}>
@@ -2266,7 +2266,7 @@ function VentesTab({ isSubscribed, subscribe }) {
       {loading && <div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
 
       {!loading && objets.length === 0 && (
-        <div style={{ textAlign:'center',padding:40,fontFamily:'Cormorant Garamond, serif',fontStyle:'italic',color:"var(--muted2)' }}>
+        <div style={{ textAlign:'center',padding:40,fontFamily:'Cormorant Garamond, serif',fontStyle:'italic',color:'var(--muted2)' }}>
           Aucun objet suivi. Ajoutez vos articles en cours de vente.
         </div>
       )}
@@ -2456,7 +2456,7 @@ function ChatBotsTab() {
       {loading && <div style={{ fontSize:13,color:'var(--muted2)',padding:20,textAlign:'center' }}>Chargement...</div>}
 
       {!loading && bots.length === 0 && (
-        <div style={{ textAlign:'center',padding:40,fontFamily:'Cormorant Garamond, serif',fontStyle:'italic',color:"var(--muted2)' }}>
+        <div style={{ textAlign:'center',padding:40,fontFamily:'Cormorant Garamond, serif',fontStyle:'italic',color:'var(--muted2)' }}>
           Aucun assistant cree. Generez une annonce pour en creer un automatiquement.
         </div>
       )}
@@ -2482,12 +2482,12 @@ function ChatBotsTab() {
 
             <div style={{ display:'flex',gap:8,flexWrap:'wrap' }}>
               <button onClick={()=>copyLink(bot.code)}
-                style={{ background:copied===bot.code?'rgba(201,168,76,.1)':'var(--s1)',border:'1px solid',borderColor:copied===bot.code?"var(--gold-border)':'var(--border2)',borderRadius:2,color:copied===bot.code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',flex:1,transition:'all .15s' }}>
+                style={{ background:copied===bot.code?'rgba(201,168,76,.1)':'var(--s1)',border:'1px solid',borderColor:copied===bot.code?'var(--gold-border)':'var(--border2)',borderRadius:2,color:copied===bot.code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',flex:1,transition:'all .15s' }}>
                 {copied===bot.code?'Copie ! (texte LeBonCoin)':'Copier pour LeBonCoin'}
               </button>
               <button onClick={()=>copyUrl(bot.code)}
-                style={{ background:'var(--s1)',border:'1px solid var(--border2)',borderRadius:2,color:copied===bot.code+'url'?"var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',transition:'all .15s' }}>
-                {copied===bot.code+'url'?"Copie !':'Copier le lien seul'}
+                style={{ background:'var(--s1)',border:'1px solid var(--border2)',borderRadius:2,color:copied===bot.code+'url'?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',transition:'all .15s' }}>
+                {copied===bot.code+'url'?'Copie !':'Copier le lien seul'}
               </button>
               <a href={'/chat/'+bot.code} target="_blank" rel="noreferrer"
                 style={{ background:'none',border:'1px solid var(--border2)',borderRadius:2,color:'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 14px',textDecoration:'none',display:'inline-flex',alignItems:'center' }}>
