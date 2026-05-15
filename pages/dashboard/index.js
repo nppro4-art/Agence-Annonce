@@ -400,133 +400,145 @@ export default function Dashboard() {
   )
 
   return (
-    <div style={{ minHeight:'100vh',background:'#030303',display:'flex',flexDirection:'column',fontFamily:'DM Sans, sans-serif' }}>
+    <div style={{ minHeight:'100vh',background:'#030303',fontFamily:'var(--font-ui)' }}>
       <style>{`
-        /* Polices via globals.css */
-
+        /* ── ANIMATIONS ─────────────────── */
         @keyframes spin{to{transform:rotate(360deg)}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        @keyframes slideRight{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
-        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
         @keyframes scaleIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-        @keyframes borderGlow{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}50%{box-shadow:0 0 20px 2px rgba(201,168,76,.15)}}
+        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        .db-fade{animation:fadeUp .45s cubic-bezier(.16,1,.3,1) forwards}
+        .db-slide{animation:fadeIn .35s ease forwards}
 
-        .db-fade{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards}
-        .db-slide{animation:slideRight .4s cubic-bezier(.16,1,.3,1) forwards}
-
-        /* Header tabs */
-        .tab-btn{
-          transition:all .25s cubic-bezier(.16,1,.3,1);
-          white-space:nowrap;
-          position:relative;
-        }
-        .tab-btn::after{
-          content:'';position:absolute;bottom:0;left:50%;right:50%;height:1px;
-          background:var(--gold);transition:all .25s cubic-bezier(.16,1,.3,1);
-        }
-        .tab-btn:hover{color:var(--cream)!important}
-        .tab-btn:hover::after{left:20%;right:20%}
-        .tab-btn.active{color:var(--gold2)!important}
-        .tab-btn.active::after{left:0;right:0}
-
-        /* Cards & tiles */
-        .act-tile{
-          transition:all .3s cubic-bezier(.16,1,.3,1);
-          cursor:pointer;
-          position:relative;
+        /* ── SIDEBAR ─────────────────────── */
+        .sidebar{
+          position:fixed;left:0;top:0;bottom:0;
+          width:60px;
+          background:rgba(3,3,3,.99);
+          border-right:1px solid rgba(201,168,76,.1);
+          z-index:200;
+          display:flex;flex-direction:column;
+          transition:width .28s cubic-bezier(.16,1,.3,1);
           overflow:hidden;
+          box-shadow:4px 0 20px rgba(0,0,0,.4);
         }
-        .act-tile::before{
-          content:'';position:absolute;inset:0;
-          background:linear-gradient(135deg,rgba(201,168,76,.06) 0%,transparent 60%);
-          opacity:0;transition:opacity .3s;
+        .sidebar:hover{width:220px}
+        .sidebar-logo{
+          display:flex;align-items:center;gap:14px;
+          padding:0 18px;height:58px;
+          flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.05);
+          white-space:nowrap;
         }
-        .act-tile:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
-        .act-tile:hover::before{opacity:1}
-
-        /* Input focus */
-        .db-input:focus{border-bottom-color:var(--gold)!important;outline:none}
-
-        /* Rows */
-        .hover-row{transition:background .15s}
-        .hover-row:hover{background:rgba(201,168,76,.04)!important}
-
-        /* Copy button */
-        .copy-btn{transition:all .2s}
-        .copy-btn:hover{border-color:var(--gold-border)!important;color:var(--gold2)!important}
-
-        /* Gold shimmer on stat numbers */
-        .stat-num{
-          background:linear-gradient(90deg,var(--gold3) 0%,var(--gold2) 40%,var(--cream) 60%,var(--gold2) 100%);
-          background-size:200% auto;
-          -webkit-background-clip:text;
-          -webkit-text-fill-color:transparent;
-          background-clip:text;
+        .sidebar-item{
+          display:flex;align-items:center;gap:16px;
+          padding:0 18px;height:44px;
+          cursor:pointer;border:none;background:transparent;
+          color:var(--muted);
+          transition:all .2s;
+          white-space:nowrap;
+          border-left:2px solid transparent;
+          flex-shrink:0;width:100%;text-align:left;
+          -webkit-tap-highlight-color:transparent;
         }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar{width:4px;height:4px}
-        ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-        ::-webkit-scrollbar-thumb:hover{background:var(--gold3)}
-
-        /* Modal */
-        .modal-enter{animation:scaleIn .25s cubic-bezier(.16,1,.3,1)}
-
-        /* Section divider */
-        .section-divider{
-          height:1px;
-          background:linear-gradient(90deg,transparent,var(--border),transparent);
-          margin:24px 0;
+        .sidebar-item:hover{color:var(--cream);background:rgba(255,255,255,.04)}
+        .sidebar-item.active{color:var(--gold2);background:rgba(201,168,76,.07);border-left-color:var(--gold)}
+        .sidebar-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center;line-height:1}
+        .sidebar-label{
+          font-family:'Bebas Neue',sans-serif;
+          font-size:13px;letter-spacing:1.5px;
+          opacity:0;transition:opacity .2s .05s;
+          overflow:hidden;text-overflow:ellipsis;
         }
+        .sidebar:hover .sidebar-label{opacity:1}
 
-        /* Tool card */
-        .tool-card{transition:all .25s cubic-bezier(.16,1,.3,1);cursor:pointer}
-        .tool-card:hover{background:var(--s2)!important;transform:translateY(-2px)}
-        .tool-card.locked{opacity:.45;cursor:not-allowed}
-        .tool-card.locked:hover{transform:none;background:var(--ink)!important}
-
-        /* Progress bar animated */
-        .progress-fill{transition:width 1.2s cubic-bezier(.16,1,.3,1)}
-
-        /* Glow effect sur le plan actif */
-        .plan-active{animation:borderGlow 3s ease-in-out infinite}
-
-        /* Sidebar */
-        .sidebar-btn{-webkit-tap-highlight-color:transparent}
-        .sidebar-btn:hover{background:rgba(255,255,255,.05)!important;color:var(--cream)!important}
-        .sidebar-active{border-left:2px solid var(--gold)!important}
-        .sidebar-tooltip{
-          position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);
-          background:rgba(14,14,14,.98);border:1px solid rgba(201,168,76,.2);
-          color:var(--cream);font-family:var(--font-ui);font-size:11px;
-          white-space:nowrap;padding:5px 10px;border-radius:4px;
-          pointer-events:none;opacity:0;transition:opacity .15s;
-          letter-spacing:.3px;
+        /* ── LAYOUT ──────────────────────── */
+        .db-layout{margin-left:60px;min-height:100vh;display:flex;flex-direction:column}
+        .db-topbar{
+          position:sticky;top:0;z-index:100;height:50px;
+          background:rgba(3,3,3,.95);border-bottom:1px solid rgba(255,255,255,.05);
+          backdrop-filter:blur(20px);
+          display:flex;align-items:center;justify-content:flex-end;
+          padding:0 24px;gap:10px;
         }
-        .sidebar-btn:hover .sidebar-tooltip{opacity:1}
-        .sidebar-tooltip::before{
-          content:'';position:absolute;right:100%;top:50%;transform:translateY(-50%);
-          border:4px solid transparent;border-right-color:rgba(201,168,76,.2);
-        }
+        .db-main{flex:1;max-width:920px;padding:32px 24px 100px}
 
+        /* ── INPUTS ──────────────────────── */
+        .db-inp{
+          background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+          border-radius:6px;color:var(--white);font-size:13px;padding:10px 14px;
+          width:100%;outline:none;transition:all .2s;font-family:var(--font-ui);
+        }
+        .db-inp:focus{border-color:rgba(201,168,76,.35);background:rgba(255,255,255,.06)}
+        .db-inp::placeholder{color:var(--muted)}
+        select.db-inp{appearance:none;cursor:pointer}
+        textarea.db-inp{resize:vertical;line-height:1.6}
+
+        /* ── BOUTONS ─────────────────────── */
+        .btn-gold-db{
+          display:inline-flex;align-items:center;justify-content:center;gap:8px;
+          background:linear-gradient(135deg,#a8843c,#c9a84c);border:none;border-radius:6px;
+          color:#030303;cursor:pointer;font-family:'Bebas Neue',sans-serif;
+          font-size:13px;letter-spacing:2px;padding:13px 22px;
+          transition:all .2s;-webkit-tap-highlight-color:transparent;
+        }
+        .btn-gold-db:hover{filter:brightness(1.08);transform:translateY(-1px)}
+        .btn-gold-db:active{transform:translateY(0)}
+        .btn-gold-db:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none}
+        .btn-ghost-db{
+          display:inline-flex;align-items:center;justify-content:center;
+          background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:6px;
+          color:var(--muted2);cursor:pointer;font-family:var(--font-ui);
+          font-size:12px;padding:9px 16px;transition:all .2s;
+        }
+        .btn-ghost-db:hover{border-color:rgba(201,168,76,.25);color:var(--gold2)}
+        .btn-danger{
+          display:inline-flex;align-items:center;justify-content:center;
+          background:rgba(200,57,43,.08);border:1px solid rgba(200,57,43,.2);border-radius:6px;
+          color:var(--red2);cursor:pointer;font-family:var(--font-ui);
+          font-size:12px;padding:9px 16px;transition:all .2s;
+        }
+        .btn-danger:hover{background:rgba(200,57,43,.15);border-color:rgba(200,57,43,.4)}
+
+        /* ── TYPOGRAPHY ──────────────────── */
+        .sec-label{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:3px;color:var(--muted2);text-transform:uppercase;margin-bottom:6px;display:block}
+        .sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,36px);font-weight:300;letter-spacing:-.5px;line-height:1.1}
+        .gold-shimmer{background:linear-gradient(135deg,#a8843c,#c9a84c,#e8d48a,#c9a84c);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite}
+
+        /* ── CARDS ───────────────────────── */
+        .card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px 22px}
+        .card-gold{background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(201,168,76,.02));border-color:rgba(201,168,76,.2)!important}
+        .card-hover{transition:all .2s}
+        .card-hover:hover{background:rgba(255,255,255,.04)!important;border-color:rgba(255,255,255,.12)!important;transform:translateY(-2px)}
+
+        /* ── PROGRESS ────────────────────── */
+        .progress-bar{background:rgba(255,255,255,.06);border-radius:4px;height:4px;overflow:hidden}
+        .progress-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.16,1,.3,1)}
+
+        /* ── MISC ────────────────────────── */
+        .hover-row{transition:background .15s}.hover-row:hover{background:rgba(201,168,76,.03)!important}
+        .copy-btn{transition:all .2s}.copy-btn:hover{border-color:rgba(201,168,76,.3)!important;color:var(--gold2)!important}
+        .tool-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:18px;cursor:pointer;transition:all .25s}
+        .tool-card:hover{background:rgba(201,168,76,.05);border-color:rgba(201,168,76,.2);transform:translateY(-2px)}
+        .tool-card.active{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.3)}
+        .tool-card.locked{opacity:.35;cursor:not-allowed}
+        .tool-card.locked:hover{transform:none;background:rgba(255,255,255,.025);border-color:rgba(255,255,255,.07)}
+        ::-webkit-scrollbar{width:3px;height:3px}
+        ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:2px}
+
+        /* ── MOBILE ──────────────────────── */
         @media(max-width:768px){
-          /* Sur mobile: sidebar en bas */
-          aside{
-            top:auto!important;bottom:0!important;left:0!important;right:0!important;
-            width:100%!important;height:56px!important;
-            flex-direction:row!important;
-            padding:0 8px!important;gap:0!important;
-            border-right:none!important;
-            border-top:1px solid rgba(201,168,76,.08)!important;
-            justify-content:space-around!important;
-            overflow-x:auto;
-          }
-          .sidebar-tooltip{display:none!important}
-          header[style*="left:56px"]{left:0!important}
-          .db-main{margin-left:0!important;margin-bottom:56px!important;padding:16px 12px 20px!important}
+          .sidebar{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;height:58px!important;flex-direction:row!important;border-right:none!important;border-top:1px solid rgba(201,168,76,.08)!important;padding:0!important;overflow-x:auto;overflow-y:hidden;box-shadow:none!important}
+          .sidebar:hover{width:100%!important}
+          .sidebar-logo{display:none!important}
+          .sidebar-item{height:58px!important;padding:0 6px!important;flex-direction:column!important;gap:3px!important;min-width:48px;flex:1;justify-content:center;border-left:none!important;border-top:2px solid transparent!important;border-radius:0}
+          .sidebar-item.active{border-top-color:var(--gold)!important;border-left-color:transparent!important}
+          .sidebar-label{opacity:1!important;font-size:7px!important;letter-spacing:0!important;transition:none!important;text-align:center}
+          .sidebar-icon{font-size:15px!important;width:auto!important}
+          .db-layout{margin-left:0!important;margin-bottom:58px}
+          .db-topbar{padding:0 12px!important}
+          .db-main{padding:16px 12px 20px!important}
           .db-grid2{grid-template-columns:1fr!important}
           .db-grid3{grid-template-columns:1fr 1fr!important}
           .db-actions{grid-template-columns:1fr 1fr!important}
@@ -540,6 +552,66 @@ export default function Dashboard() {
           .db-tools-grid{grid-template-columns:1fr!important}
         }
       `}</style>
+
+      {/* ── SIDEBAR ─────────────────────────────── */}
+      <nav className="sidebar">
+        {/* Logo */}
+        <div className="sidebar-logo">
+          <Link href="/" style={{ fontFamily:'Bebas Neue, var(--font-label)',fontSize:16,letterSpacing:4,color:'var(--white)',textDecoration:'none',flexShrink:0 }}>
+            A.<span style={{ color:'var(--red)' }}>A</span>
+          </Link>
+          <span className="sidebar-label" style={{ fontFamily:'Cormorant Garamond,serif',fontSize:14,fontWeight:300,color:'var(--muted2)',letterSpacing:1 }}>Annonza</span>
+        </div>
+
+        {/* Items */}
+        {TABS.map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)}
+            className={'sidebar-item'+(tab===t.id?' active':'')}>
+            <span className="sidebar-icon">{t.icon}</span>
+            <span className="sidebar-label">{t.label}</span>
+          </button>
+        ))}
+
+        <div style={{ flex:1 }} />
+
+        {/* Logout */}
+        <button onClick={logout} className="sidebar-item" style={{ color:'var(--muted)' }}>
+          <span className="sidebar-icon">↪</span>
+          <span className="sidebar-label" style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:12,letterSpacing:1.5 }}>Quitter</span>
+        </button>
+      </nav>
+
+      {/* ── LAYOUT PRINCIPAL ─────────────────────── */}
+      <div className="db-layout">
+
+        {/* Topbar */}
+        <div className="db-topbar">
+          {isSubscribed && (
+            <div style={{ display:'flex',gap:6 }}>
+              <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.05)',border:'1px solid rgba(201,168,76,.1)',borderRadius:3,padding:'3px 9px' }}>
+                <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:8,color:'var(--muted)',letterSpacing:1.5 }}>ANN</span>
+                <span style={{ fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--gold2)' }}>{annoncesLeft}</span>
+              </div>
+              <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.05)',border:'1px solid rgba(201,168,76,.1)',borderRadius:3,padding:'3px 9px' }}>
+                <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:8,color:'var(--muted)',letterSpacing:1.5 }}>REP</span>
+                <span style={{ fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--gold2)' }}>{reponsesLeft}</span>
+              </div>
+            </div>
+          )}
+          {isSubscribed ? (
+            <div onClick={()=>setShowSubModal(true)} style={{ display:'flex',alignItems:'center',gap:5,background:'rgba(201,168,76,.07)',border:'1px solid rgba(201,168,76,.15)',borderRadius:3,padding:'4px 10px',cursor:'pointer' }}>
+              <div style={{ width:5,height:5,borderRadius:'50%',background:'var(--gold2)',animation:'pulse 2s infinite' }} />
+              <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:9,letterSpacing:1.5,color:'var(--gold2)' }}>{isPremium?'PREMIUM':PLAN_NAMES[planKey].toUpperCase()}</span>
+            </div>
+          ) : (
+            <button onClick={()=>subscribe('business')} className="btn-gold-db" style={{ fontSize:11,padding:'7px 16px',letterSpacing:1.5 }}>
+              S&apos;abonner
+            </button>
+          )}
+        </div>
+
+        {/* Contenu */}
+        <main className="db-main">
 
       {showSubModal && (
         <div style={{ position:'fixed',inset:0,background:'rgba(0,0,0,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
@@ -632,7 +704,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="db-main" style={{ marginLeft:56,marginTop:48,maxWidth:920,padding:'32px 24px 100px',minHeight:'calc(100vh - 48px)' }}>
+
 
         {tab==='home' && (
           <div className="db-fade">
@@ -750,7 +822,8 @@ export default function Dashboard() {
         {tab==='historique' && <HistoriqueTab />}
         {tab==='tarifs' && <TarifsTab isSubscribed={isSubscribed} planKey={planKey} subscribe={subscribe} openSubModal={()=>setShowSubModal(true)} />}
         {tab==='profil' && <ProfilTab user={user} isSubscribed={isSubscribed} isPremium={isPremium} planKey={planKey} subscribe={subscribe} openSubModal={()=>setShowSubModal(true)} usage={usage} credits={credits} purchases={purchases} limits={limits} />}
-      </main>
+        </main>
+      </div>{/* fin db-layout */}
     </div>
   )
 }
@@ -2198,6 +2271,16 @@ function ChatBotsTab() {
     navigator.clipboard.writeText(text)
     setCopied(code)
     setTimeout(()=>setCopied(null), 2000)
+  }
+
+  const toggleBot = async (id, actif) => {
+    try {
+      await fetch('/api/chat/toggle', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ id })
+      })
+      setBots(prev => prev.map(b => b.id===id ? {...b, actif:!actif} : b))
+    } catch(e) {}
   }
 
   const copyUrl = (code) => {
