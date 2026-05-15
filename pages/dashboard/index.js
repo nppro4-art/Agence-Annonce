@@ -856,7 +856,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
 
   if (!hasAccess) return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Créer une annonce</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Créer une annonce</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
         <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:8 }}>
           {CATEGORY_LIST.slice(0,6).map(c=>(<div key={c} style={{ background:'var(--ink)',padding:'12px',textAlign:'center',fontSize:12,color:'var(--muted2)' }}>{c}</div>))}
@@ -869,7 +869,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Créer une annonce</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Créer une annonce</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:8 }}>
         <div style={S.lbl}>Categorie *</div>
         <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))',gap:5,marginTop:6 }}>
@@ -920,7 +920,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
               </div>
             ))}
           </div>
-          <button onClick={generate} disabled={loading} style={{ width:'100%',background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:3,color:'#030303',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:13,letterSpacing:2,padding:'15px',opacity:loading?0.6:1,display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:1,transition:'opacity .2s' }}>
+          <button onClick={generate} disabled={loading} className="btn-gold-db" style={{ width:'100%',opacity:loading?0.6:1,marginBottom:8 }}>
             {loading?<><div style={{ width:16,height:16,border:'2px solid rgba(255,255,255,.3)',borderTopColor:'white',borderRadius:'50%',animation:'spin .8s linear infinite' }}/>Generation...</>:'GENERER MON ANNONCE'}
           </button>
         </>
@@ -993,7 +993,7 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
 
   if (!isSubscribed) return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Répondre à un acheteur</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Répondre à un acheteur</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
         <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'16px',height:100,marginBottom:8 }} />
         <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'16px',height:70 }} />
@@ -1017,7 +1017,7 @@ function ReponseTab({ isSubscribed, subscribe, onUsed }) {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Outil IA</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Répondre à un acheteur</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Répondre à un acheteur</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <label style={S.lbl}>Message recu *</label>
         <textarea style={{ ...S.inp,minHeight:90,resize:'vertical',lineHeight:1.7 }} placeholder="Collez ici le message de l'acheteur..." value={message} onChange={e=>setMessage(e.target.value)} />
@@ -1098,7 +1098,7 @@ function EstimationTab({ annonces = [] }) {
   }
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Estimation</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Estimer le prix</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Estimation</span><h2 className="sec-title">Estimer le prix</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'14px 18px',marginBottom:8 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6 }}>
           <label style={{ ...S.lbl,marginBottom:0 }}>Decrivez votre article</label>
@@ -1293,7 +1293,7 @@ function OutilsTab({ isSubscribed, subscribe, planKey }) {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Outils</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Boîte à outils</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Outils</span><h2 className="sec-title">Boîte à outils</h2></div>
       <div className="db-tools-grid" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14 }}>
         {TOOLS.map(tool=>(
           <div key={tool.id}
@@ -1625,7 +1625,7 @@ function HistoriqueTab() {
 
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Historique</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mes créations</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Historique</span><h2 className="sec-title">Mes créations</h2></div>
       <div style={{ display:'flex',gap:12,marginBottom:12 }}>
         {[['annonces','Annonces ('+annonces.length+')'],['reponses','Reponses ('+reponses.length+')']].map(([id,label])=>(
           <button key={id} onClick={()=>setSection(id)}
@@ -1687,25 +1687,25 @@ function HistoriqueTab() {
 
 function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   const PLANS = [
-    {key:'starter',name:'Starter',price:'3,99',features:['10 annonces/semaine','30 reponses/semaine','Estimation prix (3/jour)','Generateur titres','Detecteur prix abusif','Checklist publication','Calendrier optimal']},
-    {key:'business',name:'Business',price:'5,99',features:['30 annonces/semaine','100 reponses/semaine','Chatbot vendeur (50 msg/j)','Analyser une annonce','Detecteur arnaque','Comparateur plateformes','Mode flash + Traduction','Suivi des ventes','Tout Starter inclus'],recommended:true},
-    {key:'expert',name:'Expert',price:'12,99',features:['Annonces illimitees','Reponses illimitees','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Acces prioritaire nouveautes']},
+    {key:'starter',name:'Starter',price:'3,99',sub:'L'essentiel',color:'#9a9590',features:['10 annonces / semaine','30 réponses acheteurs','Estimation de prix','Générateur de titres','Détecteur prix abusif','Checklist + Calendrier']},
+    {key:'business',name:'Business',price:'5,99',sub:'Le plus populaire',color:'#c9a84c',features:['30 annonces / semaine','100 réponses acheteurs','Chatbot vendeur (50 msg/j)','Analyser et améliorer','Détecteur arnaque','Comparateur plateformes','Mode flash + Traduction','Suivi des ventes'],recommended:true},
+    {key:'expert',name:'Expert',price:'12,99',sub:'Pour les pros',color:'#d4b568',features:['Annonces illimitées','Réponses illimitées','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Accès prioritaire nouveautés']},
   ]
   const PACKS = [
-    {name:'5 annonces',price:'9,99 EUR',unit:'2,00/ann.'},
-    {name:'10 annonces',price:'17,99 EUR',unit:'1,80/ann.'},
-    {name:'50 reponses',price:'14,99 EUR',unit:'0,30/rep.'},
-    {name:'500 reponses',price:'39,99 EUR',unit:'0,08/rep.'},
+    {name:'5 annonces',price:'9,99 €',unit:'2,00 € / annonce'},
+    {name:'10 annonces',price:'17,99 €',unit:'1,80 € / annonce'},
+    {name:'50 réponses',price:'14,99 €',unit:'0,30 € / réponse'},
+    {name:'500 réponses',price:'39,99 €',unit:'0,08 € / réponse'},
   ]
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Nos offres</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Tarifs</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Nos offres</span><h2 className="sec-title">Tarifs</h2></div>
       <div className="db-plans-grid" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:24 }}>
         {PLANS.map((plan,i)=>{
           const isCurrent = planKey===plan.key||(planKey==='pro'&&plan.key==='business')
           return (
             <div key={plan.key} className={isCurrent?'plan-active':''} style={{ background:plan.recommended?'linear-gradient(160deg,rgba(201,168,76,.07),rgba(201,168,76,.02))':'var(--s1)',border:'1px solid',borderColor:isCurrent?'rgba(201,168,76,.4)':plan.recommended?'rgba(201,168,76,.2)':'var(--border)',borderRadius:6,padding:'24px 20px',position:'relative',animationDelay:(i*.08)+'s' }}>
-              {plan.recommended&&<div style={{ position:'absolute',top:-1,left:'50%',transform:'translateX(-50%)',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',color:'#030303',fontFamily:'var(--font-label)',fontSize:8,letterSpacing:2.5,padding:'3px 14px',borderRadius:'0 0 6px 6px',whiteSpace:'nowrap' }}>RECOMMANDÉ</div>}
+              {plan.recommended&&<div style={{ position:'absolute',top:-1,left:'50%',transform:'translateX(-50%)',background:'linear-gradient(90deg,var(--gold3),var(--gold2))',color:'#030303',fontFamily:'var(--font-label)',fontSize:8,letterSpacing:2.5,padding:'3px 14px',borderRadius:'0 0 6px 6px',whiteSpace:'nowrap' }}>POPULAIRE</div>}
               <div style={{ fontFamily:'var(--font-label)',fontSize:11,letterSpacing:2.5,color:plan.recommended?'var(--gold3)':'var(--muted)',marginBottom:8,textTransform:'uppercase' }}>{plan.name}</div>
               <div style={{ display:'flex',alignItems:'baseline',gap:4,marginBottom:16 }}>
                 <span style={{ fontFamily:'DM Mono, monospace',fontSize:30,fontWeight:500,color:plan.recommended?'var(--gold2)':'var(--cream)',letterSpacing:-1 }}>{plan.price}</span>
@@ -1751,7 +1751,8 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
   const [twoFAEnabled, setTwoFAEnabled] = useState(user?.twoFAEnabled || false)
   const [toggling2FA, setToggling2FA] = useState(false)
   const [msg2FA, setMsg2FA] = useState('')
-  const [section, setSection] = useState('compte') // compte | parametres | achats
+  const [section, setSection] = useState('compte')
+  const [prefs, setPrefs] = useState({ notifEmail:true, notifAcheteur:true, langue:'fr', afficherScore:true })
   // Email
   const [newEmail, setNewEmail] = useState('')
   const [emailPassword, setEmailPassword] = useState('')
@@ -1814,110 +1815,204 @@ function ProfilTab({ user, isSubscribed, isPremium, planKey, subscribe, openSubM
     } catch(e) { setPwdMsg({ type:'error', text:'Erreur réseau' }) }
     setPwdLoading(false)
   }
+  const SECTIONS = [
+    { id:'compte',      label:'Compte',       icon:'◉' },
+    { id:'securite',    label:'Sécurité',     icon:'🔒' },
+    { id:'preferences', label:'Préférences',  icon:'◈' },
+    { id:'achats',      label:'Achats',       icon:'✦' },
+  ]
+
   return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Compte</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mon profil</h2></div>
-      <div className="db-grid2" style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:8 }}>
-        <div style={{ background:'var(--ink)',padding:'18px 20px' }}>
-          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:7 }}>Compte</div>
-          <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:18,fontWeight:600,marginBottom:2 }}>{user.name||'Sans nom'}</div>
-          <div style={{ fontSize:12,color:'var(--muted2)' }}>{user.email}</div>
-        </div>
-        <div style={{ background:'var(--ink)',padding:'18px 20px' }}>
-          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:7 }}>Plan actuel</div>
-          <div style={{ fontFamily:'DM Mono, monospace',fontSize:20,letterSpacing:2,color:isSubscribed?'var(--gold2)':'var(--muted2)',marginBottom:2 }}>{PLAN_NAMES[planKey].toUpperCase()}</div>
-          <div style={{ fontSize:11,color:'var(--muted)' }}>{isSubscribed&&!isPremium?PLAN_PRICES[planKey]+' EUR/semaine':isPremium?'Acces Premium':'Gratuit'}</div>
-        </div>
-      </div>
-      <div className="db-grid3" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:8 }}>
-        {[
-          {val:usage.annonces,label:'Annonces',sub:'cette semaine'},
-          {val:usage.reponses,label:'Reponses',sub:'cette semaine'},
-          {val:limits.annonces===Infinity?'∞':limits.annonces,label:'Limite',sub:'ann./semaine'},
-        ].map(s=>(
-          <div key={s.label} style={{ background:'var(--s1)',padding:'16px',textAlign:'center' }}>
-            <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:24,fontWeight:300,letterSpacing:-1,lineHeight:1,marginBottom:3 }}>{s.val}</div>
-            <div style={{ fontSize:10,color:'var(--muted2)',textTransform:'uppercase',letterSpacing:1 }}>{s.label}</div>
-            <div style={{ fontSize:9,color:'var(--muted)',marginTop:2 }}>{s.sub}</div>
-          </div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Mon compte</span><h2 className="sec-title">Profil</h2></div>
+
+      {/* Nav sections en pills */}
+      <div style={{ display:'flex',gap:6,marginBottom:24,flexWrap:'wrap' }}>
+        {SECTIONS.map(s=>(
+          <button key={s.id} onClick={()=>setSection(s.id)}
+            style={{ display:'flex',alignItems:'center',gap:6,background:section===s.id?'rgba(201,168,76,.1)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:section===s.id?'rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:20,color:section===s.id?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontFamily:'var(--font-ui)',fontSize:12,fontWeight:section===s.id?500:400,padding:'8px 16px',transition:'all .2s',whiteSpace:'nowrap' }}>
+            <span>{s.icon}</span>{s.label}
+          </button>
         ))}
       </div>
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
-        <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:10 }}>Abonnement</div>
-        {isSubscribed ? (
-          <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,flexWrap:'wrap' }}>
-            <div>
-              <div style={{ fontSize:14,color:'var(--cream)',marginBottom:2 }}>Plan {PLAN_NAMES[planKey]} actif{!isPremium?' · '+PLAN_PRICES[planKey]+' EUR/semaine':''}</div>
-              {!isPremium&&<div style={{ fontSize:11,color:'var(--muted)' }}>Annulable a tout moment · Non remboursable</div>}
+
+      {/* ── COMPTE ── */}
+      {section==='compte' && (
+        <div className="db-slide">
+          <div className="card" style={{ marginBottom:12 }}>
+            <div style={{ display:'flex',alignItems:'center',gap:16,marginBottom:20 }}>
+              <div style={{ width:52,height:52,borderRadius:'50%',background:'linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05))',border:'1px solid rgba(201,168,76,.2)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Cormorant Garamond,serif',fontSize:22,fontWeight:500,color:'var(--gold2)',flexShrink:0 }}>
+                {(user.name||user.email)[0].toUpperCase()}
+              </div>
+              <div>
+                <div style={{ fontFamily:'Cormorant Garamond,serif',fontSize:20,fontWeight:500,marginBottom:2 }}>{user.name||'Sans nom'}</div>
+                <div style={{ fontSize:12,color:'var(--muted2)',fontFamily:'DM Mono,monospace' }}>{user.email}</div>
+              </div>
             </div>
-            {!isPremium&&<button onClick={openSubModal} className="btn-ghost" style={{ fontSize:11 }}>Gerer</button>}
-          </div>
-        ) : (
-          <div>
-            <div style={{ fontSize:13,color:'var(--muted2)',marginBottom:10 }}>Plan gratuit · Abonnez-vous pour generer des annonces</div>
-            <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:7 }}>
-              {[['starter','Starter','3,99'],['business','Business','5,99'],['expert','Expert','12,99']].map(([key,name,price])=>(
-                <button key={key} onClick={()=>subscribe(key)}
-                  style={{ background:key==='business'?'linear-gradient(135deg,var(--gold3),var(--gold2))':'var(--s2)',border:'1px solid var(--border)',borderRadius:3,color:key==='business'?'#030303':'var(--muted2)',cursor:'pointer',padding:'9px 5px',fontSize:11 }}>
-                  <div style={{ fontWeight:600,marginBottom:2 }}>{name}</div>
-                  <div style={{ fontSize:12 }}>{price} EUR/sem</div>
-                </button>
+            <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
+              {[{val:usage.annonces,label:'Annonces',sub:'cette semaine'},{val:usage.reponses,label:'Réponses',sub:'cette semaine'},{val:limits.annonces===Infinity?'∞':limits.annonces,label:'Limite',sub:'ann./semaine'}].map(s=>(
+                <div key={s.label} style={{ background:'rgba(255,255,255,.03)',borderRadius:8,padding:'14px',textAlign:'center' }}>
+                  <div style={{ fontFamily:'DM Mono,monospace',fontSize:22,fontWeight:500,color:'var(--cream)',letterSpacing:-1,lineHeight:1,marginBottom:4 }}>{s.val}</div>
+                  <div style={{ fontSize:9,color:'var(--muted)',textTransform:'uppercase',letterSpacing:1.5 }}>{s.label}</div>
+                </div>
               ))}
             </div>
           </div>
-        )}
-      </div>
-      {/* Double authentification */}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
-        <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12 }}>
-          <div>
-            <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:4 }}>Double authentification</div>
-            <div style={{ fontSize:13,color:'var(--cream)',marginBottom:2 }}>
-              {twoFAEnabled?'Activee — un code vous est envoye par email a chaque connexion':'Desactivee — connexion directe avec mot de passe'}
-            </div>
-            <div style={{ fontSize:11,color:'var(--muted)' }}>Recommande pour proteger votre compte</div>
+
+          <div className="card" style={{ marginBottom:12 }}>
+            <span className="sec-label">Abonnement</span>
+            {isSubscribed ? (
+              <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap' }}>
+                <div>
+                  <div style={{ display:'flex',alignItems:'center',gap:8,marginBottom:4 }}>
+                    <div style={{ width:6,height:6,borderRadius:'50%',background:'var(--gold2)',animation:'pulse 2s infinite' }} />
+                    <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:14,color:'var(--gold2)',letterSpacing:1 }}>{PLAN_NAMES[planKey].toUpperCase()}</span>
+                    {!isPremium&&<span style={{ fontSize:11,color:'var(--muted)' }}>· {PLAN_PRICES[planKey]} €/sem</span>}
+                  </div>
+                  {!isPremium&&<div style={{ fontSize:11,color:'var(--muted)' }}>Annulable à tout moment</div>}
+                </div>
+                {!isPremium&&<button onClick={openSubModal} className="btn-ghost-db" style={{ fontSize:11 }}>Gérer</button>}
+              </div>
+            ) : (
+              <div>
+                <div style={{ fontSize:13,color:'var(--muted2)',marginBottom:14,lineHeight:1.6 }}>Aucun abonnement actif.</div>
+                <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8 }}>
+                  {[['starter','Starter','3,99'],['business','Business','5,99'],['expert','Expert','12,99']].map(([key,name,price],i)=>(
+                    <button key={key} onClick={()=>subscribe(key)}
+                      className={i===1?'btn-gold-db':'btn-ghost-db'}
+                      style={{ width:'100%',flexDirection:'column',gap:2,padding:'10px 6px',fontSize:10,letterSpacing:1 }}>
+                      <span>{name}</span>
+                      <span style={{ fontFamily:'DM Mono,monospace',fontSize:13 }}>{price} €</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <div style={{ display:'flex',alignItems:'center',gap:10 }}>
-            {msg2FA && <span style={{ fontSize:11,color:twoFAEnabled?'var(--success2)':'var(--muted2)' }}>{msg2FA}</span>}
-            <button onClick={toggle2FA} disabled={toggling2FA}
-              style={{ background:twoFAEnabled?'rgba(45,122,79,.1)':'var(--s2)',border:'1px solid',borderColor:twoFAEnabled?'rgba(45,122,79,.3)':'var(--border2)',borderRadius:2,color:twoFAEnabled?'var(--success2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'8px 16px',transition:'all .2s',opacity:toggling2FA?0.5:1 }}>
-              {toggling2FA?'...':twoFAEnabled?'Desactiver':'Activer'}
+
+          {isSubscribed&&!isPremium&&<ReferralSection />}
+        </div>
+      )}
+
+      {/* ── SÉCURITÉ ── */}
+      {section==='securite' && (
+        <div className="db-slide">
+          <div className="card" style={{ marginBottom:12 }}>
+            <span className="sec-label">Adresse email</span>
+            <div style={{ fontSize:12,color:'var(--muted2)',marginBottom:16,lineHeight:1.6 }}>
+              Actuel : <span style={{ color:'var(--cream)',fontFamily:'DM Mono,monospace' }}>{user.email}</span>
+            </div>
+            <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:12 }} className="db-grid2">
+              <div><label style={S.lbl}>Nouvel email *</label><input className="db-inp" type="email" placeholder="nouveau@email.com" value={newEmail} onChange={e=>setNewEmail(e.target.value)} /></div>
+              <div><label style={S.lbl}>Mot de passe actuel *</label><input className="db-inp" type="password" placeholder="••••••••" value={emailPassword} onChange={e=>setEmailPassword(e.target.value)} /></div>
+            </div>
+            {emailMsg&&<div style={{ background:emailMsg.type==='success'?'rgba(45,122,79,.08)':'rgba(200,57,43,.08)',border:'1px solid',borderColor:emailMsg.type==='success'?'rgba(45,122,79,.25)':'rgba(200,57,43,.25)',borderRadius:6,padding:'10px 14px',fontSize:12,color:emailMsg.type==='success'?'var(--success2)':'var(--red2)',marginBottom:10 }}>{emailMsg.text}</div>}
+            <button onClick={updateEmail} disabled={emailLoading||!newEmail||!emailPassword} className="btn-gold-db" style={{ fontSize:11,letterSpacing:1.5,opacity:(emailLoading||!newEmail||!emailPassword)?0.5:1 }}>
+              {emailLoading?'Envoi...':'Changer l'email'}
+            </button>
+            <div style={{ fontSize:11,color:'var(--muted)',marginTop:8,lineHeight:1.6 }}>Un lien de confirmation sera envoyé à la nouvelle adresse.</div>
+          </div>
+
+          <div className="card" style={{ marginBottom:12 }}>
+            <span className="sec-label">Mot de passe</span>
+            <div style={{ display:'grid',gap:8,marginBottom:12 }}>
+              {[{l:'Mot de passe actuel',k:'cur',v:currentPwd,s:setCurrentPwd},{l:'Nouveau mot de passe',k:'new',v:newPwd,s:setNewPwd},{l:'Confirmer',k:'conf',v:confirmPwd,s:setConfirmPwd}].map(f=>(
+                <div key={f.k}><label style={S.lbl}>{f.l} *</label><input className="db-inp" type="password" placeholder="••••••••" value={f.v} onChange={e=>f.s(e.target.value)} /></div>
+              ))}
+            </div>
+            {newPwd&&confirmPwd&&newPwd!==confirmPwd&&<div style={{ fontSize:11,color:'var(--red2)',marginBottom:8 }}>Les mots de passe ne correspondent pas</div>}
+            {pwdMsg&&<div style={{ background:pwdMsg.type==='success'?'rgba(45,122,79,.08)':'rgba(200,57,43,.08)',border:'1px solid',borderColor:pwdMsg.type==='success'?'rgba(45,122,79,.25)':'rgba(200,57,43,.25)',borderRadius:6,padding:'10px 14px',fontSize:12,color:pwdMsg.type==='success'?'var(--success2)':'var(--red2)',marginBottom:10 }}>{pwdMsg.text}</div>}
+            <button onClick={updatePassword} disabled={pwdLoading||!currentPwd||!newPwd||!confirmPwd||newPwd!==confirmPwd} className="btn-gold-db" style={{ fontSize:11,letterSpacing:1.5,opacity:(pwdLoading||!currentPwd||!newPwd||!confirmPwd||newPwd!==confirmPwd)?0.5:1 }}>
+              {pwdLoading?'Modification...':'Modifier le mot de passe'}
             </button>
           </div>
-        </div>
-      </div>
 
-      {isSubscribed&&!isPremium&&<ReferralSection />}
-      <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
-        <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:10 }}>Comment fonctionne le parrainage ?</div>
-        {[
-          '1. Copiez votre lien de parrainage personnel ci-dessus.',
-          '2. Envoyez-le a un ami.',
-          '3. Si votre ami prend le plan Starter ou plus, vous recevez 1 semaine Business gratuite.',
-          '4. Votre ami beneficie aussi d\'une reduction.',
-        ].map((s,i)=>(<div key={i} style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.7,marginBottom:5 }}>{s}</div>))}
-      </div>
-      {purchases&&purchases.length>0&&(
-        <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px' }}>
-          <div style={{ fontSize:10,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',marginBottom:12 }}>Historique des achats</div>
-          {purchases.map(p=>(
-            <div key={p.id} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'9px 0',borderBottom:'1px solid var(--border)',gap:8 }}>
-              <div>
-                <div style={{ fontSize:13,color:'var(--cream)' }}>{p.packName}</div>
-                <div style={{ fontSize:11,color:'var(--muted2)' }}>{new Date(p.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
+          <div className="card">
+            <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12 }}>
+              <div style={{ flex:1 }}>
+                <span className="sec-label">Double authentification</span>
+                <div style={{ fontSize:13,color:'var(--cream)',marginBottom:4 }}>{twoFAEnabled?'🔒 Activée':'🔓 Désactivée'}</div>
+                <div style={{ fontSize:12,color:'var(--muted2)',lineHeight:1.65 }}>{twoFAEnabled?'Code par email + bouton Refuser à chaque connexion.':'Protège votre compte même si votre mot de passe est compromis.'}</div>
               </div>
-              <div style={{ textAlign:'right',flexShrink:0 }}>
-                <div style={{ fontFamily:'DM Mono, monospace',fontSize:15,color:'var(--gold2)' }}>{p.amount} EUR</div>
-                <div style={{ fontSize:10,color:'var(--muted2)' }}>{p.quantity} {p.packType}</div>
+              <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0 }}>
+                {msg2FA&&<span style={{ fontSize:11,color:twoFAEnabled?'var(--success2)':'var(--muted2)' }}>{msg2FA}</span>}
+                <button onClick={toggle2FA} disabled={toggling2FA} className={twoFAEnabled?'btn-ghost-db':'btn-gold-db'} style={{ fontSize:10,letterSpacing:1.5,opacity:toggling2FA?0.5:1 }}>
+                  {toggling2FA?'...':twoFAEnabled?'Désactiver':'Activer'}
+                </button>
               </div>
             </div>
-          ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── PRÉFÉRENCES ── */}
+      {section==='preferences' && (
+        <div className="db-slide">
+          <div className="card" style={{ marginBottom:12 }}>
+            <span className="sec-label">Notifications</span>
+            {[{key:'notifEmail',label:'Emails de suivi',desc:'Conseils et nouveautés par email'},{key:'notifAcheteur',label:'Alertes chatbot',desc:'Notifié quand votre assistant reçoit une question'}].map(p=>(
+              <div key={p.key} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom:'1px solid rgba(255,255,255,.04)' }}>
+                <div><div style={{ fontSize:13,color:'var(--cream)',marginBottom:2 }}>{p.label}</div><div style={{ fontSize:11,color:'var(--muted2)' }}>{p.desc}</div></div>
+                <button onClick={()=>setPrefs(prev=>({...prev,[p.key]:!prev[p.key]}))} style={{ width:44,height:24,borderRadius:12,background:prefs[p.key]?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(255,255,255,.07)',border:'none',cursor:'pointer',transition:'all .2s',position:'relative',flexShrink:0 }}>
+                  <div style={{ width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,transition:'left .2s',left:prefs[p.key]?23:3,boxShadow:'0 1px 4px rgba(0,0,0,.3)' }} />
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="card" style={{ marginBottom:12 }}>
+            <span className="sec-label">Affichage</span>
+            <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0' }}>
+              <div><div style={{ fontSize:13,color:'var(--cream)',marginBottom:2 }}>Score vendeur</div><div style={{ fontSize:11,color:'var(--muted2)' }}>Barre de progression sur l&apos;accueil</div></div>
+              <button onClick={()=>setPrefs(p=>({...p,afficherScore:!p.afficherScore}))} style={{ width:44,height:24,borderRadius:12,background:prefs.afficherScore?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(255,255,255,.07)',border:'none',cursor:'pointer',transition:'all .2s',position:'relative',flexShrink:0 }}>
+                <div style={{ width:18,height:18,borderRadius:'50%',background:'white',position:'absolute',top:3,transition:'left .2s',left:prefs.afficherScore?23:3,boxShadow:'0 1px 4px rgba(0,0,0,.3)' }} />
+              </button>
+            </div>
+          </div>
+          <div className="card">
+            <span className="sec-label">Langue</span>
+            <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginTop:6 }}>
+              {[['fr','🇫🇷 Français'],['en','🇬🇧 English'],['es','🇪🇸 Español']].map(([code,label])=>(
+                <button key={code} onClick={()=>setPrefs(p=>({...p,langue:code}))} style={{ background:prefs.langue===code?'rgba(201,168,76,.1)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:prefs.langue===code?'rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:8,color:prefs.langue===code?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:12,padding:'10px 6px',transition:'all .2s' }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize:11,color:'var(--muted)',marginTop:10,fontStyle:'italic' }}>Traduction en cours de développement.</div>
+          </div>
+        </div>
+      )}
+
+      {/* ── ACHATS ── */}
+      {section==='achats' && (
+        <div className="db-slide">
+          {(!purchases||purchases.length===0) ? (
+            <div className="card" style={{ textAlign:'center',padding:'48px 24px' }}>
+              <div style={{ fontSize:32,marginBottom:12,opacity:.4 }}>🧾</div>
+              <div style={{ fontFamily:'Cormorant Garamond,serif',fontSize:18,fontStyle:'italic',marginBottom:6 }}>Aucun achat pour le moment</div>
+              <div style={{ fontSize:12,color:'var(--muted)' }}>Vos achats de packs et abonnements apparaîtront ici.</div>
+            </div>
+          ) : (
+            <div className="card">
+              <span className="sec-label">Historique des achats</span>
+              {purchases.map((p,i)=>(
+                <div key={p.id} style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 0',borderBottom:i<purchases.length-1?'1px solid rgba(255,255,255,.05)':'none',gap:10 }}>
+                  <div>
+                    <div style={{ fontSize:13,color:'var(--cream)',marginBottom:2 }}>{p.packName}</div>
+                    <div style={{ fontSize:11,color:'var(--muted2)',fontFamily:'DM Mono,monospace' }}>{new Date(p.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
+                  </div>
+                  <div style={{ textAlign:'right',flexShrink:0 }}>
+                    <div style={{ fontFamily:'DM Mono,monospace',fontSize:15,color:'var(--gold2)',letterSpacing:.5 }}>{p.amount} €</div>
+                    <div style={{ fontSize:10,color:'var(--muted2)',marginTop:2 }}>{p.quantity} {p.packType}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
   )
 }
-
 
 
 // ─── ANALYSER TAB (Idée D) ────────────────────────────────
@@ -1931,7 +2026,7 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
 
   if (!isSubscribed || !hasAccess) return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Analyse</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Analyser et améliorer</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Analyse</span><h2 className="sec-title">Analyser et améliorer</h2></div>
       {isSubscribed && !hasAccess && <div style={{ background:'var(--s1)',border:'1px solid var(--gold-border)',borderRadius:3,padding:'14px 18px',marginBottom:12,fontSize:13,color:'var(--muted2)' }}>Cette fonctionnalite necessite le plan Business ou superieur.</div>}
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
         <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:20,height:120,marginBottom:8 }} />
@@ -2071,7 +2166,7 @@ function VentesTab({ isSubscribed, subscribe }) {
 
   if (!isSubscribed) return (
     <div className="db-fade">
-      <div style={{ marginBottom:24 }}><div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Suivi</div><h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mes ventes</h2></div>
+      <div style={{ marginBottom:24 }}><span className="sec-label">Suivi</span><h2 className="sec-title">Mes ventes</h2></div>
       <div style={{ filter:'blur(2px) grayscale(70%)',opacity:.35,pointerEvents:'none',userSelect:'none' }}>
         <div style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:20,height:100,marginBottom:8 }} />
       </div>
@@ -2110,7 +2205,7 @@ function VentesTab({ isSubscribed, subscribe }) {
       <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16,flexWrap:'wrap',gap:10 }}>
         <div>
           <div className="label" style={{ marginBottom:6 }}>Suivi</div>
-          <h2 style={{ fontFamily:'Cormorant Garamond, serif',fontSize:28,fontWeight:400,letterSpacing:-.5 }}>Mes ventes</h2>
+          <h2 className="sec-title">Mes ventes</h2>
         </div>
         <button onClick={()=>setShowForm(!showForm)} className="btn-gold" style={{ fontSize:11,padding:'10px 18px',letterSpacing:1.5,color:'#030303' }}>
           + AJOUTER UN OBJET
@@ -2293,7 +2388,7 @@ function ChatBotsTab() {
     <div className="db-fade">
       <div style={{ marginBottom:24 }}>
         <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:8 }}>Assistants IA</div>
-        <h2 style={{ fontFamily:'Cormorant Garamond',fontSize:34,fontWeight:300,letterSpacing:-.5,lineHeight:1 }}>Mes chatbots</h2>
+        <h2 className="sec-title">Mes chatbots</h2>
         <p style={{ fontSize:13,color:'var(--muted2)',marginTop:6,lineHeight:1.65 }}>
           Chaque annonce generee cree automatiquement un assistant IA. Copiez le texte et collez-le dans vos annonces LeBonCoin.
         </p>
