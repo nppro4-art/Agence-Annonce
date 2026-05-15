@@ -1687,7 +1687,7 @@ function HistoriqueTab() {
 
 function TarifsTab({ isSubscribed, planKey, subscribe, openSubModal }) {
   const PLANS = [
-    {key:'starter',name:'Starter',price:'3,99',sub:'L'essentiel',color:'#9a9590',features:['10 annonces / semaine','30 réponses acheteurs','Estimation de prix','Générateur de titres','Détecteur prix abusif','Checklist + Calendrier']},
+    {key:'starter',name:'Starter',price:'3,99',sub:"L'essentiel",color:'#9a9590',features:['10 annonces / semaine','30 réponses acheteurs','Estimation de prix','Générateur de titres','Détecteur prix abusif','Checklist + Calendrier']},
     {key:'business',name:'Business',price:'5,99',sub:'Le plus populaire',color:'#c9a84c',features:['30 annonces / semaine','100 réponses acheteurs','Chatbot vendeur (50 msg/j)','Analyser et améliorer','Détecteur arnaque','Comparateur plateformes','Mode flash + Traduction','Suivi des ventes'],recommended:true},
     {key:'expert',name:'Expert',price:'12,99',sub:'Pour les pros',color:'#d4b568',features:['Annonces illimitées','Réponses illimitées','Chatbot (200 msg/jour)','Mode lot multi-objets','Tout Business inclus','Accès prioritaire nouveautés']},
   ]
