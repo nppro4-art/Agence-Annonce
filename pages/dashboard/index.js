@@ -2587,7 +2587,7 @@ function ReferralSection() {
   },[])
 
   if (!code) return null
-  const link = (typeof window!=='undefined'?window.location.origin:"')+'/?ref='+code
+  const link = (typeof window!=='undefined'?window.location.origin:'')+'/?ref='+code
 
   return (
     <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
