@@ -905,7 +905,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
                       {f.opts.map(o=><option key={o}>{o}</option>)}
                     </select>
                   : f.wide
-                    ? <textarea style={{ ...S.inp,resize:'vertical',minHeight:52,lineHeight:1.6 }} placeholder={f.ph} value={form[f.key]||"'} onChange={e=>setForm({...form,[f.key]:e.target.value})} />
+                    ? <textarea style={{ ...S.inp,resize:'vertical',minHeight:52,lineHeight:1.6 }} placeholder={f.ph} value={form[f.key]||''} onChange={e=>setForm({...form,[f.key]:e.target.value})} />
                     : f.type==='urgence'
                       ? <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginTop:4 }}>
                           {[['normal','Normal'],['rapide','Rapide'],['optimise','Max prix']].map(([v,l])=>(
