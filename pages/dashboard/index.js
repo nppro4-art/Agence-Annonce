@@ -393,7 +393,7 @@ export default function Dashboard() {
   ]
 
   if (loading) return (
-    <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'var(--black)',gap:16 }}>
+    <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'#110a0a',gap:16 }}>
       <div style={{ fontFamily:'Cormorant Garamond',fontSize:28,fontWeight:300,letterSpacing:4,color:'var(--gold2)' }}>Annonza</div>
       <div style={{ width:24,height:24,border:'1.5px solid rgba(201,168,76,.2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -417,7 +417,7 @@ export default function Dashboard() {
         .sidebar{
           position:fixed;left:0;top:0;bottom:0;
           width:60px;
-          background:rgba(17,10,10,.99);
+          background:#1a0f0f;
           border-right:1px solid rgba(201,168,76,.1);
           z-index:200;
           display:flex;flex-direction:column;
@@ -662,59 +662,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <header style={{ background:'rgba(17,10,10,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
-        <div className="db-header" style={{ width:'100%',padding:'0 24px',height:56,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12 }}>
-
-          {/* Logo */}
-          <Link href="/" style={{ fontFamily:'var(--font-label)',fontSize:15,letterSpacing:4,color:'var(--white)',flexShrink:0,textDecoration:'none' }}>
-            A.<span style={{ color:'var(--red)' }}>A</span>
-          </Link>
-
-          {/* Tabs */}
-          <nav style={{ display:'flex',flex:1,height:'100%',alignItems:'stretch',overflow:'hidden',maxWidth:800 }}>
-            {TABS.map(t=>(
-              <button key={t.id} onClick={()=>setTab(t.id)}
-                className={'tab-btn'+(tab===t.id?' active':'')}
-                style={{ background:'none',border:'none',color:tab===t.id?'var(--gold2)':'var(--muted)',cursor:'pointer',fontFamily:'DM Sans, sans-serif',fontSize:11,fontWeight:400,letterSpacing:.5,padding:'0 12px',flex:1,maxWidth:88,transition:'color .2s' }}>
-                <span className="tab-label">{t.label}</span>
-              </button>
-            ))}
-          </nav>
-
-          {/* Droite */}
-          <div style={{ display:'flex',alignItems:'center',gap:8,flexShrink:0 }}>
-            <div className="db-credits" style={{ display:'flex',gap:6,alignItems:'center' }}>
-              {isSubscribed && (
-                <>
-                  <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.06)',border:'1px solid rgba(201,168,76,.15)',borderRadius:2,padding:'3px 9px' }}>
-                    <span style={{ fontSize:9,color:'var(--muted)' }}>ANN</span>
-                    <span style={{ fontFamily:'DM Mono, monospace',fontSize:12,color:'var(--gold2)',fontWeight:500 }}>{annoncesLeft}</span>
-                  </div>
-                  <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.06)',border:'1px solid rgba(201,168,76,.15)',borderRadius:2,padding:'3px 9px' }}>
-                    <span style={{ fontSize:9,color:'var(--muted)' }}>REP</span>
-                    <span style={{ fontFamily:'DM Mono, monospace',fontSize:12,color:'var(--gold2)',fontWeight:500 }}>{reponsesLeft}</span>
-                  </div>
-                </>
-              )}
-            </div>
-            {isSubscribed ? (
-              <div onClick={()=>setShowSubModal(true)} style={{ display:'flex',alignItems:'center',gap:6,background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',borderRadius:2,padding:'5px 10px',cursor:'pointer',transition:'all .2s' }}>
-                <div style={{ width:5,height:5,borderRadius:'50%',background:'var(--gold2)',animation:'pulse 2s infinite' }} />
-                <span style={{ fontFamily:'var(--font-label)',fontSize:9,letterSpacing:2,color:'var(--gold2)' }}>{isPremium?'PREMIUM':PLAN_NAMES[planKey].toUpperCase()}</span>
-              </div>
-            ) : (
-              <button onClick={()=>subscribe('business')} style={{ background:'linear-gradient(135deg,var(--gold3),var(--gold2))',border:'none',borderRadius:2,color:'#030303',cursor:'pointer',fontFamily:'var(--font-label)',fontSize:11,letterSpacing:2,padding:'7px 14px' }}>
-                S&apos;ABONNER
-              </button>
-            )}
-            <button onClick={logout} style={{ background:'none',border:'1px solid rgba(255,255,255,.06)',borderRadius:2,color:'var(--muted)',cursor:'pointer',fontSize:10,padding:'6px 10px',transition:'all .2s' }}
-              onMouseEnter={e=>e.target.style.borderColor='var(--border2)'}
-              onMouseLeave={e=>e.target.style.borderColor='rgba(255,255,255,.06)'}>
-              ↪
-            </button>
-          </div>
-        </div>
-      </header>
+      
 
 
 
