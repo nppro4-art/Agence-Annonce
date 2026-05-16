@@ -28,254 +28,173 @@ const PLAN_PRICES = { premium:'—', expert:'12,99', business:'5,99', starter:'3
 const PLAN_CHATBOT = { premium:500, expert:200, business:50, starter:0, pro:50, free:0 }
 
 const CATEGORIES = {
-  Voiture: [
-    { key:'marque', label:'Marque', ph:'BMW, Renault, Peugeot...' },
-    { key:'modele', label:'Modele', ph:'Serie 3, Clio, 308...' },
+  'Véhicules 🚗': [
+    { key:'typeVehicule', label:'Type de véhicule', type:'select', opts:['Voiture','Moto / Scooter','Camping-car / Van','Utilitaire','Bateau','Quad / Buggy','Autre'] },
+    { key:'marque', label:'Marque', ph:'BMW, Renault, Yamaha...' },
+    { key:'modele', label:'Modèle', ph:'Série 3, MT-07, Kangoo...' },
     { key:'version', label:'Version / Finition', ph:'M Sport, GT Line...' },
-    { key:'annee', label:'Annee', ph:'2019', type:'number' },
-    { key:'kilometrage', label:'Kilometrage (km)', ph:'75000', type:'number' },
-    { key:'carburant', label:'Carburant', type:'select', opts:['Essence','Diesel','Hybride','Hybride rechargeable','Electrique','GPL'] },
-    { key:'boite', label:'Boite de vitesse', type:'select', opts:['Manuelle 5v','Manuelle 6v','Automatique','Semi-automatique'] },
-    { key:'couleur', label:'Couleur exterieure', ph:'Noir metallise, Blanc nacre...' },
-    { key:'couleurInt', label:'Couleur interieure', ph:'Noir, Beige, Cuir brun...' },
+    { key:'annee', label:'Année', ph:'2019', type:'number' },
+    { key:'kilometrage', label:'Kilométrage (km)', ph:'75000', type:'number' },
+    { key:'carburant', label:'Carburant', type:'select', opts:['Essence','Diesel','Hybride','Hybride rechargeable','Électrique','GPL','Sans objet'] },
+    { key:'boite', label:'Boîte de vitesse', type:'select', opts:['Manuelle','Automatique','Semi-automatique','Sans objet'] },
+    { key:'couleur', label:'Couleur', ph:'Noir métallisé, Blanc nacré...' },
     { key:'puissance', label:'Puissance (CV)', ph:'120', type:'number' },
-    { key:'cylindree', label:'Cylindree (cm3)', ph:'1598', type:'number' },
-    { key:'conso', label:'Consommation (L/100)', ph:'5.8' },
-    { key:'co2', label:'Emissions CO2 (g/km)', ph:'112' },
-    { key:'nbPortes', label:'Nombre de portes', type:'select', opts:['2','3','4','5'] },
-    { key:'nbPlaces', label:'Nombre de places', type:'select', opts:['2','4','5','7','9'] },
-    { key:'carrosserie', label:'Type de carrosserie', type:'select', opts:['Berline','Break','SUV','Citadine','Coupe','Cabriolet','Monospace','Utilitaire'] },
-    { key:'etat', label:'Etat general', type:'select', opts:['Excellent - comme neuf','Tres bon etat','Bon etat','Etat correct','A reparer'] },
-    { key:'nbProprio', label:'Nb de proprietaires', ph:'1', type:'number' },
-    { key:'premiereMain', label:'Premiere main', type:'select', opts:['Oui','Non','Ne sait pas'] },
-    { key:'ct', label:'Controle technique', type:'select', opts:['Valide','A refaire sous 2 mois','Non presente','Non applicable'] },
+    { key:'carrosserie', label:'Type de carrosserie', type:'select', opts:['Berline','Break','SUV','Citadine','Coupé','Cabriolet','Monospace','Utilitaire','Moto','Scooter','Camping-car','Autre'] },
+    { key:'etat', label:'État général', type:'select', opts:['Excellent — comme neuf','Très bon état','Bon état','État correct','À réparer'] },
+    { key:'nbProprio', label:'Nombre de propriétaires', ph:'1', type:'number' },
+    { key:'ct', label:'Contrôle technique', type:'select', opts:['Valide','À refaire sous 2 mois','Non présenté','Non applicable'] },
     { key:'dateCT', label:'Date du CT', ph:'03/2024' },
-    { key:'carnet', label:'Carnet entretien', type:'select', opts:['Complet et a jour','Partiel','Absent'] },
-    { key:'dernierEntretien', label:'Dernier entretien', ph:'Vidange + filtres a 70 000 km...', wide:true },
-    { key:'pneus', label:'Etat des pneus', type:'select', opts:['Neufs','Bonne epaisseur','Usure normale','A changer'] },
-    { key:'freins', label:'Etat des freins', type:'select', opts:['Neufs','Bon etat','Usure normale','A surveiller'] },
-    { key:'courroie', label:'Courroie de distribution', type:'select', opts:['Changee recemment','A faire','Chaine - pas de courroie'] },
-    { key:'options', label:'Options et equipements', ph:'GPS, Camera recul, Toit ouvrant, Sieges chauffants...', wide:true },
-    { key:'defauts', label:'Defauts et imperfections', ph:'Rayure aile avant, trace pare-choc, voyant...', wide:true },
-    { key:'travauxFaits', label:'Travaux effectues recemment', ph:'Embrayage neuf a 65 000 km, batterie 2023...', wide:true },
-    { key:'travauxAFaire', label:'Travaux a prevoir', ph:'Pneus arriere bientot, vidange dans 5000 km...', wide:true },
-    { key:'prix', label:'Prix demande (EUR)', ph:'8500', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui - prix a debattre','Legerement','Non - prix ferme'] },
-    { key:'prixMin', label:'Prix minimum accepte (confidentiel)', ph:'7800', type:'number' },
+    { key:'carnet', label:'Carnet entretien', type:'select', opts:['Complet et à jour','Partiel','Absent'] },
+    { key:'dernierEntretien', label:'Dernier entretien', ph:'Vidange + filtres à 70 000 km...', wide:true },
+    { key:'options', label:'Options et équipements', ph:'GPS, Caméra recul, Toit ouvrant, Sièges chauffants...', wide:true },
+    { key:'defauts', label:'Défauts et imperfections', ph:'Rayure aile avant, trace pare-choc...', wide:true },
+    { key:'travauxFaits', label:'Travaux effectués', ph:'Embrayage neuf à 65 000 km...', wide:true },
+    { key:'travauxAFaire', label:'Travaux à prévoir', ph:'Pneus arrière bientôt...', wide:true },
+    { key:'prix', label:'Prix demandé (€)', ph:'8500', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui — prix à débattre','Légèrement','Non — prix ferme'] },
+    { key:'prixMin', label:'Prix minimum accepté (confidentiel)', ph:'7800', type:'number' },
     { key:'ville', label:'Ville', ph:'Lyon, Paris...' },
-    { key:'dispo', label:'Disponibilite', type:'select', opts:['Immediate','Sous 1 semaine','Semaine uniquement','Week-end uniquement','Sur RDV'] },
-    { key:'livraison', label:'Livraison possible', type:'select', opts:['Non','Oui - frais acheteur','Oui - inclus','A discuter'] },
-    { key:'paiement', label:'Mode de paiement accepte', type:'select', opts:['Especes','Virement bancaire','Cheque de banque','Tous modes'] },
-    { key:'raisonVente', label:'Raison de la vente', ph:'Achat vehicule neuf, demenagement...' },
+    { key:'paiement', label:'Paiement accepté', type:'select', opts:['Espèces','Virement bancaire','Chèque de banque','Tous modes'] },
     { key:'urgence', label:'Urgence de vente', type:'urgence' },
   ],
-  Telephone: [
-    { key:'marque', label:'Marque', ph:'Apple, Samsung, Xiaomi...' },
-    { key:'modele', label:'Modele', ph:'iPhone 15 Pro, Galaxy S24...' },
-    { key:'couleur', label:'Couleur', ph:'Noir titane, Blanc, Violet...' },
-    { key:'stockage', label:'Stockage', type:'select', opts:['32 Go','64 Go','128 Go','256 Go','512 Go','1 To'] },
-    { key:'ram', label:'RAM', ph:'8 Go, 12 Go...' },
-    { key:'etat', label:'Etat', type:'select', opts:['Neuf sous blister','Comme neuf','Tres bon','Bon etat','Etat correct'] },
-    { key:'batterie', label:'Sante batterie', ph:'94%' },
-    { key:'cycles', label:'Nb cycles batterie', ph:'120 cycles' },
-    { key:'debloque', label:'Debloque tous operateurs', type:'select', opts:['Oui - tous operateurs','Non - Orange','Non - SFR','Non - Bouygues','Non - Free'] },
-    { key:'imei', label:'IMEI disponible', type:'select', opts:['Oui - sur demande','Non'] },
-    { key:'faceId', label:'Face ID / Touch ID', type:'select', opts:['Fonctionne parfaitement','Probleme mineur','Ne fonctionne plus','Non applicable'] },
-    { key:'etatEcran', label:'Etat ecran', type:'select', opts:['Parfait','Micro-rayures','Rayures legeres','Fissure ou cassure'] },
-    { key:'etatDos', label:'Etat du dos', type:'select', opts:['Parfait','Micro-rayures','Rayures visibles','Fissure'] },
-    { key:'cameras', label:'Etat cameras', type:'select', opts:['Toutes parfaites','Legere buee','Probleme sur une','Plusieurs defectueuses'] },
-    { key:'hautParleur', label:'Haut-parleur et micro', type:'select', opts:['Parfaits','Probleme leger','Defectueux'] },
-    { key:'connecteur', label:'Connecteur de charge', type:'select', opts:['Parfait','Parfois capricieux','Defectueux'] },
-    { key:'accessoires', label:'Accessoires inclus', ph:'Boite origine, chargeur, cable, coques...', wide:true },
-    { key:'reparations', label:'Reparations effectuees', ph:'Ecran change 2023, batterie remplacee...', wide:true },
-    { key:'defauts', label:'Autres defauts', ph:'Petit impact bas telephone, marque vitre arriere...', wide:true },
-    { key:'prix', label:'Prix demande (EUR)', ph:'450', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non - prix ferme'] },
+  'Informatique & Téléphones 💻': [
+    { key:'type', label:'Type', type:'select', opts:['Smartphone','Tablette','Ordinateur portable','PC fixe','Écran','Console de jeu','Composant PC','Imprimante','Accessoire','Autre'] },
+    { key:'marque', label:'Marque', ph:'Apple, Samsung, Dell, Sony...' },
+    { key:'modele', label:'Modèle', ph:'iPhone 15 Pro, MacBook Pro M3, PS5...' },
+    { key:'stockage', label:'Stockage', type:'select', opts:['32 Go','64 Go','128 Go','256 Go','512 Go','1 To','2 To','Autre'] },
+    { key:'ram', label:'RAM', ph:'8 Go, 16 Go, 32 Go...' },
+    { key:'processeur', label:'Processeur', ph:'Apple M3, Intel i7, Ryzen 9...' },
+    { key:'gpu', label:'Carte graphique', ph:'RTX 4060, RX 7600... (si applicable)' },
+    { key:'os', label:'Système', type:'select', opts:['iOS / iPadOS','macOS','Windows 11','Windows 10','Android','Linux','Aucun'] },
+    { key:'etat', label:'État', type:'select', opts:['Neuf sous blister','Comme neuf','Très bon état','Bon état','État correct','Pour pièces'] },
+    { key:'batterie', label:'Santé batterie', ph:'94%, 120 cycles...' },
+    { key:'etatEcran', label:'État écran', type:'select', opts:['Parfait','Micro-rayures','Rayures légères','Fissure'] },
+    { key:'debloque', label:'Débloqué tous opérateurs', type:'select', opts:['Oui','Non','Sans objet'] },
+    { key:'accessoires', label:'Accessoires inclus', ph:'Boîte, chargeur, câble, housse...', wide:true },
+    { key:'defauts', label:'Défauts', ph:'Petit impact, marque au dos...', wide:true },
+    { key:'prix', label:'Prix demandé (€)', ph:'450', type:'number' },
+    { key:'prixAchat', label:'Prix achat initial (€)', ph:'1200', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Légèrement','Non'] },
     { key:'ville', label:'Ville', ph:'Paris, Lyon...' },
-    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - Mondial Relay','Oui - Colissimo','Oui - tous','Non - main propre'] },
+    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui — Mondial Relay','Oui — Colissimo','Oui — tous','Non — main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-  Informatique: [
-    { key:'type', label:'Type', type:'select', opts:['Ordinateur portable','PC fixe','Tablette','Ecran','Imprimante','Clavier/Souris','Composant PC','Disque dur SSD','Autre'] },
-    { key:'marque', label:'Marque', ph:'Apple, Dell, HP, Asus, Lenovo...' },
-    { key:'modele', label:'Modele', ph:'MacBook Pro 14 M3, XPS 15 9520...' },
-    { key:'anneeAchat', label:'Annee achat', ph:'2022', type:'number' },
-    { key:'processeur', label:'Processeur', ph:'Apple M3 Pro, Intel i7-12700H, Ryzen 9...' },
-    { key:'ram', label:'RAM', type:'select', opts:['4 Go','8 Go','16 Go','18 Go','24 Go','32 Go','48 Go','64 Go'] },
-    { key:'stockage', label:'Stockage', ph:'512 Go SSD NVMe, 1 To SSD...' },
-    { key:'gpu', label:'Carte graphique', ph:'RTX 4060, RX 7600, Intel Iris Xe...' },
-    { key:'ecranTaille', label:'Taille ecran', ph:'14 pouces, 27 pouces...' },
-    { key:'ecranRes', label:'Resolution ecran', ph:'2560x1600 Retina, 4K UHD...' },
-    { key:'ecranHz', label:'Taux rafraichissement', ph:'60 Hz, 120 Hz, 165 Hz...' },
-    { key:'autonomie', label:'Autonomie reelle', ph:'8-10h bureautique...' },
-    { key:'batterie', label:'Sante batterie / cycles', ph:'94%, 120 cycles...' },
-    { key:'os', label:'Systeme exploitation', type:'select', opts:['macOS Sonoma','macOS Ventura','Windows 11','Windows 10','Linux','Chrome OS','Aucun'] },
-    { key:'etat', label:'Etat general', type:'select', opts:['Comme neuf','Tres bon etat','Bon etat','Etat correct','Pour pieces'] },
-    { key:'etatEcran', label:'Etat ecran', type:'select', opts:['Parfait','Micro-rayures','Pixels morts','Fissure'] },
-    { key:'etatClavier', label:'Etat clavier', type:'select', opts:['Parfait','Touches normales','Quelques touches capricieuses','Defectueux'] },
-    { key:'ports', label:'Ports disponibles', ph:'2x USB-C Thunderbolt, HDMI, SD, USB-A...' },
-    { key:'accessoires', label:'Accessoires inclus', ph:'Chargeur origine, housse, souris, dock...' },
-    { key:'logiciels', label:'Logiciels inclus', ph:'Office 2021, Adobe CC, Final Cut Pro...' },
-    { key:'defauts', label:'Defauts et remarques', ph:'Petite marque couvercle, charniere legerement...', wide:true },
-    { key:'prix', label:'Prix demande (EUR)', ph:'800', type:'number' },
-    { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'1400', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
-    { key:'ville', label:'Ville', ph:'Paris, Lyon...' },
-    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - emballe soin','Non - main propre'] },
-    { key:'urgence', label:'Urgence', type:'urgence' },
-  ],
-  Mobilier: [
-    { key:'type', label:'Type de meuble', ph:'Canape, Table basse, Armoire, Lit, Bureau...' },
-    { key:'marque', label:'Marque / Fabricant', ph:'Ikea, Maisons du Monde, Roche Bobois...' },
-    { key:'modele', label:'Modele / Reference', ph:'KALLAX, EKTORP, sur-mesure...' },
-    { key:'couleur', label:'Couleur principale', ph:'Blanc, Chene naturel, Gris anthracite...' },
-    { key:'matiere', label:'Matiere principale', type:'select', opts:['Bois massif','Bois MDF','Agglomere','Metal','Verre','Tissu','Cuir','Velours','Rotin','Marbre','Autre'] },
-    { key:'matiereSecondaire', label:'Matiere secondaire', ph:'Pieds metal noir, plateau verre...' },
-    { key:'longueur', label:'Longueur (cm)', ph:'180', type:'number' },
-    { key:'largeur', label:'Largeur / Profondeur (cm)', ph:'90', type:'number' },
-    { key:'hauteur', label:'Hauteur (cm)', ph:'75', type:'number' },
-    { key:'places', label:'Nb places (si canape)', type:'select', opts:['1 place','2 places','3 places','4 places','Angle / L','Convertible'] },
-    { key:'convertible', label:'Convertible en lit', type:'select', opts:['Non','Oui - clic-clac','Oui - avec coffre','Oui - meridienne'] },
-    { key:'rangements', label:'Rangements integres', type:'select', opts:['Aucun','Tiroirs','Portes','Etageres','Coffre'] },
-    { key:'anneeAchat', label:'Annee achat approximative', ph:'2021' },
-    { key:'etat', label:'Etat', type:'select', opts:['Comme neuf','Tres bon etat','Bon etat','Etat correct','Necessite nettoyage'] },
-    { key:'defauts', label:'Defauts et imperfections', ph:'Petite rayure plateau, trace accoudoir...', wide:true },
-    { key:'demontable', label:'Demontable', type:'select', opts:['Oui - facile','Partiellement','Non - un seul bloc'] },
-    { key:'instructions', label:'Instructions de montage', type:'select', opts:['Oui disponibles','Non'] },
-    { key:'poids', label:'Poids estime (kg)', ph:'35', type:'number' },
-    { key:'prix', label:'Prix demande (EUR)', ph:'150', type:'number' },
-    { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'450', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
+  'Gaming 🎮': [
+    { key:'type', label:'Type', type:'select', opts:['Jeu vidéo','Console','Manette / Accessoire','Pack complet','Carte cadeau','PC Gamer'] },
+    { key:'plateforme', label:'Plateforme', type:'select', opts:['PlayStation 5','PlayStation 4','PlayStation 3','Xbox Series X/S','Xbox One','Nintendo Switch','Nintendo Switch Lite','PC','Rétro / Autre'] },
+    { key:'titre', label:'Titre / Nom', ph:'FIFA 24, Zelda, Call of Duty...' },
+    { key:'etat', label:'État', type:'select', opts:['Neuf sous blister','Comme neuf','Très bon état','Bon état','État correct'] },
+    { key:'version', label:'Version', type:'select', opts:['Physique — boîte','Numérique — code','Édition Collector'] },
+    { key:'completude', label:'Complétude', type:'select', opts:['Complet — boîte + notice + jeu','Jeu seul','Boîte seule'] },
+    { key:'dlc', label:'DLC inclus', ph:'Season pass, DLC 1 et 2...', wide:true },
+    { key:'defauts', label:'Défauts', ph:'Aucun, rayure sur boîte...', wide:true },
+    { key:'prix', label:'Prix demandé (€)', ph:'25', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Non'] },
     { key:'ville', label:'Ville', ph:'Lyon...' },
-    { key:'aideChargement', label:'Aide au chargement', type:'select', opts:['Oui je peux aider','Non'] },
+    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui — emballé soin','Non — main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-  Electromenager: [
-    { key:'type', label:'Type appareil', ph:'Lave-linge, Frigo, Four, Lave-vaisselle...' },
-    { key:'marque', label:'Marque', ph:'Bosch, Samsung, Whirlpool, Miele...' },
-    { key:'modele', label:'Reference modele', ph:'WAN24264FR...' },
-    { key:'anneeAchat', label:'Annee achat', ph:'2020', type:'number' },
-    { key:'capacite', label:'Capacite', ph:'7 kg, 200L, 60 cm...' },
-    { key:'classeEnergie', label:'Classe energetique', type:'select', opts:['A+++','A++','A+','A','B','C','D','E','F','G'] },
-    { key:'conso', label:'Consommation annuelle (kWh)', ph:'150 kWh' },
-    { key:'dimensions', label:'Dimensions (L x H x P cm)', ph:'60 x 85 x 55' },
-    { key:'couleur', label:'Couleur', type:'select', opts:['Blanc','Inox','Noir','Gris anthracite','Autre'] },
-    { key:'etat', label:'Etat', type:'select', opts:['Excellent - comme neuf','Tres bon etat','Bon etat','Quelques traces cosmetiques','Necessite reparation'] },
-    { key:'fonctionnement', label:'Fonctionnement', type:'select', opts:['Parfait - aucun probleme','Quelques defauts mineurs','Fonctionne mais reparation conseillee'] },
-    { key:'nbProgrammes', label:'Nombre de programmes', ph:'15 programmes' },
-    { key:'niveauSonore', label:'Niveau sonore (dB)', ph:'49 dB' },
+  'Maison & Déco 🏠': [
+    { key:'type', label:'Type', type:'select', opts:['Meuble','Canapé / Fauteuil','Lit / Literie','Table / Chaises','Rangement','Décoration','Luminaire','Linge de maison','Cuisine / Vaisselle','Jardin','Autre'] },
+    { key:'marque', label:'Marque / Fabricant', ph:'IKEA, Maisons du Monde...' },
+    { key:'modele', label:'Modèle / Référence', ph:'KALLAX, EKTORP...' },
+    { key:'couleur', label:'Couleur', ph:'Blanc, Chêne, Gris anthracite...' },
+    { key:'matiere', label:'Matière', type:'select', opts:['Bois massif','Bois MDF','Métal','Verre','Tissu','Cuir','Velours','Rotin','Marbre','Plastique','Autre'] },
+    { key:'dimensions', label:'Dimensions (cm)', ph:'180 x 90 x 75 cm...' },
+    { key:'etat', label:'État', type:'select', opts:['Comme neuf','Très bon état','Bon état','État correct','Nécessite nettoyage'] },
+    { key:'defauts', label:'Défauts', ph:'Petite rayure plateau, trace accoudoir...', wide:true },
+    { key:'demontable', label:'Démontable', type:'select', opts:['Oui — facile','Partiellement','Non — un seul bloc'] },
+    { key:'prix', label:'Prix demandé (€)', ph:'150', type:'number' },
+    { key:'prixAchat', label:'Prix achat initial (€)', ph:'450', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Légèrement','Non'] },
+    { key:'ville', label:'Ville', ph:'Lyon...' },
+    { key:'urgence', label:'Urgence', type:'urgence' },
+  ],
+  'Électroménager 🔌': [
+    { key:'type', label:'Type', ph:'Lave-linge, Frigo, Four, Lave-vaisselle, Aspirateur...' },
+    { key:'marque', label:'Marque', ph:'Bosch, Samsung, Whirlpool, Dyson...' },
+    { key:'modele', label:'Référence modèle', ph:'WAN24264FR...' },
+    { key:'anneeAchat', label:'Année achat', ph:'2020', type:'number' },
+    { key:'capacite', label:'Capacité', ph:'7 kg, 200L, 60 cm...' },
+    { key:'classeEnergie', label:'Classe énergétique', type:'select', opts:['A+++','A++','A+','A','B','C','D','E','F','G'] },
+    { key:'etat', label:'État', type:'select', opts:['Excellent — comme neuf','Très bon état','Bon état','Quelques traces cosmétiques','Nécessite réparation'] },
+    { key:'fonctionnement', label:'Fonctionnement', type:'select', opts:['Parfait — aucun problème','Quelques défauts mineurs','Réparation conseillée'] },
     { key:'garantie', label:'Garantie restante', type:'select', opts:['Sous garantie constructeur','Sous garantie revendeur','Plus de garantie'] },
-    { key:'dateGarantie', label:'Date fin garantie', ph:'06/2025' },
-    { key:'entretien', label:'Entretien effectue', ph:'Detartrage regulier, joint remplace 2023...', wide:true },
-    { key:'defauts', label:'Defauts ou pannes historiques', ph:'Trace legere rouille tambour, joint a surveiller...', wide:true },
-    { key:'accessoires', label:'Accessoires inclus', ph:'Tuyaux, grilles, bacs, livret garantie...' },
-    { key:'facture', label:'Facture disponible', type:'select', opts:['Oui','Non'] },
-    { key:'prix', label:'Prix demande (EUR)', ph:'200', type:'number' },
-    { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'600', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
+    { key:'defauts', label:'Défauts / Pannes historiques', ph:'Trace légère rouille, joint à surveiller...', wide:true },
+    { key:'prix', label:'Prix demandé (€)', ph:'200', type:'number' },
+    { key:'prixAchat', label:'Prix achat initial (€)', ph:'600', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Légèrement','Non'] },
     { key:'ville', label:'Ville', ph:'Lyon...' },
-    { key:'livraison', label:'Livraison possible', type:'select', opts:['Non','Oui - frais acheteur','Oui - inclus'] },
+    { key:'livraison', label:'Livraison possible', type:'select', opts:['Non','Oui — frais acheteur','Oui — inclus'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-  Vetements: [
-    { key:'type', label:'Type de vetement', ph:'Veste, Manteau, Robe, Pantalon, Sneakers...' },
-    { key:'marque', label:'Marque', ph:'Zara, H&M, Nike, Gucci...' },
-    { key:'collection', label:'Collection / Saison', ph:'Hiver 2023, Ete 2022...' },
-    { key:'taille', label:'Taille', ph:'M, 42, 10 ans, EU 42...' },
-    { key:'couleur', label:'Couleur', ph:'Noir, Bleu marine, Ecru...' },
-    { key:'matiere', label:'Composition / Matiere', ph:'100% coton, 80% laine 20% cachemire...' },
-    { key:'etat', label:'Etat', type:'select', opts:['Neuf avec etiquette','Neuf sans etiquette','Comme neuf - porte 1-2 fois','Tres bon etat','Bon etat - legere usure','Etat correct'] },
-    { key:'nbPortes', label:'Nb de fois porte', ph:'2-3 fois, rarement...' },
-    { key:'defauts', label:'Defauts visibles', ph:'Aucun, petite pilling, decoloration legere...', wide:true },
-    { key:'entretien', label:'Instructions entretien', ph:'Lavage 30 degres, nettoyage a sec...' },
-    { key:'coupe', label:'Longueur / Coupe', ph:'Regular, Slim, Oversized, Cropped...' },
-    { key:'pointure', label:'Pointure (si chaussures)', ph:'42 EU / 8.5 US' },
-    { key:'accessoires', label:'Accessoires inclus', ph:'Ceinture, sac protection, etiquette...' },
-    { key:'prix', label:'Prix demande (EUR)', ph:'25', type:'number' },
-    { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'80', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
+  'Mode & Accessoires 👗': [
+    { key:'type', label:'Type', type:'select', opts:['Vêtement homme','Vêtement femme','Vêtement enfant','Chaussures','Sac / Maroquinerie','Bijou / Montre','Accessoire mode','Autre'] },
+    { key:'marque', label:'Marque', ph:'Zara, Nike, Gucci, Louis Vuitton...' },
+    { key:'taille', label:'Taille / Pointure', ph:'M, 42, EU 42, 10 ans...' },
+    { key:'couleur', label:'Couleur', ph:'Noir, Bleu marine, Beige...' },
+    { key:'matiere', label:'Matière', ph:'100% coton, cuir véritable...' },
+    { key:'etat', label:'État', type:'select', opts:['Neuf avec étiquette','Neuf sans étiquette','Comme neuf','Très bon état','Bon état','État correct'] },
+    { key:'defauts', label:'Défauts visibles', ph:'Aucun, légère décoloration...', wide:true },
+    { key:'accessoires', label:'Inclus', ph:'Boîte, sac, étiquette...' },
+    { key:'prix', label:'Prix demandé (€)', ph:'25', type:'number' },
+    { key:'prixAchat', label:'Prix achat initial (€)', ph:'80', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Légèrement','Non'] },
     { key:'ville', label:'Ville', ph:'Paris...' },
-    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - Mondial Relay','Oui - Colissimo','Oui - tous','Non - main propre'] },
+    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui — Mondial Relay','Oui — Colissimo','Non — main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-  'Jeux video': [
-    { key:'type', label:'Type', type:'select', opts:['Jeu video','Console','Manette / Accessoire','Pack complet','Carte cadeau'] },
-    { key:'console', label:'Plateforme', type:'select', opts:['PlayStation 5','PlayStation 4','PlayStation 3','Xbox Series X/S','Xbox One','Nintendo Switch','Nintendo Switch Lite','PC','Retro / Autre'] },
-    { key:'titre', label:'Titre / Nom', ph:'FIFA 24, Zelda Tears of the Kingdom...' },
-    { key:'region', label:'Region', type:'select', opts:['FR / Europe PAL','USA NTSC','Japon','Multi-region'] },
-    { key:'version', label:'Version', type:'select', opts:['Version physique - boite','Version numerique - code','Edition speciale / Collector','Premiere impression'] },
-    { key:'etat', label:'Etat', type:'select', opts:['Neuf sous blister','Comme neuf','Tres bon etat','Bon etat','Etat correct'] },
-    { key:'boite', label:'Boite et notice', type:'select', opts:['Complet - boite + notice + jeu','Jeu seul','Boite seule','Boite abimee mais complete'] },
-    { key:'dlc', label:'DLC inclus', ph:'Season pass, DLC 1 et 2, skin exclusif...', wide:true },
-    { key:'nbJeux', label:'Nb de jeux (si lot)', ph:'5 jeux inclus...' },
-    { key:'manettes', label:'Manettes incluses (si console)', ph:'2 manettes, 1 charge-play...' },
-    { key:'defauts', label:'Defauts / Problemes', ph:'Aucun, rayure sur boite, disque parfait...', wide:true },
-    { key:'prix', label:'Prix demande (EUR)', ph:'25', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Non'] },
+  'Sport & Loisirs ⚽': [
+    { key:'type', label:'Type', type:'select', opts:['Vélo / Trottinette','Fitness / Musculation','Sports de raquette','Sports de glisse','Sports collectifs','Chasse / Pêche','Camping / Randonnée','Sports nautiques','Autre'] },
+    { key:'marque', label:'Marque', ph:'Decathlon, Specialized, Babolat...' },
+    { key:'modele', label:'Modèle', ph:'BTwin 540, Babolat Pure Drive...' },
+    { key:'taille', label:'Taille / Cadre', ph:'M, cadre 54cm...' },
+    { key:'etat', label:'État', type:'select', opts:['Comme neuf','Très bon état','Bon état','État correct','Nécessite entretien'] },
+    { key:'specs', label:'Spécifications techniques', ph:'Shimano 105 11v, fourche carbone...', wide:true },
+    { key:'accessoires', label:'Accessoires inclus', ph:'Casque, pompe, cadenas...', wide:true },
+    { key:'defauts', label:'Défauts / Usures', ph:'Rayures cadre, grips usés...', wide:true },
+    { key:'prix', label:'Prix demandé (€)', ph:'80', type:'number' },
+    { key:'prixAchat', label:'Prix achat initial (€)', ph:'350', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Légèrement','Non'] },
     { key:'ville', label:'Ville', ph:'Lyon...' },
-    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - emballe soin','Non - main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-  Sport: [
-    { key:'type', label:'Type de materiel', ph:'Velo de route, Raquette tennis, Tapis de course...' },
-    { key:'marque', label:'Marque', ph:'Decathlon, Specialized, Nike, Technogym...' },
-    { key:'modele', label:'Modele', ph:'BTwin 540, Babolat Pure Drive...' },
-    { key:'anneeAchat', label:'Annee achat', ph:'2021' },
-    { key:'taille', label:'Taille / Cadre', ph:'M, 42, cadre 54cm...' },
-    { key:'etat', label:'Etat', type:'select', opts:['Comme neuf','Tres bon etat','Bon etat - usure normale','Etat correct','Necessite entretien'] },
-    { key:'frequence', label:'Frequence utilisation', type:'select', opts:['Jamais ou presque','Quelques fois par an','1 fois par mois','1 fois par semaine','Plusieurs fois par semaine'] },
-    { key:'niveau', label:'Niveau pratique vise', type:'select', opts:['Debutant','Intermediaire','Avance','Competiteur'] },
-    { key:'poids', label:'Poids (kg)', ph:'8.5', type:'number' },
-    { key:'specs', label:'Specifications techniques', ph:'Shimano 105 11v, fourche carbone, freins disque...', wide:true },
-    { key:'entretien', label:'Entretien et reparations', ph:'Revision complete 2023, chaine neuve...', wide:true },
-    { key:'defauts', label:'Defauts et usures', ph:'Rayures cadre, grips uses, pneu avant a surveiller...', wide:true },
-    { key:'accessoires', label:'Accessoires inclus', ph:'Casque, pompe, cadenas, sacoche, ordinateur bord...', wide:true },
-    { key:'prix', label:'Prix demande (EUR)', ph:'80', type:'number' },
-    { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'350', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
-    { key:'ville', label:'Ville', ph:'Lyon...' },
-    { key:'livraison', label:'Livraison possible', type:'select', opts:['Non','Oui - emballe soin','Oui - selon transporteur'] },
-    { key:'urgence', label:'Urgence', type:'urgence' },
-  ],
-  Bijoux: [
-    { key:'type', label:'Type', ph:'Bague, Collier, Bracelet, Montre, Boucles oreilles...' },
-    { key:'marque', label:'Marque / Createur', ph:'Cartier, Pandora, Daniel Wellington...' },
-    { key:'matiere', label:'Matiere principale', type:'select', opts:['Or 18 carats','Or 14 carats','Or rose','Or blanc','Argent 925','Argent plaque','Acier inoxydable','Platine','Plaque or','Bijou fantaisie'] },
-    { key:'pierres', label:'Pierres / Ornements', ph:'Diamant 0.5ct, Saphir, Perle naturelle...' },
-    { key:'poids', label:'Poids (grammes)', ph:'5.2', type:'number' },
-    { key:'taille', label:'Taille / Tour de doigt', ph:'54, 18cm longueur, 40cm chaine...' },
-    { key:'etat', label:'Etat', type:'select', opts:['Neuf sous ecrin','Comme neuf - jamais porte','Tres bon etat','Bon etat','Quelques traces usure'] },
-    { key:'defauts', label:'Defauts', ph:'Aucun, petite egratignure fermoir...', wide:true },
-    { key:'certificat', label:'Certificat authenticite', type:'select', opts:['Oui - inclus','Non'] },
-    { key:'facture', label:'Facture achat', type:'select', opts:['Disponible','Non disponible'] },
-    { key:'ecrin', label:'Ecrin / Boite origine', type:'select', opts:['Oui','Non'] },
-    { key:'gravure', label:'Gravure / Personnalisation', ph:'Aucune, initiales AB...', wide:true },
-    { key:'prix', label:'Prix demande (EUR)', ph:'120', type:'number' },
-    { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'450', type:'number' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
+  'Culture & Collection 📚': [
+    { key:'type', label:'Type', type:'select', opts:['Livre','BD / Manga','CD / Vinyle','DVD / Blu-ray','Instrument de musique','Carte / Figurine','Collection','Autre'] },
+    { key:'titre', label:'Titre / Nom', ph:'Harry Potter, One Piece tome 1...' },
+    { key:'auteur', label:'Auteur / Artiste', ph:'J.K. Rowling, Eiichiro Oda...' },
+    { key:'etat', label:'État', type:'select', opts:['Neuf','Comme neuf','Très bon état','Bon état','État correct'] },
+    { key:'edition', label:'Édition / Rareté', ph:'1ère édition, édition limitée...' },
+    { key:'defauts', label:'Défauts', ph:'Légère marque de lecture...', wide:true },
+    { key:'prix', label:'Prix demandé (€)', ph:'10', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Non'] },
     { key:'ville', label:'Ville', ph:'Paris...' },
-    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui - lettre recommandee','Non - main propre'] },
+    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui — lettre suivie','Oui — Colissimo','Non — main propre'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
-  Autre: [
+  'Animaux 🐾': [
+    { key:'type', label:'Type', type:'select', opts:['Accessoire animal','Alimentation','Cage / Habitat','Jouet','Laisse / Harnais','Vêtement animal','Soins / Hygiène','Autre'] },
+    { key:'animal', label:'Pour quel animal', type:'select', opts:['Chien','Chat','Rongeur','Oiseau','Reptile','Poisson','Autre'] },
+    { key:'marque', label:'Marque', ph:'Royal Canin, Kong, Zolux...' },
+    { key:'etat', label:'État', type:'select', opts:['Neuf','Comme neuf','Très bon état','Bon état','État correct'] },
+    { key:'defauts', label:'Défauts', ph:'Légère usure, petite trace...', wide:true },
+    { key:'prix', label:'Prix demandé (€)', ph:'15', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Non'] },
+    { key:'ville', label:'Ville', ph:'Lyon...' },
+    { key:'envoi', label:'Envoi possible', type:'select', opts:['Oui','Non — main propre'] },
+    { key:'urgence', label:'Urgence', type:'urgence' },
+  ],
+  'Autre 📦': [
     { key:'type', label:'Type / Description courte', ph:'Aspirateur robot, Livre rare, Instrument musique...' },
     { key:'marque', label:'Marque / Fabricant', ph:'(si applicable)' },
-    { key:'modele', label:'Modele / Reference', ph:'(si applicable)' },
-    { key:'anneeAchat', label:'Annee achat', ph:'(si applicable)', type:'number' },
-    { key:'couleur', label:'Couleur', ph:'(si applicable)' },
-    { key:'dimensions', label:'Dimensions ou caracteristiques', ph:'30x20x15 cm, 2.5 kg...' },
-    { key:'etat', label:'Etat', type:'select', opts:['Neuf','Comme neuf','Tres bon etat','Bon etat','Etat correct','Pour pieces'] },
-    { key:'description', label:'Description complete', ph:'Decrivez en detail votre article, son usage, ses caracteristiques...', wide:true },
-    { key:'defauts', label:'Defauts et imperfections', ph:'Aucun, petite trace, notice manquante...', wide:true },
-    { key:'accessoires', label:'Accessoires et elements inclus', ph:'Chargeur, boite, manuel, telecommande...', wide:true },
-    { key:'garantie', label:'Garantie restante', ph:'Aucune, 6 mois constructeur...' },
-    { key:'facture', label:'Facture disponible', type:'select', opts:['Oui','Non'] },
-    { key:'prix', label:'Prix demande (EUR)', ph:'50', type:'number' },
-    { key:'prixAchat', label:'Prix achat initial (EUR)', ph:'(si connu)' },
-    { key:'negociable', label:'Prix negociable', type:'select', opts:['Oui','Legerement','Non'] },
+    { key:'etat', label:'État', type:'select', opts:['Neuf','Comme neuf','Très bon état','Bon état','État correct','Pour pièces'] },
+    { key:'description', label:'Description complète', ph:'Décrivez votre article, son usage, ses caractéristiques...', wide:true },
+    { key:'defauts', label:'Défauts', ph:'Aucun, petite trace, notice manquante...', wide:true },
+    { key:'accessoires', label:'Inclus', ph:'Chargeur, boîte, manuel, télécommande...' },
+    { key:'prix', label:'Prix demandé (€)', ph:'50', type:'number' },
+    { key:'negociable', label:'Prix négociable', type:'select', opts:['Oui','Légèrement','Non'] },
     { key:'ville', label:'Ville', ph:'Lyon...' },
-    { key:'envoi', label:'Envoi possible', type:'select', opts:['Non','Oui - selon taille','Oui - tous transporteurs'] },
-    { key:'raisonVente', label:'Raison de la vente', ph:'Plus utilise, upgrade, cadeau non desire...' },
+    { key:'envoi', label:'Envoi possible', type:'select', opts:['Non','Oui — selon taille','Oui — tous transporteurs'] },
     { key:'urgence', label:'Urgence', type:'urgence' },
   ],
 }
@@ -292,7 +211,7 @@ const S = {
 function LockOverlay({ subscribe }) {
   return (
     <div style={{ position:'sticky',bottom:24,left:0,right:0,zIndex:50,display:'flex',justifyContent:'center',marginTop:20 }}>
-      <div style={{ background:'rgba(17,10,10,.95)',backdropFilter:'blur(20px)',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'28px 32px',maxWidth:440,width:'100%',textAlign:'center',boxShadow:'0 24px 60px rgba(17,10,10,.8),0 0 0 1px rgba(201,168,76,.05)' }}>
+      <div style={{ background:'rgba(7,13,26,.95)',backdropFilter:'blur(20px)',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'28px 32px',maxWidth:440,width:'100%',textAlign:'center',boxShadow:'0 24px 60px rgba(7,13,26,.8),0 0 0 1px rgba(201,168,76,.05)' }}>
         <div style={{ width:40,height:40,borderRadius:'50%',background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',fontSize:18 }}>🔒</div>
         <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--gold3)',marginBottom:8,textTransform:'uppercase' }}>Abonnement requis</div>
         <div style={{ fontFamily:'Cormorant Garamond',fontSize:22,fontWeight:500,marginBottom:8 }}>Fonctionnalité premium</div>
@@ -393,7 +312,7 @@ export default function Dashboard() {
   ]
 
   if (loading) return (
-    <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'#110a0a',gap:16 }}>
+    <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'#070d1a',gap:16 }}>
       <div style={{ fontFamily:'Cormorant Garamond',fontSize:28,fontWeight:300,letterSpacing:4,color:'var(--gold2)' }}>Annonza</div>
       <div style={{ width:24,height:24,border:'1.5px solid rgba(201,168,76,.2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -401,7 +320,7 @@ export default function Dashboard() {
   )
 
   return (
-    <div style={{ minHeight:'100vh',background:'#110a0a',fontFamily:'var(--font-ui)' }}>
+    <div style={{ minHeight:'100vh',background:'#070d1a',fontFamily:'var(--font-ui)' }}>
       <style>{`
         /* ── ANIMATIONS ─────────────────── */
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -417,7 +336,7 @@ export default function Dashboard() {
         .sidebar{
           position:fixed;left:0;top:0;bottom:0;
           width:60px;
-          background:#1a0f0f;
+          background:#0d1525;
           border-right:1px solid rgba(201,168,76,.1);
           z-index:200;
           display:flex;flex-direction:column;
@@ -458,7 +377,7 @@ export default function Dashboard() {
         .db-layout{margin-left:60px;min-height:100vh;display:flex;flex-direction:column}
         .db-topbar{
           position:sticky;top:0;z-index:100;height:50px;
-          background:rgba(17,10,10,.95);border-bottom:1px solid rgba(255,255,255,.05);
+          background:rgba(7,13,26,.95);border-bottom:1px solid rgba(255,255,255,.05);
           backdrop-filter:blur(20px);
           display:flex;align-items:center;justify-content:flex-end;
           padding:0 24px;gap:10px;
@@ -527,8 +446,8 @@ export default function Dashboard() {
         .tool-card.locked:hover{transform:none;background:rgba(255,255,255,.025);border-color:rgba(255,255,255,.07)}
         ::-webkit-scrollbar{width:3px;height:3px}
         ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:2px}
-        select{background:#160c0c!important;color:#f0ece4!important}
-        select option{background:#160c0c!important;color:#f0ece4!important}
+        select{background:#0a1020!important;color:#f0ece4!important}
+        select option{background:#0a1020!important;color:#f0ece4!important}
         select option:checked{background:rgba(201,168,76,.15)!important;color:#c9a84c!important}
 
         /* ── MOBILE ──────────────────────── */
@@ -619,16 +538,16 @@ export default function Dashboard() {
 
       {/* Bouton guide flottant */}
       <button onClick={()=>setGuideOpen(!guideOpen)}
-        style={{ position:'fixed',bottom:24,right:24,zIndex:400,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(17,10,10,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
+        style={{ position:'fixed',bottom:24,right:24,zIndex:400,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(7,13,26,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
         title="Guide de l\'outil">
         {guideOpen ? '✕' : '?'}
       </button>
       {guideOpen && <GuidePanel tab={tab} onClose={()=>setGuideOpen(false)} />}
 
       {showSubModal && (
-        <div style={{ position:'fixed',inset:0,background:'rgba(17,10,10,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
+        <div style={{ position:'fixed',inset:0,background:'rgba(7,13,26,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
           onClick={()=>setShowSubModal(false)}>
-          <div className="modal-enter" style={{ background:'#110a0a',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(17,10,10,.8)' }}
+          <div className="modal-enter" style={{ background:'#070d1a',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(7,13,26,.8)' }}
             onClick={e=>e.stopPropagation()}>
             <button onClick={()=>setShowSubModal(false)} style={{ position:'absolute',top:16,right:18,background:'rgba(255,255,255,.06)',border:'none',borderRadius:'50%',color:'var(--muted2)',cursor:'pointer',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16 }}>×</button>
             <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--gold3)',marginBottom:10,textTransform:'uppercase' }}>Mon abonnement</div>
@@ -832,11 +751,12 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
       <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Créer une annonce</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:8 }}>
         <div style={S.lbl}>Categorie *</div>
-        <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))',gap:5,marginTop:6 }}>
-          {CATEGORY_LIST.map(c=>(
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))',gap:10,marginTop:8 }}>
+          {CATEGORY_LIST.map((c,i)=>(
             <button key={c} onClick={()=>{setCategorie(c);setForm({})}}
-              style={{ background:categorie===c?'rgba(201,168,76,.12)':'var(--ink)',border:'1px solid',borderColor:categorie===c?'var(--gold)':'var(--border)',borderRadius:3,color:categorie===c?'var(--gold2)':'var(--muted2)',cursor:'pointer',fontSize:11,padding:'7px 5px',fontWeight:categorie===c?600:400 }}>
-              {c}
+              style={{ background:categorie===c?'rgba(201,168,76,.1)':'rgba(255,255,255,.02)',border:'1px solid',borderColor:categorie===c?'rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:10,color:categorie===c?'var(--gold2)':'var(--muted2)',cursor:'pointer',padding:'12px 8px',display:'flex',flexDirection:'column',alignItems:'center',gap:5,transition:'all .2s',animationDelay:(i*.03)+'s' }}>
+              <span style={{ fontSize:22 }}>{c.split(' ').pop()}</span>
+              <span style={{ fontSize:10,letterSpacing:.3,textAlign:'center',lineHeight:1.3 }}>{c.split(' ').slice(0,-1).join(' ')}</span>
             </button>
           ))}
         </div>
@@ -2532,7 +2452,7 @@ function GuidePanel({ tab, onClose }) {
   if (!guide) return null
   const [openIdx, setOpenIdx] = useState(null)
   return (
-    <div style={{ position:'fixed',top:0,right:0,bottom:0,width:340,background:'rgba(17,10,10,.99)',border:'1px solid rgba(201,168,76,.15)',borderRadius:'12px 0 0 12px',zIndex:500,display:'flex',flexDirection:'column',boxShadow:'-20px 0 60px rgba(0,0,0,.6)',animation:'slideInGuide .25s ease' }}>
+    <div style={{ position:'fixed',top:0,right:0,bottom:0,width:340,background:'rgba(7,13,26,.99)',border:'1px solid rgba(201,168,76,.15)',borderRadius:'12px 0 0 12px',zIndex:500,display:'flex',flexDirection:'column',boxShadow:'-20px 0 60px rgba(0,0,0,.6)',animation:'slideInGuide .25s ease' }}>
       <style>{`@keyframes slideInGuide{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}.guide-scroll::-webkit-scrollbar{width:2px}.guide-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:1px}`}</style>
       <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 20px',borderBottom:'1px solid rgba(255,255,255,.06)',flexShrink:0 }}>
         <div>
