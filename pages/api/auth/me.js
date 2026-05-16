@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
     const user = await prisma.user.findUnique({
       where: { id: payload.id },
-      select: { id: true, email: true, name: true, plan: true, planKey: true, subStatus: true, createdAt: true, referralCode: true }
+      select: { id: true, email: true, name: true, plan: true, planKey: true, subStatus: true, createdAt: true, referralCode: true, clientCode: true, twoFAEnabled: true }
     })
     if (!user) return res.status(404).json({ error: 'Utilisateur non trouve' })
 
