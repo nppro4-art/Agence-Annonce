@@ -329,6 +329,13 @@ export default function Dashboard() {
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
         @keyframes scaleIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        @keyframes orbit{from{transform:rotate(0deg) translateX(var(--r)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--r)) rotate(-360deg)}}
+        @keyframes orbitReverse{from{transform:rotate(0deg) translateX(var(--r)) rotate(0deg)}to{transform:rotate(-360deg) translateX(var(--r)) rotate(360deg)}}
+        @keyframes twinkle{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+        @keyframes moonGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(180,200,255,.4))}50%{filter:drop-shadow(0 0 14px rgba(180,200,255,.8))}}
+        .star{position:fixed;border-radius:50%;animation:twinkle var(--dur,3s) ease-in-out var(--delay,0s) infinite;pointer-events:none;z-index:0}
+        .moon{position:fixed;font-size:28px;animation:moonGlow 4s ease-in-out infinite,orbit 120s linear infinite;pointer-events:none;z-index:0;--r:40vw}
+        .db-layout,.sidebar,.db-main,.card,.sec-title,.sec-label{position:relative;z-index:1}
         .db-fade{animation:fadeUp .45s cubic-bezier(.16,1,.3,1) forwards}
         .db-slide{animation:fadeIn .35s ease forwards}
 
@@ -375,7 +382,7 @@ export default function Dashboard() {
 
         /* ── LAYOUT ──────────────────────── */
         .db-layout{margin-left:60px;min-height:100vh;display:flex;flex-direction:column}
-        .db-topbar{
+        .db-topbar{justify-content:space-between;
           position:sticky;top:0;z-index:100;height:50px;
           background:rgba(7,13,26,.95);border-bottom:1px solid rgba(255,255,255,.05);
           backdrop-filter:blur(20px);
@@ -452,6 +459,8 @@ export default function Dashboard() {
 
         /* ── MOBILE ──────────────────────── */
         @media(max-width:768px){
+          .star{display:none}
+          .moon{font-size:20px!important;top:3%!important;right:4%!important}
           .sidebar{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;height:58px!important;flex-direction:row!important;border-right:none!important;border-top:1px solid rgba(201,168,76,.08)!important;padding:0!important;overflow-x:auto;overflow-y:hidden;box-shadow:none!important}
           .sidebar:hover{width:100%!important}
           .sidebar-logo{display:none!important}
@@ -460,7 +469,7 @@ export default function Dashboard() {
           .sidebar-label{opacity:1!important;font-size:7px!important;letter-spacing:0!important;transition:none!important;text-align:center}
           .sidebar-icon{font-size:15px!important;width:auto!important}
           .db-layout{margin-left:0!important;margin-bottom:58px}
-          .db-topbar{padding:0 12px!important}
+          .db-topbar{justify-content:space-between;padding:0 12px!important}
           .db-main{padding:16px 12px 20px!important}
           .db-grid2{grid-template-columns:1fr!important}
           .db-grid3{grid-template-columns:1fr 1fr!important}
@@ -508,34 +517,55 @@ export default function Dashboard() {
       <div className="db-layout">
 
         {/* Topbar */}
-        <div className="db-topbar">
-          {isSubscribed && (
-            <div style={{ display:'flex',gap:6 }}>
-              <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.05)',border:'1px solid rgba(201,168,76,.1)',borderRadius:3,padding:'3px 9px' }}>
-                <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:8,color:'var(--muted)',letterSpacing:1.5 }}>ANN</span>
-                <span style={{ fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--gold2)' }}>{annoncesLeft}</span>
+        <div className="db-topbar" style={{ justifyContent:'space-between' }}>
+          {/* Compteur global */}
+          <div className="cpt-group" style={{ display:'flex',alignItems:'center',gap:16 }}>
+            {[
+              {val:(usage.annonces||0)+(usage.reponses||0),label:'Actions totales',icon:'◈'},
+              {val:usage.annonces||0,label:'Annonces',icon:'✍'},
+              {val:usage.reponses||0,label:'Réponses',icon:'◎'},
+            ].map(s=>(
+              <div key={s.label} style={{ display:'flex',alignItems:'center',gap:6 }}>
+                <span style={{ fontSize:11,color:'var(--muted)' }}>{s.icon}</span>
+                <div>
+                  <div style={{ fontFamily:'DM Mono,monospace',fontSize:13,color:'var(--cream)',lineHeight:1 }}>{s.val}</div>
+                  <div style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:7,letterSpacing:1.5,color:'var(--muted)',textTransform:'uppercase' }}>{s.label}</div>
+                </div>
               </div>
-              <div style={{ display:'flex',alignItems:'center',gap:4,background:'rgba(201,168,76,.05)',border:'1px solid rgba(201,168,76,.1)',borderRadius:3,padding:'3px 9px' }}>
-                <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:8,color:'var(--muted)',letterSpacing:1.5 }}>REP</span>
-                <span style={{ fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--gold2)' }}>{reponsesLeft}</span>
+            ))}
+          </div>
+
+          {/* Badge abonnement + upgrade */}
+          <div style={{ display:'flex',alignItems:'center',gap:8 }}>
+            {isSubscribed ? (
+              <div style={{ display:'flex',alignItems:'center',gap:0,borderRadius:6,overflow:'hidden',border:'1px solid rgba(201,168,76,.2)' }}>
+                <div onClick={()=>setShowSubModal(true)}
+                  style={{ display:'flex',alignItems:'center',gap:6,background:'rgba(201,168,76,.07)',padding:'5px 12px',cursor:'pointer' }}>
+                  <div style={{ width:5,height:5,borderRadius:'50%',background:'var(--gold2)',animation:'pulse 2s infinite' }} />
+                  <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:9,letterSpacing:1.5,color:'var(--gold2)' }}>
+                    {isPremium?'PREMIUM':PLAN_NAMES[planKey].toUpperCase()}
+                  </span>
+                </div>
+                {!isPremium && (
+                  <button onClick={()=>{ const next = planKey==='starter'?'business':'expert'; subscribe(next) }}
+                    style={{ background:'linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08))',border:'none',borderLeft:'1px solid rgba(201,168,76,.2)',color:'var(--gold2)',cursor:'pointer',padding:'5px 10px',fontSize:14,lineHeight:1,display:'flex',alignItems:'center' }}
+                    title={planKey==='starter'?'Passer à Business':'Passer à Expert'}>
+                    ↑
+                  </button>
+                )}
               </div>
-            </div>
-          )}
-          {isSubscribed ? (
-            <div onClick={()=>setShowSubModal(true)} style={{ display:'flex',alignItems:'center',gap:5,background:'rgba(201,168,76,.07)',border:'1px solid rgba(201,168,76,.15)',borderRadius:3,padding:'4px 10px',cursor:'pointer' }}>
-              <div style={{ width:5,height:5,borderRadius:'50%',background:'var(--gold2)',animation:'pulse 2s infinite' }} />
-              <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:9,letterSpacing:1.5,color:'var(--gold2)' }}>{isPremium?'PREMIUM':PLAN_NAMES[planKey].toUpperCase()}</span>
-            </div>
-          ) : (
-            <button onClick={()=>subscribe('business')} className="btn-gold-db" style={{ fontSize:11,padding:'7px 16px',letterSpacing:1.5 }}>
-              S&apos;abonner
-            </button>
-          )}
+            ) : (
+              <button onClick={()=>subscribe('business')} className="btn-gold-db" style={{ fontSize:10,padding:'7px 14px',letterSpacing:1.5 }}>
+                S&apos;abonner
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Contenu */}
         <main className="db-main">
 
+      <NightSky />
       {/* Bouton guide flottant */}
       <button onClick={()=>setGuideOpen(!guideOpen)}
         style={{ position:'fixed',bottom:24,right:24,zIndex:400,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(7,13,26,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
@@ -618,17 +648,29 @@ export default function Dashboard() {
             {/* Actions principales */}
             <div style={{ marginBottom:8 }}>
               <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--muted2)',textTransform:'uppercase',marginBottom:14 }}>Actions rapides</div>
-              <div className="db-actions" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:28 }}>
+              <div className="db-actions" style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginBottom:28 }}>
                 {[
-                  {title:'Créer',sub:'une annonce',t:'annonce',icon:'✍',color:'var(--gold)'},
-                  {title:'Répondre',sub:'à un acheteur',t:'reponse',icon:'◎',color:'var(--cream)'},
-                  {title:'Estimer',sub:'le prix',t:'estimation',icon:'⚖',color:'var(--gold3)'},
+                  {title:'Créer',sub:'une annonce',t:'annonce',icon:'✍',desc:'Générez une annonce complète en 15 secondes'},
+                  {title:'Répondre',sub:'à un acheteur',t:'reponse',icon:'◎',desc:'Réponse prête en 5 secondes'},
+                  {title:'Estimer',sub:'le prix',t:'estimation',icon:'⚖',desc:'Fourchette de marché instantanée'},
                 ].map((a,i)=>(
-                  <div key={a.t} className="act-tile" onClick={()=>setTab(a.t)}
-                    style={{ background:'var(--s1)',border:'1px solid var(--border)',borderRadius:4,padding:'20px 16px',textAlign:'center',animationDelay:(i*.08)+'s' }}>
-                    <div style={{ fontSize:22,marginBottom:10 }}>{a.icon}</div>
-                    <div style={{ fontFamily:'Cormorant Garamond, serif',fontSize:19,fontWeight:500,lineHeight:1,color:'var(--cream)',marginBottom:3 }}>{a.title}</div>
-                    <div style={{ fontSize:11,color:'var(--muted2)',fontStyle:'italic' }}>{a.sub}</div>
+                  <div key={a.t} onClick={()=>setTab(a.t)}
+                    style={{ position:'relative',overflow:'hidden',background:'rgba(255,255,255,.03)',border:'1px solid rgba(255,255,255,.08)',borderRadius:14,padding:'22px 18px',cursor:'pointer',transition:'all .25s cubic-bezier(.16,1,.3,1)',userSelect:'none' }}
+                    onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,168,76,.07)';e.currentTarget.style.borderColor='rgba(201,168,76,.25)';e.currentTarget.style.transform='translateY(-3px)'}}
+                    onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.03)';e.currentTarget.style.borderColor='rgba(255,255,255,.08)';e.currentTarget.style.transform='translateY(0)'}}>
+                    {/* Gradient déco */}
+                    <div style={{ position:'absolute',top:0,right:0,width:80,height:80,background:'radial-gradient(circle at 100% 0%,rgba(201,168,76,.08),transparent 70%)',pointerEvents:'none' }} />
+                    {/* Numéro */}
+                    <div style={{ fontFamily:'DM Mono,monospace',fontSize:9,color:'rgba(201,168,76,.3)',letterSpacing:2,marginBottom:14 }}>0{i+1}</div>
+                    {/* Icône */}
+                    <div style={{ fontSize:24,marginBottom:12,lineHeight:1 }}>{a.icon}</div>
+                    {/* Titre */}
+                    <div style={{ fontFamily:'Cormorant Garamond,serif',fontSize:20,fontWeight:500,color:'var(--cream)',lineHeight:1,marginBottom:4 }}>{a.title}</div>
+                    <div style={{ fontFamily:'Cormorant Garamond,serif',fontSize:13,fontStyle:'italic',color:'var(--muted2)',marginBottom:10 }}>{a.sub}</div>
+                    {/* Desc */}
+                    <div style={{ fontSize:11,color:'rgba(255,255,255,.3)',lineHeight:1.5 }}>{a.desc}</div>
+                    {/* Flèche */}
+                    <div style={{ position:'absolute',bottom:16,right:16,fontSize:14,color:'rgba(201,168,76,.25)' }}>→</div>
                   </div>
                 ))}
               </div>
@@ -2377,6 +2419,66 @@ function ChatBotsTab() {
           </div>
         </div>
       ))}
+    </div>
+  )
+}
+
+
+// ─── CIEL ÉTOILÉ ──────────────────────────────────────────
+function NightSky() {
+  const stars = Array.from({length:60}, (_,i) => ({
+    id:i,
+    size: Math.random()*2+1,
+    x: Math.random()*100,
+    y: Math.random()*100,
+    dur: Math.random()*3+2,
+    delay: Math.random()*4,
+    opacity: Math.random()*.6+.2,
+  }))
+  const shootingStars = Array.from({length:3}, (_,i) => ({
+    id:i,
+    x: Math.random()*60+10,
+    y: Math.random()*30+5,
+    delay: i*7+Math.random()*5,
+  }))
+
+  return (
+    <div style={{ position:'fixed',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:0 }}>
+      {/* Étoiles fixes */}
+      {stars.map(s=>(
+        <div key={s.id} className="star" style={{
+          width:s.size+'px',height:s.size+'px',
+          left:s.x+'%',top:s.y+'%',
+          background:`rgba(${180+Math.random()*60},${190+Math.random()*50},255,${s.opacity})`,
+          '--dur': s.dur+'s',
+          '--delay': s.delay+'s',
+        }} />
+      ))}
+      {/* Lune */}
+      <div style={{
+        position:'fixed',top:'8%',right:'12%',
+        fontSize:36,
+        animation:'moonGlow 4s ease-in-out infinite',
+        filter:'drop-shadow(0 0 10px rgba(180,200,255,.5))',
+        pointerEvents:'none',
+        zIndex:0,
+        transform:'rotate(180deg)',
+      }}>🌙</div>
+      {/* Nébuleuse subtile */}
+      <div style={{
+        position:'fixed',top:'-20%',right:'-10%',
+        width:'60vw',height:'60vw',
+        background:'radial-gradient(circle,rgba(30,60,120,.12) 0%,rgba(10,20,60,.06) 40%,transparent 70%)',
+        pointerEvents:'none',zIndex:0,
+        borderRadius:'50%',
+      }} />
+      <div style={{
+        position:'fixed',bottom:'-20%',left:'-10%',
+        width:'50vw',height:'50vw',
+        background:'radial-gradient(circle,rgba(20,40,100,.08) 0%,transparent 70%)',
+        pointerEvents:'none',zIndex:0,
+        borderRadius:'50%',
+      }} />
     </div>
   )
 }
