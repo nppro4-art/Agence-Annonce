@@ -292,7 +292,7 @@ const S = {
 function LockOverlay({ subscribe }) {
   return (
     <div style={{ position:'sticky',bottom:24,left:0,right:0,zIndex:50,display:'flex',justifyContent:'center',marginTop:20 }}>
-      <div style={{ background:'rgba(3,3,3,.95)',backdropFilter:'blur(20px)',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'28px 32px',maxWidth:440,width:'100%',textAlign:'center',boxShadow:'0 24px 60px rgba(0,0,0,.8),0 0 0 1px rgba(201,168,76,.05)' }}>
+      <div style={{ background:'rgba(17,10,10,.95)',backdropFilter:'blur(20px)',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'28px 32px',maxWidth:440,width:'100%',textAlign:'center',boxShadow:'0 24px 60px rgba(17,10,10,.8),0 0 0 1px rgba(201,168,76,.05)' }}>
         <div style={{ width:40,height:40,borderRadius:'50%',background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',fontSize:18 }}>🔒</div>
         <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--gold3)',marginBottom:8,textTransform:'uppercase' }}>Abonnement requis</div>
         <div style={{ fontFamily:'Cormorant Garamond',fontSize:22,fontWeight:500,marginBottom:8 }}>Fonctionnalité premium</div>
@@ -317,6 +317,7 @@ export default function Dashboard() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [tab, setTab] = useState('home')
+  const [guideOpen, setGuideOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [usage, setUsage] = useState({ annonces:0, reponses:0 })
   const [annonces, setAnnonces] = useState([])
@@ -400,7 +401,7 @@ export default function Dashboard() {
   )
 
   return (
-    <div style={{ minHeight:'100vh',background:'#030303',fontFamily:'var(--font-ui)' }}>
+    <div style={{ minHeight:'100vh',background:'#110a0a',fontFamily:'var(--font-ui)' }}>
       <style>{`
         /* ── ANIMATIONS ─────────────────── */
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -416,7 +417,7 @@ export default function Dashboard() {
         .sidebar{
           position:fixed;left:0;top:0;bottom:0;
           width:60px;
-          background:rgba(3,3,3,.99);
+          background:rgba(17,10,10,.99);
           border-right:1px solid rgba(201,168,76,.1);
           z-index:200;
           display:flex;flex-direction:column;
@@ -457,7 +458,7 @@ export default function Dashboard() {
         .db-layout{margin-left:60px;min-height:100vh;display:flex;flex-direction:column}
         .db-topbar{
           position:sticky;top:0;z-index:100;height:50px;
-          background:rgba(3,3,3,.95);border-bottom:1px solid rgba(255,255,255,.05);
+          background:rgba(17,10,10,.95);border-bottom:1px solid rgba(255,255,255,.05);
           backdrop-filter:blur(20px);
           display:flex;align-items:center;justify-content:flex-end;
           padding:0 24px;gap:10px;
@@ -526,6 +527,9 @@ export default function Dashboard() {
         .tool-card.locked:hover{transform:none;background:rgba(255,255,255,.025);border-color:rgba(255,255,255,.07)}
         ::-webkit-scrollbar{width:3px;height:3px}
         ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:2px}
+        select{background:#160c0c!important;color:#f0ece4!important}
+        select option{background:#160c0c!important;color:#f0ece4!important}
+        select option:checked{background:rgba(201,168,76,.15)!important;color:#c9a84c!important}
 
         /* ── MOBILE ──────────────────────── */
         @media(max-width:768px){
@@ -613,10 +617,18 @@ export default function Dashboard() {
         {/* Contenu */}
         <main className="db-main">
 
+      {/* Bouton guide flottant */}
+      <button onClick={()=>setGuideOpen(!guideOpen)}
+        style={{ position:'fixed',bottom:24,right:24,zIndex:400,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(17,10,10,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
+        title="Guide de l\'outil">
+        {guideOpen ? '✕' : '?'}
+      </button>
+      {guideOpen && <GuidePanel tab={tab} onClose={()=>setGuideOpen(false)} />}
+
       {showSubModal && (
-        <div style={{ position:'fixed',inset:0,background:'rgba(0,0,0,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
+        <div style={{ position:'fixed',inset:0,background:'rgba(17,10,10,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
           onClick={()=>setShowSubModal(false)}>
-          <div className="modal-enter" style={{ background:'#0a0a0a',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.8)' }}
+          <div className="modal-enter" style={{ background:'#110a0a',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(17,10,10,.8)' }}
             onClick={e=>e.stopPropagation()}>
             <button onClick={()=>setShowSubModal(false)} style={{ position:'absolute',top:16,right:18,background:'rgba(255,255,255,.06)',border:'none',borderRadius:'50%',color:'var(--muted2)',cursor:'pointer',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16 }}>×</button>
             <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--gold3)',marginBottom:10,textTransform:'uppercase' }}>Mon abonnement</div>
@@ -650,7 +662,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <header style={{ background:'rgba(3,3,3,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
+      <header style={{ background:'rgba(17,10,10,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
         <div className="db-header" style={{ width:'100%',padding:'0 24px',height:56,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12 }}>
 
           {/* Logo */}
@@ -2144,7 +2156,7 @@ function AnalyserTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
 }
 
 // ─── VENTES TAB (Idée E) ──────────────────────────────────
-function VentesTab({ isSubscribed, subscribe }) {
+function VentesTab({ isSubscribed, subscribe, hasAccess, annonces = [] }) {
   const [objets, setObjets] = useState([])
   const [stats, setStats] = useState({ vendu:0, totalGagne:0, enCours:0 })
   const [loading, setLoading] = useState(true)
@@ -2502,6 +2514,109 @@ function ChatBotsTab() {
 }
 
 
+// ─── GUIDE PANEL ──────────────────────────────────────────
+const GUIDES = {
+  home: { titre:'Tableau de bord', sections:[
+    ['Score vendeur', "Votre score augmente à chaque annonce (+10 pts) et réponse (+5 pts). Niveaux : Débutant → Vendeur → Pro → Expert."],
+    ['Crédits annonces', "Remis à zéro chaque semaine. Starter = 10/sem, Business = 30/sem, Expert = illimité. Packs disponibles dans Tarifs."],
+    ['Crédits réponses', "Chaque réponse IA consomme 1 crédit. Rechargement chaque lundi. Packs de réponses disponibles à l\'unité."],
+  ]},
+  annonce: { titre:'Créer une annonce', sections:[
+    ['Comment ça marche', "Choisissez une catégorie, remplissez le formulaire, cliquez Générer. L\'IA rédige une annonce complète en 15 secondes."],
+    ['Barre de complétion', "Plus vous remplissez de champs, meilleure sera l\'annonce. Visez 70% minimum pour 3x plus de contacts."],
+    ['Score de qualité', "Après génération, l\'IA note votre annonce sur 100. Un score > 80 est excellent."],
+    ['Texte prêt à copier', "Le texte est directement prêt à coller sur LeBonCoin. Un chatbot est créé automatiquement."],
+  ]},
+  reponse: { titre:'Répondre à un acheteur', sections:[
+    ['Comment ça marche', "Copiez le message de l\'acheteur. Sélectionnez votre annonce si disponible. Réponse prête en 5 secondes."],
+    ['Lier une annonce', "En liant une annonce, l\'IA connaît votre article et son prix. La réponse sera beaucoup plus précise."],
+    ['Conseil de négociation', "En plus de la réponse, l\'IA vous donne un conseil privé sur comment gérer la négociation."],
+  ]},
+  estimation: { titre:'Estimer le prix', sections:[
+    ['Comment ça marche', "Décrivez votre article. L\'IA analyse les prix du marché pour donner une fourchette basse / conseillée / haute."],
+    ['Fourchette', "Bas = vendre vite. Haut = attendre l\'acheteur idéal. Conseillé = juste milieu."],
+    ['Disponibilité', "Disponible sur tous les plans, même gratuit."],
+  ]},
+  analyser: { titre:'Analyser une annonce', sections:[
+    ['Comment ça marche', "Collez une annonce existante. L\'IA la note, identifie les 3 problèmes principaux, puis la réécrit entièrement."],
+    ['Avant / Après', "Score original vs score amélioré. En moyenne +35 points après réécriture."],
+    ['Plan requis', "Disponible à partir du plan Business (5,99€/sem)."],
+  ]},
+  ventes: { titre:'Mes ventes', sections:[
+    ['Ajouter une vente', "Cliquez Ajouter, renseignez le titre et le prix demandé. Liez à une annonce existante si disponible."],
+    ['Marquer vendu', "Entrez le prix final obtenu. L\'outil calcule si vous avez vendu au-dessus ou en dessous du prix demandé."],
+    ['Statistiques', "En haut : objets en cours, vendus, total gagné."],
+  ]},
+  chatbots: { titre:'Chatbots vendeur', sections:[
+    ["Principe", "Un assistant IA lié à votre annonce répond aux acheteurs 24h/24 à votre place via un lien unique."],
+    ['Ajouter à LeBonCoin', "Copiez le texte \"Copier pour LeBonCoin\" et collez-le dans votre description d\'annonce."],
+    ['Désactiver', "Désactivez le chatbot une fois l\'article vendu."],
+    ['Limites', "Starter = non disponible · Business = 50 msg/jour · Expert = 200 msg/jour · Premium = 500 msg/jour."],
+  ]},
+  outils: { titre:'9 outils IA', sections:[
+    ['Titres', "5 titres optimisés pour LeBonCoin générés à partir d\'une description courte."],
+    ['Prix abusif', "L\'IA compare le prix demandé avec le marché et donne un verdict."],
+    ['Calendrier', "Meilleur jour et heure pour publier selon la catégorie de l\'article."],
+    ['Arnaque', "Analyse un message suspect et donne un verdict rouge / orange / vert."],
+    ['Mode flash', "Annonce agressive pour vendre en 48h : prix cassé, urgence assumée."],
+    ['Mode lot', "Annonce groupée pour vendre plusieurs objets ensemble."],
+  ]},
+  historique: { titre:'Historique', sections:[
+    ['Annonces', "Toutes vos annonces générées. Cliquez pour voir et copier le texte complet."],
+    ['Réponses', "Toutes vos réponses générées pour les acheteurs."],
+    ['Conservation', "Historique conservé indéfiniment tant que votre compte est actif."],
+  ]},
+  tarifs: { titre:'Tarifs et plans', sections:[
+    ['Fonctionnement', "Plans hebdomadaires. Changement ou annulation possible à tout moment, sans engagement."],
+    ['Starter vs Business', "Starter = outils de base. Business = tout + chatbot + arnaque + analyser + flash. Expert = illimité."],
+    ['Packs', "Crédits supplémentaires sans abonnement. Idéal pour un usage ponctuel."],
+    ['Paiement', "Stripe sécurisé. Annulable en un clic depuis Profil."],
+  ]},
+  profil: { titre:'Profil et paramètres', sections:[
+    ['Modifier email', "Dans Sécurité : nouvel email + mot de passe actuel. Confirmation par email requise."],
+    ['Double auth', "Code à 6 chiffres par email à chaque connexion. Bouton \"Ce n\'était pas moi\" pour bloquer."],
+    ['Parrainage', "Votre lien dans Compte. Un ami qui souscrit = 1 semaine Business gratuite pour vous."],
+  ]},
+}
+
+function GuidePanel({ tab, onClose }) {
+  const guide = GUIDES[tab]
+  if (!guide) return null
+  const [openIdx, setOpenIdx] = useState(null)
+  return (
+    <div style={{ position:'fixed',top:0,right:0,bottom:0,width:340,background:'rgba(17,10,10,.99)',border:'1px solid rgba(201,168,76,.15)',borderRadius:'12px 0 0 12px',zIndex:500,display:'flex',flexDirection:'column',boxShadow:'-20px 0 60px rgba(0,0,0,.6)',animation:'slideInGuide .25s ease' }}>
+      <style>{`@keyframes slideInGuide{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}.guide-scroll::-webkit-scrollbar{width:2px}.guide-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:1px}`}</style>
+      <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 20px',borderBottom:'1px solid rgba(255,255,255,.06)',flexShrink:0 }}>
+        <div>
+          <div style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:9,letterSpacing:3,color:'var(--gold3)',marginBottom:2 }}>GUIDE CONTEXTUEL</div>
+          <div style={{ fontFamily:'Cormorant Garamond,serif',fontSize:20,fontWeight:400 }}>{guide.titre}</div>
+        </div>
+        <button onClick={onClose} style={{ background:'rgba(255,255,255,.06)',border:'none',borderRadius:'50%',width:30,height:30,cursor:'pointer',color:'var(--muted2)',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>✕</button>
+      </div>
+      <div className="guide-scroll" style={{ flex:1,overflowY:'auto',padding:'8px 0' }}>
+        {guide.sections.map(([titre, contenu], i) => (
+          <div key={i} style={{ borderBottom:'1px solid rgba(255,255,255,.04)' }}>
+            <button onClick={()=>setOpenIdx(openIdx===i?null:i)}
+              style={{ width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 20px',background:'none',border:'none',cursor:'pointer',textAlign:'left',gap:10 }}>
+              <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:11,letterSpacing:1,color:openIdx===i?'var(--gold2)':'var(--cream)',transition:'color .2s' }}>{titre}</span>
+              <span style={{ color:'var(--muted)',fontSize:10,flexShrink:0,transform:openIdx===i?'rotate(180deg)':'rotate(0)',transition:'transform .2s',display:'inline-block' }}>▾</span>
+            </button>
+            {openIdx===i && (
+              <div style={{ padding:'0 20px 16px 20px',fontSize:12,color:'var(--muted2)',lineHeight:1.8,borderLeft:'2px solid rgba(201,168,76,.25)',marginLeft:20,paddingLeft:14 }}>
+                {contenu}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div style={{ padding:'14px 20px',borderTop:'1px solid rgba(255,255,255,.04)',fontSize:10,color:'var(--muted)',textAlign:'center',flexShrink:0 }}>
+        Une question ? Contactez-nous sur la page d&apos;accueil.
+      </div>
+    </div>
+  )
+}
+
+
 function ScoreVendeur({ usage }) {
   const { points, niveau, prochainNiveau, pointsManquants, emoji } = (() => {
     let p = Math.min(usage.annonces * 10, 200) + Math.min(usage.reponses * 5, 150)
@@ -2587,7 +2702,7 @@ function ReferralSection() {
   },[])
 
   if (!code) return null
-  const link = (typeof window!=='undefined'?window.location.origin:'')+'/?ref='+code
+  const link = (typeof window!=='undefined'?window.location.origin:"')+'/?ref='+code
 
   return (
     <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
