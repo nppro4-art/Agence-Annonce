@@ -14,10 +14,12 @@ export default function Login() {
   const router = useRouter()
   const [form, setForm] = useState({ email: '', password: '' })
   const [code, setCode] = useState('')
-  const [step, setStep] = useState('login') // login | 2fa
+  const [step, setStep] = useState('login') // login | 2fa | refused
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [testIndex, setTestIndex] = useState(0)
+  const [showPwd, setShowPwd] = useState(false)
+  const [pollingActive, setPollingActive] = useState(false)
 
   useEffect(() => {
     const t = setInterval(() => setTestIndex(i => (i + 1) % TEMOIGNAGES.length), 4000)
@@ -38,6 +40,28 @@ export default function Login() {
     return () => clearInterval(t)
   }, [router.query])
 
+  // Polling - vérifier si refusé ou confirmé
+  useEffect(() => {
+    if (!pollingActive || !form.email) return
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/auth/status-2fa?email=' + encodeURIComponent(form.email))
+        const data = await res.json()
+        if (data.status === 'refused') {
+          setPollingActive(false)
+          setStep('refused')
+          clearInterval(interval)
+        }
+        if (data.status === 'confirmed' && data.code) {
+          setCode(data.code)
+          setPollingActive(false)
+          clearInterval(interval)
+        }
+      } catch(e) {}
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [pollingActive, form.email])
+
   const submitLogin = async (e) => {
     e.preventDefault()
     setLoading(true); setError('')
@@ -56,6 +80,7 @@ export default function Login() {
           body: JSON.stringify({ email: form.email })
         })
         setStep('2fa')
+        setPollingActive(true)
         setLoading(false)
         return
       }
@@ -150,7 +175,17 @@ export default function Login() {
                 ].map(f=>(
                   <div key={f.key} style={{ marginBottom:16 }}>
                     <label style={{ fontSize:11,fontWeight:500,color:'var(--muted2)',letterSpacing:1,textTransform:'uppercase',display:'block',marginBottom:8 }}>{f.label}</label>
-                    <input className="input-field" type={f.type} placeholder={f.ph} value={form[f.key]} onChange={e=>setForm({...form,[f.key]:e.target.value})} required />
+                    {f.key==='password' ? (
+                      <div style={{ position:'relative' }}>
+                        <input className="input-field" type={showPwd?'text':'password'} placeholder={f.ph} value={form[f.key]} onChange={e=>setForm({...form,[f.key]:e.target.value})} required style={{ paddingRight:44 }} />
+                        <button type="button" onClick={()=>setShowPwd(!showPwd)}
+                          style={{ position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:16,padding:4,lineHeight:1 }}>
+                          {showPwd ? '🙈' : '👁'}
+                        </button>
+                      </div>
+                    ) : (
+                      <input className="input-field" type={f.type} placeholder={f.ph} value={form[f.key]} onChange={e=>setForm({...form,[f.key]:e.target.value})} required />
+                    )}
                   </div>
                 ))}
                 {error && <div style={{ background:'rgba(200,57,43,.08)',border:'1px solid rgba(200,57,43,.2)',borderRadius:3,padding:'10px 14px',fontSize:13,color:'var(--red2)',marginBottom:16 }}>{error}</div>}
@@ -159,6 +194,21 @@ export default function Login() {
                 </button>
               </form>
             </>
+          )}
+
+          {step === 'refused' && (
+            <div style={{ textAlign:'center' }}>
+              <div style={{ background:'rgba(200,57,43,.08)',border:'1px solid rgba(200,57,43,.3)',borderRadius:8,padding:32,marginBottom:24 }}>
+                <div style={{ fontSize:48,marginBottom:16 }}>🔒</div>
+                <h2 style={{ fontFamily:'var(--font-display)',fontSize:22,fontWeight:600,marginBottom:10,color:'var(--red2)' }}>Connexion refusee</h2>
+                <p style={{ fontSize:13,color:'var(--muted2)',lineHeight:1.7 }}>
+                  La connexion a ete refusee depuis votre email.<br/>Si c'etait vous, reessayez.
+                </p>
+              </div>
+              <button onClick={()=>{setStep('login');setCode('');setError('');setPollingActive(false)}} className="btn-primary" style={{ width:'100%',fontSize:13,padding:'14px' }}>
+                RETOUR A LA CONNEXION
+              </button>
+            </div>
           )}
 
           {step === '2fa' && (
