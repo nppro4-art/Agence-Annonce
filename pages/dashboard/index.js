@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { SkyBackground, useSkyTheme, SKY_THEMES, getThemeFromHour } from '../../lib/SkyBackground'
 
 const PLAN_LIMITS = {
   premium:  { annonces: Infinity, reponses: Infinity },
@@ -318,6 +319,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null)
   const [tab, setTab] = useState('home')
   const [loading, setLoading] = useState(true)
+  const [skySettings, setSkySettings] = useState({ skyMode:'auto', skyTheme:'deep_night' })
   const [usage, setUsage] = useState({ annonces:0, reponses:0 })
   const [annonces, setAnnonces] = useState([])
   const [credits, setCredits] = useState({ annonces:{ remaining:0 }, reponses:{ remaining:0 } })
@@ -329,6 +331,7 @@ export default function Dashboard() {
   const [cancelDone, setCancelDone] = useState(false)
 
   useEffect(() => {
+    fetch('/api/public/sky-settings').then(r=>r.json()).then(s=>setSkySettings(s)).catch(()=>{})
     fetch('/api/auth/me').then(r=>r.json()).then(data => {
       if (!data.user) { router.push('/auth/login'); return }
       setUser(data.user)
@@ -491,7 +494,7 @@ export default function Dashboard() {
         }
       `}</style>
 
-      <NightSky />
+      <SkyBackground manualTheme={skySettings.skyMode==='manual'?skySettings.skyTheme:null} />
 
       {/* ── GUIDE AU PREMIER PLAN ─── */}
       {guideOpen && (
@@ -654,28 +657,6 @@ function ParisClock() {
     <div style={{ textAlign:'center', position:'absolute', left:'50%', transform:'translateX(-50%)' }}>
       <div style={{ fontFamily:'DM Mono,monospace', fontSize:15, color:'var(--cream)', letterSpacing:2, lineHeight:1 }}>{time}</div>
       <div style={{ fontFamily:'Bebas Neue,sans-serif', fontSize:7, letterSpacing:2, color:'var(--muted)', textTransform:'uppercase', marginTop:1 }}>Paris</div>
-    </div>
-  )
-}
-
-// ─── CIEL ÉTOILÉ ──────────────────────────────────────────
-function NightSky() {
-  const stars = Array.from({length:55}, (_,i) => ({
-    id:i, size:Math.random()*2+1, x:Math.random()*100, y:Math.random()*100,
-    dur:Math.random()*3+2, delay:Math.random()*4, opacity:Math.random()*.6+.2,
-  }))
-  return (
-    <div style={{ position:'fixed',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:0 }}>
-      {stars.map(s=>(
-        <div key={s.id} className="star" style={{
-          width:s.size+'px', height:s.size+'px', left:s.x+'%', top:s.y+'%',
-          background:`rgba(${180+Math.floor(Math.random()*60)},${190+Math.floor(Math.random()*50)},255,${s.opacity})`,
-          '--dur':s.dur+'s', '--delay':s.delay+'s',
-        }} />
-      ))}
-      <div style={{ position:'fixed',top:'8%',right:'12%',fontSize:32,animation:'moonGlow 4s ease-in-out infinite',filter:'drop-shadow(0 0 10px rgba(180,200,255,.5))',pointerEvents:'none',zIndex:0,transform:'rotate(180deg)' }}>🌙</div>
-      <div style={{ position:'fixed',top:'-15%',right:'-5%',width:'55vw',height:'55vw',background:'radial-gradient(circle,rgba(40,80,160,.16) 0%,rgba(20,50,120,.07) 40%,transparent 70%)',pointerEvents:'none',zIndex:0,borderRadius:'50%',animation:'nebulaPulse 12s ease-in-out infinite' }} />
-      <div style={{ position:'fixed',bottom:'-15%',left:'-5%',width:'45vw',height:'45vw',background:'radial-gradient(circle,rgba(30,60,140,.12) 0%,rgba(15,35,90,.05) 40%,transparent 70%)',pointerEvents:'none',zIndex:0,borderRadius:'50%',animation:'nebulaPulse 16s ease-in-out infinite reverse' }} />
     </div>
   )
 }
