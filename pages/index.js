@@ -85,7 +85,7 @@ export default function Home() {
   const t = TEMOIGNAGES[temoIndex]
 
   return (
-    <div style={{ minHeight: '100vh', background: '#030303', color: '#f0ece4', fontFamily: "'DM Sans', system-ui, sans-serif", overflowX: 'hidden' }}>
+    <div style={{ minHeight: '100vh', background: '#110a0a', color: '#f0ece4', fontFamily: "'DM Sans', system-ui, sans-serif", overflowX: 'hidden' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
@@ -99,7 +99,7 @@ export default function Home() {
         .fade-3{animation:fadeUp .6s ease .4s both}
         .fade-4{animation:fadeUp .6s ease .55s both}
         .gold-text{background:linear-gradient(135deg,#a8843c,#c9a84c,#e8d48a,#c9a84c);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite}
-        .btn-main{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#a8843c,#c9a84c);border:none;border-radius:6px;color:#030303;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;padding:16px 32px;text-decoration:none;transition:all .2s;-webkit-tap-highlight-color:transparent}
+        .btn-main{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#a8843c,#c9a84c);border:none;border-radius:6px;color:#110a0a;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;padding:16px 32px;text-decoration:none;transition:all .2s;-webkit-tap-highlight-color:transparent}
         .btn-main:hover{transform:translateY(-2px);filter:brightness(1.1)}
         .btn-main:active{transform:translateY(0)}
         .btn-outline{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(201,168,76,.3);border-radius:6px;color:#c9a84c;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;padding:12px 24px;text-decoration:none;transition:all .2s;-webkit-tap-highlight-color:transparent}
@@ -114,13 +114,13 @@ export default function Home() {
 
       {/* Notification popup */}
       {notif && (
-        <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', background: 'rgba(14,14,14,.95)', border: '1px solid rgba(201,168,76,.25)', borderRadius: 8, padding: '10px 18px', fontSize: 12, color: '#c9a84c', zIndex: 9999, whiteSpace: 'nowrap', animation: 'slideUp .3s ease', backdropFilter: 'blur(10px)' }}>
+        <div style={{ position: 'fixed', bottom: 20, left: '50%', transform: 'translateX(-50%)', background: 'rgba(17,10,10,.95)', border: '1px solid rgba(201,168,76,.25)', borderRadius: 8, padding: '10px 18px', fontSize: 12, color: '#c9a84c', zIndex: 9999, whiteSpace: 'nowrap', animation: 'slideUp .3s ease', backdropFilter: 'blur(10px)' }}>
           ✦ {notif.text}
         </div>
       )}
 
       {/* HEADER */}
-      <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(3,3,3,.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,.06)', padding: '0 20px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,10,10,.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,.06)', padding: '0 20px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/" style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 4, color: '#f0ece4' }}>
           A.<span style={{ color: '#c8392b' }}>A</span>
         </Link>
@@ -144,7 +144,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <Link href="/auth/register" style={{ fontFamily: 'Bebas Neue', fontSize: 11, letterSpacing: 2, color: '#030303', background: '#c9a84c', padding: '5px 14px', borderRadius: 4 }}>EN PROFITER</Link>
+          <Link href="/auth/register" style={{ fontFamily: 'Bebas Neue', fontSize: 11, letterSpacing: 2, color: '#110a0a', background: '#c9a84c', padding: '5px 14px', borderRadius: 4 }}>EN PROFITER</Link>
         </div>
       )}
 
@@ -191,7 +191,13 @@ export default function Home() {
 
       {/* DEMO VISUELLE - comment ça marche */}
       <section style={{ padding: '20px 20px 60px', maxWidth: 600, margin: '0 auto' }}>
-        <div style={{ background: 'rgba(255,255,255,.02)', border: '1px solid rgba(255,255,255,.07)', borderRadius: 16, overflow: 'hidden' }}>
+        {/* Label exemple */}
+        <div style={{ textAlign:'center',marginBottom:16 }}>
+          <span style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:10,letterSpacing:3,color:'#c9a84c',background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',borderRadius:20,padding:'4px 14px' }}>
+            EXEMPLE RÉEL — GÉNÉRÉ EN 15 SECONDES
+          </span>
+        </div>
+        <div style={{ background: 'rgba(255,255,255,.02)', border: '1px solid rgba(201,168,76,.15)', borderRadius: 16, overflow: 'hidden', boxShadow:'0 8px 32px rgba(0,0,0,.4)' }}>
           {/* Barre de "navigation" */}
           <div style={{ background: 'rgba(255,255,255,.03)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid rgba(255,255,255,.06)' }}>
             <div style={{ display: 'flex', gap: 5 }}>
@@ -201,7 +207,9 @@ export default function Home() {
           </div>
           {/* Contenu demo */}
           <div style={{ padding: '20px 16px' }}>
-            <div style={{ fontSize: 10, fontFamily: 'Bebas Neue', letterSpacing: 2, color: '#5a5550', marginBottom: 12 }}>AVANT — Annonce classique</div>
+            <div style={{ display:'flex',alignItems:'center',gap:8,marginBottom:12 }}>
+              <span style={{ fontFamily:'Bebas Neue',fontSize:10,letterSpacing:2,color:'#5a5550' }}>AVANT — Annonce classique</span>
+            </div>
             <div style={{ background: 'rgba(200,57,43,.06)', border: '1px solid rgba(200,57,43,.15)', borderRadius: 8, padding: '12px 14px', marginBottom: 16, fontSize: 13, color: '#7a7268', lineHeight: 1.6 }}>
               "Je vends ma voiture. Bon état. Contactez-moi."
               <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -312,7 +320,7 @@ export default function Home() {
             {PLANS.map((plan, i) => (
               <div key={plan.name} style={{ background: plan.popular ? 'linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03))' : 'rgba(255,255,255,.02)', border: '1px solid', borderColor: plan.popular ? 'rgba(201,168,76,.3)' : 'rgba(255,255,255,.07)', borderRadius: 14, padding: '20px', position: 'relative', overflow: 'hidden' }}>
                 {plan.popular && (
-                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'linear-gradient(135deg,#a8843c,#c9a84c)', color: '#030303', fontFamily: 'Bebas Neue', fontSize: 10, letterSpacing: 2, padding: '4px 14px', borderRadius: '0 14px 0 8px' }}>POPULAIRE</div>
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'linear-gradient(135deg,#a8843c,#c9a84c)', color: '#110a0a', fontFamily: 'Bebas Neue', fontSize: 10, letterSpacing: 2, padding: '4px 14px', borderRadius: '0 14px 0 8px' }}>POPULAIRE</div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
                   <div>
