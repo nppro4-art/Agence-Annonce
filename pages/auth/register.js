@@ -14,6 +14,7 @@ export default function Register() {
   const router = useRouter()
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
+  const [showPwd, setShowPwd] = useState(false)
   const [loading, setLoading] = useState(false)
   const [testIndex, setTestIndex] = useState(0)
 
@@ -121,7 +122,16 @@ export default function Register() {
                 </label>
                 <input className="input-field" type={f.type} placeholder={f.ph}
                   value={form[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })}
-                  required={f.req} minLength={f.key === 'password' ? 8 : undefined} />
+                  required={f.req} minLength={f.key === 'password' ? 8 : undefined}
+                type={f.key==='password'?(showPwd?'text':'password'):f.type}
+                style={{ paddingRight: f.key==='password'?44:undefined }}
+              />
+              {f.key==='password' && (
+                <button type="button" onClick={()=>setShowPwd(!showPwd)}
+                  style={{ position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',color:'var(--muted)',cursor:'pointer',fontSize:16,padding:4,lineHeight:1 }}>
+                  {showPwd ? '🙈' : '👁'}
+                </button>
+              )}
               </div>
             ))}
 
