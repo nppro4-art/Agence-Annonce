@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { SkyBackground } from '../../lib/SkyBackground'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -68,6 +69,7 @@ export default function Register() {
         }
       `}</style>
 
+      <SkyBackground />
       <div className="auth-left" style={{ flex: 1, background: 'var(--ink)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '48px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 70% 40%, rgba(200,57,43,.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <Link href="/" style={{ fontFamily: 'var(--font-label)', fontSize: 16, letterSpacing: 3 }}>
