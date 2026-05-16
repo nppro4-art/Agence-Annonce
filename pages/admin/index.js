@@ -129,7 +129,7 @@ export default function Admin() {
       )}
 
       {/* Header */}
-      <header style={{ background:'rgba(3,3,3,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
+      <header style={{ background:'rgba(17,10,10,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
         <div style={{ maxWidth:1200,margin:'0 auto',padding:'0 24px',height:56,display:'flex',alignItems:'center',justifyContent:'space-between',gap:16 }}>
           <div style={{ display:'flex',alignItems:'center',gap:14,flexShrink:0 }}>
             <span style={{ fontFamily:'var(--font-label)',fontSize:15,letterSpacing:4 }}>A.<span style={{ color:'var(--red)' }}>A</span></span>
@@ -324,7 +324,7 @@ export default function Admin() {
                   </div>
                 ))}
               </div>
-              <button onClick={addEmployee} className="btn-gold" style={{ width:'100%',fontSize:11,padding:'13px',letterSpacing:2,color:'#030303' }}>+ AJOUTER L&apos;AFFILIÉ</button>
+              <button onClick={addEmployee} className="btn-gold" style={{ width:'100%',fontSize:11,padding:'13px',letterSpacing:2,color:'#110a0a' }}>+ AJOUTER L&apos;AFFILIÉ</button>
             </div>
             <div style={{ fontFamily:'var(--font-label)',fontSize:9,color:'var(--muted2)',letterSpacing:2,marginBottom:12 }}>{employees.length} AFFILIÉ(S)</div>
             {employees.length===0 ? (
@@ -370,7 +370,7 @@ export default function Admin() {
                 </div>
                 <div style={{ display:'flex',alignItems:'center',gap:14,flexShrink:0 }}>
                   <span style={{ fontFamily:'var(--font-display)',fontSize:24,fontWeight:300,color:'var(--gold2)' }}>{c.amount} €</span>
-                  <button onClick={()=>markPaid(c.id)} className="btn-gold" style={{ fontSize:10,padding:'8px 16px',letterSpacing:1.5,color:'#030303' }}>PAYER ✓</button>
+                  <button onClick={()=>markPaid(c.id)} className="btn-gold" style={{ fontSize:10,padding:'8px 16px',letterSpacing:1.5,color:'#110a0a' }}>PAYER ✓</button>
                 </div>
               </div>
             ))}
@@ -468,7 +468,7 @@ function AccessTab({ showToast }) {
           type="email" placeholder="email@exemple.com" value={email} onChange={e=>setEmail(e.target.value)}
           onKeyDown={e=>e.key==='Enter'&&grant()} />
         <button onClick={grant} disabled={loading||!email} className="btn-gold"
-          style={{ width:'100%',fontSize:11,padding:'13px',letterSpacing:2,opacity:(loading||!email)?0.5:1,color:'#030303' }}>
+          style={{ width:'100%',fontSize:11,padding:'13px',letterSpacing:2,opacity:(loading||!email)?0.5:1,color:'#110a0a' }}>
           {loading?'ACTIVATION...':'∞ ACTIVER ACCÈS PREMIUM'}
         </button>
       </div>
@@ -560,7 +560,7 @@ function SettingsTab({ showToast }) {
         </div>
       ))}
       <button onClick={save} disabled={saving} className="btn-gold"
-        style={{ width:'100%',marginTop:8,fontSize:11,padding:'14px',letterSpacing:2,opacity:saving?0.6:1,color:'#030303' }}>
+        style={{ width:'100%',marginTop:8,fontSize:11,padding:'14px',letterSpacing:2,opacity:saving?0.6:1,color:'#110a0a' }}>
         {saving?'SAUVEGARDE...':'SAUVEGARDER LES PARAMÈTRES'}
       </button>
     </div>
