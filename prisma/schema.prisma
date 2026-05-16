@@ -22,6 +22,9 @@ model User {
   referralUsed     String?
   loyaltyPoints    Int            @default(0)
   twoFAEnabled     Boolean        @default(false)
+  clientCode       String?        @unique
+  lastLogin        DateTime?
+  role             String         @default("user")
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   annonces         Annonce[]
