@@ -241,6 +241,7 @@ export default function Dashboard() {
   const [usage, setUsage] = useState({ annonces:0, reponses:0 })
   const [annonces, setAnnonces] = useState([])
   const [credits, setCredits] = useState({ annonces:{ remaining:0 }, reponses:{ remaining:0 } })
+  const [totalStats, setTotalStats] = useState({ annonces:0, reponses:0, estimations:0, chatbots:0, analyses:0 })
   const [purchases, setPurchases] = useState([])
   const [showSubModal, setShowSubModal] = useState(false)
   const [cancelLoading, setCancelLoading] = useState(false)
@@ -532,17 +533,20 @@ export default function Dashboard() {
         {/* Topbar */}
         <div className="db-topbar" style={{ justifyContent:'space-between' }}>
           {/* Compteur global */}
-          <div className="cpt-group" style={{ display:'flex',alignItems:'center',gap:16 }}>
+          <div className="cpt-group" style={{ display:'flex',alignItems:'center',gap:12 }}>
             {[
-              {val:(usage.annonces||0)+(usage.reponses||0),label:'Actions totales',icon:'◈'},
-              {val:usage.annonces||0,label:'Annonces',icon:'✍'},
-              {val:usage.reponses||0,label:'Réponses',icon:'◎'},
+              {val:(totalStats.annonces||0)+(totalStats.reponses||0)+(totalStats.estimations||0)+(totalStats.analyses||0)+(totalStats.chatbots||0),label:'Total',icon:'◈'},
+              {val:totalStats.annonces||0,label:'Annonces',icon:'✍'},
+              {val:totalStats.reponses||0,label:'Réponses',icon:'◎'},
+              {val:totalStats.estimations||0,label:'Estimations',icon:'⚖'},
+              {val:totalStats.analyses||0,label:'Analyses',icon:'◈'},
+              {val:totalStats.chatbots||0,label:'Chatbots',icon:'◇'},
             ].map(s=>(
-              <div key={s.label} style={{ display:'flex',alignItems:'center',gap:6 }}>
-                <span style={{ fontSize:11,color:'var(--muted)' }}>{s.icon}</span>
+              <div key={s.label} style={{ display:'flex',alignItems:'center',gap:5 }}>
+                <span style={{ fontSize:10,color:'var(--muted)' }}>{s.icon}</span>
                 <div>
-                  <div style={{ fontFamily:'DM Mono,monospace',fontSize:13,color:'var(--cream)',lineHeight:1 }}>{s.val}</div>
-                  <div style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:7,letterSpacing:1.5,color:'var(--muted)',textTransform:'uppercase' }}>{s.label}</div>
+                  <div style={{ fontFamily:'DM Mono,monospace',fontSize:12,color:'var(--cream)',lineHeight:1 }}>{s.val}</div>
+                  <div style={{ fontFamily:'Bebas Neue,sans-serif',fontSize:6,letterSpacing:1.5,color:'var(--muted)',textTransform:'uppercase' }}>{s.label}</div>
                 </div>
               </div>
             ))}
@@ -581,11 +585,16 @@ export default function Dashboard() {
       <NightSky />
       {/* Bouton guide flottant */}
       <button onClick={()=>setGuideOpen(!guideOpen)}
-        style={{ position:'fixed',bottom:24,right:24,zIndex:400,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(8,10,15,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
+        style={{ position:'fixed',bottom:24,right:24,zIndex:9998,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(8,10,15,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
         title="Guide de l\'outil">
         {guideOpen ? '✕' : '?'}
       </button>
-      {guideOpen && <GuidePanel tab={tab} onClose={()=>setGuideOpen(false)} />}
+      {guideOpen && (
+        <>
+          <div onClick={()=>setGuideOpen(false)} style={{ position:'fixed',inset:0,zIndex:9997,background:'rgba(0,0,0,.4)',backdropFilter:'blur(2px)' }} />
+          <GuidePanel tab={tab} onClose={()=>setGuideOpen(false)} />
+        </>
+      )}
 
       {showSubModal && (
         <div style={{ position:'fixed',inset:0,background:'rgba(8,10,15,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
@@ -2577,7 +2586,7 @@ function GuidePanel({ tab, onClose }) {
   if (!guide) return null
   const [openIdx, setOpenIdx] = useState(null)
   return (
-    <div className="guide-scroll" style={{ position:'fixed',top:0,right:0,bottom:0,width:340,maxWidth:'90vw',background:'rgba(8,10,15,.99)',border:'1px solid rgba(201,168,76,.15)',borderRadius:'12px 0 0 12px',zIndex:500,display:'flex',flexDirection:'column',boxShadow:'-20px 0 60px rgba(0,0,0,.6)',animation:'slideInGuide .25s ease' }}>
+    <div className="guide-scroll" style={{ position:'fixed',top:0,right:0,bottom:0,width:340,maxWidth:'90vw',background:'rgba(6,8,14,.99)',border:'1px solid rgba(201,168,76,.2)',borderRadius:'12px 0 0 12px',zIndex:9999,backdropFilter:'blur(20px)',display:'flex',flexDirection:'column',boxShadow:'-20px 0 60px rgba(0,0,0,.6)',animation:'slideInGuide .25s ease' }}>
       <style>{`@keyframes slideInGuide{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}.guide-scroll::-webkit-scrollbar{width:2px}.guide-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:1px}`}</style>
       <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 20px',borderBottom:'1px solid rgba(255,255,255,.06)',flexShrink:0 }}>
         <div>
