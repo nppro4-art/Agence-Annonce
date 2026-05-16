@@ -217,4 +217,6 @@ model Settings {
   commissionExpert    Float   @default(2.50)
   stripePrice         Float   @default(5.99)
   adminWebhook        String?
+  skyMode             String  @default("auto")
+  skyTheme            String  @default("deep_night")
 }
