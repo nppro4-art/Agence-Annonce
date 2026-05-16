@@ -211,7 +211,7 @@ const S = {
 function LockOverlay({ subscribe }) {
   return (
     <div style={{ position:'sticky',bottom:24,left:0,right:0,zIndex:50,display:'flex',justifyContent:'center',marginTop:20 }}>
-      <div style={{ background:'rgba(7,13,26,.95)',backdropFilter:'blur(20px)',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'28px 32px',maxWidth:440,width:'100%',textAlign:'center',boxShadow:'0 24px 60px rgba(7,13,26,.8),0 0 0 1px rgba(201,168,76,.05)' }}>
+      <div style={{ background:'rgba(8,10,15,.95)',backdropFilter:'blur(20px)',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'28px 32px',maxWidth:440,width:'100%',textAlign:'center',boxShadow:'0 24px 60px rgba(8,10,15,.8),0 0 0 1px rgba(201,168,76,.05)' }}>
         <div style={{ width:40,height:40,borderRadius:'50%',background:'rgba(201,168,76,.08)',border:'1px solid rgba(201,168,76,.2)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px',fontSize:18 }}>🔒</div>
         <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--gold3)',marginBottom:8,textTransform:'uppercase' }}>Abonnement requis</div>
         <div style={{ fontFamily:'Cormorant Garamond',fontSize:22,fontWeight:500,marginBottom:8 }}>Fonctionnalité premium</div>
@@ -312,7 +312,7 @@ export default function Dashboard() {
   ]
 
   if (loading) return (
-    <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'#070d1a',gap:16 }}>
+    <div style={{ minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'#080a0f',gap:16 }}>
       <div style={{ fontFamily:'Cormorant Garamond',fontSize:28,fontWeight:300,letterSpacing:4,color:'var(--gold2)' }}>Annonza</div>
       <div style={{ width:24,height:24,border:'1.5px solid rgba(201,168,76,.2)',borderTopColor:'var(--gold)',borderRadius:'50%',animation:'spin .8s linear infinite' }} />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -320,7 +320,7 @@ export default function Dashboard() {
   )
 
   return (
-    <div style={{ minHeight:'100vh',background:'#070d1a',fontFamily:'var(--font-ui)' }}>
+    <div style={{ minHeight:'100vh',background:'#080a0f',fontFamily:'var(--font-ui)' }}>
       <style>{`
         /* ── ANIMATIONS ─────────────────── */
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -329,6 +329,7 @@ export default function Dashboard() {
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
         @keyframes scaleIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
         @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        @keyframes nebulaPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
         @keyframes orbit{from{transform:rotate(0deg) translateX(var(--r)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--r)) rotate(-360deg)}}
         @keyframes orbitReverse{from{transform:rotate(0deg) translateX(var(--r)) rotate(0deg)}to{transform:rotate(-360deg) translateX(var(--r)) rotate(360deg)}}
         @keyframes twinkle{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
@@ -384,7 +385,7 @@ export default function Dashboard() {
         .db-layout{margin-left:60px;min-height:100vh;display:flex;flex-direction:column}
         .db-topbar{justify-content:space-between;
           position:sticky;top:0;z-index:100;height:50px;
-          background:rgba(7,13,26,.95);border-bottom:1px solid rgba(255,255,255,.05);
+          background:rgba(8,10,15,.95);border-bottom:1px solid rgba(255,255,255,.05);
           backdrop-filter:blur(20px);
           display:flex;align-items:center;justify-content:flex-end;
           padding:0 24px;gap:10px;
@@ -460,30 +461,42 @@ export default function Dashboard() {
         /* ── MOBILE ──────────────────────── */
         @media(max-width:768px){
           .star{display:none}
-          .moon{font-size:20px!important;top:3%!important;right:4%!important}
-          .sidebar{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;height:58px!important;flex-direction:row!important;border-right:none!important;border-top:1px solid rgba(201,168,76,.08)!important;padding:0!important;overflow-x:auto;overflow-y:hidden;box-shadow:none!important}
+          .moon{font-size:18px!important;top:2%!important;right:3%!important}
+          .sidebar{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;height:56px!important;flex-direction:row!important;border-right:none!important;border-top:1px solid rgba(201,168,76,.1)!important;padding:0!important;overflow-x:auto;overflow-y:hidden;box-shadow:0 -4px 20px rgba(0,0,0,.4)!important}
           .sidebar:hover{width:100%!important}
           .sidebar-logo{display:none!important}
-          .sidebar-item{height:58px!important;padding:0 6px!important;flex-direction:column!important;gap:3px!important;min-width:48px;flex:1;justify-content:center;border-left:none!important;border-top:2px solid transparent!important;border-radius:0}
-          .sidebar-item.active{border-top-color:var(--gold)!important;border-left-color:transparent!important}
-          .sidebar-label{opacity:1!important;font-size:7px!important;letter-spacing:0!important;transition:none!important;text-align:center}
-          .sidebar-icon{font-size:15px!important;width:auto!important}
-          .db-layout{margin-left:0!important;margin-bottom:58px}
-          .db-topbar{justify-content:space-between;padding:0 12px!important}
-          .db-main{padding:16px 12px 20px!important}
+          .sidebar-item{height:56px!important;padding:0 4px!important;flex-direction:column!important;gap:2px!important;min-width:44px;flex:1;justify-content:center;border-left:none!important;border-top:2px solid transparent!important;border-radius:0}
+          .sidebar-item.active{border-top-color:var(--gold)!important;border-left-color:transparent!important;background:rgba(201,168,76,.06)!important}
+          .sidebar-label{opacity:1!important;font-size:7px!important;letter-spacing:0!important;transition:none!important;text-align:center;max-width:48px;overflow:hidden;text-overflow:ellipsis}
+          .sidebar-icon{font-size:14px!important;width:auto!important}
+          .db-layout{margin-left:0!important;margin-bottom:56px!important}
+          .db-topbar{padding:0 10px!important;gap:6px!important;height:44px!important}
+          .cpt-group{gap:8px!important}
+          .db-main{padding:14px 12px 16px!important;max-width:100%!important}
           .db-grid2{grid-template-columns:1fr!important}
           .db-grid3{grid-template-columns:1fr 1fr!important}
-          .db-actions{grid-template-columns:1fr 1fr!important}
+          .db-actions{grid-template-columns:1fr!important}
           .db-form-grid{grid-template-columns:1fr!important}
           .db-tools-grid{grid-template-columns:1fr 1fr!important}
           .db-plans-grid{grid-template-columns:1fr!important}
+          .db-inp{font-size:16px!important}
+          .cat-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))!important;gap:6px!important}
+          .guide-scroll{max-width:95vw!important}
+          button[title*="Guide"]{bottom:66px!important;right:12px!important;width:38px!important;height:38px!important}
+          .card,.tool-card{border-radius:10px!important}
         }
         @media(max-width:420px){
-          .db-actions{grid-template-columns:1fr!important}
           .db-grid3{grid-template-columns:1fr!important}
-          .db-tools-grid{grid-template-columns:1fr!important}
+          .db-tools-grid{grid-template-columns:1fr 1fr!important}
+          .sidebar-label{display:none!important}
+          .sidebar-item{min-width:36px!important}
+          .db-actions{grid-template-columns:1fr!important}
         }
-      `}</style>
+        @media(max-width:768px) and (orientation:landscape){
+          .sidebar{height:48px!important}
+          .sidebar-item{height:48px!important}
+          .db-layout{margin-bottom:48px!important}
+        }`}</style>
 
       {/* ── SIDEBAR ─────────────────────────────── */}
       <nav className="sidebar">
@@ -568,16 +581,16 @@ export default function Dashboard() {
       <NightSky />
       {/* Bouton guide flottant */}
       <button onClick={()=>setGuideOpen(!guideOpen)}
-        style={{ position:'fixed',bottom:24,right:24,zIndex:400,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(7,13,26,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
+        style={{ position:'fixed',bottom:24,right:24,zIndex:400,width:44,height:44,borderRadius:'50%',background:guideOpen?'linear-gradient(135deg,#a8843c,#c9a84c)':'rgba(8,10,15,.95)',border:'1px solid',borderColor:guideOpen?'transparent':'rgba(201,168,76,.3)',color:guideOpen?'#030303':'var(--gold2)',cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 20px rgba(0,0,0,.5)',transition:'all .2s',fontWeight:700 }}
         title="Guide de l\'outil">
         {guideOpen ? '✕' : '?'}
       </button>
       {guideOpen && <GuidePanel tab={tab} onClose={()=>setGuideOpen(false)} />}
 
       {showSubModal && (
-        <div style={{ position:'fixed',inset:0,background:'rgba(7,13,26,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
+        <div style={{ position:'fixed',inset:0,background:'rgba(8,10,15,.9)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20,backdropFilter:'blur(8px)' }}
           onClick={()=>setShowSubModal(false)}>
-          <div className="modal-enter" style={{ background:'#070d1a',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(7,13,26,.8)' }}
+          <div className="modal-enter" style={{ background:'#080a0f',border:'1px solid rgba(201,168,76,.2)',borderRadius:8,padding:'32px 28px',width:'100%',maxWidth:440,position:'relative',boxShadow:'0 32px 80px rgba(8,10,15,.8)' }}
             onClick={e=>e.stopPropagation()}>
             <button onClick={()=>setShowSubModal(false)} style={{ position:'absolute',top:16,right:18,background:'rgba(255,255,255,.06)',border:'none',borderRadius:'50%',color:'var(--muted2)',cursor:'pointer',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16 }}>×</button>
             <div style={{ fontFamily:'var(--font-label)',fontSize:10,letterSpacing:3,color:'var(--gold3)',marginBottom:10,textTransform:'uppercase' }}>Mon abonnement</div>
@@ -793,7 +806,7 @@ function AnnonceTab({ isSubscribed, credits, subscribe, onUsed }) {
       <div style={{ marginBottom:24 }}><span className="sec-label">Outil IA</span><h2 className="sec-title">Créer une annonce</h2></div>
       <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'14px 18px',marginBottom:8 }}>
         <div style={S.lbl}>Categorie *</div>
-        <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))',gap:10,marginTop:8 }}>
+        <div className="cat-grid" style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(110px,1fr))',gap:8,marginTop:8 }}>
           {CATEGORY_LIST.map((c,i)=>(
             <button key={c} onClick={()=>{setCategorie(c);setForm({})}}
               style={{ background:categorie===c?'rgba(201,168,76,.1)':'rgba(255,255,255,.02)',border:'1px solid',borderColor:categorie===c?'rgba(201,168,76,.3)':'rgba(255,255,255,.07)',borderRadius:10,color:categorie===c?'var(--gold2)':'var(--muted2)',cursor:'pointer',padding:'12px 8px',display:'flex',flexDirection:'column',alignItems:'center',gap:5,transition:'all .2s',animationDelay:(i*.03)+'s' }}>
@@ -2464,20 +2477,30 @@ function NightSky() {
         zIndex:0,
         transform:'rotate(180deg)',
       }}>🌙</div>
-      {/* Nébuleuse subtile */}
+      {/* Nébuleuses bleu nuit */}
       <div style={{
-        position:'fixed',top:'-20%',right:'-10%',
-        width:'60vw',height:'60vw',
-        background:'radial-gradient(circle,rgba(30,60,120,.12) 0%,rgba(10,20,60,.06) 40%,transparent 70%)',
+        position:'fixed',top:'-15%',right:'-5%',
+        width:'55vw',height:'55vw',
+        background:'radial-gradient(circle,rgba(40,80,160,.18) 0%,rgba(20,50,120,.08) 40%,transparent 70%)',
         pointerEvents:'none',zIndex:0,
         borderRadius:'50%',
+        animation:'nebulaPulse 12s ease-in-out infinite',
       }} />
       <div style={{
-        position:'fixed',bottom:'-20%',left:'-10%',
-        width:'50vw',height:'50vw',
-        background:'radial-gradient(circle,rgba(20,40,100,.08) 0%,transparent 70%)',
+        position:'fixed',bottom:'-15%',left:'-5%',
+        width:'45vw',height:'45vw',
+        background:'radial-gradient(circle,rgba(30,60,140,.14) 0%,rgba(15,35,90,.06) 40%,transparent 70%)',
         pointerEvents:'none',zIndex:0,
         borderRadius:'50%',
+        animation:'nebulaPulse 16s ease-in-out infinite reverse',
+      }} />
+      <div style={{
+        position:'fixed',top:'40%',left:'30%',
+        width:'30vw',height:'30vw',
+        background:'radial-gradient(circle,rgba(20,50,120,.06) 0%,transparent 70%)',
+        pointerEvents:'none',zIndex:0,
+        borderRadius:'50%',
+        animation:'nebulaPulse 20s ease-in-out infinite',
       }} />
     </div>
   )
@@ -2554,7 +2577,7 @@ function GuidePanel({ tab, onClose }) {
   if (!guide) return null
   const [openIdx, setOpenIdx] = useState(null)
   return (
-    <div style={{ position:'fixed',top:0,right:0,bottom:0,width:340,background:'rgba(7,13,26,.99)',border:'1px solid rgba(201,168,76,.15)',borderRadius:'12px 0 0 12px',zIndex:500,display:'flex',flexDirection:'column',boxShadow:'-20px 0 60px rgba(0,0,0,.6)',animation:'slideInGuide .25s ease' }}>
+    <div className="guide-scroll" style={{ position:'fixed',top:0,right:0,bottom:0,width:340,maxWidth:'90vw',background:'rgba(8,10,15,.99)',border:'1px solid rgba(201,168,76,.15)',borderRadius:'12px 0 0 12px',zIndex:500,display:'flex',flexDirection:'column',boxShadow:'-20px 0 60px rgba(0,0,0,.6)',animation:'slideInGuide .25s ease' }}>
       <style>{`@keyframes slideInGuide{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}.guide-scroll::-webkit-scrollbar{width:2px}.guide-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:1px}`}</style>
       <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 20px',borderBottom:'1px solid rgba(255,255,255,.06)',flexShrink:0 }}>
         <div>
@@ -2601,7 +2624,7 @@ function ScoreVendeur({ usage }) {
   const pct = Math.min(100, Math.max(0, ((points-minPoints)/(maxPoints-minPoints))*100))
 
   return (
-    <div style={{ background:'linear-gradient(135deg,rgba(201,168,76,.05),rgba(201,168,76,.02))',border:'1px solid rgba(201,168,76,.15)',borderRadius:4,padding:'16px 22px',marginBottom:24,display:'flex',alignItems:'center',gap:16,flexWrap:'wrap' }}>
+    <div style={{ background:'linear-gradient(135deg,rgba(201,168,76,.05),rgba(201,168,76,.02))',border:'1px solid rgba(201,168,76,.15)',borderRadius:10,padding:'14px 18px',marginBottom:20,display:'flex',alignItems:'center',gap:12,flexWrap:'wrap' }}>
       <div style={{ fontSize:24 }}>{emoji}</div>
       <div style={{ flex:1,minWidth:140 }}>
         <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8 }}>
@@ -2672,7 +2695,7 @@ function ReferralSection() {
   },[])
 
   if (!code) return null
-  const link = (typeof window!=='undefined'?window.location.origin:'')+'/?ref='+code
+  const link = (typeof window!=='undefined'?window.location.origin:"')+'/?ref='+code
 
   return (
     <div style={{ background:'var(--s1)',border:'1px solid var(--border)',padding:'18px 20px',marginBottom:8 }}>
