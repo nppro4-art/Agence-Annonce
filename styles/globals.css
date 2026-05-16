@@ -31,9 +31,11 @@
 
 /* ── RESET ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  background: #110a0a; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--black);
+  background: #110a0a;
+  background-color: #110a0a;
   color: var(--cream);
   font-family: var(--font-ui);
   font-size: 15px;
