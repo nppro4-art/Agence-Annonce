@@ -3,18 +3,18 @@
 
 /* ── VARIABLES ──────────────────────────────────────────── */
 :root {
-  --black:    #030303;
-  --ink:      #0a0a0a;
-  --s1:       #0e0e0e;
-  --s2:       #121212;
-  --s3:       #1a1814;
+  --black:    #110a0a;
+  --ink:      #160c0c;
+  --s1:       #1a0f0f;
+  --s2:       #1f1212;
+  --s3:       #251515;
   --white:    #ffffff;
   --cream:    #f0ece4;
-  --muted:    #5a5550;
-  --muted2:   #7a7268;
-  --muted3:   #9a9590;
-  --border:   #1e1c18;
-  --border2:  #2a2520;
+  --muted:    #6a5858;
+  --muted2:   #8a7272;
+  --muted3:   #aa9292;
+  --border:   #2a1818;
+  --border2:  #3a2020;
   --gold:     #c9a84c;
   --gold2:    #d4b568;
   --gold3:    #a8843c;
@@ -69,7 +69,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   background: linear-gradient(135deg, var(--gold3), var(--gold2));
   border: none; border-radius: 3px;
-  color: #030303 !important; cursor: pointer;
+  color: #110a0a !important; cursor: pointer;
   font-family: var(--font-label); font-size: 14px; letter-spacing: 2px;
   padding: 13px 28px; font-weight: 700;
   transition: all .2s;
