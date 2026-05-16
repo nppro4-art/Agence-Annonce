@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { SkyBackground, SKY_THEMES } from '../../lib/SkyBackground'
 
 // ── Helpers ──────────────────────────────────────────────
 const PLAN_NAMES = { premium:'Premium', expert:'Expert', business:'Business', starter:'Starter', pro:'Business', free:'Gratuit' }
@@ -22,18 +23,7 @@ function ParisClock() {
   )
 }
 
-function NightSky() {
-  const stars = Array.from({length:40},(_,i)=>({id:i,size:Math.random()*2+1,x:Math.random()*100,y:Math.random()*100,dur:Math.random()*3+2,delay:Math.random()*4,op:Math.random()*.5+.2}))
-  return (
-    <div style={{position:'fixed',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:0}}>
-      <style>{`@keyframes twinkle{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}@keyframes moonGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(180,200,255,.4))}50%{filter:drop-shadow(0 0 14px rgba(180,200,255,.8))}}@keyframes nebulaPulse{0%,100%{opacity:.5}50%{opacity:.9}}.a-star{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:twinkle var(--dur) ease-in-out var(--delay) infinite}`}</style>
-      {stars.map(s=><div key={s.id} className="a-star" style={{width:s.size+'px',height:s.size+'px',left:s.x+'%',top:s.y+'%',background:`rgba(180,200,255,${s.op})`,['--dur']:s.dur+'s',['--delay']:s.delay+'s'}}/>)}
-      <div style={{position:'fixed',top:'6%',right:'10%',fontSize:28,animation:'moonGlow 4s ease-in-out infinite',pointerEvents:'none',zIndex:0,transform:'rotate(180deg)'}}>🌙</div>
-      <div style={{position:'fixed',top:'-15%',right:'-5%',width:'50vw',height:'50vw',background:'radial-gradient(circle,rgba(40,80,160,.15) 0%,transparent 70%)',pointerEvents:'none',zIndex:0,borderRadius:'50%',animation:'nebulaPulse 12s ease-in-out infinite'}}/>
-      <div style={{position:'fixed',bottom:'-10%',left:'-5%',width:'40vw',height:'40vw',background:'radial-gradient(circle,rgba(30,60,140,.1) 0%,transparent 70%)',pointerEvents:'none',zIndex:0,borderRadius:'50%',animation:'nebulaPulse 16s ease-in-out infinite reverse'}}/>
-    </div>
-  )
-}
+
 
 const S = {
   card: {background:'rgba(255,255,255,.025)',border:'1px solid rgba(255,255,255,.07)',borderRadius:12,padding:'20px 22px',marginBottom:12},
@@ -51,6 +41,7 @@ export default function Admin() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [toast, setToast] = useState(null)
+  const [skySettings, setSkySettings] = useState({ skyMode:'auto', skyTheme:'deep_night' })
   const [newEmp, setNewEmp] = useState({name:'',code:'',email:'',webhook:''})
   // Recherche + profil utilisateur
   const [search, setSearch] = useState('')
@@ -65,6 +56,12 @@ export default function Admin() {
       loadAll()
     })
   }, [])
+
+  useEffect(()=>{
+    fetch('/api/admin/settings').then(r=>r.json()).then(d=>{
+      if(d.settings){setSkySettings({skyMode:d.settings.skyMode||'auto',skyTheme:d.settings.skyTheme||'deep_night'})}
+    }).catch(()=>{})
+  },[])
 
   const loadAll = () => {
     setLoading(true)
@@ -170,7 +167,7 @@ export default function Admin() {
 
   if (loading) return (
     <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'#080a0f',gap:16}}>
-      <NightSky />
+      <SkyBackground manualTheme={skySettings.skyMode==="manual"?skySettings.skyTheme:null} />
       <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:16,letterSpacing:4,color:'#c9a84c',zIndex:1}}>ADMINISTRATION</div>
       <div style={{width:24,height:24,border:'1.5px solid rgba(201,168,76,.2)',borderTopColor:'#c9a84c',borderRadius:'50%',animation:'spin .8s linear infinite',zIndex:1}}/>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -218,7 +215,7 @@ export default function Admin() {
         }
       `}</style>
 
-      <NightSky />
+      <SkyBackground manualTheme={skySettings.skyMode==="manual"?skySettings.skyTheme:null} />
 
       {/* Toast */}
       {toast && <div style={{position:'fixed',bottom:28,left:'50%',transform:'translateX(-50%)',background:'rgba(8,10,15,.98)',border:'1px solid',borderColor:toast.type==='error'?'rgba(200,57,43,.4)':'rgba(201,168,76,.3)',borderRadius:8,padding:'11px 22px',fontSize:13,color:toast.type==='error'?'#e05a4a':'#c9a84c',zIndex:9999,whiteSpace:'nowrap',boxShadow:'0 8px 32px rgba(0,0,0,.7)'}}>{toast.type==='error'?'✕':'✦'} {toast.msg}</div>}
@@ -337,13 +334,34 @@ export default function Admin() {
                   <div style={S.card}>
                     <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:9,color:'rgba(106,120,152,.9)',letterSpacing:2,marginBottom:14}}>CHANGER LE PLAN</div>
                     <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8,marginBottom:8}}>
-                      {[['free','Gratuit','0 €'],['starter','Starter','3,99 €/sem'],['business','Business','5,99 €/sem'],['expert','Expert','12,99 €/sem'],['premium','Premium','Gratuit (admin)']].map(([key,name,price])=>(
-                        <button key={key} onClick={()=>changePlan(selectedUser.id,key)}
-                          style={{background:userDetail?.planKey===key?'rgba(201,168,76,.12)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:userDetail?.planKey===key?'rgba(201,168,76,.4)':'rgba(255,255,255,.07)',borderRadius:8,padding:'12px',cursor:'pointer',textAlign:'left',transition:'all .2s'}}>
-                          <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:11,color:userDetail?.planKey===key?'#c9a84c':'#f0ece4',letterSpacing:1,marginBottom:3}}>{name} {userDetail?.planKey===key?'← actuel':''}</div>
-                          <div style={{fontSize:11,color:'rgba(106,120,152,.9)'}}>{price}</div>
-                        </button>
-                      ))}
+                      {[['free','Gratuit','0 €',''],['starter','Starter','3,99 €/sem','10 ann. · 30 rép.'],['business','Business','5,99 €/sem','30 ann. · 100 rép.'],['expert','Expert','12,99 €/sem','Illimité'],['premium','Premium','Admin gratuit','Illimité + 500 msg/j']].map(([key,name,price,desc])=>{
+                        const isCurrent = userDetail?.planKey===key
+                        return (
+                          <button key={key} onClick={()=>changePlan(selectedUser.id,key)}
+                            style={{
+                              background:isCurrent?'rgba(201,168,76,.1)':'rgba(255,255,255,.03)',
+                              border:'2px solid',
+                              borderColor:isCurrent?'#c9a84c':'rgba(255,255,255,.07)',
+                              borderRadius:10,padding:'14px 12px',cursor:'pointer',textAlign:'left',
+                              transition:'all .25s',position:'relative',overflow:'hidden',
+                              boxShadow:isCurrent?'0 0 16px rgba(201,168,76,.25),inset 0 0 20px rgba(201,168,76,.05)':'none',
+                            }}>
+                            {isCurrent && (
+                              <>
+                                <div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,#c9a84c,transparent)',animation:'shimmerLine 2s linear infinite'}}/>
+                                <div style={{position:'absolute',bottom:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,#c9a84c,transparent)',animation:'shimmerLine 2s linear infinite reverse'}}/>
+                                <style>{`@keyframes shimmerLine{0%{background-position:-200% 0}100%{background-position:200% 0}}`}</style>
+                              </>
+                            )}
+                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:4}}>
+                              <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:12,color:isCurrent?'#c9a84c':'#f0ece4',letterSpacing:1.5}}>{name.toUpperCase()}</div>
+                              {isCurrent && <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:8,color:'#c9a84c',letterSpacing:1,background:'rgba(201,168,76,.15)',padding:'2px 6px',borderRadius:3}}>ACTUEL</div>}
+                            </div>
+                            <div style={{fontFamily:'DM Mono,monospace',fontSize:13,color:isCurrent?'#f0ece4':'rgba(106,120,152,.9)',marginBottom:3}}>{price}</div>
+                            {desc&&<div style={{fontSize:10,color:'rgba(106,120,152,.7)'}}>{desc}</div>}
+                          </button>
+                        )
+                      })}
                     </div>
                   </div>
 
@@ -671,7 +689,7 @@ function AccessTab({ showToast }) {
 }
 
 function SettingsTab({ showToast }) {
-  const [form, setForm] = useState({commissionFirst:'6',commissionStarter:'0.50',commissionBusiness:'1.50',commissionExpert:'2.50',adminWebhook:'',discordWebhookAvis:''})
+  const [form, setForm] = useState({commissionFirst:'6',commissionStarter:'0.50',commissionBusiness:'1.50',commissionExpert:'2.50',adminWebhook:'',discordWebhookAvis:'',skyMode:'auto',skyTheme:'deep_night'})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   useEffect(()=>{
@@ -710,6 +728,41 @@ function SettingsTab({ showToast }) {
           </div>
         </div>
       ))}
+      {/* Panneau ciel */}
+      <div style={{background:'rgba(255,255,255,.025)',border:'1px solid rgba(255,255,255,.07)',borderRadius:12,marginBottom:12,overflow:'hidden'}}>
+        <div style={{padding:'12px 22px',borderBottom:'1px solid rgba(255,255,255,.04)',fontFamily:'Bebas Neue,sans-serif',fontSize:9,color:'#a8843c',letterSpacing:2.5}}>AMBIANCE VISUELLE — CIEL</div>
+        <div style={{padding:'16px 22px'}}>
+          <div style={{display:'flex',gap:10,marginBottom:16}}>
+            {[['auto','🔄 Automatique (heure Paris)'],['manual','✏️ Manuel']].map(([mode,label])=>(
+              <button key={mode} onClick={()=>setForm(f=>({...f,skyMode:mode}))}
+                style={{flex:1,background:form.skyMode===mode?'rgba(201,168,76,.12)':'rgba(255,255,255,.03)',border:'1px solid',borderColor:form.skyMode===mode?'rgba(201,168,76,.4)':'rgba(255,255,255,.08)',borderRadius:8,padding:'10px',cursor:'pointer',color:form.skyMode===mode?'#c9a84c':'rgba(106,120,152,.9)',fontFamily:'DM Sans,sans-serif',fontSize:12,transition:'all .2s'}}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {form.skyMode==='manual' && (
+            <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8}}>
+              {Object.entries(SKY_THEMES).map(([key,theme])=>(
+                <button key={key} onClick={()=>setForm(f=>({...f,skyTheme:key}))}
+                  style={{background:form.skyTheme===key?'rgba(201,168,76,.1)':'rgba(255,255,255,.02)',border:'2px solid',borderColor:form.skyTheme===key?'#c9a84c':'rgba(255,255,255,.06)',borderRadius:8,padding:'12px',cursor:'pointer',textAlign:'left',transition:'all .2s',boxShadow:form.skyTheme===key?'0 0 12px rgba(201,168,76,.2)':'none'}}>
+                  <div style={{fontFamily:'Bebas Neue,sans-serif',fontSize:10,color:form.skyTheme===key?'#c9a84c':'#f0ece4',letterSpacing:1,marginBottom:3}}>{theme.label.split('(')[0].trim()}</div>
+                  <div style={{fontSize:10,color:'rgba(106,120,152,.7)'}}>{theme.label.match(/\(([^)]+)\)/)?.[1]||''}</div>
+                  {form.skyTheme===key && <div style={{fontSize:9,color:'#c9a84c',marginTop:4,fontFamily:'Bebas Neue,sans-serif',letterSpacing:1}}>● ACTIF</div>}
+                </button>
+              ))}
+            </div>
+          )}
+          {form.skyMode==='auto' && (
+            <div style={{background:'rgba(255,255,255,.03)',borderRadius:8,padding:'12px 16px',fontSize:12,color:'rgba(106,120,152,.9)',lineHeight:1.7}}>
+              Le ciel change automatiquement selon l&apos;heure de Paris :<br/>
+              🌑 00h-03h Nuit profonde · 🌘 03h-06h Fin de nuit · 🌅 06h-09h Aube<br/>
+              ☀️ 09h-12h Matin · 🌞 12h-15h Plein soleil · 🌇 15h-18h Après-midi<br/>
+              🌆 18h-21h Coucher de soleil · 🌃 21h-00h Crépuscule
+            </div>
+          )}
+        </div>
+      </div>
+
       <button onClick={save} disabled={saving} style={{width:'100%',marginTop:8,background:'linear-gradient(135deg,#a8843c,#c9a84c)',border:'none',borderRadius:6,color:'#030303',cursor:'pointer',fontFamily:'Bebas Neue,sans-serif',fontSize:12,letterSpacing:2,padding:'14px',opacity:saving?0.6:1}}>
         {saving?'SAUVEGARDE...':'SAUVEGARDER'}
       </button>
