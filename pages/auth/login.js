@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { SkyBackground } from '../../lib/SkyBackground'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -151,6 +152,7 @@ export default function Login() {
         <div style={{ fontSize:11,color:'var(--muted)',letterSpacing:.5 }}>annonza.business</div>
       </div>
 
+      <SkyBackground />
       {/* Formulaire */}
       <div className="auth-right" style={{ flex:1,display:'flex',alignItems:'center',justifyContent:'center',padding:'48px 32px' }}>
         <div style={{ width:'100%',maxWidth:380 }}>
