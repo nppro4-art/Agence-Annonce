@@ -48,6 +48,7 @@ export default async function handler(req, res) {
       plan,
       planKey,
       subStatus,
+      clientCode: String(Math.floor(100000 + Math.random() * 900000)),
     }
   })
 
