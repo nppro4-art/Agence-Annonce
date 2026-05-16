@@ -47,7 +47,7 @@ export default function Employee() {
         .fade{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards}
       `}</style>
 
-      <header style={{ background:'rgba(3,3,3,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
+      <header style={{ background:'rgba(17,10,10,.97)',borderBottom:'1px solid rgba(201,168,76,.12)',backdropFilter:'blur(24px)',position:'sticky',top:0,zIndex:100 }}>
         <div style={{ maxWidth:800,margin:'0 auto',padding:'0 24px',height:56,display:'flex',alignItems:'center',justifyContent:'space-between' }}>
           <div style={{ display:'flex',alignItems:'center',gap:12 }}>
             <span style={{ fontFamily:'var(--font-label)',fontSize:15,letterSpacing:4 }}>A.<span style={{ color:'var(--red)' }}>A</span></span>
