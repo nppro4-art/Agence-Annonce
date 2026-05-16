@@ -3,18 +3,18 @@
 
 /* ── VARIABLES ──────────────────────────────────────────── */
 :root {
-  --black:    #110a0a;
-  --ink:      #160c0c;
-  --s1:       #1a0f0f;
-  --s2:       #1f1212;
-  --s3:       #251515;
+  --black:    #070d1a;
+  --ink:      #0a1020;
+  --s1:       #0d1525;
+  --s2:       #101a2e;
+  --s3:       #131f35;
   --white:    #ffffff;
   --cream:    #f0ece4;
-  --muted:    #6a5858;
-  --muted2:   #8a7272;
-  --muted3:   #aa9292;
-  --border:   #2a1818;
-  --border2:  #3a2020;
+  --muted:    #4a5878;
+  --muted2:   #6a7898;
+  --muted3:   #8a98b8;
+  --border:   #1a2540;
+  --border2:  #243050;
   --gold:     #c9a84c;
   --gold2:    #d4b568;
   --gold3:    #a8843c;
@@ -32,10 +32,10 @@
 /* ── RESET ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html {
-  background: #110a0a; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  background: #070d1a; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
-  background: #110a0a;
-  background-color: #110a0a;
+  background: #070d1a;
+  background-color: #070d1a;
   color: var(--cream);
   font-family: var(--font-ui);
   font-size: 15px;
