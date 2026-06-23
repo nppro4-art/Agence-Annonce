@@ -244,7 +244,20 @@ function renderLogo(site) {
 
 function renderHero(siteData) {
   const hero = siteData.pages?.home?.hero || {};
-  const tpl = loadComponent('hero');
+
+  // Sélection variante : 'default' | 'video' | '3d' | 'auto'
+  let variant = hero.variant || 'default';
+  if (variant === 'auto') {
+    const sector = (siteData.sector || '').toLowerCase();
+    const luxSectors   = ['luxe','luxury','wellness','immobilier','tech'];
+    const videoSectors = ['restaurant','bar','hotel','spa'];
+    variant = luxSectors.some(s => sector.includes(s)) ? '3d'
+            : (videoSectors.some(s => sector.includes(s)) && hero.video_url) ? 'video'
+            : 'default';
+  }
+  const tpl = variant === 'video' ? loadComponent('hero-video')
+            : variant === '3d'    ? loadComponent('hero-3d')
+            : loadComponent('hero');
 
   const hasImage = !!hero.background_image;
   const bgClass = hasImage ? ' has-image' : '';
@@ -271,12 +284,18 @@ function renderHero(siteData) {
       </div>`).join('')
     : '';
 
+  const videoElement = hero.video_url
+    ? `<video autoplay muted loop playsinline><source src="${escapeHTML(hero.video_url)}" type="video/mp4"></video>`
+    : '';
+
   return injectData(tpl, siteData, {
-    HERO_BG_CLASS: bgClass,
-    HERO_BG_IMAGE: bgImage,
-    HERO_CTA_PRIMARY: ctaPrimary,
+    HERO_BG_CLASS:      bgClass,
+    HERO_BG_IMAGE:      bgImage,
+    HERO_VIDEO_ELEMENT: videoElement,
+    HERO_IMAGE_URL:     escapeHTML(hero.background_image || ''),
+    HERO_CTA_PRIMARY:   ctaPrimary,
     HERO_CTA_SECONDARY: ctaSecondary,
-    HERO_TRUST: trustHTML,
+    HERO_TRUST:         trustHTML,
   });
 }
 
