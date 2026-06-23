@@ -1,0 +1,44 @@
+<section class="before-after" id="before-after">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Résultats</span>
+      <h2 class="section-title">{{pages.home.before_after.title}}</h2>
+      <p class="section-subtitle">{{pages.home.before_after.subtitle}}</p>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-panel reveal">
+        {{BA_IMAGE_BEFORE}}
+        <span class="ba-label ba-label-before">Avant</span>
+      </div>
+      <div class="ba-panel reveal reveal-delay-1">
+        {{BA_IMAGE_AFTER}}
+        <span class="ba-label ba-label-after">Après</span>
+      </div>
+    </div>
+    <div class="ba-arrow" aria-hidden="true">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="19.5" stroke="var(--color-border)"/>
+        <path d="M16 20h8m0 0-3-3m3 3-3 3" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+.ba-grid {
+  position: relative;
+}
+.ba-arrow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-surface);
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 0 4px 20px -6px rgba(0,0,0,.18);
+}
+@media (max-width: 680px) {
+  .ba-arrow { display: none; }
+}
+</style>

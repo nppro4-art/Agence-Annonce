@@ -1,0 +1,16 @@
+<div class="process-step reveal reveal-delay-{{ITEM_DELAY}}">
+  <div class="process-step-num">{{ITEM_NUMBER}}</div>
+  <div class="process-step-line" aria-hidden="true"></div>
+  <h3 class="process-step-title">{{item.title}}</h3>
+  <p class="process-step-text">{{item.description}}</p>
+</div>
+
+<style>
+.process-step-line {
+  width: 32px;
+  height: 2px;
+  background: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  border-radius: 2px;
+  margin-bottom: 14px;
+}
+</style>

@@ -1,0 +1,27 @@
+<div class="service-card reveal reveal-delay-{{ITEM_DELAY}}">
+  <div class="service-icon-wrap">
+    <span class="service-icon" aria-hidden="true">{{item.icon}}</span>
+  </div>
+  <h3>{{item.title}}</h3>
+  <p>{{item.description}}</p>
+  {{ITEM_PRICE}}
+</div>
+
+<style>
+.service-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: background .3s, border-color .3s;
+}
+.service-card:hover .service-icon-wrap {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  border-color: var(--color-accent);
+}
+</style>

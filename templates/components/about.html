@@ -1,0 +1,33 @@
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-media reveal">
+        {{ABOUT_IMAGE}}
+        <div class="about-media-accent" aria-hidden="true"></div>
+      </div>
+      <div class="about-text">
+        <span class="eyebrow reveal">Notre histoire</span>
+        <h2 class="section-title reveal reveal-delay-1">{{pages.home.about.title}}</h2>
+        <p class="reveal reveal-delay-2">{{pages.home.about.text}}</p>
+        <div class="about-stats reveal reveal-delay-3">
+          {{ABOUT_STATS}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.about-media-accent {
+  position: absolute;
+  bottom: -16px;
+  right: -16px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  filter: blur(24px);
+  pointer-events: none;
+  z-index: 0;
+}
+</style>

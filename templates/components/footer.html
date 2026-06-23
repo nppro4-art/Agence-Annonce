@@ -1,0 +1,46 @@
+<footer class="site-footer" id="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand-block">
+        <div class="footer-brand">{{site.name}}</div>
+        <p class="footer-tagline">{{pages.home.footer.tagline}}</p>
+        <div class="footer-social">
+          {{FOOTER_SOCIAL}}
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Liens de navigation">
+        <div class="footer-links">
+          {{FOOTER_LINKS}}
+        </div>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© {{CURRENT_YEAR}} {{site.name}}. Tous droits réservés.</span>
+      <span class="footer-bottom-right">
+        {{FOOTER_BADGE}}
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer-bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.footer-nav {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media (max-width: 640px) {
+  .footer-nav { gap: 24px; }
+  .footer-top { flex-direction: column; gap: 32px; }
+}
+</style>

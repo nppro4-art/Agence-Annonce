@@ -1,0 +1,77 @@
+<section class="hero" id="hero">
+  <div class="hero-bg{{HERO_BG_CLASS}}">
+    {{HERO_BG_IMAGE}}
+  </div>
+  <div class="hero-glow"></div>
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <span class="eyebrow reveal">{{pages.home.hero.eyebrow}}</span>
+      <h1 class="hero-title reveal reveal-delay-1">
+        {{pages.home.hero.title}}<br>
+        <em>{{pages.home.hero.title_em}}</em>
+      </h1>
+      <p class="hero-subtitle reveal reveal-delay-2">{{pages.home.hero.subtitle}}</p>
+      <div class="hero-actions reveal reveal-delay-3">
+        {{HERO_CTA_PRIMARY}}
+        {{HERO_CTA_SECONDARY}}
+      </div>
+      <div class="hero-trust reveal reveal-delay-3">
+        {{HERO_TRUST}}
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator" aria-hidden="true">
+    <span></span>
+  </div>
+</section>
+
+<style>
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: .03em;
+}
+.hero-trust-item svg {
+  width: 15px;
+  height: 15px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+.hero-scroll-indicator span {
+  display: block;
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--color-accent), transparent);
+  animation: scroll-line 2s ease-in-out infinite;
+}
+@keyframes scroll-line {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+@media (max-width: 640px) {
+  .hero-scroll-indicator { display: none; }
+}
+</style>

@@ -1,0 +1,53 @@
+<form class="contact-form" id="contact-form" novalidate>
+  <div class="form-row">
+    <div class="form-field">
+      <label for="cf-name">Nom complet</label>
+      <input type="text" id="cf-name" name="name" placeholder="Jean Dupont" required autocomplete="name">
+    </div>
+    <div class="form-field">
+      <label for="cf-email">Email</label>
+      <input type="email" id="cf-email" name="email" placeholder="jean@exemple.fr" required autocomplete="email">
+    </div>
+  </div>
+  <div class="form-field">
+    <label for="cf-subject">Sujet</label>
+    <input type="text" id="cf-subject" name="subject" placeholder="Comment puis-je vous aider ?">
+  </div>
+  <div class="form-field">
+    <label for="cf-message">Message</label>
+    <textarea id="cf-message" name="message" rows="5" placeholder="Décrivez votre projet ou votre question…" required></textarea>
+  </div>
+  <div class="form-footer">
+    <button type="submit" class="btn btn-primary">
+      Envoyer le message
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10m0 0-3.5-3.5M13 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <p class="form-privacy">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" style="display:inline;vertical-align:middle;margin-right:5px">
+        <path d="M6.5 1.5L2 3v4c0 2.5 2 4.5 4.5 5C9 12 11 10 11 7V3L6.5 1.5Z" stroke="var(--color-text-muted)" stroke-width="1.1"/>
+      </svg>
+      Vos données ne sont jamais partagées.
+    </p>
+  </div>
+</form>
+
+<style>
+.form-footer {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.form-privacy {
+  font-size: .72rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+@media (max-width: 520px) {
+  .form-footer { flex-direction: column; align-items: flex-start; }
+  .form-footer .btn { width: 100%; }
+}
+</style>

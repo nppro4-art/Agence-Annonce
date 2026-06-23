@@ -1,0 +1,30 @@
+<div class="gallery-item reveal reveal-delay-{{ITEM_DELAY}}">
+  {{GALLERY_IMAGE}}
+  <div class="gallery-item-overlay" aria-hidden="true">
+    <span class="gallery-item-label">{{item.alt}}</span>
+  </div>
+</div>
+
+<style>
+.gallery-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity .4s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+  border-radius: 16px;
+}
+.gallery-item:hover .gallery-item-overlay {
+  opacity: 1;
+}
+.gallery-item-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+</style>

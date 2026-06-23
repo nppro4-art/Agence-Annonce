@@ -259,11 +259,24 @@ function renderHero(siteData) {
     ? `<a href="${escapeHTML(hero.cta_secondary.href)}" class="btn btn-outline">${escapeHTML(hero.cta_secondary.text)}</a>`
     : '';
 
+  // Trust indicators sous les CTA (optionnels)
+  const trustItems = (hero.trust_items || []);
+  const trustHTML = trustItems.length > 0
+    ? trustItems.map(t => `
+      <div class="hero-trust-item">
+        <svg viewBox="0 0 15 15" fill="none" aria-hidden="true">
+          <path d="M12.5 3.5l-6.5 7-3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        ${escapeHTML(t)}
+      </div>`).join('')
+    : '';
+
   return injectData(tpl, siteData, {
     HERO_BG_CLASS: bgClass,
     HERO_BG_IMAGE: bgImage,
     HERO_CTA_PRIMARY: ctaPrimary,
     HERO_CTA_SECONDARY: ctaSecondary,
+    HERO_TRUST: trustHTML,
   });
 }
 
@@ -314,7 +327,8 @@ function renderTestimonials(siteData) {
   const items = testimonials.items.map((item, i) => {
     const rating = Math.max(0, Math.min(5, Number(item.rating) || 5));
     const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-    return renderItem('_testimonial-item', item, i, siteData, { ITEM_STARS: stars });
+    const initials = (item.author || '').split(/\s+/).map(w => w[0] || '').join('').substring(0, 2).toUpperCase();
+    return renderItem('_testimonial-item', item, i, siteData, { ITEM_STARS: stars, ITEM_INITIALS: initials });
   }).join('\n');
 
   return injectData(tpl, siteData, { TESTIMONIAL_ITEMS: items });

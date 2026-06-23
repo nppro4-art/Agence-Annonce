@@ -1,0 +1,71 @@
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Contact</span>
+      <h2 class="section-title">{{pages.home.contact.title}}</h2>
+      <p class="section-subtitle">{{pages.home.contact.subtitle}}</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M3 5.25A2.25 2.25 0 0 1 5.25 3h7.5A2.25 2.25 0 0 1 15 5.25v7.5A2.25 2.25 0 0 1 12.75 15h-7.5A2.25 2.25 0 0 1 3 12.75v-7.5Z" stroke="var(--color-accent)" stroke-width="1.2"/>
+              <path d="M3 6.75l6 3.75 6-3.75" stroke="var(--color-accent)" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Email</div>
+            <a href="mailto:{{pages.home.contact.email}}" class="contact-info-value">{{pages.home.contact.email}}</a>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M3.75 3h2.625c.345 0 .648.22.757.548l.9 2.701a.75.75 0 0 1-.184.785L6.6 8.278a9.751 9.751 0 0 0 3.122 3.122l1.244-1.248a.75.75 0 0 1 .785-.184l2.701.9a.75.75 0 0 1 .548.757V14.25a1.5 1.5 0 0 1-1.5 1.5C6.398 15.75 2.25 11.602 2.25 6.5a1.5 1.5 0 0 1 1.5-1.5Z" stroke="var(--color-accent)" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Téléphone</div>
+            <a href="tel:{{pages.home.contact.phone}}" class="contact-info-value">{{pages.home.contact.phone}}</a>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <div class="contact-info-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M9 1.5C6.515 1.5 4.5 3.515 4.5 6c0 3.75 4.5 10.5 4.5 10.5S13.5 9.75 13.5 6c0-2.485-2.015-4.5-4.5-4.5Z" stroke="var(--color-accent)" stroke-width="1.2"/>
+              <circle cx="9" cy="6" r="1.5" stroke="var(--color-accent)" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Adresse</div>
+            <div class="contact-info-value">{{pages.home.contact.address}}</div>
+          </div>
+        </div>
+
+        <div class="contact-info-item" style="border-bottom: none;">
+          <div class="contact-info-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <circle cx="9" cy="9" r="6.75" stroke="var(--color-accent)" stroke-width="1.2"/>
+              <path d="M9 5.25V9l2.25 2.25" stroke="var(--color-accent)" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div style="width: 100%">
+            <div class="contact-info-label">Horaires</div>
+            <div class="contact-hours">
+              {{CONTACT_HOURS}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        {{CONTACT_FORM}}
+      </div>
+    </div>
+  </div>
+</section>
