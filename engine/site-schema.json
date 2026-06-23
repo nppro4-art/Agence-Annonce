@@ -1,0 +1,157 @@
+{
+  "site": {
+    "id": "proj-001",
+    "name": "Boulangerie Dupont",
+    "template": "universal",
+    "url": "https://boulangerie-dupont.creazio.app",
+    "show_badge": true,
+    "logo": {
+      "type": "text",
+      "text": "Boulangerie Dupont",
+      "image_url": null
+    },
+    "colors": {
+      "primary": "#15140f",
+      "accent": "#c9a84c",
+      "text": "#15140f",
+      "bg": "#f7f5f0",
+      "surface": "#ffffff",
+      "border": "#e8e4da",
+      "textMuted": "#6f6b60"
+    },
+    "fonts": {
+      "heading": "Instrument Serif",
+      "body": "DM Sans"
+    }
+  },
+
+  "seo": {
+    "title": "Boulangerie Dupont — Pain artisanal à Toulouse",
+    "description": "Boulangerie artisanale à Toulouse. Pain au levain, viennoiseries et pâtisseries fraîches chaque jour.",
+    "keywords": ["boulangerie", "Toulouse", "pain artisanal", "viennoiserie", "pâtisserie"],
+    "og_image": null
+  },
+
+  "pages": {
+    "home": {
+      "components": ["hero", "services", "about", "gallery", "testimonials", "contact", "footer"],
+
+      "nav": {
+        "links": [
+          { "label": "Nos pains", "href": "#services" },
+          { "label": "Notre histoire", "href": "#about" },
+          { "label": "Galerie", "href": "#gallery" },
+          { "label": "Contact", "href": "#contact" }
+        ],
+        "cta": { "text": "Nous contacter", "href": "#contact" }
+      },
+
+      "hero": {
+        "title": "Du pain comme",
+        "title_em": "autrefois",
+        "subtitle": "Pétri à la main, cuit au feu de bois, chaque matin depuis 1987. Venez découvrir notre sélection de pains au levain et viennoiseries artisanales.",
+        "background_image": null,
+        "cta_primary": { "text": "Voir nos pains", "href": "#services" },
+        "cta_secondary": { "text": "Nous trouver", "href": "#contact" }
+      },
+
+      "services": {
+        "section_title": "Notre sélection",
+        "section_subtitle": "Une sélection de pains, viennoiseries et pâtisseries préparés chaque matin avec des ingrédients locaux.",
+        "items": [
+          {
+            "icon": "🥖",
+            "title": "Pain au levain",
+            "description": "Fermentation lente de 24h pour une croûte croustillante et une mie alvéolée.",
+            "price": "À partir de 3,50€"
+          },
+          {
+            "icon": "🥐",
+            "title": "Viennoiseries",
+            "description": "Croissants, pains au chocolat et chaussons aux pommes, pur beurre.",
+            "price": "À partir de 1,80€"
+          },
+          {
+            "icon": "🍰",
+            "title": "Pâtisseries",
+            "description": "Tartes de saison, éclairs et entremets faits maison chaque jour.",
+            "price": "À partir de 4,20€"
+          }
+        ]
+      },
+
+      "about": {
+        "title": "Une histoire de famille",
+        "text": "Depuis 1987, la famille Dupont perpétue un savoir-faire artisanal transmis de génération en génération. Chaque pain est pétri à la main et cuit dans notre four à bois traditionnel.",
+        "image_url": null,
+        "stats": [
+          { "value": "35+", "label": "Années d'expérience" },
+          { "value": "100%", "label": "Farines locales" },
+          { "value": "5h", "label": "Du four à la vitrine" }
+        ]
+      },
+
+      "gallery": {
+        "title": "Notre atelier en images",
+        "images": [
+          { "url": null, "alt": "Pain au levain" },
+          { "url": null, "alt": "Four à bois" },
+          { "url": null, "alt": "Vitrine de viennoiseries" },
+          { "url": null, "alt": "Pétrissage à la main" },
+          { "url": null, "alt": "Pâtisseries de saison" },
+          { "url": null, "alt": "Façade de la boutique" }
+        ]
+      },
+
+      "testimonials": {
+        "title": "Ce qu'en disent nos clients",
+        "items": [
+          { "rating": 5, "text": "Le meilleur pain au levain de Toulouse, sans hésitation.", "author": "Camille M.", "role": "Cliente depuis 2019" },
+          { "rating": 5, "text": "Des viennoiseries exceptionnelles, travail artisanal.", "author": "Julien R.", "role": "Client régulier" },
+          { "rating": 4, "text": "Toujours frais, toujours bon. Une vraie institution.", "author": "Sophie L.", "role": "Habitante du quartier" }
+        ]
+      },
+
+      "contact": {
+        "title": "Venez nous rendre visite",
+        "subtitle": "Notre boutique est ouverte toute la semaine. Écrivez-nous pour toute question ou commande spéciale.",
+        "email": "contact@boulangerie-dupont.fr",
+        "phone": "05 61 00 00 00",
+        "address": "12 rue des Artisans, 31000 Toulouse",
+        "form_enabled": true,
+        "hours": [
+          { "days": "Lundi — Vendredi", "hours": "6h30 – 19h30" },
+          { "days": "Samedi", "hours": "7h00 – 19h00" },
+          { "days": "Dimanche", "hours": "7h00 – 13h00" }
+        ]
+      },
+
+      "footer": {
+        "tagline": "Pain artisanal et pâtisseries fraîches, au cœur de Toulouse depuis 1987.",
+        "links": [
+          { "label": "Mentions légales", "href": "#mentions-legales" },
+          { "label": "Nos pains", "href": "#services" },
+          { "label": "Contact", "href": "#contact" }
+        ],
+        "social": {
+          "instagram": "https://instagram.com/boulangeriedupont",
+          "facebook": "https://facebook.com/boulangeriedupont",
+          "linkedin": null,
+          "tiktok": null,
+          "x": null
+        }
+      }
+    }
+  },
+
+  "legal": {
+    "company_name": "Boulangerie Dupont SARL",
+    "legal_form": "SARL au capital de 5 000€",
+    "siret": "123 456 789 00012",
+    "vat_number": "FR12345678900",
+    "address": "12 rue des Artisans, 31000 Toulouse",
+    "email": "contact@boulangerie-dupont.fr",
+    "phone": "05 61 00 00 00",
+    "capital": "5 000€"
+  }
+}
