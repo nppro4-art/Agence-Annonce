@@ -6,6 +6,7 @@ import { pushToGitHub } from './generate.js';
 import { notifyDiscord } from '../server.js';
 import { moderateContent } from '../services/moderation.js';
 import { computeModifyApplyDate } from '../services/team.js';
+import { analyzeInspirationUrl, buildInspirationPrompt } from '../services/url-analyzer.js';
 
 const router    = express.Router();
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -22,7 +23,8 @@ RÈGLES :
 3. Si l'instruction ajoute une section, ajoute-la dans pages.home.components ET crée les données correspondantes
 4. Pour "plus premium/luxe" : ajuste les couleurs vers des tons sombres et des accents dorés
 5. Pour "plus coloré/moderne" : utilise des couleurs vives et contemporaines
-6. Retourne UNIQUEMENT le JSON valide, sans markdown ni explication`;
+6. Retourne UNIQUEMENT le JSON valide, sans markdown ni explication
+7. Si une URL d'inspiration est fournie dans l'instruction, adapte la palette de couleurs et/ou la structure de sections selon l'analyse fournie — sans copier le contenu`;
 
 // ── POST /api/modify ────────────────────────────────────────
 router.post('/', async (req, res) => {
@@ -45,6 +47,15 @@ router.post('/', async (req, res) => {
       .from('site-codes').download(`${projectId}/current/data.json`);
     const currentJSON = JSON.parse(await jsonFile.text());
 
+    // Détecter et analyser une URL d'inspiration dans l'instruction
+    let inspirationContext = '';
+    const urlMatch = instruction.match(/https?:\/\/[^\s]+/);
+    if (urlMatch) {
+      console.log(`[MODIFY INSPIRATION] Analyse de ${urlMatch[0]}`);
+      const profile = await analyzeInspirationUrl(urlMatch[0]);
+      inspirationContext = buildInspirationPrompt(profile);
+    }
+
     // Modifier via Claude
     const aiRes = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
@@ -52,7 +63,7 @@ router.post('/', async (req, res) => {
       system: MODIFY_PROMPT,
       messages: [{
         role: 'user',
-        content: `JSON actuel :\n${JSON.stringify(currentJSON, null, 2)}\n\nInstruction : ${instruction}\n\nRetourne le JSON modifié complet.`,
+        content: `JSON actuel :\n${JSON.stringify(currentJSON, null, 2)}\n\nInstruction : ${instruction}${inspirationContext ? '\n\n' + inspirationContext : ''}\n\nRetourne le JSON modifié complet.`,
       }],
     });
 

@@ -15,6 +15,7 @@ import { notifyDiscord } from '../server.js';
 import { moderateContent } from '../services/moderation.js';
 import { pickTeamMember, signatureHTML, computeCreationRevealDate } from '../services/team.js';
 import { fillSiteImages } from '../services/images.js';
+import { analyzeInspirationUrl, buildInspirationPrompt } from '../services/url-analyzer.js';
 
 const router    = express.Router();
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -179,7 +180,20 @@ router.post('/', async (req, res) => {
 
     console.log(`[GENERATE] ${profile.email} — ${prompt.substring(0,60)}...`);
 
-    // 3. Générer le JSON via Claude
+    // 3. Analyser l'URL d'inspiration si fournie
+    let inspirationBlock = '';
+    if (designChoices?.inspiration_url) {
+      console.log(`[INSPIRATION] Analyse de ${designChoices.inspiration_url}`);
+      const profile = await analyzeInspirationUrl(designChoices.inspiration_url);
+      inspirationBlock = buildInspirationPrompt(profile);
+      if (profile?.error) {
+        console.warn(`[INSPIRATION] ${profile.error}`);
+      } else {
+        console.log(`[INSPIRATION] Analyse OK — tons: ${profile?.tone}, dark: ${profile?.darkMode}, sections: ${profile?.sections?.join(',')}`);
+      }
+    }
+
+    // 3b. Générer le JSON via Claude
     const personalizationBlock = buildPersonalizationBlock(addons, designChoices);
 
     const aiResponse = await anthropic.messages.create({
@@ -188,7 +202,7 @@ router.post('/', async (req, res) => {
       system: SYSTEM_PROMPT,
       messages: [{
         role: 'user',
-        content: `Génère le JSON pour ce site web :\n\nDescription : ${prompt}\nNom du projet : ${projectName || 'Mon Site'}\nType : ${siteType || 'vitrine'}\n${personalizationBlock}\nInformations légales à intégrer :\n${JSON.stringify(legalData || {})}`
+        content: `Génère le JSON pour ce site web :\n\nDescription : ${prompt}\nNom du projet : ${projectName || 'Mon Site'}\nType : ${siteType || 'vitrine'}\n${personalizationBlock}${inspirationBlock}\nInformations légales à intégrer :\n${JSON.stringify(legalData || {})}`
       }],
     });
 
