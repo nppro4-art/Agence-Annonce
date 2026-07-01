@@ -4,6 +4,8 @@
  */
 
 import dotenv from 'dotenv';
+import { cleanSupabaseUrl, inspectServiceKey } from './lib/supabase.js';
+
 dotenv.config();
 
 const REQUIRED = [
@@ -46,11 +48,20 @@ function checkVar(name) {
   if (!val) return { ok: false, msg: 'MANQUANT' };
   if (val.startsWith(' ') || val.endsWith(' ')) return { ok: false, msg: 'ESPACE détecté au début/fin de la valeur' };
   if (val.includes('\n')) return { ok: false, msg: 'CARACTÈRE NOUVELLE LIGNE détecté' };
-  if (name === 'SUPABASE_URL' && !val.startsWith('https://')) return { ok: false, msg: `Doit commencer par https:// (valeur : ${val})` };
-  if (name === 'SUPABASE_URL' && !val.includes('.supabase.co')) return { ok: false, msg: `URL Supabase inhabituelle (valeur : ${val})` };
+  if (name === 'SUPABASE_URL') {
+    const cleaned = cleanSupabaseUrl(val);
+    if (!cleaned.startsWith('https://')) return { ok: false, msg: `Doit commencer par https:// (valeur brute : "${val}")` };
+    if (!cleaned.includes('.supabase.co')) return { ok: false, msg: `URL Supabase inhabituelle (valeur nettoyée : "${cleaned}")` };
+    if (val !== cleaned) return { ok: true, msg: `OK (URL corrigée automatiquement : "${cleaned}")` };
+  }
+  if (name === 'SUPABASE_SERVICE_KEY') {
+    const role = inspectServiceKey(val);
+    if (role === 'missing') return { ok: false, msg: 'MANQUANT' };
+    if (role === 'invalid') return { ok: false, msg: 'Clé invalide (ne ressemble pas à un JWT Supabase)' };
+    if (role !== 'service_role') return { ok: false, msg: `Rôle incorrect : "${role}" — utilisez la clé service_role, pas anon` };
+  }
   if (name === 'FRONTEND_URL' && !val.startsWith('https://')) return { ok: false, msg: `Doit commencer par https:// (valeur : ${val})` };
   if (name === 'GITHUB_USERNAME' && val.includes('/')) return { ok: false, msg: `Ne doit pas contenir de / (valeur : ${val})` };
-  if (name === 'SUPABASE_SERVICE_KEY' && (!val.startsWith('eyJ') || val.length < 100)) return { ok: false, msg: 'Ressemble à une clé invalide (doit être la service_role key, pas anon)' };
   return { ok: true, msg: 'OK' };
 }
 

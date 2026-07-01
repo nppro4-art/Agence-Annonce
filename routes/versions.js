@@ -1,10 +1,10 @@
 import express from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseClient } from '../lib/supabase.js';
 import { renderSite } from '../engine/render-engine.js';
 import { pushToGitHub } from './generate.js';
 
 const router   = express.Router();
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 
 // ── GET /api/versions/:projectId ────────────────────────────
 router.get('/:projectId', async (req, res) => {

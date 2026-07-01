@@ -1,11 +1,11 @@
 import express from 'express';
-import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import Stripe from 'stripe';
 import { notifyDiscord } from '../server.js';
+import { createSupabaseClient, cleanSupabaseUrl, inspectServiceKey } from '../lib/supabase.js';
 
 const router   = express.Router();
-const supabase  = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase  = createSupabaseClient();
 const resend    = new Resend(process.env.RESEND_API_KEY);
 const stripe    = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -19,15 +19,26 @@ router.post('/register', async (req, res) => {
   let step = 'init';
   try {
     // Vérifications de configuration critiques
-    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+    const rawUrl = process.env.SUPABASE_URL;
+    const cleanUrl = cleanSupabaseUrl(rawUrl);
+    const keyRole = inspectServiceKey(process.env.SUPABASE_SERVICE_KEY);
+    console.log(`[AUTH REGISTER] Config : URL brute="${rawUrl}" | URL nettoyée="${cleanUrl}" | rôle clé=${keyRole}`);
+
+    if (!rawUrl || !process.env.SUPABASE_SERVICE_KEY) {
       throw new Error('Configuration serveur : SUPABASE_URL ou SUPABASE_SERVICE_KEY manquant');
+    }
+    if (!cleanUrl.startsWith('https://')) {
+      throw new Error(`Configuration serveur : SUPABASE_URL invalide après nettoyage : "${cleanUrl}"`);
+    }
+    if (keyRole !== 'service_role') {
+      throw new Error(`Configuration serveur : SUPABASE_SERVICE_KEY doit être la clé service_role (rôle détecté=${keyRole}). Vérifiez les variables d'environnement Render.`);
     }
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error('Configuration serveur : STRIPE_SECRET_KEY manquant');
     }
 
     step = 'supabase_auth';
-    console.log(`[AUTH REGISTER] Étape ${step} : création utilisateur Supabase pour ${email}`);
+    console.log(`[AUTH REGISTER] Étape ${step} : création utilisateur Supabase pour ${email} via ${cleanUrl}`);
     // Créer dans Supabase Auth — nécessite la clé service_role
     const { data: authData, error: authErr } = await supabase.auth.admin.createUser({
       email, password,

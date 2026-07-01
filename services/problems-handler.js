@@ -16,13 +16,13 @@
  */
 
 import fetch from 'node-fetch';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseClient } from '../lib/supabase.js';
 import { Resend } from 'resend';
 import Stripe from 'stripe';
 import Anthropic from '@anthropic-ai/sdk';
 import { notifyDiscord } from '../server.js';
 
-const supabase  = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 const resend    = new Resend(process.env.RESEND_API_KEY);
 const stripe    = new Stripe(process.env.STRIPE_SECRET_KEY);
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

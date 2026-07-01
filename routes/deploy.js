@@ -4,14 +4,14 @@
  */
 
 import express from 'express';
+import { createSupabaseClient } from '../lib/supabase.js';
 import { Octokit } from 'octokit';
 import fetch from 'node-fetch';
-import { createClient } from '@supabase/supabase-js';
 import { notifyDiscord } from '../server.js';
 
 const router   = express.Router();
 const octokit  = new Octokit({ auth: process.env.GITHUB_TOKEN });
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 
 // ══════════════════════════════════════════════════════════
 //  POST /api/deploy/site — Déployer ou redéployer un site

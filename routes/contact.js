@@ -1,10 +1,10 @@
 import express from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseClient } from '../lib/supabase.js';
 import { Resend } from 'resend';
 import { notifyDiscord } from '../server.js';
 
 const router   = express.Router();
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 const resend   = new Resend(process.env.RESEND_API_KEY);
 
 // ── POST /api/contact — Soumission formulaire ───────────────

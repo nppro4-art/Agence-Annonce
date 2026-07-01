@@ -1,6 +1,6 @@
 import express from 'express';
+import { createSupabaseClient } from '../lib/supabase.js';
 import Anthropic from '@anthropic-ai/sdk';
-import { createClient } from '@supabase/supabase-js';
 import { renderSite } from '../engine/render-engine.js';
 import { pushToGitHub } from './generate.js';
 import { notifyDiscord } from '../server.js';
@@ -10,7 +10,7 @@ import { analyzeInspirationUrl, buildInspirationPrompt } from '../services/url-a
 
 const router    = express.Router();
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const supabase  = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 
 const MODIFY_PROMPT = `Tu es le moteur de modification de sites web de Créazio.
 

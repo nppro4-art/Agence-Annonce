@@ -25,17 +25,17 @@ import dotenv        from 'dotenv';
 import Anthropic     from '@anthropic-ai/sdk';
 import { Octokit }   from 'octokit';
 import fetch         from 'node-fetch';
-import { createClient } from '@supabase/supabase-js';
 import { Resend }    from 'resend';
 import Stripe        from 'stripe';
 import cron          from 'node-cron';
+import { createSupabaseClient, cleanSupabaseUrl, inspectServiceKey } from './lib/supabase.js';
 
 dotenv.config();
 
 const app       = express();
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const octokit   = new Octokit({ auth: process.env.GITHUB_TOKEN });
-const supabase  = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase  = createSupabaseClient();
 const resend    = new Resend(process.env.RESEND_API_KEY);
 const stripe    = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -74,6 +74,40 @@ app.use('/api/finance',  financeRoutes);
 // ── Health check ───────────────────────────────────────────
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', version: 'v1-mvp', timestamp: new Date().toISOString() });
+});
+
+// ── Health check configuration (utile sans shell Render) ───
+// Protégé par une clé admin pour éviter de divulguer la config publiquement.
+// Secret : ADMIN_SECRET_KEY, ADMIN_PASSWORD, ou fallback "CREAZIO2026ADMIN".
+app.get('/health/env', (req, res) => {
+  const adminSecret = process.env.ADMIN_SECRET_KEY || process.env.ADMIN_PASSWORD || 'CREAZIO2026ADMIN';
+  const provided = req.query.secret || req.headers['x-admin-secret'];
+  if (provided !== adminSecret) {
+    return res.status(401).json({ error: 'Secret admin requis' });
+  }
+
+  const required = [
+    'ANTHROPIC_API_KEY', 'GITHUB_TOKEN', 'GITHUB_USERNAME',
+    'SUPABASE_URL', 'SUPABASE_SERVICE_KEY', 'RESEND_API_KEY',
+    'STRIPE_SECRET_KEY', 'FRONTEND_URL',
+  ];
+  const missing = required.filter(k => !process.env[k]);
+
+  const rawUrl = process.env.SUPABASE_URL;
+  const cleanUrl = cleanSupabaseUrl(rawUrl);
+  const role = inspectServiceKey(process.env.SUPABASE_SERVICE_KEY);
+  res.json({
+    status: missing.length === 0 && role === 'service_role' ? 'ok' : 'ko',
+    all_good: missing.length === 0 && role === 'service_role',
+    supabase_url_raw: rawUrl || null,
+    supabase_url_cleaned: cleanUrl || null,
+    supabase_url_cleaned_ok: !!(cleanUrl && cleanUrl.startsWith('https://') && cleanUrl.includes('.supabase.co')),
+    supabase_key_role: role,
+    supabase_key_role_ok: role === 'service_role',
+    missing_required_vars: missing,
+    frontend_url: process.env.FRONTEND_URL || null,
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // ── Cron jobs automatiques ──────────────────────────────────

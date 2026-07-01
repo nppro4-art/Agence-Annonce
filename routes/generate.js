@@ -5,8 +5,8 @@
  */
 
 import express from 'express';
+import { createSupabaseClient } from '../lib/supabase.js';
 import Anthropic from '@anthropic-ai/sdk';
-import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { Octokit } from 'octokit';
 import fetch from 'node-fetch';
@@ -19,7 +19,7 @@ import { analyzeInspirationUrl, buildInspirationPrompt } from '../services/url-a
 
 const router    = express.Router();
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const supabase  = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 const resend    = new Resend(process.env.RESEND_API_KEY);
 const octokit   = new Octokit({ auth: process.env.GITHUB_TOKEN });
 

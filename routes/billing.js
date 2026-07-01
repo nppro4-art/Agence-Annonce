@@ -4,8 +4,8 @@
  */
 
 import express from 'express';
+import { createSupabaseClient } from '../lib/supabase.js';
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { notifyDiscord } from '../server.js';
 import { handlePaymentFailure, generateAndStoreInvoice, handleChargeback } from '../services/problems-handler.js';
@@ -13,7 +13,7 @@ import { pickTeamMember, signatureHTML } from '../services/team.js';
 
 const router   = express.Router();
 const stripe   = new Stripe(process.env.STRIPE_SECRET_KEY);
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 const resend   = new Resend(process.env.RESEND_API_KEY);
 
 // ══════════════════════════════════════════════════════════

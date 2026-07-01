@@ -1,3 +1,4 @@
+import { createSupabaseClient } from '../lib/supabase.js';
 /**
  * ╔══════════════════════════════════════════════════════════════╗
  * ║  CATALOGUE D'INTÉGRATIONS                                     ║
@@ -6,9 +7,8 @@
  * ║  + helpers CRUD sur la table `integrations` (Supabase).        ║
  * ╚══════════════════════════════════════════════════════════════╝
  */
-import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 
 // ── Catalogue ────────────────────────────────────────────────
 // `plans` : plans pour lesquels l'intégration est disponible

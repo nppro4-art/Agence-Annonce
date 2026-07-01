@@ -5,10 +5,10 @@
  * ╚══════════════════════════════════════════════════════════════╝
  */
 import express from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseClient } from '../lib/supabase.js';
 
 const router   = express.Router();
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createSupabaseClient();
 
 router.get('/public', async (req, res) => {
   try {
