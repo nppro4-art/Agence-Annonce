@@ -1,33 +1,344 @@
-<section class="about" id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div class="about-media reveal">
-        {{ABOUT_IMAGE}}
-        <div class="about-media-accent" aria-hidden="true"></div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créazio — Notre équipe</title>
+<meta name="description" content="Créazio, c'est une équipe de jeunes passionnés qui a tout construit de zéro pour rendre la création de sites accessible à chaque petite entreprise française.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+/* Override logo pour Cormorant */
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:1.25rem; font-weight:500; }
+.nav-logo .a-gold { color:var(--gold); font-style:italic; }
+
+/* Hero about */
+.about-hero {
+  padding: 140px 0 80px;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+.about-hero-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(var(--brd) 1px,transparent 1px),
+    linear-gradient(90deg,var(--brd) 1px,transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 10%, transparent 80%);
+  opacity: .3;
+}
+.about-hero-content { text-align: center; position: relative; z-index: 1; }
+.about-hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem,6vw,5rem);
+  font-weight: 400; letter-spacing: -.04em;
+  line-height: 1.05; color: var(--text); margin-bottom: 18px;
+}
+.about-hero h1 em { font-style: italic; color: var(--gold); }
+.about-hero-sub {
+  font-size: 1rem; color: var(--t2); max-width: 500px;
+  margin: 0 auto 0; line-height: 1.78; font-weight: 300;
+}
+
+/* Photo équipe */
+.team-photo-wrap {
+  position: relative; margin: 56px auto 0; max-width: 900px;
+  border-radius: 22px; overflow: hidden;
+  border: 1px solid var(--brd2);
+  box-shadow: 0 4px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(201,168,76,.08);
+}
+.team-photo-wrap img { width: 100%; height: auto; display: block; }
+.team-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(5,5,5,.55) 0%, transparent 60%);
+}
+.team-photo-label {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(5,5,5,.7); backdrop-filter: blur(12px);
+  border: 1px solid var(--brd2); border-radius: 100px;
+  padding: 8px 20px; white-space: nowrap;
+}
+.team-photo-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.team-photo-label span { font-family: 'Syne', sans-serif; font-size: .64rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--t2); }
+
+/* Membres */
+.team-members {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin-top: 20px;
+  max-width: 900px; margin-left: auto; margin-right: auto;
+}
+.member-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--surface); border: 1px solid var(--brd2);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: .72rem; font-weight: 600; color: var(--t2);
+  transition: border-color .15s, color .15s;
+}
+.member-pill:hover { border-color: var(--gold-b); color: var(--text); }
+.member-pill-role { font-size: .6rem; color: var(--t4); font-weight: 400; }
+
+/* Histoire */
+.story-sect { background: var(--surface); }
+.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.story-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem,3vw,2.2rem); font-weight: 400;
+  line-height: 1.38; color: var(--text); letter-spacing: -.02em;
+  margin-bottom: 24px;
+}
+.story-big em { font-style: italic; color: var(--gold); }
+.story-body p {
+  font-size: .84rem; color: var(--t2); line-height: 1.85;
+  margin-bottom: 18px; font-weight: 300;
+}
+.story-body p strong { color: var(--text); font-weight: 600; }
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item {
+  display: flex; gap: 20px; padding: 24px 0;
+  border-bottom: 1px solid var(--brd);
+}
+.tl-item:last-child { border-bottom: none; }
+.tl-year {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; color: var(--gold); width: 56px;
+  flex-shrink: 0; padding-top: 2px; font-weight: 400;
+}
+.tl-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--gold);
+  flex-shrink: 0; margin-top: 6px;
+  box-shadow: 0 0 0 3px rgba(201,168,76,.15);
+}
+.tl-content { flex: 1; }
+.tl-title { font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.tl-desc { font-size: .77rem; color: var(--t2); line-height: 1.7; }
+
+/* Valeurs */
+.vals-sect { background: var(--black); }
+.vals-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 44px; }
+.val-card {
+  background: var(--surface); border: 1px solid var(--brd);
+  border-radius: 16px; padding: 26px 22px; transition: border-color .2s;
+}
+.val-card:hover { border-color: var(--gold-b); }
+.val-icon { font-size: 1.5rem; margin-bottom: 12px; }
+.val-title { font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.val-desc { font-size: .76rem; color: var(--t2); line-height: 1.72; }
+
+/* Stats équipe */
+.team-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 56px; }
+.ts-card { background: var(--surface); border: 1px solid var(--brd); border-radius: 14px; padding: 20px 16px; text-align: center; }
+.ts-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 400; color: var(--text); line-height: 1; }
+.ts-num span { color: var(--gold); }
+.ts-label { font-family: 'Syne', sans-serif; font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); margin-top: 6px; }
+
+/* CTA */
+.about-cta { background: var(--surface); }
+.about-cta-inner {
+  text-align: center; padding: 80px 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(201,168,76,.07) 0%, transparent 70%);
+}
+.about-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3rem); font-weight: 400; letter-spacing: -.03em; color: var(--text); margin-bottom: 14px; }
+.about-cta h2 em { font-style: italic; color: var(--gold); }
+.about-cta p { font-size: .88rem; color: var(--t2); margin-bottom: 28px; }
+
+@media (max-width: 780px) {
+  .story-grid { grid-template-columns: 1fr; gap: 40px; }
+  .vals-grid { grid-template-columns: 1fr; }
+  .team-stats { grid-template-columns: 1fr 1fr; }
+  .about-hero { padding: 100px 0 56px; }
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" id="site-nav">
+  <a href="index.html" class="nav-logo">CRE<span class="a-gold">A</span>zio</a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html#how">Notre process</a>
+    <a class="nav-link" href="index.html#features">Fonctionnalités</a>
+    <a class="nav-link" href="pricing.html">Tarifs</a>
+    <a class="nav-link active" href="about.html">Notre équipe</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost btn-sm" href="dashboard.html">Se connecter</a>
+    <a class="btn btn-primary btn-sm" href="create.html">Créer mon site →</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="about-hero">
+    <div class="about-hero-grid"></div>
+    <div class="container">
+      <div class="about-hero-content reveal">
+        <div class="eyebrow" style="justify-content:center">Notre équipe</div>
+        <h1>On a tout construit<br><em>de zéro.</em></h1>
+        <p class="about-hero-sub">Créazio, c'est 11 jeunes de 18 à 22 ans qui ont développé leurs propres logiciels pour rendre la création de sites web accessible à chaque petite entreprise française.</p>
       </div>
-      <div class="about-text">
-        <span class="eyebrow reveal">Notre histoire</span>
-        <h2 class="section-title reveal reveal-delay-1">{{pages.home.about.title}}</h2>
-        <p class="reveal reveal-delay-2">{{pages.home.about.text}}</p>
-        <div class="about-stats reveal reveal-delay-3">
-          {{ABOUT_STATS}}
+
+      <!-- Photo équipe -->
+      <div class="team-photo-wrap reveal">
+        <img src="team.jpg" alt="L'équipe Créazio — Lucas, Théo, Inès, Hugo, Antoine, Yanis, Camille, Manon, Mathis, Alexis, Léa">
+        <div class="team-photo-overlay"></div>
+        <div class="team-photo-label">
+          <div class="team-photo-dot"></div>
+          <span>L'équipe Créazio · 11 experts · France</span>
         </div>
+      </div>
+
+      <!-- Membres -->
+      <div class="team-members reveal">
+        <div class="member-pill">Lucas <span class="member-pill-role">— Dev & Architecture</span></div>
+        <div class="member-pill">Théo <span class="member-pill-role">— Backend & API</span></div>
+        <div class="member-pill">Inès <span class="member-pill-role">— Design & UX</span></div>
+        <div class="member-pill">Hugo <span class="member-pill-role">— Logiciels propriétaires</span></div>
+        <div class="member-pill">Antoine <span class="member-pill-role">— SEO & Contenu</span></div>
+        <div class="member-pill">Yanis <span class="member-pill-role">— Frontend & 3D</span></div>
+        <div class="member-pill">Camille <span class="member-pill-role">— Relation clients</span></div>
+        <div class="member-pill">Manon <span class="member-pill-role">— Marketing</span></div>
+        <div class="member-pill">Mathis <span class="member-pill-role">— Infrastructure</span></div>
+        <div class="member-pill">Alexis <span class="member-pill-role">— Intégrations</span></div>
+        <div class="member-pill">Léa <span class="member-pill-role">— Opérations</span></div>
       </div>
     </div>
   </div>
-</section>
 
-<style>
-.about-media-accent {
-  position: absolute;
-  bottom: -16px;
-  right: -16px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
-  filter: blur(24px);
-  pointer-events: none;
-  z-index: 0;
-}
-</style>
+  <div class="divider"></div>
+
+  <!-- HISTOIRE -->
+  <section class="story-sect">
+    <div class="container sec">
+      <div class="story-grid">
+        <div>
+          <div class="eyebrow reveal">Notre histoire</div>
+          <p class="story-big reveal reveal-delay-1">On avait 18 ans et on regardait les petits commerces de nos quartiers <em>sans site web.</em></p>
+          <div class="story-body reveal reveal-delay-2">
+            <p>Les agences web demandaient <strong>entre 5 000 et 15 000€</strong> pour créer un site. C'est inabordable pour un artisan, un restaurateur ou une coiffeuse qui se lance. Et les constructeurs de sites "faciles" donnaient des résultats tellement génériques qu'ils faisaient plus de mal que de bien.</p>
+            <p>On a passé des mois à développer nos propres logiciels. L'idée : <strong>automatiser tout ce qui est répétitif</strong> dans la création d'un site — le code, la structure, les optimisations techniques — pour que notre équipe puisse se concentrer sur ce qui compte vraiment : le design, les textes, et la relation avec le client.</p>
+            <p>Le résultat, c'est Créazio. <strong>Un site à partir de 249.99€</strong>, avec une vraie équipe derrière. Pas un template. Pas un robot. Un vrai travail humain, rendu accessible grâce à nos outils.</p>
+            <p>On a choisi de <strong>favoriser les petites entreprises</strong>. Artisans, commerçants, indépendants — ils méritent autant qu'une grande entreprise d'avoir une présence professionnelle en ligne.</p>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline reveal">
+          <div class="tl-item">
+            <div class="tl-year">2023</div>
+            <div class="tl-dot"></div>
+            <div class="tl-content">
+              <div class="tl-title">Le déclic</div>
+              <div class="tl-desc">On voit un boulanger de quartier fermer faute de visibilité. Son concurrent, avec un site web basique, avait doublé sa clientèle. On décide d'agir.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2024</div>
+            <div class="tl-dot"></div>
+            <div class="tl-content">
+              <div class="tl-title">Le développement</div>
+              <div class="tl-desc">18 mois de développement intensif. On code nos logiciels propriétaires, on teste avec des dizaines de vrais clients, on itère jusqu'à atteindre la qualité agence.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2025</div>
+            <div class="tl-dot"></div>
+            <div class="tl-content">
+              <div class="tl-title">Le lancement</div>
+              <div class="tl-desc">Créazio est lancé. Notre équipe de 11 personnes crée des sites pour des artisans, restaurateurs, coiffeurs et PME partout en France.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2026</div>
+            <div class="tl-dot"></div>
+            <div class="tl-content">
+              <div class="tl-title">Aujourd'hui</div>
+              <div class="tl-desc">Nous continuons à développer nos outils, à améliorer notre service, et à rendre le web accessible à toutes les petites entreprises françaises.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="team-stats">
+        <div class="ts-card reveal"><div class="ts-num">11</div><div class="ts-label">Experts Créazio</div></div>
+        <div class="ts-card reveal reveal-delay-1"><div class="ts-num">18<span>ans</span></div><div class="ts-label">Notre âge au départ</div></div>
+        <div class="ts-card reveal reveal-delay-2"><div class="ts-num">100<span>%</span></div><div class="ts-label">Logiciels maison</div></div>
+        <div class="ts-card reveal reveal-delay-3"><div class="ts-num">🇫🇷</div><div class="ts-label">Équipe française</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- VALEURS -->
+  <section class="vals-sect">
+    <div class="container sec">
+      <div class="reveal">
+        <div class="eyebrow">Ce qui nous anime</div>
+        <h2 class="section-title">Nos <em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold)">valeurs</em></h2>
+      </div>
+      <div class="vals-grid">
+        <div class="val-card reveal">
+          <div class="val-icon">🎯</div>
+          <div class="val-title">Accessibilité réelle</div>
+          <div class="val-desc">Un site professionnel ne devrait pas coûter une fortune. On a construit nos logiciels spécifiquement pour réduire les coûts sans sacrifier la qualité.</div>
+        </div>
+        <div class="val-card reveal reveal-delay-1">
+          <div class="val-icon">🤝</div>
+          <div class="val-title">Des humains derrière</div>
+          <div class="val-desc">Pas de robot, pas de template générique. Chaque site est créé et validé par notre équipe. Vous avez de vraies personnes à vos côtés.</div>
+        </div>
+        <div class="val-card reveal reveal-delay-2">
+          <div class="val-icon">💎</div>
+          <div class="val-title">Qualité sans compromis</div>
+          <div class="val-desc">On s'inspire des meilleures agences mondiales pour le design. Chaque site Créazio est unique, premium et optimisé pour convertir.</div>
+        </div>
+        <div class="val-card reveal">
+          <div class="val-icon">🇫🇷</div>
+          <div class="val-title">Fierté locale</div>
+          <div class="val-desc">On travaille avec des artisans, commerçants et indépendants français. Soutenir leur croissance, c'est soutenir nos économies locales.</div>
+        </div>
+        <div class="val-card reveal reveal-delay-1">
+          <div class="val-icon">⚡</div>
+          <div class="val-title">Innovation permanente</div>
+          <div class="val-desc">Notre équipe développe constamment de nouveaux outils. Ce qu'on fait en 2026 était impossible en 2023 — et ce sera encore mieux en 2027.</div>
+        </div>
+        <div class="val-card reveal reveal-delay-2">
+          <div class="val-icon">🔓</div>
+          <div class="val-title">Transparence totale</div>
+          <div class="val-desc">Vos données vous appartiennent. Votre code vous appartient. On ne pratique aucun lock-in. Notre succès repose sur votre satisfaction.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CTA -->
+  <section class="about-cta">
+    <div class="container">
+      <div class="about-cta-inner reveal">
+        <div class="eyebrow" style="justify-content:center">Rejoignez-nous</div>
+        <h2>Votre site mérite<br>une <em>vraie équipe</em>.</h2>
+        <p>Décrivez votre activité. On s'occupe de tout le reste.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="btn btn-primary btn-lg" href="create.html">Créer mon site →</a>
+          <a class="btn btn-ghost btn-lg" href="mailto:contact@creazio.fr">Nous écrire</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="_footer.js"></script>
+<script>
+window.addEventListener('scroll',()=>document.getElementById('site-nav').classList.toggle('solid',scrollY>20),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}}),{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*.08)+'s';io.observe(el);});
+</script>
+</body>
+</html>

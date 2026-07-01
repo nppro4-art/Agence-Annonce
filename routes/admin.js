@@ -132,7 +132,7 @@ router.get('/dashboard', async (req, res) => {
     const allProfiles = profiles.data || [];
     const allProjects = projects.data || [];
 
-    const prices = { trial: 0, solo: 64.99, business: 119.99, expert: 189.99 };
+    const prices = { trial: 0, solo: 69.99, business: 149.99, expert: 299.99 };
 
     const mrr = allProfiles.reduce((sum, p) => {
       if (!p.plan_active) return sum;

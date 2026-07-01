@@ -188,7 +188,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       if (!userId) break;
 
       await supabase.from('profiles').update({
-        plan: session.metadata?.plan || 'starter',
+        plan: session.metadata?.plan || 'solo',
         plan_active: true,
         plan_status: 'active',
         stripe_subscription_id: session.subscription,

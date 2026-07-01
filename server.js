@@ -39,7 +39,7 @@ const supabase  = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SE
 const resend    = new Resend(process.env.RESEND_API_KEY);
 const stripe    = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Webhook Stripe — body brut obligatoire
+// Webhook Stripe — body brut obligatoire (monté AVANT le JSON parser global)
 app.use('/webhook/stripe', express.raw({ type: 'application/json' }));
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json({ limit: '10mb' }));
@@ -61,6 +61,8 @@ import { pickTeamMember, signatureHTML } from './services/team.js';
 app.use('/api/auth',     authRoutes);
 app.use('/api/generate', generateRoutes);
 app.use('/api/modify',   modifyRoutes);
+// Montage explicite du webhook Stripe avant les routes billing standards
+app.use('/webhook/stripe', billingRoutes);
 app.use('/api/billing',  billingRoutes);
 app.use('/api/versions', versionsRoutes);
 app.use('/api/contact',  contactRoutes);
@@ -330,8 +332,9 @@ async function sendWeeklyDiscordReport() {
   const { data: activeSubs } = await supabase
     .from('profiles').select('plan').eq('plan_active', true);
 
+  const planPrices = { solo: 69.99, business: 149.99, expert: 299.99, starter: 69.99, pro: 149.99 };
   const mrr = (activeSubs || []).reduce((sum, p) => {
-    return sum + (p.plan === 'starter' ? 29 : p.plan === 'pro' ? 79 : p.plan === 'business' ? 199 : 0);
+    return sum + (planPrices[p.plan] || 0);
   }, 0);
 
   await notifyDiscord('RAPPORT_HEBDO',

@@ -176,3 +176,4 @@ export async function deactivateIntegration(projectId, integrationId) {
   if (error) throw error;
   return { success: true };
 }
+  

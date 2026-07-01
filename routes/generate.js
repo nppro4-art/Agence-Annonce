@@ -456,12 +456,11 @@ async function deployToVercel(repoName, projectName) {
 // transmis depuis create.html. Renvoie une chaîne vide si rien
 // n'est renseigné — l'IA déduit alors tout depuis la description.
 const ADDON_LABELS = {
-  ecommerce: 'E-commerce (vente en ligne avec paiement)',
-  reservation: 'Réservation en ligne',
-  blog: 'Blog / Actualités',
-  multilang: 'Site multilingue',
+  ecom: 'E-commerce (vente en ligne avec paiement)',
+  resa: 'Réservation en ligne',
   social: 'Publication réseaux sociaux',
   seo: 'SEO avancé',
+  chat: 'Chat IA assistant',
 };
 
 const STYLE_LABELS = {

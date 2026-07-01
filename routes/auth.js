@@ -15,26 +15,50 @@ router.post('/register', async (req, res) => {
   if (!email || !password || !firstName) {
     return res.status(400).json({ error: 'Champs requis manquants' });
   }
+
+  let step = 'init';
   try {
-    // Créer dans Supabase Auth
+    // Vérifications de configuration critiques
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+      throw new Error('Configuration serveur : SUPABASE_URL ou SUPABASE_SERVICE_KEY manquant');
+    }
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('Configuration serveur : STRIPE_SECRET_KEY manquant');
+    }
+
+    step = 'supabase_auth';
+    console.log(`[AUTH REGISTER] Étape ${step} : création utilisateur Supabase pour ${email}`);
+    // Créer dans Supabase Auth — nécessite la clé service_role
     const { data: authData, error: authErr } = await supabase.auth.admin.createUser({
       email, password,
       email_confirm: true,
       user_metadata: { first_name: firstName, last_name: lastName },
     });
-    if (authErr) throw new Error(authErr.message);
+    if (authErr) throw new Error(`Supabase Auth : ${authErr.message}`);
+    if (!authData?.user?.id) throw new Error('Supabase Auth : aucun user.id retourné');
     const userId = authData.user.id;
+    console.log(`[AUTH REGISTER] Utilisateur Supabase créé : ${userId}`);
 
-    // Créer customer Stripe
-    const customer = await stripe.customers.create({
-      email,
-      name: `${firstName} ${lastName}`,
-      phone,
-      metadata: { supabase_id: userId },
-    });
+    step = 'stripe_customer';
+    console.log(`[AUTH REGISTER] Étape ${step} : création customer Stripe`);
+    let customer;
+    try {
+      customer = await stripe.customers.create({
+        email,
+        name: `${firstName} ${lastName}`,
+        phone,
+        metadata: { supabase_id: userId },
+      });
+    } catch (stripeErr) {
+      // Rollback : supprimer l'utilisateur Supabase créé si Stripe échoue
+      await supabase.auth.admin.deleteUser(userId).catch(() => {});
+      throw new Error(`Stripe Customer : ${stripeErr.message}`);
+    }
+    console.log(`[AUTH REGISTER] Customer Stripe créé : ${customer.id}`);
 
-    // Créer profil dans Supabase
-    await supabase.from('profiles').insert({
+    step = 'supabase_profile';
+    console.log(`[AUTH REGISTER] Étape ${step} : insertion profil`);
+    const { error: profileErr } = await supabase.from('profiles').insert({
       id: userId, email,
       first_name: firstName,
       last_name: lastName,
@@ -45,24 +69,43 @@ router.post('/register', async (req, res) => {
       stripe_customer_id: customer.id,
       created_at: new Date().toISOString(),
     });
+    if (profileErr) {
+      // Rollback Stripe + Supabase Auth si le profil échoue
+      await stripe.customers.del(customer.id).catch(() => {});
+      await supabase.auth.admin.deleteUser(userId).catch(() => {});
+      throw new Error(`Supabase Profile : ${profileErr.message}`);
+    }
+    console.log(`[AUTH REGISTER] Profil inséré pour ${userId}`);
 
-    // Email de bienvenue
-    await resend.emails.send({
-      from: 'Créazio <bonjour@creazio.fr>',
-      to: email,
-      subject: 'Bienvenue sur Créazio ✦',
-      html: welcomeEmail(firstName),
-    });
+    step = 'welcome_email';
+    console.log(`[AUTH REGISTER] Étape ${step} : envoi email de bienvenue`);
+    try {
+      await resend.emails.send({
+        from: 'Créazio <bonjour@creazio.fr>',
+        to: email,
+        subject: 'Bienvenue sur Créazio ✦',
+        html: welcomeEmail(firstName),
+      });
+    } catch (emailErr) {
+      console.warn('[AUTH REGISTER] Email de bienvenue non envoyé :', emailErr.message);
+      // On ne bloque pas l'inscription si l'email échoue
+    }
 
-    // Discord
-    await notifyDiscord('NOUVEAUX_INSCRITS',
-      `🎉 **Nouvel inscrit**\n👤 ${firstName} ${lastName}\n📧 ${email}\n🏷️ ${sector || 'Non précisé'}`,
-      0x00875a);
+    step = 'discord';
+    try {
+      await notifyDiscord('NOUVEAUX_INSCRITS',
+        `🎉 **Nouvel inscrit**\n👤 ${firstName} ${lastName}\n📧 ${email}\n🏷️ ${sector || 'Non précisé'}`,
+        0x00875a);
+    } catch (discordErr) {
+      console.warn('[AUTH REGISTER] Discord notification failed :', discordErr.message);
+    }
 
+    console.log(`[AUTH REGISTER] Succès : ${userId}`);
     res.json({ success: true, userId, message: 'Compte créé' });
   } catch (err) {
-    console.error('[AUTH REGISTER]', err.message);
-    res.status(500).json({ error: err.message });
+    console.error(`[AUTH REGISTER] ÉCHEC à l'étape "${step}" :`, err.message);
+    console.error(err.stack);
+    res.status(500).json({ error: err.message, step });
   }
 });
 
